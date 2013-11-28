@@ -1,0 +1,37 @@
+
+/*Grid need a explicit width/height by default*/
+/*#grid {
+    width: 45em;
+    height: 20em;
+}*/
+
+
+.dojoxGridCell {
+   font-size: 9pt !important;
+   text-align: center !important;
+}
+
+.hiddenCycleRow {
+	display: none !important;
+}
+
+.visibleCycleRow {
+	display: block !important;
+}
+
+.hiddenCellOfMine {
+	display: none !important;
+}
+
+.visibleCellOfMine {
+	display: block !important;
+}
+
+
+.claro .dojoxGridRow .dojoxGridRowTable tr td table tr {
+    background-color: transparent !important;
+}
+
+.claro .dojoxGridRowOver .dojoxGridRowTable  tr td table tr {
+    background-color: transparent !important;
+}

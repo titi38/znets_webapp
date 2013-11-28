@@ -1,0 +1,7 @@
+{
+	"identifier": "id",
+	"label": "name",
+	"items": [
+		{ "id": "statsRoot", "name":"Stats", "type":"root"}
+	]
+}

@@ -1,0 +1,199 @@
+
+<meta http-equiv="Context-Type" content="text/html; charset=US-ASCII">
+<!DOCTYPE HTML>
+<html>
+	<body>
+	<head>
+	<style>body 
+		{
+		text-align:justify;
+		background-color:WhiteSmoke ;
+		}
+	</style>
+	<script type="text/javascript" src="dojo/dojo/dojo.js" djConfig=" locale: 'en-us', parseOnLoad: true, isDebug:false"></script>
+	<script type="text/javascript" src="functions/configScript.js"></script>
+	</head>
+	
+	<img src="images/ZNeTS_2.gif" />
+
+	
+	<h1>REQUIRED </h1>
+	<i>For more information, please read the ZNeTS.conf.5 manual page</i>
+	
+		<p> LocalNetwork </p> 
+		<form method="get" name="form" id="theForm" action="setConfig" onSubmit="return validation(document.getElementById('form');">
+
+		<TABLE id="localhostTable" border="1">
+			<TR>
+				<TD><INPUT id="IP" type="text" value="ip/mask e.g.:127.0.0.1/8" />  <INPUT id="name"  type="text" value="Name" /> </TD>
+				<TD><INPUT type="button" id="AddNetwork"  value="Add Network" onclick="if (isValidIp(document.getElementById('IP').value)) addRowLocalHost('localhostTable', document.getElementById('IP').value, document.getElementById('name').value ); else  alert('Bad network IP address format');" /></TD>
+			</TR>
+		</TABLE>
+
+				 
+ 
+		<INPUT type="button" id="DelNetwork" value="Delete Network" onclick="deleteRow ('localhostTable');" />
+		
+			
+		<h1>OPTIONAL</h1>
+		<input type="checkbox" id="disableIpV4" name="disableIpV4"/> disableIpV4<br />
+		<input type="checkbox" id="disableIpV6" name="disableIpV6"/> disableIpV6 <br />
+		whoisCmd="/usr/bin/env whois" <input type="text"  id="whoisCmd" name="whoisCmd" value="whoisCmd" />  <br />
+		<input type="checkbox" id="processCycleOnExit" name="processCycleOnExit" value="processCycleOnExit" /> processCycleOnExit <br />
+		<h3> Pcap options</h3>
+		<input type="checkbox" id="AcquisitionPcap" name="AcquisitionPcap" OnChange="checkboxTest();" /> Pcap<br />
+		<p>Currently monitored interface(s)<p>
+		<form method="get" name="theForm2" id="theForm2" action="setConfig" onSubmit="return validation(document.getElementById('theForm2');">
+		<TABLE id="pcapDeviceTable" width="auto" border="1">
+			<TR><TD> <div class="styled-select-up">	
+		<select name="listPcap" id="listPcap">
+		<option  selected="selected" title="">Please choose an interface</option>
+		</select></div>
+        </TD><TD><input type="button" id="AddInterface" value="Add Interface" onclick="if ( document.getElementById('listPcap').value != 'Please choose an interface' ) addRowItf('pcapDeviceTable', document.getElementById('listPcap').value, true);" /></TD>
+			</TR>
+		</TABLE>
+		<br />
+		<INPUT type="button" id="DelInterface" value="Delete Interface" onclick="deleteRowItf ('pcapDeviceTable');" />
+		<br /><br />
+		
+		pcap Buffer Size</td><td><input type="tel" id="pcapBufferSize" name="pcapBufferSize" value=""  /> 
+		pcap Filter</td><td><input type="text" id="pcapFilter" name="pcapFilter" value="filter"  />  
+		
+		<h3> NetFlow options </h3>
+		<table>
+		<input type="checkbox" id="AcquisitionNetFlow" OnChange="checkboxTest();" name="AcquisitionNetFlow" /> NetFlow<br />
+		<tr><td>netFlowDevice</td><td><input type="text" id="netFlowDevice" name="netFlowDevice" value=""  /> </td></tr>
+		<tr><td>netFlow Udp Port</td><td><input type="tel" id="netFlowUdpPort" name="netFlowUdpPort" value=""  /></td></tr>
+		<tr><td>netFlowIpDataSources</td><td><input type="tel" id="netFlowIpDataSources" name="netFlowIpDataSources" value="NETWORK_ADDR[/MASK]"  /></td></tr>
+		<tr><td>sendNflowToHost</td><td><input type="text" id="sendNflowToHost" name="sendNflowToHost" value="HOST"  /> </td></tr>
+		<tr><td>sendNflowToPort</td><td><input type="tel" id="sendNflowToPort" name="sendNflowToPort" value="PORT"  /></td></tr>
+		</table>
+		<table>
+		<h3>Database options</h3>
+		<tr><td>DBMS<input type="text" id="DBMS" name="DBMS" value=""  /></tr></td>
+		<tr><td><input type="checkbox" id="disableRecordDataflowToDatabase" OnChange="checkboxTest();" name="disableRecordDataflowToDatabase" value=""  />disableRecordDataflowToDatabase </tr></td>
+		<tr><td>databaseUser</td><td><input type="text" id="databaseUser" name="databaseUser" value="USER"  /> </td></tr>
+		<tr><td>databasePassword</td><td><input type="text" id="databasePassword" name="databasePassword" value="PASSWORD"  /> </td></tr>
+		<tr><td>databaseIPaddr</td><td><input type="tel" name="databaseIPaddr" id="databaseIPaddr" value="IP_ADDR"  /> </td></tr>
+		<tr><td>databasePort</td>
+		
+		<td><input type="tel" id="databasePort" name="databasePort" value="PORT"  /> </td></tr>
+		<tr><td>databaseName</td><td><input type="text" id="databaseName" name="databaseName" value=""  /> </td></tr>
+		<tr><td>databaseNbConn</td><td><input type="text" id="databaseNbConn" name="databaseNbConn" value=""  /> </td></tr>
+		<input type="checkbox" id="databaseDataflowAutovacuum" name="databaseDataflowAutovacuum" value=""  /> databaseDataflowAutovacuum </td></tr>
+		<tr><td>databaseDataflowAutovacuumSize</td><td><input type="tel" id="databaseDataflowAutovacuumSize" name="databaseDataflowAutovacuumSize" value="NBDAYS"  /> </td></tr>
+		</table>
+
+		<h3>Webserver options</h3>
+		<table>
+		<tr><td><input type="checkbox" id="disableHttpdServer" name="disableHttpdServer" OnChange="checkboxTest();"  value=""  /> disableHttpdServer </td></tr>
+		<tr><td>httpdDevice</td><td><input type="text" id="httpdDevice" name="httpdDevice" value="ITF"  /> </td></tr>
+		<tr><td>httpdIpAllowed</td><td><input type="tel" id="httpdIpAllowed"  name="httpdIpAllowed" value="NETWORK_ADDR[/MASK]"  /> </td></tr>
+		<tr><td>httpdPort</td><td><input type="tel" id="httpdPort" name="httpdPort" value="PORT"  /> </td></tr>
+		<tr><td><input type="checkbox" id="httpdAuthPAM" name="httpdAuthPAM" value="" OnChange="checkboxTest();"  /> httpdAuthPAM </td></tr>
+		<tr><td>PAMservice</td><td><input type="text" id="PAMservice" name="PAMservice" value=""  /> </td></tr>
+		<tr><td>httpdAuthorizedPamUsers</tr></td>
+		<table id="httpdAuthorizedPamUsers" name="httpdAuthorizedPamUsers">
+		<TR>
+			<TD><INPUT id="loginhttpdAuthorizedPamUsers" type="text" value="" />
+			<TD><INPUT type="button" id="AddUser"  value="Add User" onclick="addRow2Col('httpdAuthorizedPamUsers', document.getElementById('loginhttpdAuthorizedPamUsers').value)" /></TD>
+		</TR>
+		</table>
+		
+		<INPUT type="button" id="DelUser" value="Delete User(s)" onclick="deleteRow ('httpdAuthorizedPamUsers');" />
+		<table>
+		<tr><td>httpdAuthLoginPwd</td><td><input type="text" id="httpdAuthLoginPwd" name="httpdAuthLoginPwd" value="login:pwd"  /> </td></tr>
+		<tr><td><input type="checkbox" id="httpdUseSSL" name="httpdUseSSL" value=""  OnChange="checkboxTest();" /> httpdUseSSL </td></tr>
+		<tr><td>httpdSSLcertFile</td><td><input type="text" id="httpdSSLcertFile" name="httpdSSLcertFile" value="FILE"  /> </td></tr>
+		<tr><td>httpdSSLcertPwd</td><td><input type="text" id="httpdSSLcertPwd" name="httpdSSLcertPwd" value="PASSWORD"  /> </td></tr>
+		<tr><td>httpdSSLCaFile</td><td><input type="text" id="httpdSSLCaFile" name="httpdSSLCaFile" value="FILE"  /> </td></tr>
+		<tr><td><input type="checkbox" id="httpdAuthPeerSSL" name="httpdAuthPeerSSL" value="" OnChange="checkboxTest();"  /> httpdAuthPeerSSL </td></tr>
+		<tr><td>httpdAuthorizedPeerDN</tr></td>
+		</table>
+		<table id="httpdAuthorizedPeerDN" name="httpdAuthorizedPeerDN">
+		<TR>
+			<TD><INPUT id="httpdAuthorizedPeer" type="text" value="" />
+			<TD><INPUT type="button" id="AddHttpdAuthorizedPeerDN"  value="Add User" onclick="addRow2Col('httpdAuthorizedPeerDN', document.getElementById('httpdAuthorizedPeer').value)" /></TD>
+		</TR>
+		</table>
+		<INPUT type="button" id="DelHttpdAuthorizedPeerDN" value="Delete User(s)" onclick="deleteRow ('httpdAuthorizedPeerDN');" />
+		<table>
+		<tr><td>httpdNbThreads</td><td><input type="tel" id="httpdNbThreads" name="httpdNbThreads" value="NB"  /> </td></tr>
+		<tr><td>ignoredLocalhosts</tr></td>
+		</table>
+		<table id="ignoredLocalhosts" name="ignoredLocalhosts">
+		<TR>
+			<TD><INPUT id="loginToIgnore" type="text" value="" />
+			<TD><INPUT type="button" id="AddIgnoredLocalhosts"  value="Add User" onclick="addRow2Col('ignoredLocalhosts', document.getElementById('loginToIgnore').value)" /></TD>
+		</TR>
+		</table>
+		<INPUT type="button" id="DelIgnoredLocalhosts" value="Delete User(s)" onclick="deleteRow ('ignoredLocalhosts');" />
+		
+		<h3>Data files options</h3>
+		<table>
+		<tr><td><input type="checkbox" id="saveDataflowToFile" name="saveDataflowToFile" value=""  />saveDataflowToFileCheck </td></tr>
+		<tr><td>dataflowFilePath</td><td><input type="text" id="dataflowFilePath" name="dataflowFilePath" value="PATH"  /> </td></tr>
+		<tr><td><input type="checkbox" id="dataflowFileRotateDaily" name="dataflowFileRotateDaily" value=""  /> dataflowFileRotateDaily</td></tr>
+		<tr><td><input type="checkbox" id="dataflowFileRotateHourly" name="dataflowFileRotateHourly" value=""  />dataflowFileRotateHourly </td></tr>
+		<tr><td></table>
+		
+		
+		<h3>Aggregation options</h3>
+		<table>
+		<tr><td>nbCollectCyclePerHour</td><td><input type="text" id="nbCollectCyclePerHour" name="nbCollectCyclePerHour"  /></td></tr>
+		<tr><td><input type="checkbox" id="aggregateTcpClientPorts" name="aggregateTcpClientPorts" value=""  />aggregateTcpClientPorts</td></tr>
+		<tr><td><input type="checkbox" id="aggregateUdpClientPorts" name="aggregateUdpClientPorts" value=""  />aggregateUdpClientPorts</td></tr>
+		</table>	
+		
+		<h3>Alerts configuration</h3>
+		<table>
+		<tr><td>suspiciousHost</td><td><input type="tel" id="suspiciousHost" name="suspiciousHost" value=""  /> </td></tr>
+		<tr><td>loadSuspiciousHostsFiles</td><td><input type="tel" id="loadSuspiciousHostsFiles" name="loadSuspiciousHostsFiles" value=""  /> </td></tr>
+		<tr><td>alertMaxDest</td><td><input type="tel" id="alertMaxDest" name="alertMaxDest" value=""  /> </td></tr>
+		<tr><td>whiteListLHostMaxDest</td><td><br /><textarea id="whiteListLHostMaxDest" name="whiteListLHostMaxDest" COLS="15" ROWS="6" value=""></textarea> </td></tr>
+		<tr><td>alertMaxInFlowByDest</td><td><input type="tel" id="alertMaxInFlowByDest" name="alertMaxInFlowByDest" value=""  /> </td></tr>
+		<tr><td>alertMaxOutFlowByDest</td><td><input type="tel" id="alertMaxOutFlowByDest" name="alertMaxOutFlowByDest" value=""  /> </td></tr>
+		<tr><td>whiteListLHostInc</td><td><br /><textarea type="tel" id="whiteListLHostInc" name="whiteListLHostInc" value=""></textarea> </td></tr>
+		<tr><td>whiteListLHostOut</td><td><br /><textarea id="whiteListLHostOut" name="whiteListLHostOut" COLS="30" ROWS="10" value=""></textarea></td></tr>
+		<tr><td>alertMaxMultOutScanDest</td><td><input type="tel" id="alertMaxMultOutScanDest" name="alertMaxMultOutScanDest" value=""  /> </td></tr>
+		<tr><td>whiteListLHost</td><td><input type="tel" id="whiteListLHost" name="whiteListLHost" value=""  /> </td></tr>
+		<tr><td>whiteListEHost</td><td><input type="tel" id="whiteListEHost" name="whiteListEHost" value=""  /> </td></tr>
+		<tr><td>alertMaxExtSMTPtraffic</td><td><input type="tel" id="alertMaxExtSMTPtraffic" name="alertMaxExtSMTPtraffic" value=""  /> </td></tr>
+		<tr><td>checkDNSquery</td><td><input type="tel" id="checkDNSquery" name="checkDNSquery" value=""  /> </td></tr>
+		<tr><td>externalDNSLists</td><td><textarea type="tel" id="externalDNSLists" name="externalDNSLists" value=""></textarea> </td></tr>
+		<tr><td><input type="checkbox" id="pcapIgnoreMac" name="pcapIgnoreMac" value=""  /> pcapIgnoreMac</tr></td>
+		<tr><td>whiteListDupIp</td><td><textarea type="tel" id="whiteListDupIp" name="whiteListDupIp" value=""></textarea> </td></tr>
+		<tr><td>ipMaxLeaseTime</td><td><input type="tel" id="ipMaxLeaseTime" name="ipMaxLeaseTime" value=""  /> </td></tr>
+		</table>
+		
+		<h3>Mail Alert Configuration</h3>
+		<table>
+		<tr><td><input type="checkbox" id="sendMailOnAlert" name="sendMailOnAlert" value="" OnChange="checkboxTest();" /> sendMailOnAlert  </tr></td>
+		<tr><td>mailServer</td><td><input type="tel" id="mailServer" name="mailServer" value=""  /> </td></tr>
+		<tr><td>mailSrc</td><td><input type="tel" id="mailSrc" name="mailSrc" value=""  /> </td></tr>
+		<tr><td>mailDst</td><td><input type="tel" id="mailDst" name="mailDst" value=""  /> </td></tr>
+		</table>
+		
+		<h3>Log Configuration</h3>
+		<table>
+
+		<tr><td><input type="checkbox" id="autoupdate" name="autoupdate" value=""  /> autoupdate</tr></td>
+		<tr><td><input type="checkbox" id="GeoIPASNum" name="GeoIPASNum" value=""  /> GeoIPASNum</tr></td>
+		<tr><td><input type="checkbox" id="verboseMode" name="verboseMode" value=""  /> verboseMode</tr></td>
+		<tr><td><input type="checkbox" id="useSyslogd" name="useSyslogd"  value=""  /> useSyslogd</tr></td>
+		<tr><td><input type="checkbox" id="ParanoiacSuspiciousMode" name="ParanoiacSuspiciousMode" value=""  /> ParanoiacSuspiciousMode (more sensible with alert rising)</td></tr>
+		</table>
+		<h3>Download updated Suspicious Hosts List</h3>
+		<table id="TabListSuspicious" name="TabListSuspicious">
+		<TR><TD colspan=3></TD></TR>
+		</table>
+		<INPUT type="button" id="DelList" value="Delete List(s)" onclick="deleteRow ('TabListSuspicious');" />
+		<br /><br /><br />
+		<input type="button" value="Save" onclick="sendConf();" />
+		
+		</form>
+		
+		
+
+	</body>
+</html><html><body></body></html>

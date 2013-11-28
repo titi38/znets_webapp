@@ -1,0 +1,112 @@
+
+body, html {
+    font: 100% verdana, arial, sans-serif;
+    background-color: #fff;height: auto;
+    margin: -0px;
+    overflow: visible;
+}
+
+.wrapper {
+    width: 100%;
+    /*height: 40px;*/
+    background : #417845;
+    background : -webkit-gradient(linear, left top, left bottom, from(#66b366), to(#518F55));
+    background : -moz-linear-gradient(top, #66b366, #518F55);
+    border-top: 2px solid #939393;
+    position: relative;
+    /*margin-bottom: 30px;*/
+}
+
+div.TabOnglets{
+    margin: 0;
+    padding: 0;
+}
+ 
+div.TabOnglets {
+    height: 30px;
+    border-left: 1px solid rgba(0,0,0,0.3);
+    border-right: 1px solid rgba(255,255,255,0.3);
+    float:left;
+}
+ 
+div.TabOnglets li {
+    list-style: none;
+    float:left;
+    height: 29px;
+    text-align: center;
+    background: -webkit-gradient(radial, 50% 100%, 10, 50% 50%, 90, from(rgba(78,138,78,1)), to(rgba(61,111,61, 1)) );
+    background: -moz-radial-gradient(center 40px 45deg, circle cover, rgba(78,138,78,1) 0%, rgba(61,111,61, 1) 100%);
+    }
+ 
+div.TabOnglets li table {
+	font-weight: bolder;
+	color: #dfede5;
+	font-size: 18px;
+	font-family: arial,helvetica,sans-serif;
+	
+	cursor: pointer;
+	
+    display: block;
+    padding: 0 20px;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(0,0,0,0.1);
+    text-align: center;
+    line-height: 29px;
+    background : -webkit-gradient(linear, left top, left bottom, from(#66b366), to(#518F55)));
+    background : -moz-linear-gradient(top, #66b366, #518F55);
+    -webkit-transition-property: background;
+    -webkit-transition-duration: 700ms;
+    -moz-transition-property: background;
+    -moz-transition-duration: 700ms;
+    }
+ 
+div.TabOnglets li table:hover {
+	color: white;
+    background: transparent none;
+	cursor: hand;
+}
+ 
+div.TabOnglets li.active table{
+	color: white;
+	
+	cursor: default;
+	
+    background: -webkit-gradient(radial, 50% 100%, 10, 50% 50%, 90, from(rgba(78,138,78,1)), to(rgba(61,111,61, 1)) );
+    background: -moz-radial-gradient(center 40px 45deg, circle cover, rgba(78,138,78,1) 0%, rgba(61,111,61, 1) 100%);
+}
+ 
+div.TabOnglets li#Alerts{
+	float:left;
+}
+
+
+div#AllTabs{
+          position:relative;
+          bottom:0px;
+          width:100%;
+		/*height:100px;     Edit for height of header*/
+}
+
+
+div#BigDiv{
+          width:100%;
+          text-align:center;
+          position: relative; 
+		  float: left;
+		  height: auto;
+          display: table-cell;
+          vertical-align: middle;
+}
+
+div#whoisSearchBar{
+	position: absolute !important;
+	bottom: 0 !important;
+	width: 99.7% !important;
+	height: 40px !important;
+}
+
+
+
+.dojoxGridSortBtnSingle{
+ 	visibility: hidden !important;
+}

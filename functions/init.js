@@ -1,5 +1,5 @@
 function initFunction(){
-	//alert(decalHoraire("2011-11-16 12:00"));
+	//alert(decalHoraire("yaaaa2011-11-16 12:00"));
 	//alert(navigator.userAgent);
 
 	

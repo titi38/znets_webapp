@@ -8,7 +8,7 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<script type="text/javascript" src="http://archive.dojotoolkit.org/dojo-2013-08-01/dojotoolkit/dojo/dojo.js" data-dojo-config="isDebug: true, parseOnLoad: true"></script>
+<script type="text/javascript" src="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojo/dojo.js" data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 <script>dojoConfig = { has: {"dojo-firebug": true, "dojo-debug-messages": true}, parseOnLoad: true }</script>
 
 <script type="text/javascript">
@@ -42,17 +42,17 @@
 <script type="text/javascript">require("dojox/widget/Dialog")</script>
 <script type="text/javascript">require("dojo/data/ItemFileReadStore")</script-->
 
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dijit/themes/claro/claro.css"/>
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojox/widget/Calendar/Calendar.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dijit/themes/claro/claro.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojox/widget/Calendar/Calendar.css"/>
 
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojox/form/resources/RangeSlider.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojox/form/resources/RangeSlider.css"/>
 
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojox/widget/Dialog/Dialog.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojox/widget/Dialog/Dialog.css"/>
 
 
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojo/resources/dojo.css"/>
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dijit/themes/tundra/tundra.css"/>
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojox/form/resources/RangeSlider.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojo/resources/dojo.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dijit/themes/tundra/tundra.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojox/form/resources/RangeSlider.css"/>
 
 
 <!--script type="text/javascript" src="function-min.js"></script-->
@@ -78,13 +78,13 @@
 <link rel="stylesheet" href="styles/dijitProgressBar.css"/>
 
 <!--link rel="stylesheet" href="dojo/dojo/resources/dojo.css"/-->
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"/>
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css"/>
 
-<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-07-01/dojotoolkit/dojox/layout/resources/ExpandoPane.css"/>
+<link rel="stylesheet" href="http://archive.dojotoolkit.org/dojo-2013-10-01/dojotoolkit/dojox/layout/resources/ExpandoPane.css"/>
 
 
-<link rel="shortcut icon" type="image/ico" href="favicon.ico" />
+<link rel="shortcut icon" type="image/ico" href="images/favicon.ico" />
 
 
 <script type="text/javascript" src="functions/charting.js"></script>
@@ -726,7 +726,6 @@
 					*/
 					startupCount++;
 						if(startupCount == 4){
-						BANC_TEST = this;
 						var selectedW = this.selectedChildWidget;
 						console.log("=============================> startup");
 						setActiveTabDojo(this.selectedChildWidget);
@@ -880,7 +879,6 @@
 												require(["dojo/domReady!"], function(){
 													
 														alert("domReady");
-														alert(":::"+BANC_TEST.selectedNode);
 														current_shown_graph_index["Global"] = graphIndexFromTreePath("Global");
 														clickTitreOpen(graphIndexFromTreePath("Global"),"Global");
 														//alert("ok22222");
@@ -893,7 +891,6 @@
 												alert(this.getNodesByItem(pTFL[pTFL.length-3]));
 												try{this.getNodesByItem(pTFL[pTFL.length-3]).focusFirstChild(); alert("3 ok");}catch(e){alert(">>>>3")}
 												//this.set("selectedItem", pTFL[pTFL.length-1]);
-												alert(BANC_TEST.selectedNode);
 												alert("ok");
 												current_shown_graph_index["Global"] = graphIndexFromTreePath("Global");
 												clickTitreOpen(graphIndexFromTreePath("Global"),"Global");*/

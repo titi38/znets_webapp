@@ -261,7 +261,7 @@
 		// compteur de "startup" de la tab container ( lancer le click on tree au 4eme startup qui est le dernier)
 		var startupCount = 0;
 		
-		askWhere = "";//"/hell/";
+		askWhere = "";/*"/hell/";*/
 		
 		divSizePercent = "80%";
 		

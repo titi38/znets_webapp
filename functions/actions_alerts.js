@@ -70,10 +70,10 @@ function clickOnAlert(element){
 //				if( tr.getAttribute("SUSPICIOUS") == "true"){
 				if( element.attr("alertType") == "SUSPICIOUS"){
 					try{
-						if( JsonAlert.data[0].details.split('IP address: ')[1].split('type:')[0].length < JsonAlert.data[0].details.split('IP address: ')[1].split('\nhostname:')[0].length )
-							document.getElementById("ipext").value= JsonAlert.data[0].details.split('IP address: ')[1].split('type:')[0];
+						if( JsonAlert.details.split('IP address: ')[1].split('type:')[0].length < JsonAlert.details.split('IP address: ')[1].split('\nhostname:')[0].length )
+							document.getElementById("ipext").value= JsonAlert.details.split('IP address: ')[1].split('type:')[0];
 						else
-							document.getElementById("ipext").value= JsonAlert.data[0].details.split('IP address: ')[1].split('\nhostname:')[0];
+							document.getElementById("ipext").value= JsonAlert.details.split('IP address: ')[1].split('\nhostname:')[0];
 						document.getElementById("ipext").onchange();	
 					}catch(e){}
 				}
@@ -83,19 +83,20 @@ function clickOnAlert(element){
 //				if( tr.getAttribute("SCAN") == "true"){
 				if( element.attr("alertType") == "SCAN"){
 					try{
-						document.getElementById("ipext").value= JsonAlert.data[0].details.split(' host ')[2].split(' ')[0];
+						document.getElementById("ipext").value= JsonAlert.details.split(' host ')[2].split(' ')[0];
 						document.getElementById("ipext").onchange();	
 
 					}catch(e){}
 				}
 				
 				
-				var text = document.createTextNode(JsonAlert.data[0].details);
+				var text = document.createTextNode(JsonAlert.details);
 				area.appendChild(text);
 				
-
+				
 				dialogLogs.setAttribute( 'title', '<center>Alert raised by  '+localhost+'<br> on '+date.split(" ")[0]+' at '+date.split(" ")[1]+'<center>' );	
 				//dialogLogs.domNode.title = '<center>Alert raised by  '+localhost+'<br> on '+date.split(" ")[0]+' at '+date.split(" ")[1]+'<center>'  ;	
+				
 				
 				
 				/*current_Alerts_TR = element ;

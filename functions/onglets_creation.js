@@ -110,6 +110,13 @@ function addNewDataTab(){
 	return "Results"+j;
 	*/
 	AjouterOnglet("Results"+j, true, true, false, "" );
+	
+	require(["dojo/ready","dijit/registry"], function(ready, registry){
+		ready(function(){
+			registry.byId('RawDataTabContainer').selectChild(registry.byId("DivResults"+j));
+		});
+	});
+	
 	//document.getElementById("Results"+j).onclick();
 	return "Results"+j;
 }
@@ -2787,7 +2794,7 @@ function ChargerLogs(){
 												{ "name": "Detail", "field": "_item", 'width': '90px',  formatter: function(item){ 
 																							if(item.detail+"" != "")
 																								return new Button({ label: "<img src='images/more.png' title='Alert' width='20' height='20'/>", onClick:function(){
-																											BANC_TEST = item;
+																										
 																											clickLoupe(item.severity[0], item.detail[0], item.msg[0], item.date[0]); 
 																											//clickOnAlert(this);
 																											//addNewIpTab(item.ip);
@@ -2846,9 +2853,68 @@ function ChargerLogs(){
 													},
 												document.getElementById("TabLogsDiv"));
 													
+												
+												
+												aspect.after(grid, "resize", function() {
+													
+													grid.scrollToRow(grid.rowCount);  
+													
+													var compt = 0
+													var finalCompt = null;
+													
+													aspect.after(grid, "onStyleRow", function(e, item) {
+														
+														if( item[0].index == grid.rowCount-1 ){
+															grid.scrollToRow(grid.rowCount)
+															
+															compt++;
+															finalCompt = compt;
+															
+															aspect.after(grid, "onStyleRow", function(e, item) {
+																if( item[0].index == grid.rowCount-(finalCompt+1) ){
+																	alert(grid.rowCount);
+																	setTimeout("grid.scrollToRow(grid.rowCount);", 12000);
+																	//grid.scrollToRow(grid.rowCount);
+																}
+															});
+															
+														}else{
+															compt++;
+													
+															console.log("item: "+item.length+" | index: "+item[0].index+" | count: "+grid.rowCount);
+														}
+														
+														if( finalCompt != null && item[0].index == grid.rowCount-(finalCompt+1) ){
+															BANC_TEST =grid;
+															console.log("=======================> "+finalCompt+" : "+grid.rowCount+" : "+item[0].index)
+															grid.scrollToRow(grid.rowCount);  
+														}
+														/*
+															console.log("item: "+item.length+" | index: "+item[0].index+" | count: "+grid.rowCount);
+														item[0].index;
+															
+															//grid.scrollToRow(grid.rowCount);  
+															//console.log("hii5iii");
+															//alert("hii5iii");*/
+													});
+													
+												});
+												
+												/*aspect.after(grid.getRowNode(grid.rowCount-1), "resize", function() {
+													//grid.scrollToRow(grid.rowCount);  
+													console.log("hiiiii");
+												});*/
+													
 												//Call startup() to render the grid
 												grid.startup();
+													
 												grid.resize();
+												
+												
+													/*aspect.after(grid, "onStyleRow", function(e, item) {
+														
+													});*/
+													
 											}
 										}	
 										
@@ -3384,7 +3450,6 @@ function ChargerData(Onglet, force){
 								menusObject.rowMenu.addChild(new dijit.MenuItem({
 																				label: "Copy values to search form",
 																				onClick: function(e){
-																					BANC_TEST = menusObject.rightClickedItem;
 																					//SelectIpData
 																					alert(menusObject.rightClickedItem.ip);
 																					/*addNewIpTab(menusObject.rightClickedItem.ip);
@@ -6184,6 +6249,7 @@ function localhostsTabCompletion(Json){
 						loadingMessage: "Loading data... Please wait.",
 						noDataMessage:  "No data found... ",
 						selectable: true,
+										sortFields: [{attribute: 'network', descending: false}, {attribute: 'ip', descending: false}],
 						plugins: {
 							/*pagination: {
 								nestedSorting: true,

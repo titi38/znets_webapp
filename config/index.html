@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+	<link rel="stylesheet" type="text/css" id="themeStyles" href="/dojo/dijit/themes/tundra/tundra.css">
+	<link rel="stylesheet" type="text/css"  href="/dojo/dojox/widget/Dialog/Dialog.css">
+
+	<style>body 
+		{
+		text-align:justify;
+		background-color:White ;
+		}
+
+.errorIcon {
+    width:18px;
+    height:18px;
+    background-repeat:no-repeat;
+    background: url("/images/errorIcon.gif");
+}
+.okIcon {
+    width:22px;
+    height:22px;
+    background-repeat:no-repeat;
+    background: url("/images/ok.gif");
+}
+
+
+.questionMessage {
+    width:25px;
+    height:25px;
+    background-repeat:no-repeat;
+    background: url("/images/config.png");
+}
+
+
+	</style>
+	<script type="text/javascript" src="/dojo/dojo/dojo.js" djConfig=" locale: 'en-us', parseOnLoad: true, isDebug:false"></script>
+	<script src='/dojo/dojo/ZNeTS.js'></script>
+	<script type="text/javascript" src="/config/configScript.js"></script>
+	</head>
+	<body class="tundra">
+	
+	 <img src="/images/ZNeTS.gif" />
+
+	 <h3>Local Networks Options</h3>
+	 <form method="POST" name="form" id="theForm" action="/setConfig" onSubmit="return validation(document.getElementById('form');">
+	
+		<p><b>localNetwork</b> <a href="javascript:infos('localNetwork');"><img src="/images/info.gif" width=35 border=0></a> (required)</p> 
+
+		<input type="hidden" value="" id="localHostList" name="localHostList">
+		<TABLE id="localhostTable" border="1">
+			<TR>
+				<TD><INPUT id="IP" type="text" value="ip/mask" onFocus="this.value='';" onBlur="if (this.value == '') this.value='ip/mask';" />  <INPUT id="name"  type="text" value="Local Network Name" onFocus="this.value='';" onBlur="if (this.value == '') this.value='Local Network Name';"/> </TD>
+				<TD>
+				<button id="buttonAddLNet" data-dojo-type="dijit.form.Button" type="button">Add Network
+					<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+						if (document.getElementById('IP').value != "ip/mask")
+						if (isValidIp(document.getElementById('IP').value)) 
+						{
+						  addRow3Col('localhostTable', document.getElementById('IP').value, document.getElementById('name').value ); 
+						  updateLocalNetworkListCombo ();
+						}
+						else  alert('Bad network IP address format');
+					</script>
+				</button>
+				</TD>
+			</TR>
+		</TABLE>
+
+		<button id="buttonRmLNet" data-dojo-type="dijit.form.Button" type="button">Delete Network
+			<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+				deleteRow ('localhostTable');  updateLocalNetworkListCombo ();
+			</script>
+		</button>
+		
+		
+		
+		<p><b>groupLocalNetwork</b> <a href="javascript:infos('groupLocalNetwork');"><img src="/images/info.gif" width=35 border=0></a> (required)</p> 
+		<input type="hidden" value="" id="groupLocalList" name="groupLocalList">
+		<TABLE id="groupLocalListTable" border="1">
+			<TR>
+				<TD><INPUT id="groupLocal" type="text" value="MyGroupName" onFocus="this.value='';" onBlur="if (this.value == '') this.value='MyGroupName';"/> 				<select  id="LocalNetworkNameSelect">
+				<!--option id="LocalNetworkName" size="50" >Default Local Network</option-->
+				</select> </TD>
+				<TD>
+
+				<button id="AddgroupLocalNetwork" data-dojo-type="dijit.form.Button" type="button">Add Group
+					<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+						if (document.getElementById('groupLocal').value != "MyGroupName")
+						addRow3Col('groupLocalListTable', document.getElementById('groupLocal').value, document.getElementById('LocalNetworkNameSelect').value );
+					</script>
+				</button>
+				</TD>
+			</TR>
+		</TABLE>
+
+		<button id="DelgroupLocalNetwork" data-dojo-type="dijit.form.Button" type="button">Delete Network
+			<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+				deleteRow ('groupLocalListTable');
+			</script>
+		</button>
+		
+	
+		<br /><br /><br />
+		<b>localHostToIgnore</b>  <a href="javascript:infos('localHostToIgnore');"><img src="/images/info.gif" width=35 border=0></a> <br /> <br />
+		<input type="hidden" value="" id="localhostsToIgnoreList" name="localhostsToIgnoreList">
+		<table id="ignoredLocalhostsTable" name="ignoredLocalhostsTable" border="1">
+		<TR>
+			<TD><INPUT id="localhostsToIgnore" type="text" size=70 value="ip/mask" onFocus="this.value='';" onBlur="if (this.value == '') this.value='ip/mask';" />
+			<TD>
+				<button id="AddIgnoredLocalhosts" data-dojo-type="dijit.form.Button" type="button">Add
+					<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+						 if (document.getElementById('localhostsToIgnore').value!="" && document.getElementById('localhostsToIgnore').value!="ip/mask") addRow2Col('ignoredLocalhostsTable', document.getElementById('localhostsToIgnore').value);
+					</script>
+				</button>
+			</TD>
+		</TR>
+		</table>
+		<table>
+		<button id="DelIgnoredLocalhosts" data-dojo-type="dijit.form.Button" type="button">Delete
+		  <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            deleteRow ('ignoredLocalhostsTable');
+		  </script>
+		</button>
+
+		<tr><td><br /></tr></td>
+		<h3> Miscellaneous</h3>
+		<tr><td><input type="checkbox" id="disableIpV4" name="disableIpV4"/> <b>disableIpV4</b> <a href="javascript:infos('disableIpV4');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		<tr><td><input type="checkbox" id="disableIpV6" name="disableIpV6"/> <b>disableIpV6</b> <a href="javascript:infos('disableIpV6');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		<tr><td><b>whoisCmd</b> <a href="javascript:infos('whoisCmd');"><img src="/images/info.gif" width=35 border=0></a> : <input type="text"  id="whoisCmd" name="whoisCmd" value="whoisCmd" />  </tr></td>
+		<tr><td><input type="checkbox" id="processCycleOnExit" name="processCycleOnExit" value="processCycleOnExit" /> <b>processCycleOnExit</b> <a href="javascript:infos('processCycleOnExit');"><img src="/images/info.gif" width=35 border=0></a> </tr></td>
+		</table>
+		<h3> LibPcap options</h3>
+		<table>
+		<tr><td><input type="checkbox" id="usePcap" name="usePcap" OnChange="checkboxTest();" /> <b>usePcap</b> <a href="javascript:infos('usePcap');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		<tr><td><p><b>pcapDevice</b> <a href="javascript:infos('pcapDevice');"><img src="/images/info.gif" width=35 border=0></a><p></tr></td>
+		<form method="get" name="theForm2" id="theForm2" action="setConfig" onSubmit="return validation(document.getElementById('theForm2');">
+		</table>
+		<input type="hidden" value="" id="pcapDeviceList" name="pcapDeviceList">
+		<TABLE id="pcapDeviceTable" width="auto" border="1">
+			<TR><TD> <div class="styled-select-up">	
+		<select id="listPcap">
+		<option  selected="selected" title="">Please choose an interface</option>
+		</select></div>
+        </TD><TD>
+		<button id="AddInterface" data-dojo-type="dijit.form.Button" type="button">Add Interface
+		  <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            if ( document.getElementById('listPcap').value != 'Please choose an interface' ) addRowItf('pcapDeviceTable', document.getElementById('listPcap').value, true);
+		  </script>
+		</button>
+		</TD>
+		</TR>
+		</TABLE>
+		<button id="DelInterface" data-dojo-type="dijit.form.Button" type="button">Remove Interface
+		  <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            deleteRowItf ('pcapDeviceTable');
+		  </script>
+		</button>
+		<br /><br />
+		<table>
+		<tr><td><b>pcapBufferSize</b> <a href="javascript:infos('pcapBufferSize');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="pcapBufferSize" name="pcapBufferSize"   /> </tr></td>
+		<tr><td><b>pcapFilter</b> <a href="javascript:infos('pcapFilter');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="pcapFilter" name="pcapFilter" value="filter"  />  </tr></td>
+		</table>
+		<h3> NetFlow options </h3>
+		
+		<table>
+		<input type="checkbox" id="useNetFlow" OnChange="checkboxTest();" name="useNetFlow" /> <b>useNetFlow  </b> <a href="javascript:infos('useNetFlow');"><img src="/images/info.gif" width=35 border=0></a><br />
+		<tr><td><b>netFlowDevice </b><a href="javascript:infos('netFlowDevice');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="netFlowDevice" name="netFlowDevice"   /> </td></tr>
+		<tr><td><b>netFlow Udp Port </b><a href="javascript:infos('netFlowUdpPort');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="netFlowUdpPort" name="netFlowUdpPort"   /></td></tr>
+		<tr><td><b>netFlowIpDataSources </b><a href="javascript:infos('netFlowIpDataSources');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="netFlowIpDataSources" name="netFlowIpDataSources" value="ip/mask" onFocus="this.value='';" onBlur="if (this.value == '') this.value='ip/mask';"  /></td></tr>
+		<tr><td><b>sendNflowToHost </b><a href="javascript:infos('sendNflowToHost');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="sendNflowToHost" name="sendNflowToHost" value="HOST"  /> </td></tr>
+		<tr><td><b>sendNflowToPort </b><a href="javascript:infos('sendNflowToPort');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="sendNflowToPort" name="sendNflowToPort" value="PORT"  /></td></tr>
+		</table>
+		
+		<h3>Database options</h3>
+
+		DBMS
+		<select name="DBMS" id="DBMS" OnChange="checkboxTest();">
+		</select><br /><br />
+
+		<table>
+		<tr><td><input type="checkbox" id="disableRecordDataflowToDatabase" OnChange="checkboxTest();" name="disableRecordDataflowToDatabase"   /><b>disableRecordDataflowToDatabase </b><a href="javascript:infos('disableRecordDataflowToDatabase');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		<tr><td><b>databaseUser </b><a href="javascript:infos('databaseUser');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="databaseUser" name="databaseUser" value="USER"   /> </td></tr>
+		<tr><td><b>databasePassword </b><a href="javascript:infos('databasePassword');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="databasePassword" name="databasePassword" value="PASSWORD"  /> </td></tr>
+		<tr><td><b>databaseIPaddr </b><a href="javascript:infos('databaseIPaddr');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" name="databaseIPaddr" id="databaseIPaddr" value="IP_ADDR"  /> </td></tr>
+		<tr><td><b>databasePort </b><a href="javascript:infos('databasePort');"><img src="/images/info.gif" width=35 border=0></a></td><td><input type="tel" id="databasePort" name="databasePort" value="PORT"  /> </td></tr>
+		<tr><td><b>databaseName </b><a href="javascript:infos('databaseName');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="databaseName" name="databaseName"   /> </td></tr>
+		<tr><td><b>databaseOthersOpts </b><a href="javascript:infos('databaseOthersOpts');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="databaseOthersOpts" name="databaseOthersOpts"   /> </td></tr>
+
+
+		<tr><TD colspan=2>
+
+<div dojoType="dijit.Dialog" id="errorDialog" title="Bad postgreSQL parameters" style="display: none">
+<div>
+ <span class="dijitInline errorIcon"></span>
+ <span id="errorMessage" class="dijitInline">ZNeTS can't connect to the postgreSQL database</span>
+</div><BR/>
+<button dojoType="dijit.form.Button" type="submit" onClick="dijit.byId('errorDialog').hide();">
+OK
+</button></div>
+
+<div dojoType="dijit.Dialog" id="okDialog" title="Valid postgreSQL parameters" style="display: none">
+<div>
+ <span class="dijitInline okIcon"></span>
+ <span id="errorMessage" class="dijitInline">ZNeTS successfully connect to the postgreSQL database</span>
+</div><BR/>
+<button dojoType="dijit.form.Button" type="submit" onClick="dijit.byId('okDialog').hide();">
+OK
+</button></div>
+		<button id="Test2PGS" data-dojo-type="dijit.form.Button" type="button">Test conn PGS
+		  <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+	if ( testPgConn (document.getElementById('databaseName').value,document.getElementById('databaseUser').value, document.getElementById('databasePassword').value,document.getElementById('databaseIPaddr').value,document.getElementById('databasePort').value,document.getElementById('databaseOthersOpts').value) )
+	  dijit.byId("okDialog").show()
+	else
+	  dijit.byId("errorDialog").show()
+
+		  </script>
+		</button>
+		</TD></tr>
+		<tr><td><b>databaseNbConn </b><a href="javascript:infos('databaseNbConn');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="databaseNbConn" name="databaseNbConn"   /> </td></tr>
+		<tr><td><input type="checkbox" id="databaseDataflowAutovacuum" name="databaseDataflowAutovacuum"   /> <b>databaseDataflowAutovacuum </b><a href="javascript:infos('databaseDataflowAutovacuum');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><b>databaseDataflowAutovacuumSize </b><a href="javascript:infos('databaseDataflowAutovacuumSize');"><img src="/images/info.gif" width=35 border=0></a> : </td><td>
+		<input type="tel" id="databaseDataflowAutovacuumSize" name="databaseDataflowAutovacuumSize" value="NBDAYS"  /> </td></tr>
+		<tr><td><input type="checkbox" id="databaseQueryTimeout" name="databaseQueryTimeout"   /> <b>databaseQueryTimeout </b><a href="javascript:infos('databaseQueryTimeout');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+
+		</table>
+
+		<h3>Webserver options</h3>
+		<table>
+		<tr><td><input type="checkbox" id="disableHttpdServer" name="disableHttpdServer" OnChange="checkboxTest();"    /> <b>disableHttpdServer </b><a href="javascript:infos('disableHttpdServer');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><b>httpdDevice </b><a href="javascript:infos('httpdDevice');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="httpdDevice" name="httpdDevice" value="ITF"  /> </td></tr>
+		<tr><td><b>httpdIpAllowed </b><a href="javascript:infos('httpdIpAllowed');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="httpdIpAllowed"  name="httpdIpAllowed" value="ip/mask" onFocus="this.value='';" onBlur="if (this.value == '') this.value='ip/mask';"  /> </td></tr>
+		<tr><td><b>httpdPort </b><a href="javascript:infos('httpdPort');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="httpdPort" name="httpdPort" value="PORT"  /> </td></tr>
+	
+		
+	<tr><td colspan=2><b><b>httpdAuthLoginPwd </b><a href="javascript:infos('httpdAuthLoginPwd');"><img src="/images/info.gif" width=35 border=0></a> : </td></tr>
+	<tr><td colspan=2><input type="hidden" value="" id="httpdAuthLoginPwdList" name="httpdAuthLoginPwdList">
+		<table id="httpdAuthLoginPwdTable" name="httpdAuthLoginPwdTable" value="myLogin" onFocus="this.value='';" onBlur="if (this.value == '') this.value='myLogin';">
+	<TR>
+		<TD><input type="text" id="httpdAuthLoginPwd" value="myLogin:myPassword" onFocus="this.value='';" onBlur="if (this.value == '') this.value='myLogin:myPassword';" size=70  />
+		</TD><TD>
+			<button id="AddHttpdAuthLoginPwd" data-dojo-type="dijit.form.Button" type="button">Add
+		    <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            if (document.getElementById('httpdAuthLoginPwd').value!="myLogin:myPassword" && document.getElementById('httpdAuthLoginPwd').value!="") addRow2Col('httpdAuthLoginPwdTable', document.getElementById('httpdAuthLoginPwd').value)</script>
+			</button>
+		</TD>
+		</TR>
+		</table>
+		<button id="DelHttpdAuthLoginPwd" data-dojo-type="dijit.form.Button" type="button">Delete
+		    <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            	    deleteRow ('httpdAuthLoginPwdTable');</script>
+		</button>
+</TD></TR>
+	
+		
+		<tr><td><input type="checkbox" id="httpdAuthPAM" name="httpdAuthPAM"  OnChange="checkboxTest();"  /> <b>httpdAuthPAM </b><a href="javascript:infos('httpdAuthPAM');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><b>PAMservice </b><a href="javascript:infos('PAMservice');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="PAMservice" name="PAMservice"   /> </td></tr>
+		<tr><td><b>httpdAuthorizedPamUsers </b></tr></td>
+		</table>
+		
+		<input type="hidden" value="" id="httpdAuthorizedPamUsersList" name="httpdAuthorizedPamUsersList">
+		<table id="httpdAuthorizedPamUsersTable" name="httpdAuthorizedPamUsersTable" value="myLogin" onFocus="this.value='';" onBlur="if (this.value == '') this.value='myLogin';">
+		<TR>
+		<TD><INPUT id="httpdAuthorizedPamUsers" type="text" size=70  />
+		</TD><TD>
+			<button id="AddHttpdAuthorizedPamUser" data-dojo-type="dijit.form.Button" type="button">Add
+		    <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            if (document.getElementById('httpdAuthorizedPamUsers').value!="myLogin" && document.getElementById('httpdAuthorizedPamUsers').value!="") addRow2Col('httpdAuthorizedPamUsersTable', document.getElementById('httpdAuthorizedPamUsers').value)</script>
+			</button>
+		</TD>
+		</TR>
+		</table>
+		
+		
+		<button id="DelHttpdAuthorizedPamUser" data-dojo-type="dijit.form.Button" type="button">Delete
+		    <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            deleteRow ('httpdAuthorizedPamUsersTable');</script>
+			</button>
+				
+
+	
+		<table>
+		<tr><td><input type="checkbox" id="httpdUseSSL" name="httpdUseSSL" OnChange="checkboxTest();" /> <b>httpdUseSSL </b><a href="javascript:infos('httpdUseSSL');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><b>httpdSSLcertFile </b><a href="javascript:infos('httpdSSLcertFile');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="httpdSSLcertFile" name="httpdSSLcertFile" value="FILE"  /> </td></tr>
+		<tr><td><b>httpdSSLcertPwd </b><a href="javascript:infos('httpdSSLcertPwd');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="httpdSSLcertPwd" name="httpdSSLcertPwd" value="PASSWORD"  /> </td></tr>
+		<tr><td><b>httpdSSLCaFile </b><a href="javascript:infos('httpdSSLCaFile');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="httpdSSLCaFile" name="httpdSSLCaFile" value="FILE"  /> </td></tr>
+		<tr><td><input type="checkbox" id="httpdAuthPeerSSL" name="httpdAuthPeerSSL" OnChange="checkboxTest();"  /> <b>httpdAuthPeerSSL </b><a href="javascript:infos('httpdAuthPeerSSL');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><b>httpdAuthorizedPeerDNs</b></tr></td>
+		</table>
+		<input type="hidden" value="" id="httpdAuthorizedPeerDNsList" name="httpdAuthorizedPeerDNsList">
+		<table id="httpdAuthorizedPeerDNsTable" name="httpdAuthorizedPeerDNsTable">
+		<TR>
+			<TD><INPUT id="httpdAuthorizedPeerDNs" type="text" size=70 value="My Certificate DN (/C=.../...)" onFocus="this.value='';" onBlur="if (this.value == '') this.value='My Certificate DN (/C=.../...)';"/>
+			</TD><TD>
+			<button id="AddHttpdAuthorizedPeerDN" data-dojo-type="dijit.form.Button" type="button">Add User
+		    <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            if ( document.getElementById('httpdAuthorizedPeer').value!="My Certificate DN (/C=.../...)" && document.getElementById('httpdAuthorizedPeerDNs').value!="") addRow2Col('httpdAuthorizedPeerDNsTable', document.getElementById('httpdAuthorizedPeerDNs').value)
+			</script>
+			</button></TD>
+		</TR>
+		</table>
+		
+		<button id="DelHttpdAuthorizedPeerDN" data-dojo-type="dijit.form.Button" type="button">Delete User(s)
+		    <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">deleteRow ('httpdAuthorizedPeerDNsTable');</script>
+		</button>
+
+		<table>
+		<tr><td><b>httpdNbThreads </b><a href="javascript:infos('httpdNbThreads');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="httpdNbThreads" name="httpdNbThreads" value="NB"  /> </td></tr>
+		</table>
+		
+		
+		<h3>Data files options</h3>
+		<table>
+		<tr><td><input type="checkbox" id="saveDataflowToFile" name="saveDataflowToFile"   /><b>saveDataflowToFile </b><a href="javascript:infos('saveDataflowToFile');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><b>dataflowFilePath </b><a href="javascript:infos('dataflowFilePath');"><img src="/images/info.gif" width=35 border=0></a> </td><td><input type="text" id="dataflowFilePath" name="dataflowFilePath" value="PATH"  /> <a href="javascript:infos('disableIpV4');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><input type="checkbox" id="dataflowFileRotateDaily" name="dataflowFileRotateDaily"   /> <b>dataflowFileRotateDaily </b><a href="javascript:infos('dataflowFileRotateDaily');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><input type="checkbox" id="dataflowFileRotateHourly" name="dataflowFileRotateHourly"   /><b>dataflowFileRotateHourly </b><a href="javascript:infos('dataflowFileRotateHourly');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		</table>
+		
+		
+		<h3>Aggregation options</h3>
+		<table>
+		<tr><td><b>nbCollectCyclePerHour </b><a href="javascript:infos('nbCollectCyclePerHour');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="text" id="nbCollectCyclePerHour" name="nbCollectCyclePerHour"  /></td></tr>
+		<tr><td><input type="checkbox" id="aggregateTcpClientPorts" name="aggregateTcpClientPorts"   /><b>aggregateTcpClientPorts </b><a href="javascript:infos('aggregateTcpClientPorts');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		<tr><td><input type="checkbox" id="aggregateUdpClientPorts" name="aggregateUdpClientPorts"   /><b>aggregateUdpClientPorts </b><a href="javascript:infos('aggregateUdpClientPorts');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		</table>	
+		
+		<h3>Alerts configuration</h3>
+		<table>
+		<tr><td><b>alertMaxDest </b><a href="javascript:infos('alertMaxDest');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="alertMaxDest" name="alertMaxDest"   /> </td></tr>
+		<tr><td><b>whiteListLHostMaxDest </b><a href="javascript:infos('whiteListLHostMaxDest');"><img src="/images/info.gif" width=35 border=0></a></td><td><br /><textarea id="whiteListLHostMaxDest" name="whiteListLHostMaxDest" COLS="15" ROWS="6" ></textarea> </td></tr>
+		<tr><td><b>alertMaxInFlowByDest </b><a href="javascript:infos('alertMaxInFlowByDest');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="alertMaxInFlowByDest" name="alertMaxInFlowByDest"   /> </td></tr>
+		<tr><td><b>alertMaxOutFlowByDest </b><a href="javascript:infos('alertMaxOutFlowByDest');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="alertMaxOutFlowByDest" name="alertMaxOutFlowByDest"   /> </td></tr>
+		<tr><td><b>whiteListLHostInc </b><a href="javascript:infos('whiteListLHostInc');"><img src="/images/info.gif" width=35 border=0></a></td><td><br /><textarea type="tel" id="whiteListLHostInc" name="whiteListLHostInc"  COLS="100" ROWS="13"></textarea> </td></tr>
+		<tr><td><b>whiteListLHostOut </b><a href="javascript:infos('whiteListLHostOut');"><img src="/images/info.gif" width=35 border=0></a></td><td><br /><textarea id="whiteListLHostOut" name="whiteListLHostOut" COLS="100" ROWS="13" ></textarea></td></tr>
+		<tr><td><b>alertMaxMultOutScanDest </b><a href="javascript:infos('alertMaxMultOutScanDest');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="alertMaxMultOutScanDest" name="alertMaxMultOutScanDest"   /> </td></tr>
+		<tr><td><b>whiteListLHost </b><a href="javascript:infos('whiteListLHost');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><br /><textarea type="tel" id="whiteListLHost" name="whiteListLHost"  COLS="100" ROWS="13"></textarea> </td></tr>
+		<tr><td><b>whiteListEHost </b><a href="javascript:infos('whiteListEHost');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><br /><textarea type="tel" id="whiteListEHost" name="whiteListEHost"  COLS="100" ROWS="13"></textarea> </td></tr>
+		<tr><td><b>alertMaxExtSMTPtraffic </b><a href="javascript:infos('alertMaxExtSMTPtraffic');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="alertMaxExtSMTPtraffic" name="alertMaxExtSMTPtraffic"   /> </td></tr>
+		<tr><td><b>checkDNSquery </b><a href="javascript:infos('checkDNSquery');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="checkbox" id="checkDNSquery" name="checkDNSquery" /> </td></tr>
+		<tr><td><b>externalDNSLists </b><a href="javascript:infos('externalDNSLists');"><img src="/images/info.gif" width=35 border=0></a></td><td><textarea type="tel" id="externalDNSLists" name="externalDNSLists"  COLS="100" ROWS="13" ></textarea> </td></tr>
+		<tr><td><input type="checkbox" id="checkMacAddress" name="checkMacAddress"   /> <b>checkMacAddress </b><a href="javascript:infos('checkMacAddress');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		<tr><td><b>whiteListDupIp </b><a href="javascript:infos('whiteListDupIp');"><img src="/images/info.gif" width=35 border=0></a></td><td><textarea type="tel" id="whiteListDupIp" name="whiteListDupIp"  COLS="100" ROWS="13" ></textarea> </td></tr>
+		<tr><td><b>ipMaxLeaseTime </b><a href="javascript:infos('ipMaxLeaseTime');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="ipMaxLeaseTime" name="ipMaxLeaseTime"   /> </td></tr>
+		<tr><td><input type="checkbox" id="paranoiacSuspiciousMode" name="paranoiacSuspiciousMode"   /> <b>paranoiacSuspiciousMode </b><a href="javascript:infos('paranoiacSuspiciousMode');"><img src="/images/info.gif" width=35 border=0></a></td></tr>
+		</table>
+		
+		<h3>Mail Alert Configuration</h3>
+		<table>
+		<tr><td><input type="checkbox" id="sendMailOnAlert" name="sendMailOnAlert"  OnChange="checkboxTest();" /> <b>sendMailOnAlert  </b><a href="javascript:infos('sendMailOnAlert');"><img src="/images/info.gif" width=35 border=0></a> </tr></td>
+		<tr><td><b>mailServer </b><a href="javascript:infos('mailServer');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="mailServer" name="mailServer"   /> </td></tr>
+		<tr><td><b>mailSrc </b><a href="javascript:infos('mailSrc');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="mailSrc" name="mailSrc"   /> </td></tr>
+		<tr><td><b>mailDst </b><a href="javascript:infos('mailDst');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="mailDst" name="mailDst"   /> </td></tr>
+		<tr><td><b>mailHostname </b><a href="javascript:infos('mailHostname');"><img src="/images/info.gif" width=35 border=0></a> : </td><td><input type="tel" id="mailHostname" name="mailHostname"   /> </td></tr>
+		</table>
+		
+		<h3>Log Configuration</h3>
+		<table>
+
+		
+		<tr><td><input type="checkbox" id="verboseMode" name="verboseMode"   /> <b>verboseMode </b><a href="javascript:infos('verboseMode');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		<tr><td><input type="checkbox" id="useSyslogd" name="useSyslogd"    /> <b>useSyslogd </b><a href="javascript:infos('useSyslogd');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		</table>
+		<h3>Download updated Suspicious Hosts List</h3>
+		<tr><td><input type="checkbox" id="autoupdate" name="autoupdate"   /> <b>autoupdate </b><a href="javascript:infos('autoupdate');"><img src="/images/info.gif" width=35 border=0></a></tr></td>
+		<input type="hidden" value="" id="suspiciousList" name="suspiciousList">
+		<table id="suspiciousListTable" name="suspiciousListTable">
+		<TR><TD colspan=3></TD></TR>
+		</table>
+			<TD><TR>
+			<button id="DelList" data-dojo-type="dijit.form.Button" type="button">Delete List(s)
+		    <script type="dojo/method" data-dojo-event="onClick" data-dojo-args="evt">
+            deleteRow ('suspiciousListTable');
+			</script>
+			</button>
+			</TD></TR>
+		<br /><br /><br />
+
+<div dojoType="dijit.Dialog" id="confirmSaveChangeDialog" title="Confirm Save Changes" style="display: none">
+<div>
+ <span class="dijitInline questionMessage"></span>
+ <span id="errorMessage" class="dijitInline">ZNeTS will now update your configuration files.<BR>Do you want to proceed ?</span>
+</div><BR/>
+<div id="2cols">
+<div style="float: left;">
+<button dojoType="dijit.form.Button" type="submit" onClick="dijit.byId('confirmSaveChangeDialog').hide(); sendConf();">
+Yes
+</button></div>
+<div style="float: right;">
+<button dojoType="dijit.form.Button" type="submit" onClick="dijit.byId('confirmSaveChangeDialog').hide();">
+No
+</button></div>
+</div></div>
+
+		<input type="button" value="Save" onclick="dijit.byId('confirmSaveChangeDialog').show();" />
+		</form>
+
+	</body>
+</html>

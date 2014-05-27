@@ -14,7 +14,7 @@ function chargeZoomVar(chart,  idNum, json) {
 
 
 function zoomYAxis(id){
-
+	
 	try{
 		
 		var scale = dijit.byId(id).value
@@ -59,8 +59,10 @@ function zoomYAxis(id){
 		
 		changeAxes(chart$, divIdNum$, json$);
 		
-		setCursor(chart$.node.id, "rect");
+		setCursors(chart$.node.id, "rect");
+		
 	}catch(e){
+		//alert("errr :\n"+e+" \n alert raised in zooms.js at line "+e.lineNumber);
 	}
 }
 

@@ -1138,7 +1138,7 @@ function myGetIconClassFunction(item, opened)
 //var innerHTMLDivGraphsLocalhosts = function(Onglet){
 function createLocalhostContentPaneSContent(Onglet){
 	
-	require(["dojo/ready", "dijit/registry", "dijit/layout/BorderContainer", "dojox/layout/ExpandoPane", "dijit/layout/ContentPane", "dijit/form/VerticalSlider", "dojo/domReady!"], function(ready, registry, BorderContainer, ExpandoPane, ContentPane, VerticalSlider){
+	require(["dojo/ready", "dijit/registry", "dijit/layout/BorderContainer", "dojox/layout/ExpandoPane", "dijit/layout/ContentPane", "dijit/form/VerticalSlider", "dijit/form/VerticalRule", "dojo/dom-construct", "dojo/parser", "dojo/dom", "dojo/domReady!"], function(ready, registry, BorderContainer, ExpandoPane, ContentPane, VerticalSlider, VerticalRule, domConstruct, parser, dom){
 		ready(function(){	
 			
 			/*
@@ -1408,6 +1408,10 @@ function createLocalhostContentPaneSContent(Onglet){
 				ETR.appendChild(ETD);
 				
 				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
+				
+				
 				ETD = document.createElement("td");
 				ETD.setAttribute('align',"center");
 				ETR.appendChild(ETD);
@@ -1419,22 +1423,62 @@ function createLocalhostContentPaneSContent(Onglet){
 				ETD.appendChild(E2);
 				
 					try{
-						dojo.require("dijit.form.VerticalSlider");
 						dojo.ready(function(){
-							var vertical = dojo.byId("zoomProto"+Onglet);
-							var slider = new VerticalSlider({
+							
+							// Create the rules
+							var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomProto"+Onglet), "first");
+							var leftSliderRules = new VerticalRule({
+								container: "leftDecoration",
+								count: 11,
+								style: "width:5px;",
+								ruleStyle: "border-color:gray;"
+							}, leftRulesNode);
+							
+							var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomProto"+Onglet), "first");
+							var rightSliderRules = new VerticalRule({
+								container: "rightDecoration",
+								count: 11,
+								style: "width:5px;",
+								ruleStyle: "border-color:gray;"
+							}, rightRulesNode);
+					 
+					
+							// Create the vertical slider programmatically
+							var vertSlider = new VerticalSlider({
 								//Class: "zoomAxisSlider",
 								intermediateChanges: true,
 								style: "height: 100%;",
 								name: "zoomProto"+Onglet,
+								id: "zoomProto"+Onglet,
+								value: 0, 
+								minimum: 0, 
+								maximum: 10, 
+								discreteValues: 11,
 								onChange: function(evt){
-									chargeZoomVar(Chart12[Onglet], 2 , JsonObj12[Onglet]);
+									chargeZoomVar(ChartLocalhost[2][Onglet], 2 , JsonObjLocalhost[2][Onglet]);
 									zoomYAxis("zoomProto"+Onglet);
 								}
-							}, vertical);
+							}, "zoomProto"+Onglet);
+				
+							// Start up the widgets
+							vertSlider.startup();
+							leftSliderRules.startup();
+							rightSliderRules.startup();
+							
 						});
 					}catch(e){alert(e);}
-					
+				
+
+				/*<div id="zoomTrafficGlobal"
+					style="height: 100%;" 
+					intermediateChanges="true"
+					onChange="chargeZoomVar(ChartNetwork[1]['Global'], 1, JsonObjNetwork[1]['Global']); zoomYAxis('zoomTrafficGlobal');"
+					type="range"
+					data-dojo-type="dijit.form.VerticalSlider"
+					data-dojo-props="value: 0, minimum: 0, maximum: 10, discreteValues: 11">
+					<div data-dojo-type="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+					<div data-dojo-type="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+				</div>*/
 					
 				E1 = document.createElement("div");
 				E1.setAttribute('id',"DivChart2"+Onglet+"Accurate");
@@ -1522,29 +1566,15 @@ function createLocalhostContentPaneSContent(Onglet){
 				
 				
 				E1 = document.createElement("div");
+				E1.setAttribute('id',"DivChart3"+Onglet);
+				E1.setAttribute('style', "display: block;");
 				EE.appendChild(E1);
 				
-				E2 = document.createElement("div");
-				E2.setAttribute('style', "position : absolute; ");
-				E1.appendChild(E2);
-				
-				E3 =  document.createElement("font");
-				E3.setAttribute('id',"unit3"+Onglet);
-				E3.setAttribute('style',"margin-left: 30px;");
-				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
-				
-				E2 = document.createElement("div");
-				E2.setAttribute('style', "position : absolute; ");
-				E1.appendChild(E2);
-				
-				E3 =  document.createElement("font");
-				E3.setAttribute('id',"unitD3"+Onglet);
-				E3.setAttribute('style',"margin-left: 750px;");
-				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
 				
 				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				E2.setAttribute('cellspacing',"0");
+				E2.setAttribute('cellpadding',"0");
 				E1.appendChild(E2);
 				
 				E1 = document.createElement("tbody");
@@ -1554,40 +1584,101 @@ function createLocalhostContentPaneSContent(Onglet){
 				E1.appendChild(ETR);
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart3"+Onglet);
-				E2.setAttribute('style', "width: 800px; height: 500px; float:left; margin-left:1px;");
+				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
 				ETD.appendChild(E2);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('style',"border: solid 1px #759dc0;");
+				ETR.appendChild(ETD);
+				
+				
+				
+				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				ETD.appendChild(E2);
+				
+				E1 = document.createElement("tbody");
+				E2.appendChild(E1);
+				
+				ETR = document.createElement("tr");
+				ETR.setAttribute('height',"30px");
+				E1.appendChild(ETR);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETD.innerHTML = "<font><i><u>Zoom</u></i></font>"
+				ETR.appendChild(ETD);
+				
+				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
 				
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
 				ETR.appendChild(ETD);
+				
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"zoomLoc"+Onglet);
 				ETD.appendChild(E2);
-
-
-					try{
-						dojo.require("dojox.form.RangeSlider");
-						dojo.ready(function(){
-							var vertical = dojo.byId("zoomLoc"+Onglet);
-							var slider = new dojox.form.VerticalRangeSlider({
-								Class: "zoomAxisSlider",
-								intermediateChanges: false,
-								showButtons: false,
-								style: "height:450px; margin-left:5px; margin-right:50px;  float: left;",
-								name: "zoomLoc"+Onglet,
-								onChange: function(evt){
-									chargeZoomVar(Chart13[Onglet], 3,  JsonObj13[Onglet]);
-									zoomYAxis("zoomLoc"+Onglet);
-								}
-							}, vertical);
-						});
-					}catch(e){}
 				
+				
+				
+			
+				
+				try{
+					dojo.ready(function(){
+						
+						 // Create the rules
+						var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomLoc"+Onglet), "first");
+						var leftSliderRules = new VerticalRule({
+							container: "leftDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, leftRulesNode);
+						
+						var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomLoc"+Onglet), "first");
+						var rightSliderRules = new VerticalRule({
+							container: "rightDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, rightRulesNode);
+				 
+				
+						// Create the vertical slider programmatically
+						var vertSlider = new VerticalSlider({
+						   //Class: "zoomAxisSlider",
+							intermediateChanges: true,
+							style: "height: 100%;",
+							//name: "zoomLoc"+Onglet,
+							//id: "zoomLoc"+Onglet,
+							value: 0, 
+							minimum: 0, 
+							maximum: 10, 
+							discreteValues: 11,
+							onChange: function(evt){
+								chargeZoomVar(ChartLocalhost[3][Onglet], 3 , JsonObjLocalhost[3][Onglet]);
+								zoomYAxis("zoomLoc"+Onglet);
+							}
+						}, "zoomLoc"+Onglet);
+				
+						// Start up the widgets
+						vertSlider.startup();
+						leftSliderRules.startup();
+						rightSliderRules.startup();
+					
+					});
+				}catch(e){alert(e);}
 				
 				
 				
@@ -1659,33 +1750,18 @@ function createLocalhostContentPaneSContent(Onglet){
 				
 				EE = document.createElement("div");
 				
-				
-				
+
 				
 				E1 = document.createElement("div");
+				E1.setAttribute('id',"DivChart4"+Onglet);
+				E1.setAttribute('style', "display: block;");
 				EE.appendChild(E1);
 				
-				E2 = document.createElement("div");
-				E2.setAttribute('style', "position : absolute; ");
-				E1.appendChild(E2);
-				
-				E3 =  document.createElement("font");
-				E3.setAttribute('id',"unit4"+Onglet);
-				E3.setAttribute('style',"margin-left: 30px;");
-				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
-				
-				E2 = document.createElement("div");
-				E2.setAttribute('style', "position : absolute; ");
-				E1.appendChild(E2);
-				
-				E3 =  document.createElement("font");
-				E3.setAttribute('id',"unitD4"+Onglet);
-				E3.setAttribute('style',"margin-left: 750px;");
-				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
 				
 				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				E2.setAttribute('cellspacing',"0");
+				E2.setAttribute('cellpadding',"0");
 				E1.appendChild(E2);
 				
 				E1 = document.createElement("tbody");
@@ -1695,38 +1771,100 @@ function createLocalhostContentPaneSContent(Onglet){
 				E1.appendChild(ETR);
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart4"+Onglet);
-				E2.setAttribute('style', "width: 800px; height: 500px; float:left; margin-left:1px;");
+				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
 				ETD.appendChild(E2);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('style',"border: solid 1px #759dc0;");
+				ETR.appendChild(ETD);
+				
+				
+				
+				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				ETD.appendChild(E2);
+				
+				E1 = document.createElement("tbody");
+				E2.appendChild(E1);
+				
+				ETR = document.createElement("tr");
+				ETR.setAttribute('height',"30px");
+				E1.appendChild(ETR);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETD.innerHTML = "<font><i><u>Zoom</u></i></font>"
+				ETR.appendChild(ETD);
+				
+				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
 				
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
 				ETR.appendChild(ETD);
+				
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"zoomExt"+Onglet);
 				ETD.appendChild(E2);
 				
-					try{
-						dojo.require("dojox.form.RangeSlider");
-						dojo.ready(function(){
-							var vertical = dojo.byId("zoomExt"+Onglet);
-							var slider = new dojox.form.VerticalRangeSlider({
-								Class: "zoomAxisSlider",
-								intermediateChanges: false,
-								showButtons: false,
-								style: "height:450px; margin-left:5px; margin-right:50px;  float: left;",
-								name: "zoomExt"+Onglet,
-								onChange: function(evt){
-									chargeZoomVar(Chart14[Onglet], 4,  JsonObj14[Onglet] );
-									zoomYAxis("zoomExt"+Onglet);
-								}
-							}, vertical);
-						});
-					}catch(e){}
+				
+				
+				try{
+					dojo.ready(function(){
+						
+						// Create the rules
+						var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomExt"+Onglet), "first");
+						var leftSliderRules = new VerticalRule({
+							container: "leftDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, leftRulesNode);
+						
+						var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomExt"+Onglet), "first");
+						var rightSliderRules = new VerticalRule({
+							container: "rightDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, rightRulesNode);
+					
+				
+						// Create the vertical slider programmatically
+						var vertSlider = new VerticalSlider({
+							//Class: "zoomAxisSlider",
+							intermediateChanges: true,
+							style: "height: 100%;",
+							name: "zoomExt"+Onglet,
+							id: "zoomExt"+Onglet,
+							value: 0, 
+							minimum: 0, 
+							maximum: 10, 
+							discreteValues: 11,
+							onChange: function(evt){
+								chargeZoomVar(ChartLocalhost[4][Onglet], 4 , JsonObjLocalhost[4][Onglet]);
+								zoomYAxis("zoomExt"+Onglet);
+							}
+						}, "zoomExt"+Onglet);
+				
+						// Start up the widgets
+						vertSlider.startup();
+						leftSliderRules.startup();
+						rightSliderRules.startup();
+						
+					});
+				}catch(e){alert(e);}				
+				
 				
 				
 				
@@ -1762,7 +1900,7 @@ function createLocalhostContentPaneSContent(Onglet){
 //var innerHTMLDivGraphsNetworks = function(Onglet){
 function createNetworkContentPaneSContent(Onglet){
 	
-	require(["dojo/ready", "dijit/registry", "dijit/layout/BorderContainer", "dojox/layout/ExpandoPane", "dijit/layout/ContentPane", "dojo/domReady!"], function(ready, registry, BorderContainer, ExpandoPane, ContentPane){
+	require(["dojo/ready", "dijit/registry", "dijit/layout/BorderContainer", "dojox/layout/ExpandoPane", "dijit/layout/ContentPane", "dijit/form/VerticalSlider", "dijit/form/VerticalRule", "dojo/dom-construct", "dojo/parser", "dojo/dom", "dojo/domReady!"], function(ready, registry, BorderContainer, ExpandoPane, ContentPane, VerticalSlider, VerticalRule, domConstruct, parser, dom){
 		ready(function(){	
 			
 			/*
@@ -1859,7 +1997,7 @@ function createNetworkContentPaneSContent(Onglet){
 				E1.setAttribute('style', "display: block;");
 				EE.appendChild(E1);
 				
-				var E2 = document.createElement("div");
+				/*var E2 = document.createElement("div");
 				E2.setAttribute('style', "position : absolute; ");
 				E1.appendChild(E2);
 				
@@ -1877,9 +2015,12 @@ function createNetworkContentPaneSContent(Onglet){
 				E3.setAttribute('id',"unitD1"+Onglet);
 				E3.setAttribute('style',"margin-left: 750px;");
 				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
+				E2.appendChild(E3);*/
 				
-				E2 = document.createElement("table");
+				var E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				E2.setAttribute('cellspacing',"0");
+				E2.setAttribute('cellpadding',"0");
 				E1.appendChild(E2);
 				
 				E1 = document.createElement("tbody");
@@ -1891,40 +2032,103 @@ function createNetworkContentPaneSContent(Onglet){
 				E1.appendChild(ETR);
 				
 				var ETD = document.createElement("td");
+				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart1"+Onglet);
-				E2.setAttribute('style', "width: 800px; height: 500px; float:left; margin-left:1px;");
+				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
 				ETD.appendChild(E2);
 				
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('style',"border: solid 1px #759dc0;");
 				ETR.appendChild(ETD);
+				
+				
+				
+				
+				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				ETD.appendChild(E2);
+				
+				E1 = document.createElement("tbody");
+				E2.appendChild(E1);
+				
+				ETR = document.createElement("tr");
+				ETR.setAttribute('height',"30px");
+				E1.appendChild(ETR);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETD.innerHTML = "<font><i><u>Zoom</u></i></font>"
+				ETR.appendChild(ETD);
+				
+				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
+				
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETR.appendChild(ETD);
+				
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"zoomTraffic"+Onglet);
 				ETD.appendChild(E2);
 				
 				
-					try{
-						dojo.require("dojox.form.RangeSlider");
-						dojo.ready(function(){
-							var vertical = dojo.byId("zoomTraffic"+Onglet);
-							var slider = new dojox.form.VerticalRangeSlider({
-								Class: "zoomAxisSlider",
-								intermediateChanges: false,
-								showButtons: false,
-								style: "height:450px; margin-left:5px; margin-right:50px;  float: left;",
-								name: "zoomTraffic"+Onglet,
-								onChange: function(evt){
-									chargeZoomVar(Chart1[Onglet], 1,  JsonObj1[Onglet] );
-									zoomYAxis("zoomTraffic"+Onglet);
-								}
-							}, vertical);
-						});
-					}catch(e){alert(e);}
 				
+				try{
+					dojo.ready(function(){
+						
+						// Create the rules
+						var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomTraffic"+Onglet), "first");
+						var leftSliderRules = new VerticalRule({
+							container: "leftDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, leftRulesNode);
+						
+						var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomTraffic"+Onglet), "first");
+						var rightSliderRules = new VerticalRule({
+							container: "rightDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, rightRulesNode);
+					
+				
+						// Create the vertical slider programmatically
+						var vertSlider = new VerticalSlider({
+							//Class: "zoomAxisSlider",
+							intermediateChanges: true,
+							style: "height: 100%;",
+							name: "zoomTraffic"+Onglet,
+							id: "zoomTraffic"+Onglet,
+							value: 0, 
+							minimum: 0, 
+							maximum: 10, 
+							discreteValues: 11,
+							onChange: function(evt){
+								chargeZoomVar(ChartNetwork[1][Onglet], 1 , JsonObjNetwork[1][Onglet]);
+								zoomYAxis("zoomTraffic"+Onglet);
+							}
+						}, "zoomTraffic"+Onglet);
+				
+						// Start up the widgets
+						vertSlider.startup();
+						leftSliderRules.startup();
+						rightSliderRules.startup();
+						
+					});
+				}catch(e){alert(e);}				
+				
+				
+
 				
 				E1 = document.createElement("div");
 				E1.setAttribute('id',"DivChart1"+Onglet+"Accurate");
@@ -2008,7 +2212,7 @@ function createNetworkContentPaneSContent(Onglet){
 				E1.setAttribute('style', "display: block;");
 				EE.appendChild(E1);
 				
-				E2 = document.createElement("div");
+				/*E2 = document.createElement("div");
 				E2.setAttribute('style', "position : absolute; ");
 				E1.appendChild(E2);
 				
@@ -2026,9 +2230,12 @@ function createNetworkContentPaneSContent(Onglet){
 				E3.setAttribute('id',"unitD2"+Onglet);
 				E3.setAttribute('style',"margin-left: 750px;");
 				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
+				E2.appendChild(E3);*/
 				
 				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				E2.setAttribute('cellspacing',"0");
+				E2.setAttribute('cellpadding',"0");
 				E1.appendChild(E2);
 				
 				E1 = document.createElement("tbody");
@@ -2038,37 +2245,99 @@ function createNetworkContentPaneSContent(Onglet){
 				E1.appendChild(ETR);
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart2"+Onglet);
-				E2.setAttribute('style', "width: 800px; height: 500px; float:left; margin-left:1px;");
+				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
 				ETD.appendChild(E2);
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('style',"border: solid 1px #759dc0;");
 				ETR.appendChild(ETD);
+				
+				
+				
+				
+				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				ETD.appendChild(E2);
+				
+				E1 = document.createElement("tbody");
+				E2.appendChild(E1);
+				
+				ETR = document.createElement("tr");
+				ETR.setAttribute('height',"30px");
+				E1.appendChild(ETR);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETD.innerHTML = "<font><i><u>Zoom</u></i></font>"
+				ETR.appendChild(ETD);
+				
+				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
+				
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETR.appendChild(ETD);
+				
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"zoomPackets"+Onglet);
 				ETD.appendChild(E2);
 				
-					try{
-						dojo.require("dojox.form.RangeSlider");
-						dojo.ready(function(){
-							var vertical = dojo.byId("zoomPackets"+Onglet);
-							var slider = new dojox.form.VerticalRangeSlider({
-								Class: "zoomAxisSlider",
-								intermediateChanges: false,
-								showButtons: false,
-								style: "height:450px; margin-left:5px; margin-right:50px;  float: left;",
-								name: "zoomPackets"+Onglet,
-								onChange: function(evt){
-									chargeZoomVar(Chart2[Onglet], 2,  JsonObj2[Onglet]);
-									zoomYAxis("zoomPackets"+Onglet);
-								}
-							}, vertical);
-						});
-					}catch(e){alert(e);}
+				
+				
+				try{
+					dojo.ready(function(){
+						
+						// Create the rules
+						var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomPackets"+Onglet), "first");
+						var leftSliderRules = new VerticalRule({
+							container: "leftDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, leftRulesNode);
+						
+						var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomPackets"+Onglet), "first");
+						var rightSliderRules = new VerticalRule({
+							container: "rightDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, rightRulesNode);
+					
+				
+						// Create the vertical slider programmatically
+						var vertSlider = new VerticalSlider({
+							//Class: "zoomAxisSlider",
+							intermediateChanges: true,
+							style: "height: 100%;",
+							name: "zoomPackets"+Onglet,
+							id: "zoomPackets"+Onglet,
+							value: 0, 
+							minimum: 0, 
+							maximum: 10, 
+							discreteValues: 11,
+							onChange: function(evt){
+								chargeZoomVar(ChartNetwork[2][Onglet], 2 , JsonObjNetwork[2][Onglet]);
+								zoomYAxis("zoomPackets"+Onglet);
+							}
+						}, "zoomPackets"+Onglet);
+				
+						// Start up the widgets
+						vertSlider.startup();
+						leftSliderRules.startup();
+						rightSliderRules.startup();
+						
+					});
+				}catch(e){alert(e);}
 				
 				
 				E1 = document.createElement("div");
@@ -2152,7 +2421,7 @@ function createNetworkContentPaneSContent(Onglet){
 				E2.setAttribute('style', "position : absolute; ");
 				E1.appendChild(E2);
 				
-				E3 =  document.createElement("font");
+				/*E3 =  document.createElement("font");
 				E3.setAttribute('id',"unit3"+Onglet);
 				E3.setAttribute('style',"margin-left: 30px;");
 				E3.setAttribute('size', 1);
@@ -2166,9 +2435,12 @@ function createNetworkContentPaneSContent(Onglet){
 				E3.setAttribute('id',"unitD3"+Onglet);
 				E3.setAttribute('style',"margin-left: 750px;");
 				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
+				E2.appendChild(E3);*/
 				
 				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				E2.setAttribute('cellspacing',"0");
+				E2.setAttribute('cellpadding',"0");
 				E1.appendChild(E2);
 				
 				E1 = document.createElement("tbody");
@@ -2178,38 +2450,98 @@ function createNetworkContentPaneSContent(Onglet){
 				E1.appendChild(ETR);
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart3"+Onglet);
-				E2.setAttribute('style', "width: 800px; height: 500px; float:left; margin-left:1px;");
+				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
 				ETD.appendChild(E2);
 				
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('style',"border: solid 1px #759dc0;");
 				ETR.appendChild(ETD);
+				
+				
+				
+				
+				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				ETD.appendChild(E2);
+				
+				E1 = document.createElement("tbody");
+				E2.appendChild(E1);
+				
+				ETR = document.createElement("tr");
+				ETR.setAttribute('height',"30px");
+				E1.appendChild(ETR);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETD.innerHTML = "<font><i><u>Zoom</u></i></font>"
+				ETR.appendChild(ETD);
+				
+				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
+				
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETR.appendChild(ETD);
+				
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"zoomLoc"+Onglet);
 				ETD.appendChild(E2);
 				
-					try{
-						dojo.require("dojox.form.RangeSlider");
-						dojo.ready(function(){
-							var vertical = dojo.byId("zoomLoc"+Onglet);
-							var slider = new dojox.form.VerticalRangeSlider({
-								Class: "zoomAxisSlider",
-								intermediateChanges: false,
-								showButtons: false,
-								style: "height:450px; margin-left:5px; margin-right:50px;  float: left;",
-								name: "zoomLoc"+Onglet,
-								onChange: function(evt){
-									chargeZoomVar(Chart3[Onglet], 3,  JsonObj3[Onglet] );
-									zoomYAxis("zoomLoc"+Onglet);
-								}
-							}, vertical);
-						});
-					}catch(e){alert(e);}
+				try{
+					dojo.ready(function(){
+						
+						// Create the rules
+						var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomLoc"+Onglet), "first");
+						var leftSliderRules = new VerticalRule({
+							container: "leftDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, leftRulesNode);
+						
+						var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomLoc"+Onglet), "first");
+						var rightSliderRules = new VerticalRule({
+							container: "rightDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, rightRulesNode);
+					
+				
+						// Create the vertical slider programmatically
+						var vertSlider = new VerticalSlider({
+							//Class: "zoomAxisSlider",
+							intermediateChanges: true,
+							style: "height: 100%;",
+							name: "zoomLoc"+Onglet,
+							id: "zoomLoc"+Onglet,
+							value: 0, 
+							minimum: 0, 
+							maximum: 10, 
+							discreteValues: 11,
+							onChange: function(evt){
+								chargeZoomVar(ChartNetwork[3][Onglet], 3 , JsonObjNetwork[3][Onglet]);
+								zoomYAxis("zoomLoc"+Onglet);
+							}
+						}, "zoomLoc"+Onglet);
+				
+						// Start up the widgets
+						vertSlider.startup();
+						leftSliderRules.startup();
+						rightSliderRules.startup();
+						
+					});
+				}catch(e){alert(e);}
 				
 				
 				// create a ContentPane as the center pane in the BorderContainer
@@ -2278,7 +2610,7 @@ function createNetworkContentPaneSContent(Onglet){
 				E1 = document.createElement("div");
 				EE.appendChild(E1);
 				
-				E2 = document.createElement("div");
+				/*E2 = document.createElement("div");
 				E2.setAttribute('style', "position : absolute; ");
 				E1.appendChild(E2);
 				
@@ -2296,9 +2628,12 @@ function createNetworkContentPaneSContent(Onglet){
 				E3.setAttribute('id',"unitD4"+Onglet);
 				E3.setAttribute('style',"margin-left: 750px;");
 				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
+				E2.appendChild(E3);*/
 				
 				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				E2.setAttribute('cellspacing',"0");
+				E2.setAttribute('cellpadding',"0");
 				E1.appendChild(E2);
 				
 				E1 = document.createElement("tbody");
@@ -2308,38 +2643,99 @@ function createNetworkContentPaneSContent(Onglet){
 				E1.appendChild(ETR);
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart4"+Onglet);
-				E2.setAttribute('style', "width: 800px; height: 500px; float:left; margin-left:1px;");
+				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
 				ETD.appendChild(E2);
 				
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('style',"border: solid 1px #759dc0;");
 				ETR.appendChild(ETD);
+				
+				
+				
+				
+				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				ETD.appendChild(E2);
+				
+				E1 = document.createElement("tbody");
+				E2.appendChild(E1);
+				
+				ETR = document.createElement("tr");
+				ETR.setAttribute('height',"30px");
+				E1.appendChild(ETR);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETD.innerHTML = "<font><i><u>Zoom</u></i></font>"
+				ETR.appendChild(ETD);
+				
+				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
+				
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETR.appendChild(ETD);
+				
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"zoomExt"+Onglet);
 				ETD.appendChild(E2);
 				
-					try{
-						dojo.require("dojox.form.RangeSlider");
-						dojo.ready(function(){
-							var vertical = dojo.byId("zoomExt"+Onglet);
-							var slider = new dojox.form.VerticalRangeSlider({
-								Class: "zoomAxisSlider",
-								intermediateChanges: false,
-								showButtons: false,
-								style: "height:450px; margin-left:5px; margin-right:50px;  float: left;",
-								name: "zoomExt"+Onglet,
-								onChange: function(evt){
-									chargeZoomVar(Chart4[Onglet], 4,  JsonObj4[Onglet] );
-									zoomYAxis("zoomExt"+Onglet);
-								}
-							}, vertical);
-						});
-					}catch(e){alert(e);}
+				
+				try{
+					dojo.ready(function(){
+						
+						// Create the rules
+						var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomExt"+Onglet), "first");
+						var leftSliderRules = new VerticalRule({
+							container: "leftDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, leftRulesNode);
+						
+						var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomExt"+Onglet), "first");
+						var rightSliderRules = new VerticalRule({
+							container: "rightDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, rightRulesNode);
+					
+				
+						// Create the vertical slider programmatically
+						var vertSlider = new VerticalSlider({
+							//Class: "zoomAxisSlider",
+							intermediateChanges: true,
+							style: "height: 100%;",
+							name: "zoomExt"+Onglet,
+							id: "zoomExt"+Onglet,
+							value: 0, 
+							minimum: 0, 
+							maximum: 10, 
+							discreteValues: 11,
+							onChange: function(evt){
+								chargeZoomVar(ChartNetwork[4][Onglet], 4 , JsonObjNetwork[4][Onglet]);
+								zoomYAxis("zoomExt"+Onglet);
+							}
+						}, "zoomExt"+Onglet);
+				
+						// Start up the widgets
+						vertSlider.startup();
+						leftSliderRules.startup();
+						rightSliderRules.startup();
+						
+					});
+				}catch(e){alert(e);}
 				
 				
 				// create a ContentPane as the center pane in the BorderContainer
@@ -2408,7 +2804,7 @@ function createNetworkContentPaneSContent(Onglet){
 				E1 = document.createElement("div");
 				EE.appendChild(E1);
 				
-				E2 = document.createElement("div");
+				/*E2 = document.createElement("div");
 				E2.setAttribute('style', "position : absolute; ");
 				E1.appendChild(E2);
 				
@@ -2416,9 +2812,12 @@ function createNetworkContentPaneSContent(Onglet){
 				E3.setAttribute('id',"unit5"+Onglet);
 				E3.setAttribute('style',"margin-left: 30px;");
 				E3.setAttribute('size', 1);
-				E2.appendChild(E3);
+				E2.appendChild(E3);*/
 				
 				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				E2.setAttribute('cellspacing',"0");
+				E2.setAttribute('cellpadding',"0");
 				E1.appendChild(E2);
 				
 				E1 = document.createElement("tbody");
@@ -2428,38 +2827,98 @@ function createNetworkContentPaneSContent(Onglet){
 				E1.appendChild(ETR);
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart5"+Onglet);
-				E2.setAttribute('style', "width: 800px; height: 500px; float:left; margin-left:1px;");
+				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
 				ETD.appendChild(E2);
 				
 				
 				ETD = document.createElement("td");
+				ETD.setAttribute('style',"border: solid 1px #759dc0;");
 				ETR.appendChild(ETD);
+				
+				
+				
+				
+				E2 = document.createElement("table");
+				E2.setAttribute('style',"width: 100%; height: 100%;");
+				ETD.appendChild(E2);
+				
+				E1 = document.createElement("tbody");
+				E2.appendChild(E1);
+				
+				ETR = document.createElement("tr");
+				ETR.setAttribute('height',"30px");
+				E1.appendChild(ETR);
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETD.innerHTML = "<font><i><u>Zoom</u></i></font>"
+				ETR.appendChild(ETD);
+				
+				
+				ETR = document.createElement("tr");
+				E1.appendChild(ETR);
+				
+				
+				ETD = document.createElement("td");
+				ETD.setAttribute('align',"center");
+				ETR.appendChild(ETD);
+				
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"zoomNb"+Onglet);
 				ETD.appendChild(E2);
 				
-					try{
-						dojo.require("dojox.form.RangeSlider");
-						dojo.ready(function(){
-							var vertical = dojo.byId("zoomNb"+Onglet);
-							var slider = new dojox.form.VerticalRangeSlider({
-								Class: "zoomAxisSlider",
-								intermediateChanges: false,
-								showButtons: false,
-								style: "height:450px; margin-left:5px; margin-right:50px;  float: left;",
-								name: "zoomNb"+Onglet,
-								onChange: function(evt){
-									chargeZoomVar(Chart5[Onglet], 5,  JsonObj5[Onglet] );
-									zoomYAxis("zoomNb"+Onglet);
-								}
-							}, vertical);
-						});
-					}catch(e){alert(e);}
+				try{
+					dojo.ready(function(){
+						
+						// Create the rules
+						var leftRulesNode = domConstruct.create("div", {}, dom.byId("zoomNb"+Onglet), "first");
+						var leftSliderRules = new VerticalRule({
+							container: "leftDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, leftRulesNode);
+						
+						var rightRulesNode = domConstruct.create("div", {}, dom.byId("zoomNb"+Onglet), "first");
+						var rightSliderRules = new VerticalRule({
+							container: "rightDecoration",
+							count: 11,
+							style: "width:5px;",
+							ruleStyle: "border-color:gray;"
+						}, rightRulesNode);
+					
+				
+						// Create the vertical slider programmatically
+						var vertSlider = new VerticalSlider({
+							//Class: "zoomAxisSlider",
+							intermediateChanges: true,
+							style: "height: 100%;",
+							name: "zoomNb"+Onglet,
+							id: "zoomNb"+Onglet,
+							value: 0, 
+							minimum: 0, 
+							maximum: 10, 
+							discreteValues: 11,
+							onChange: function(evt){
+								chargeZoomVar(ChartNetwork[5][Onglet], 5 , JsonObjNetwork[5][Onglet]);
+								zoomYAxis("zoomNb"+Onglet);
+							}
+						}, "zoomNb"+Onglet);
+				
+						// Start up the widgets
+						vertSlider.startup();
+						leftSliderRules.startup();
+						rightSliderRules.startup();
+						
+					});
+				}catch(e){alert(e);}
 				
 				
 				// create a ContentPane as the center pane in the BorderContainer

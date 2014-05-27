@@ -1264,14 +1264,14 @@ makeChart5 = function(){
 						setCursors("chart5"+ongletActif(), "rect");
 						
 						// legende des ordonnées
-						try{
+						/*try{
 							document.getElementById("unit5"+ongletActif()).removeChild( document.getElementById("unit5"+ongletActif()).firstChild );     
 						}catch(e){console.log("error : "+e+"\n in 'charting.js' function ! Alert raised at line :"+new Error().lineNumber);}  
 						
 						if(JsonObjNetwork[5][ongletActif()].data[0].unit){
 						var text = document.createTextNode(JsonObjNetwork[5][ongletActif()].data[0].unit);
 						document.getElementById("unit5"+ongletActif()).appendChild(text);
-						}
+						}*/
 			
 						
 						

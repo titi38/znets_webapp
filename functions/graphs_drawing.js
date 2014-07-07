@@ -201,7 +201,87 @@ var addVerticalAxis = function(chart$, down, up, unitL, unitR, factD){
 
 
 
-var changeAxes = function(chart$, chartNum, json$){
+var addVerticalAxisAccurate = function(chart$, down, up, json$){
+	
+	var unit = json$.data[0].unit;
+	var puissance = 0;
+	var from= 0;
+	var to = 0
+	var top = 0;
+	var unitPrefixe = 0;
+
+	for(var i = 0; i< down.length; i++){
+		if(down[i]<from)from = down[i];
+	}
+	for(var i = 0; i< up.length; i++){
+		if(up[i]>to)to = up[i];
+	}
+	
+	top = Math.max(Math.abs(from), Math.abs(to));
+	
+	while(top >=10000){
+		puissance++;
+		top = top/1024;
+	}
+	if(puissance>8)puissance = 8; //on ne dépasse pas le "yotta"
+	
+	switch(puissance){
+		case 0:
+			unitPrefixe = "";
+		break;
+		case 1:
+			unitPrefixe = "K";
+		break;
+		case 2:
+			unitPrefixe = "M";
+		break;
+		case 3:
+			unitPrefixe = "G";
+		break;
+		case 4:
+			unitPrefixe = "T";
+		break;
+		case 5:
+			unitPrefixe = "P";
+		break;
+		case 6:
+			unitPrefixe = "E";
+		break;
+		case 7:
+			unitPrefixe = "Z";
+		break;
+		case 8:
+			unitPrefixe = "Y";
+		break;
+		default:
+			unitPrefixe = "Y";
+		break;
+	}
+	
+	var myLabelFunc = function(text, value, precision){
+		
+		return_value = Math.abs(value)/Math.pow(1024,puissance);
+		
+		if(return_value>0 && return_value<10)
+			return return_value.toFixed(3)+" "+unitPrefixe+unit;
+		else if(return_value>=10 && return_value<100)
+			return return_value.toFixed(2)+" "+unitPrefixe+unit;
+		else if(return_value>=100 && return_value<1000)
+			return return_value.toFixed(1)+" "+unitPrefixe+unit;
+		else
+			return return_value.toFixed(0)+" "+unitPrefixe+unit;
+		
+	};
+	//alert('hooo');
+	chart$.addAxis("y", {labelFunc: myLabelFunc, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true, includeZero: true});
+	
+	// changing axis X stroke to white
+	//addWhiteAxisX(chart$);
+
+}
+
+
+var OLD_changeAxes = function(chart$, chartNum, json$){
 	
 	unit = json$.data[0].unit;
 	factD = json$.data[0].factD;
@@ -294,7 +374,7 @@ var changeAxes = function(chart$, chartNum, json$){
 
 		
 	// changing axis X stroke to white
-	addWhiteAxisX(chart$);
+	//addWhiteAxisX(chart$);
 
 }
 

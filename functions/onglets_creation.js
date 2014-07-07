@@ -3331,8 +3331,8 @@ function ChargerLogs(){
 															
 															aspect.after(grid, "onStyleRow", function(e, item) {
 																if( item[0].index == grid.rowCount-(finalCompt+1) ){
-																	alert(grid.rowCount);
-																	setTimeout("grid.scrollToRow(grid.rowCount);", 12000);
+																	//alert(grid.rowCount);
+																	setTimeout(grid.scrollToRow(grid.rowCount), 12000);
 																	//grid.scrollToRow(grid.rowCount);
 																}
 															});
@@ -4709,7 +4709,7 @@ function chargerAlerts(){
 		var xhr = createXhrObject();
 		
 		
-		xhr.open("GET", askWhere +   "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params'), true);
+		xhr.open("GET",    askWhere +"getAlertList.json?"+document.getElementById("Alerts").getAttribute('params'), true);
 		
 	
 		xhr.onreadystatechange=function() 
@@ -5285,7 +5285,6 @@ function chargerAlerts(){
 						
 						
 						
-						
 					}catch(e){ 
 						alert(e+" ::=:: "+e.lineNumber)
 						if(JsonAlerts.errMsg)
@@ -5330,7 +5329,7 @@ function rechargerAlerts(page){
 		var xhr = createXhrObject();
 		
 		
-		xhr.open("GET", askWhere + "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params')+"&page="+page, false);
+		xhr.open("GET",  askWhere +"getAlertList.json?"+document.getElementById("Alerts").getAttribute('params')+"&page="+page, false);
 	
 	
 		xhr.onreadystatechange=function() 
@@ -5476,9 +5475,9 @@ function chargerAlertsFIXEDHEADER(page){
 			xhr.open("GET",  askWhere + "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params'), false);
 		else{
 			if(document.getElementById("Alerts").getAttribute('params') == "" || document.getElementById("Alerts").getAttribute('params') == null)
-				xhr.open("GET", askWhere + "getAlertList.json?page="+page, false);
+				xhr.open("GET",  askWhere +"getAlertList.json?page="+page, false);
 			else
-				xhr.open("GET", askWhere + "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params')+"&page="+page, false);
+				xhr.open("GET",  askWhere +"getAlertList.json?"+document.getElementById("Alerts").getAttribute('params')+"&page="+page, false);
 		}
 		
 		xhr.send(null);
@@ -5893,12 +5892,12 @@ function chargerAlertsHTML(page){
 		var xhr = createXhrObject();
 		
 		if(page==null || page == "")//open xml element (case as first run)
-			xhr.open("GET",   askWhere +  "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params'), false);
+			xhr.open("GET",   askWhere + "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params'), false);
 		else{
 			if(document.getElementById("Alerts").getAttribute('params') == "" || document.getElementById("Alerts").getAttribute('params') == null)
 				xhr.open("GET",  askWhere + "getAlertList.json?page="+page, false);
 			else
-				xhr.open("GET",  askWhere + "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params')+"&page="+page, false);
+				xhr.open("GET", askWhere +  "getAlertList.json?"+document.getElementById("Alerts").getAttribute('params')+"&page="+page, false);
 		}
 		
 		xhr.send(null);

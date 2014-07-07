@@ -239,11 +239,6 @@
 						mySetTheme(ChartNetwork[1][ongletActif()]);
 						//ChartNetwork[1][ongletActif()].theme.plotarea.fill.y2;
 						
-						//alert('riO');
-						
-						// changer les labels de l'axe de droite et ajouter les unites au dessus
-						changeAxes(ChartNetwork[1][ongletActif()], "1", JsonObjNetwork[1][ongletActif()]);
-						//alert('riOO');
 						
 						// definir le type de curseur quand l'utilisateur pointe sur un 'clickable'
 						setCursors("chart1"+ongletActif(), "rect");
@@ -532,8 +527,6 @@ makeChart2 = function(){
 						// Setting zoom-bar	
 						setZoomBar( registry.byId("zoomPackets"+ongletActif()) , ChartNetwork[2][ongletActif()] );
 						
-						// changer les labels de l'axe de droite et ajouter les unites au dessus
-						changeAxes(ChartNetwork[2][ongletActif()], "2", JsonObjNetwork[2][ongletActif()]);
 						
 						// definir le type de curseur quand l'utilisateur pointe sur un 'clickable'
 						setCursors("chart2"+ongletActif(), "rect");
@@ -772,9 +765,6 @@ makeChart3 = function(){
 						setZoomBar( registry.byId("zoomLoc"+ongletActif()) , ChartNetwork[3][ongletActif()] );
 						
 						
-						// changer les labels de l'axe de droite et ajouter les unites au dessus
-						changeAxes(ChartNetwork[3][ongletActif()], "3", JsonObjNetwork[3][ongletActif()]);
-						
 						// definir le type de curseur quand l'utilisateur pointe sur un 'clickable'
 						setCursors("chart3"+ongletActif(), "rect");
 						
@@ -1010,9 +1000,6 @@ makeChart4 = function(){
 						// Setting zoom-bar	
 						setZoomBar( registry.byId("zoomExt"+ongletActif()) , ChartNetwork[4][ongletActif()] );
 						
-						
-						// changer les labels de l'axe de droite et ajouter les unites au dessus
-						changeAxes(ChartNetwork[4][ongletActif()], "4", JsonObjNetwork[4][ongletActif()]);
 						
 						// definir le type de curseur quand l'utilisateur pointe sur un 'clickable'
 						setCursors("chart4"+ongletActif(), "rect");
@@ -1915,9 +1902,6 @@ makeChart12 = function(){
 						setZoomBar( registry.byId("zoomProto"+ongletActif()) , ChartLocalhost[2][ongletActif()] );
 						
 						
-						// changer les labels de l'axe de droite et ajouter les unites au dessus
-						changeAxes(ChartLocalhost[2][ongletActif()], "2", JsonObjLocalhost[2][ongletActif()]);
-						
 						
 						// changer les labels de l'axe de droite et ajouter les unites au dessus
 						//try{
@@ -2147,9 +2131,6 @@ makeChart13 = function(){
 						// Setting zoom-bar	
 						setZoomBar( registry.byId("zoomLoc"+ongletActif()) , ChartLocalhost[3][ongletActif()] );
 						
-						
-						// changer les labels de l'axe de droite et ajouter les unites au dessus
-						changeAxes(ChartLocalhost[3][ongletActif()], "3", JsonObjLocalhost[3][ongletActif()]);
 						
 						// definir le type de curseur quand l'utilisateur pointe sur un 'clickable'
 						setCursors("chart3"+ongletActif(), "rect");
@@ -2391,9 +2372,6 @@ makeChart14 = function(){
 						// Setting zoom-bar	
 						setZoomBar( registry.byId("zoomExt"+ongletActif()) , ChartLocalhost[4][ongletActif()] );
 						
-						
-						// changer les labels de l'axe de droite et ajouter les unites au dessus
-						changeAxes(ChartLocalhost[4][ongletActif()], "4", JsonObjLocalhost[4][ongletActif()]);
 						
 						// definir le type de curseur quand l'utilisateur pointe sur un 'clickable'
 						setCursors("chart4"+ongletActif(), "rect");
@@ -2820,7 +2798,7 @@ makeChart16b = function(){
 
 makeChartProtoAccurate = function(divID){
 	
-	
+	//alert("makeChartProtoAccurate");
 	// jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&service=ext", true
 	
 	//alert(jsonNameFromTreePath(ongletActif()));
@@ -2945,15 +2923,16 @@ makeChartProtoAccurate = function(divID){
 								
 								var c = new Chart(divID);
 								
-								c.addAxis("x", {fixLower: "major", fixUpper: "major"});
-								c.addAxis("y", {vertical: true, fixLower: "minor", fixUpper: "minor", natural: true, includeZero: true});
+								
+								
 								c.addPlot("default1", {type: StackedAreas});
 								c.addPlot("default2", {type: StackedAreas});
 								c.addPlot("default3", {type: StackedAreas});
 								c.addPlot("default4", {type: StackedAreas});
 								c.addPlot("default", {type: StackedAreas});
 								c.setTheme(Wetland);
-								
+						
+							
 								
 								var serie_cumul_all = [];
 								var serie_cumul_others_udp = [];
@@ -3005,7 +2984,44 @@ makeChartProtoAccurate = function(divID){
 								c.addSeries("udp", udp_out, {plot: "default", stroke: {color: green_Color_Stroke}, fill: green_Color});
 								c.addSeries("tcp", tcp_out, {plot: "default", stroke: {color: blue_Color_Stroke}, fill: blue_Color});
 								
+								
+								// Ajout des axes X et Y (abscisse et ordonnée)
+								
+								/*c.addAxis("x", {fixLower: "major", fixUpper: "major"});*/
+								var labels = new Array();
+																
+								if(JsonAccurate.data[1].legend.length>24){
+									// ajout de l'axe x
+									c.addAxis("x", {
+										//labels: JsonAccurate.data[1].legend,
+										labels: labels,
+										majorTickStep:	30
+
+									});
+								}else{
+									labels = createLabels("hours", JsonAccurate.data[1].legend);
+									
+									//alert(labels.length);
+									/*for(var k = 0; k <tcp_in.length; k++){
+										JsonAccurate.data[1].legend
+										labels.push({value:k+1 , text: k+"test"}); 
+									}*/
+									
+									// ajout de l'axe x
+									c.addAxis("x", {
+										//labels: JsonAccurate.data[1].legend
+										labels: labels,
+										majorTickStep:	30
+									});					
+								}
+								
+								
+								// ajouter l'axe des ordonnées et ajuster les unites au dessus
+								addVerticalAxisAccurate(c, serie_cumul_all, tcp_out, JsonAccurate);
+								//c.addAxis("y", {vertical: true, fixLower: "minor", fixUpper: "minor", natural: true, includeZero: true});
 							
+								
+								// Ajout des animations
 								var anim_aE = new Magnify(c, "default");
 								var anim_aE = new MoveSlice(c, "default");
 								var anim_cE = new Tooltip(c, "default");
@@ -3079,6 +3095,7 @@ makeChartProtoAccurate = function(divID){
 makeChartNetworkNbHostsAccurate = function(divID){
 	
 	
+	//alert("makeChartNetworkNbHostsAccurate");
 	// jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&service=ext", true
 	
 	//alert(jsonNameFromTreePath(ongletActif()));
@@ -3188,6 +3205,7 @@ makeChartNetworkNbHostsAccurate = function(divID){
 
 makeChartLocalhostsNbHostsAccurate = function(divID){
 	
+	//alert("makeChartLocalhostsNbHostsAccurate");
 	
 	// jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&service=ext", true
 	
@@ -3309,3 +3327,42 @@ makeChartLocalhostsNbHostsAccurate = function(divID){
 
 };
 
+
+
+function createLabels(timestamp, legend){
+	
+	var labels = new Array();
+	
+	switch(timestamp){
+		
+		case"hours":
+			for(var i = 0; i < legend.length; i++){
+				for(var j = 0; j < 30; j++){
+					if(j*2<10)m="0";
+					else m="";
+					//alert(legend[i].text+m+j*2+"m");
+					labels.push({value:i*30+j , text: legend[i].text+m+j*2}); 
+				}
+			}
+		break;
+				
+		case"days":
+			for(var i = 0; i < 30; i++){
+				for(var j = 0; j < 30; j++){
+					if(j*2<10)m="0";
+					else m="";
+					labels.push({value:i*30+j , text: legend[i].text+m+j*2}); 
+				}
+			}
+		break;
+		
+		default:
+			alert("Unknow timestamp in 'createLabels' function. alert raised at "+new Error().lineNumber);
+		break;
+		
+
+	}
+	
+	return labels;
+	
+}

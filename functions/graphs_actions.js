@@ -246,7 +246,7 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 			document.getElementById("AS").setAttribute("value", as);
 			document.getElementById("AS").value = as;
 			document.getElementById("AS").onchange();
-			alert(label);
+			//alert(label);
 			if(isApp)
 				{
 				addToParameters( null, "&app="+as );

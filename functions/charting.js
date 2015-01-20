@@ -514,6 +514,7 @@ makeChart2 = function(){
 							// ajout de l'axe x
 							ChartNetwork[2][ongletActif()].addAxis("x", { 
 								labels: JsonObjNetwork[2][ongletActif()].data[1].legend
+								majorTickStep:	2
 
 							});						
 						}
@@ -768,6 +769,7 @@ makeChart3 = function(){
 							// ajout de l'axe x
 							ChartNetwork[3][ongletActif()].addAxis("x", { 
 								labels: JsonObjNetwork[3][ongletActif()].data[1].legend
+								majorTickStep:	2
 
 							});						
 						}
@@ -1003,6 +1005,7 @@ makeChart4 = function(){
 							// ajout de l'axe x
 							ChartNetwork[4][ongletActif()].addAxis("x", { 
 								labels: JsonObjNetwork[4][ongletActif()].data[1].legend
+								majorTickStep:	2
 
 							});						
 						}
@@ -1230,6 +1233,7 @@ makeChart5 = function(){
 						}else{
 							ChartNetwork[5][ongletActif()].addAxis("x", { 
 								labels: JsonObjNetwork[5][ongletActif()].data[1].legend
+								majorTickStep:	2
 
 							});
 						}
@@ -1905,7 +1909,7 @@ makeChart12 = function(){
 							// ajout de l'axe x
 							ChartLocalhost[2][ongletActif()].addAxis("x", { 
 								labels: JsonObjLocalhost[2][ongletActif()].data[1].legend
-
+								majorTickStep:	2
 							});							
 						}
 			
@@ -2135,7 +2139,7 @@ makeChart13 = function(){
 							// ajout de l'axe x
 							ChartLocalhost[3][ongletActif()].addAxis("x", { 
 								labels: JsonObjLocalhost[3][ongletActif()].data[1].legend
-
+								majorTickStep:	2
 							});						
 						}
 			
@@ -2375,7 +2379,7 @@ makeChart14 = function(){
 							// ajout de l'axe x
 							ChartLocalhost[4][ongletActif()].addAxis("x", { 
 								labels: JsonObjLocalhost[4][ongletActif()].data[1].legend
-
+								majorTickStep:	2
 							});						
 						}
 			

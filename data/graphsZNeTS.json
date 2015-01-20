@@ -9,7 +9,7 @@
 			"children":[{"_reference":"Top_L_H"}, {"_reference":"Top_C"}, {"_reference":"Top_A_S"}, {"_reference":"P"}] },
 		
 		{ "id": "I/O_P", "name":"Packets by", "type":"graph_name", "valuePrefixe":"", "valueSuffixe":"Packets.json?", "graphIndex": "2",
-			"children":[{"_reference":"Top_L_H"}, {"_reference":"Top_C"}, {"_reference":"Top_A_S"}, {"_reference":"P"}] },
+			"children":[{"_reference":"Top_L_H"}, {"_reference":"Top_C"}, {"_reference":"Top_A_S"}, {"_reference":"P"} },
 		
 		{ "id": "L_S", "name":"Local Services by", "type":"graph_name", "valuePrefixe":"Top10Services", "valueSuffixe":".json?service=loc&", "graphIndex": "3",
 			"children":[{"_reference":"Top_T"}, {"_reference":"Top_P_N"}] },

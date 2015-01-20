@@ -129,7 +129,7 @@ function clignote(){
 	
 }
 
-function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, service, country, as){
+function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, service, country, as,isApp){
 	
 	//alert(name+" : "+ipFrom(name));
 	//alert("label : "+label+"\n name : "+name+"("+ipFrom(name)+")"+"\n port : "+port+"\n proto : "+proto+"\n dir : "+dir+"\n direction : "+direction+"\n multiplePie : "+multiplePie+"\n JN : "+JN+"\n service : "+service+"\n country : "+country+"\n as : "+as)
@@ -246,8 +246,16 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 			document.getElementById("AS").setAttribute("value", as);
 			document.getElementById("AS").value = as;
 			document.getElementById("AS").onchange();
+			alert(label);
+			if(isApp)
+				{
+				addToParameters( null, "&app="+as );
+				}
+			else
+				{
+				addToParameters( null, "&as="+as );
+				}
 			
-			addToParameters( null, "&as="+as );
 		}
 		if(ongletActif() != "Global" && !document.getElementById(ongletActif()).isClosable) addToParameters( null, "&net="+ongletActif() );
 		

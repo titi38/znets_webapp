@@ -134,7 +134,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 			
 			if(isClosable){ 	// si isClosable = true alors il s'agit soit d'un onglet data, soit d'un onglet localhost
 				
-				if(estData){ // s'il est un onglet data alors l'"attache" à 'RawDataTabContainer'
+				if(estData){ // s'il est un onglet data alors l'"attache" ï¿½ 'RawDataTabContainer'
 					
 					
 						Elem = document.createElement("div");
@@ -169,7 +169,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 						tabOngletsIds.push(NouvelOnglet+"");
 
 					
-				}else{ // sinon, c'est un onglet localhost alors l'"attache" à 'LocalhostsTabContainer'
+				}else{ // sinon, c'est un onglet localhost alors l'"attache" ï¿½ 'LocalhostsTabContainer'
 				
 					
 						Elem = document.createElement("div");
@@ -209,9 +209,9 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 					
 				};
 				
-			}else{ 			// sinon c'est soit un onglet réseau, soit un onglet groupe de réseau
+			}else{ 			// sinon c'est soit un onglet rï¿½seau, soit un onglet groupe de rï¿½seau
 				
-				if(estGroupe){ // s'il est un groupe de réseaux, alors c'est un "TabContainer" et on l'"attache" à 'NetworksTabContainer'
+				if(estGroupe){ // s'il est un groupe de rï¿½seaux, alors c'est un "TabContainer" et on l'"attache" ï¿½ 'NetworksTabContainer'
 					
 					var TabContainer = registry.byId('NetworksTabContainer');
 					
@@ -231,7 +231,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 					
 				}else{
 				
-					if(!underGroup){ // s'il n'est pas dans un groupe de réseaux, alors, on l'"attache" à 'NetworksTabContainer'
+					if(!underGroup){ // s'il n'est pas dans un groupe de rï¿½seaux, alors, on l'"attache" ï¿½ 'NetworksTabContainer'
 					
 						Elem = document.createElement("div");
 						Elem.setAttribute('id', "Div"+NouvelOnglet);
@@ -254,7 +254,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 						tabOngletsIds.push(NouvelOnglet+"");
 						
 						
-					}else{		// sinon, on l'"attache" au groupe de réseaux correspondant
+					}else{		// sinon, on l'"attache" au groupe de rï¿½seaux correspondant
 						
 						// Creation du nouvel onglet dojo
 						Elem = document.createElement("div");
@@ -491,7 +491,7 @@ function creerDivGraphique(Onglet){
 		mettreChampsAJour(document.getElementById('presets'+Onglet).value, 'presets'+Onglet, Onglet);
 		
 		
-		// l'affichage de l'interval de temps affiché par les graphes
+		// l'affichage de l'interval de temps affichï¿½ par les graphes
 		E1 = document.createElement("div");
 		E1.innerHTML = '<table cellspacing=0 cellpadding=0><tr><td style="width: 50%"><center><table><tr><td><img src="images/clock.png" title="Current selection"></td><td><i>:<font id="timeSpace'+Onglet+'" style="margin-left: 15px;"></font></i></td></tr></table></center></td><td id="timeSpaceChange'+Onglet+'" style="width: 50%"></td></tr></table>'
 		
@@ -656,7 +656,7 @@ function creerDivData(Onglet){
 		
 		/*E2 = document.createElement("div");
 		E2.setAttribute('id',"TabData"+Onglet);
-		// inutile car nous la rendrons visible une fois que le tableau sera completé a 100%
+		// inutile car nous la rendrons visible une fois que le tableau sera completï¿½ a 100%
 		//E2.setAttribute('style', "width: 100%; border: 1px solid #6c6; margin: 2px; height: 98%; overflow-y: auto;");
 		E1.appendChild(E2);
 		
@@ -886,7 +886,7 @@ function creerDivGraphiqueReseau(Onglet){
 			mettreChampsAJour(document.getElementById('presets'+Onglet).value, 'presets'+Onglet, Onglet);
 			
 			
-			// l'affichage de l'interval de temps affiché par les graphes
+			// l'affichage de l'interval de temps affichï¿½ par les graphes
 			E1 = document.createElement("div");
 			E1.innerHTML ='<table cellspacing=0 cellpadding=0><tr><td style="width: 50%"><center><table><tr><td><img src="images/clock.png" title="Current selection"></td><td><i>:<font id="timeSpace'+Onglet+'" style="margin-left: 15px;"></font></i></td></tr></table></center></td><td id="timeSpaceChange'+Onglet+'" style="width: 50%"></td></tr></table>'
 			
@@ -3149,7 +3149,7 @@ function ChargerLogs(){
 	
 	require(["dojo/ready","dijit/registry", "dojo/aspect", "dojox/grid/EnhancedGrid", "dojox/grid/enhanced/plugins/Pagination", "dojox/grid/enhanced/plugins/NestedSorting", "dojo/data/ItemFileWriteStore","dijit/form/Button"], function(ready, registry, aspect, EnhancedGrid, Pagination, NestedSorting, ItemFileWriteStore, Button){
 		ready(function(){
-			// si un chargement a déja echoué (car serveur introuvable) !
+			// si un chargement a dï¿½ja echouï¿½ (car serveur introuvable) !
 			if (pending>=2)  return;
 			
 			//sinon
@@ -3168,7 +3168,7 @@ function ChargerLogs(){
 				{
 					if (xhr.readyState == 4) 
 					{
-						//alert("Chargé");
+						//alert("Chargï¿½");
 						
 						if (xhr.status == 200) 
 						{
@@ -3508,7 +3508,7 @@ function ChargerLogs(){
 						}
 					}else if (xhr.readyState == 0) 
 					{
-						//alert("Non initialisé");
+						//alert("Non initialisï¿½");
 					}else if (xhr.readyState == 1) 
 					{
 						//alert("Ouvert");
@@ -4612,7 +4612,7 @@ function ChargerData(Onglet, force){
 						
 						
 						
-						// création de l'icone "save to CSV"
+						// crï¿½ation de l'icone "save to CSV"
 						E1 = document.createElement("button");
 						E1.setAttribute('type', "button");
 						//E1.setAttribute('onclick', "this.disabled = true; body.style.cursor = 'wait'; self.location.href='http://lpsc-znets:8443/rawDataFlow.csv?'+parameters;");
@@ -4770,14 +4770,14 @@ function chargerAlerts(){
 										items: []
 									};
 										
-									// définir le contenu de la store avec les premiers éléments connus 
+									// dï¿½finir le contenu de la store avec les premiers ï¿½lï¿½ments connus 
 									var lastAlertAcquiredId = 0;
 									for(var i=0; i<JsonAlerts.items.length; i++){
 										data.items.push(JsonAlerts.items[i]);
 										lastAlertAcquiredId = JsonAlerts.items[i].id;
 									}
 										
-									// compléter le contenu de la store avec les éléments inconnus 
+									// complï¿½ter le contenu de la store avec les ï¿½lï¿½ments inconnus 
 									//oealert(lastAlertAcquiredId);
 									while(lastAlertAcquiredId >= 2){
 										lastAlertAcquiredId --;
@@ -4802,9 +4802,9 @@ function chargerAlerts(){
 									//set up layout
 									var layout = [
 										{"name" : "Date", 'field': 'date', "width" : "auto"},
-										{"name" : "Message", 'field': 'msg', "width" : "auto"},
 										{"name" : "Localhost", 'field': 'ip', "width" : "auto"},
-										{ "name": "Detail", "field": "_item", 'width': 'auto',  formatter: function(item){ 
+										{"name" : "Message", 'field': 'msg', "width" : "auto"},
+										{ "name": "Detail", "field": "_item", 'width': '100px',  formatter: function(item){ 
 																				//alert(localhostAlreadyOpened(item.ip));
 																					try{
 																						console.log("XXXXXXXXXXXXX=========> "+item.id);
@@ -5353,7 +5353,7 @@ function rechargerAlerts(page){
 									var store = registry.byId("DojoTableAlerts").store;
 								
 									if(store._arrayOfAllItems.length != JsonAlerts.nbResults){
-										alert(" store : "+store._arrayOfAllItems.length+"\n nb alertes : "+JsonAlerts.nbResults);
+										//alert(" store : "+store._arrayOfAllItems.length+"\n nb alertes : "+JsonAlerts.nbResults);
 										//for(var i= store._arrayOfAllItems.length)
 									}
 									
@@ -6904,7 +6904,7 @@ function localhostsTabCompletion(Json){
 					}
 				}else if (xhr.readyState == 0) 
 				{
-					//alert("Non initialisé");
+					//alert("Non initialisï¿½");
 				}else if (xhr.readyState == 1) 
 				{
 					//alert("Ouvert");
@@ -7041,7 +7041,7 @@ function addTreeToLocalhost(item, node){
 					}
 				}else if (xhr.readyState == 0) 
 				{
-					//alert("Non initialisé");
+					//alert("Non initialisï¿½");
 				}else if (xhr.readyState == 1) 
 				{
 					//alert("Ouvert");
@@ -7180,7 +7180,7 @@ function addTreeToExternalhost(item, node){
 					}
 				}else if (xhr.readyState == 0) 
 				{
-					//alert("Non initialisé");
+					//alert("Non initialisï¿½");
 				}else if (xhr.readyState == 1) 
 				{
 					//alert("Ouvert");

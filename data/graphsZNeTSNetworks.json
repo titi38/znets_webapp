@@ -6,10 +6,10 @@
 			"children":[{"_reference":"I/O_T"}, {"_reference":"I/O_P"}, {"_reference":"L_S"}, {"_reference":"E_S"}, {"_reference":"N_D"}, {"_reference":"N_L_H"}] },
 		
 		{ "id": "I/O_T", "name":"Traffic by", "type":"graph_name", "valuePrefixe":"", "valueSuffixe":"Traffic.json?", "graphIndex": "1",
-			"children":[{"_reference":"Top_L_H"}, {"_reference":"Top_C"}, {"_reference":"Top_A_S"}, {"_reference":"P"}] },
+			"children":[{"_reference":"Top_L_H"}, {"_reference":"Top_C"}, {"_reference":"Top_A_S"}, {"_reference":"P"}, {"_reference":"A"}] },
 		
 		{ "id": "I/O_P", "name":"Packets by", "type":"graph_name", "valuePrefixe":"", "valueSuffixe":"Packets.json?", "graphIndex": "2",
-			"children":[{"_reference":"Top_L_H"}, {"_reference":"Top_C"}, {"_reference":"Top_A_S"}, {"_reference":"P"}] },
+			"children":[{"_reference":"Top_L_H"}, {"_reference":"Top_C"}, {"_reference":"Top_A_S"}, {"_reference":"P"}, {"_reference":"A"}] },
 		
 		{ "id": "L_S", "name":"Local Services by", "type":"graph_name", "valuePrefixe":"Top10Services", "valueSuffixe":".json?service=loc&", "graphIndex": "3",
 			"children":[{"_reference":"Top_T"}, {"_reference":"Top_P_N"}] },
@@ -34,6 +34,10 @@
 		
 		{ "id": "P", "name":"Protocoles", "type":"graph_sort" , "valuePrefixe":"net", "valueSuffixe":"Protocoles"},
 		
+		
+		{ "id": "A", "name":"Applications", "type":"graph_sort" , "valuePrefixe":"netTop10", "valueSuffixe":"app"},
+		
+
 		{ "id": "Top_T", "name":"Traffic", "type":"graph_sort" , "valuePrefixe":"net", "valueSuffixe":"Traffic"},
 		
 		{ "id": "Top_P_N", "name":"Packets Number", "type":"graph_sort" , "valuePrefixe":"net", "valueSuffixe":"Packets"},

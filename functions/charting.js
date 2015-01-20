@@ -30,7 +30,7 @@
 						var up = new Array();
 						var down = new Array();
 						
-						/*try{// ajout automatique des séries
+						/*try{// ajout automatique des sï¿½ries
 							curTab = JsonObjNetwork[1][ongletActif()].data[2].tab;
 							for(var j = 0; j < curTab.length; j++){
 								curTab[j].y = -10;
@@ -58,7 +58,7 @@
 						alert( JsonObjNetwork[1][ongletActif()].data[2].tab.length+" ::: "+down.length+" ::: "+up.length)
 						*/
 						
-						// ajout automatique des séries
+						// ajout automatique des sï¿½ries
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") == -1){
 							var i = 2;
 							
@@ -112,7 +112,7 @@
 							};
 							
 						}else{
-							try{// ajout automatique des séries et des couleurs prédéfinies
+							try{// ajout automatique des sï¿½ries et des couleurs prï¿½dï¿½finies
 									
 								var ordre = ["OTHERS", "UDP", "TCP"];
 									
@@ -179,7 +179,8 @@
 						}else{
 							// ajout de l'axe x
 							ChartNetwork[1][ongletActif()].addAxis("x", {
-								labels: JsonObjNetwork[1][ongletActif()].data[1].legend
+								labels: JsonObjNetwork[1][ongletActif()].data[1].legend,
+								majorTickStep:	2
 							});					
 						}
 						
@@ -200,7 +201,7 @@
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
@@ -245,12 +246,12 @@
 						
 						
 		
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") != -1){
-							// Création manuelle de la legende des protocoles
+							// Crï¿½ation manuelle de la legende des protocoles
 							creerLegendeProtocole(JsonObjNetwork[1][ongletActif()], "1", ongletActif(), Vcolor);
 						}else{
-							// Création manuelle de la legende
+							// Crï¿½ation manuelle de la legende
 							creerLegende(JsonObjNetwork[1][ongletActif()], "1", ongletActif(), 17);
 						}
 						
@@ -282,7 +283,15 @@
 													clickToPie(ChartNetwork[1][ongletActif()].axes.x.labels[evt.index].text, "", "", evt.run.name.slice(0,3), "", sens, true, "netLocHostsProtoTraffic.json", "", "", "");
 												};
 											})
-										}else if(jsonNameFromTreePath(ongletActif()).indexOf("Country") != -1){
+										}
+										
+										
+									//	netExtHostsTop10appTraffic.json
+									//	netExtHostsTop10appPackets.json
+									
+									//	netLocHostsTop10appPackets.json
+										
+										else if(jsonNameFromTreePath(ongletActif()).indexOf("Country") != -1){
 											ChartNetwork[1][ongletActif()].connectToPlot( "default", function(evt){
 												if(evt.type === "onclick"){
 													if(evt.run.data[evt.index].y<0) var sens = "inc";
@@ -292,7 +301,10 @@
 												};
 											});
 											setTimeout(function(){ChartNetwork[1][ongletActif()].connectToPlot( "default",  function(evt){ eventMouse(evt, "1", ongletActif());});},500);
-										}else if(jsonNameFromTreePath(ongletActif()).indexOf("as") != -1){
+										}
+										
+										
+										else if(jsonNameFromTreePath(ongletActif()).indexOf("as") != -1){
 											ChartNetwork[1][ongletActif()].connectToPlot( "default", function(evt){
 												if(evt.type === "onclick"){
 													if(evt.run.data[evt.index].y<0) var sens = "inc";
@@ -302,7 +314,26 @@
 												};
 											});
 											setTimeout(function(){ChartNetwork[1][ongletActif()].connectToPlot( "default",  function(evt){ eventMouse(evt, "1", ongletActif());});},500);
-										}else {}
+										}
+										
+										
+										
+										else if(jsonNameFromTreePath(ongletActif()).indexOf("app") != -1){
+											ChartNetwork[1][ongletActif()].connectToPlot( "default", function(evt){
+												if(evt.type === "onclick"){
+													if(evt.run.data[evt.index].y<0) var sens = "inc";
+													else var sens = "out";
+													
+													clickToPie(ChartNetwork[1][ongletActif()].axes.x.labels[evt.index].text, "", "", "", "", sens, true, "netLocHostsTop10appTraffic.json", "", "", evt.run.data[evt.index].item.split("(")[1].split(")")[0],true);
+													dijit.byId("SelectCountry").setAttribute( 'value' , evt.run.data[evt.index].item.split("(")[0] );
+												};
+											});
+											setTimeout(function(){ChartNetwork[1][ongletActif()].connectToPlot( "default",  function(evt){ eventMouse(evt, "1", ongletActif());});},500);
+										}
+										
+										
+										
+										else {}
 														
 						
 									///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -391,7 +422,7 @@ makeChart2 = function(){
 						var up = new Array();
 						var down = new Array();
 						
-						// ajout automatique des séries
+						// ajout automatique des sï¿½ries
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") == -1){
 							var i = 2;
 							while(JsonObjNetwork[2][ongletActif()].data[i] != null){
@@ -416,7 +447,7 @@ makeChart2 = function(){
 							};
 							
 						}else{
-							try{// ajout automatique des séries et des couleurs prédéfinies
+							try{// ajout automatique des sï¿½ries et des couleurs prï¿½dï¿½finies
 								
 								var ordre = ["OTHERS", "UDP", "TCP"];
 									
@@ -503,7 +534,7 @@ makeChart2 = function(){
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
@@ -534,12 +565,12 @@ makeChart2 = function(){
 						
 						
 						
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") != -1){
-							// Création manuelle de la legende des protocoles
+							// Crï¿½ation manuelle de la legende des protocoles
 							creerLegendeProtocole(JsonObjNetwork[2][ongletActif()], "2", ongletActif(), Vcolor);
 						}else{
-							// Création manuelle de la legende
+							// Crï¿½ation manuelle de la legende
 							creerLegende(JsonObjNetwork[2][ongletActif()], "2", ongletActif(), 17);
 						}
 						
@@ -571,7 +602,9 @@ makeChart2 = function(){
 													clickToPie(ChartNetwork[2][ongletActif()].axes.x.labels[evt.index].text, "", "", evt.run.name.slice(0,3), "", sens, true, "netLocHostsProtoPackets.json", "", "", "");
 												};
 											})
-										}else if(jsonNameFromTreePath(ongletActif()).indexOf("Country") != -1){
+										}
+										
+										else if(jsonNameFromTreePath(ongletActif()).indexOf("Country") != -1){
 											ChartNetwork[2][ongletActif()].connectToPlot( "default", function(evt){
 												if(evt.type === "onclick"){
 													if(evt.run.data[evt.index].y<0) var sens = "inc";
@@ -581,7 +614,9 @@ makeChart2 = function(){
 												};
 											});
 											setTimeout(function(){ChartNetwork[2][ongletActif()].connectToPlot( "default",  function(evt){ eventMouse(evt, "2", ongletActif());});},500);
-										}else if(jsonNameFromTreePath(ongletActif()).indexOf("as") != -1){
+										}
+										
+										else if(jsonNameFromTreePath(ongletActif()).indexOf("as") != -1){
 											ChartNetwork[2][ongletActif()].connectToPlot( "default", function(evt){
 												if(evt.type === "onclick"){
 													if(evt.run.data[evt.index].y<0) var sens = "inc";
@@ -591,7 +626,22 @@ makeChart2 = function(){
 												};
 											});
 											setTimeout(function(){ChartNetwork[2][ongletActif()].connectToPlot( "default",  function(evt){ eventMouse(evt, "2", ongletActif());});},500);
-										}else {}
+										}
+										
+										else if(jsonNameFromTreePath(ongletActif()).indexOf("app") != -1){
+											ChartNetwork[2][ongletActif()].connectToPlot( "default", function(evt){
+												if(evt.type === "onclick"){
+													if(evt.run.data[evt.index].y<0) var sens = "inc";
+													else var sens = "out";
+													clickToPie(ChartNetwork[2][ongletActif()].axes.x.labels[evt.index].text, "", "", "", "", sens, true, "netLocHostsTop10appPackets.json", "", "", evt.run.data[evt.index].item.split("(")[1].split(")")[0],true);
+													dijit.byId("SelectCountry").setAttribute( 'value' , evt.run.data[evt.index].item.split("(")[0]);
+												};
+											});
+											setTimeout(function(){ChartNetwork[2][ongletActif()].connectToPlot( "default",  function(evt){ eventMouse(evt, "2", ongletActif());});},500);
+										}
+										
+										
+										else {}
 											
 						
 			
@@ -680,7 +730,7 @@ makeChart3 = function(){
 						var down = new Array();
 						
 						
-						// ajout automatique des séries
+						// ajout automatique des sï¿½ries
 						try{
 							var i = 2;
 							while(JsonObjNetwork[3][ongletActif()].data[i] != null){
@@ -737,7 +787,7 @@ makeChart3 = function(){
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
@@ -771,12 +821,12 @@ makeChart3 = function(){
 						
 						
 			
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") != -1){
-							// Création manuelle de la legende des protocoles
+							// Crï¿½ation manuelle de la legende des protocoles
 							creerLegendeProtocole(JsonObjNetwork[3][ongletActif()], "3", ongletActif(), Vcolor);
 						}else{
-							// Création manuelle de la legende
+							// Crï¿½ation manuelle de la legende
 							creerLegende(JsonObjNetwork[3][ongletActif()], "3", ongletActif(), 17);
 						}
 						
@@ -973,7 +1023,7 @@ makeChart4 = function(){
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
@@ -1006,12 +1056,12 @@ makeChart4 = function(){
 						
 						
 			
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") != -1){
-							// Création manuelle de la legende des protocoles
+							// Crï¿½ation manuelle de la legende des protocoles
 							creerLegendeProtocole(JsonObjNetwork[4][ongletActif()], "4", ongletActif(), Vcolor);
 						}else{
-							// Création manuelle de la legende
+							// Crï¿½ation manuelle de la legende
 							creerLegende(JsonObjNetwork[4][ongletActif()], "4", ongletActif(), 17);
 						}
 						
@@ -1194,13 +1244,13 @@ makeChart5 = function(){
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
 						
 						
-						// ajout automatique des séries	
+						// ajout automatique des sï¿½ries	
 						var up = new Array();
 						
 							
@@ -1219,7 +1269,7 @@ makeChart5 = function(){
 						
 						
 						
-						// ajout automatique des séries
+						// ajout automatique des sï¿½ries
 						var i = 2;
 						while(JsonObjNetwork[5][ongletActif()].data[i] != null){
 							ChartNetwork[5][ongletActif()].addSeries(JsonObjNetwork[5][ongletActif()].data[i].name,  JsonObjNetwork[5][ongletActif()].data[i].tab,{plot : "default"});
@@ -1250,7 +1300,7 @@ makeChart5 = function(){
 						// definir le type de curseur quand l'utilisateur pointe sur un 'clickable'
 						setCursors("chart5"+ongletActif(), "rect");
 						
-						// legende des ordonnées
+						// legende des ordonnï¿½es
 						/*try{
 							document.getElementById("unit5"+ongletActif()).removeChild( document.getElementById("unit5"+ongletActif()).firstChild );     
 						}catch(e){console.log("error : "+e+"\n in 'charting.js' function ! Alert raised at line :"+new Error().lineNumber);}  
@@ -1262,7 +1312,7 @@ makeChart5 = function(){
 			
 						
 						
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						creerLegende(JsonObjNetwork[5][ongletActif()], "5", ongletActif(), 17);
 						
 						
@@ -1394,7 +1444,7 @@ makeChart6 = function(){
 						chart6.render();
 
 						
-						// legende des ordonnées
+						// legende des ordonnï¿½es
 						try{
 							document.getElementById("unit6"+ongletActif()).removeChild( document.getElementById("unit6"+ongletActif()).firstChild );  
 						}catch(e){console.log("error : "+e+"\n in 'charting.js' function ! Alert raised at line :"+new Error().lineNumber);}
@@ -1533,7 +1583,7 @@ makeChart7 = function(){
 						chart7.render();
 						
 						
-						// legende des ordonnées
+						// legende des ordonnï¿½es
 						try{
 							document.getElementById("unit7"+ongletActif()).removeChild( document.getElementById("unit7"+ongletActif()).firstChild );  
 						}catch(e){console.log("error : "+e+"\n in 'charting.js' function ! Alert raised at line :"+new Error().lineNumber);}
@@ -1678,7 +1728,7 @@ makeChart11 = function(){
 						// dessin du graphe
 						ChartLocalhost[1][ongletActif()].render();
 						
-						// legende des ordonnées
+						// legende des ordonnï¿½es
 						try{
 							document.getElementById("unit1"+ongletActif()).removeChild( document.getElementById("unit1"+ongletActif()).firstChild );  
 						}catch(e){console.log("error : "+e+"\n in 'charting.js' function ! Alert raised at line :"+new Error().lineNumber);}
@@ -1786,9 +1836,9 @@ makeChart12 = function(){
 						var up = new Array();
 						var down = new Array();
 						
-						// ajout automatique des séries
+						// ajout automatique des sï¿½ries
 					
-						try{// ajout automatique des séries et des couleurs prédéfinies
+						try{// ajout automatique des sï¿½ries et des couleurs prï¿½dï¿½finies
 							
 							var ordre = ["OTHERS", "UDP", "TCP"];
 							
@@ -1875,7 +1925,7 @@ makeChart12 = function(){
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
@@ -1917,12 +1967,12 @@ makeChart12 = function(){
 						
 						
 			
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") != -1){
-							// Création manuelle de la legende des protocoles
+							// Crï¿½ation manuelle de la legende des protocoles
 							creerLegendeProtocole(JsonObjLocalhost[2][ongletActif()], "2", ongletActif(), Vcolor);
 						}else{
-							// Création manuelle de la legende
+							// Crï¿½ation manuelle de la legende
 							creerLegende(JsonObjLocalhost[2][ongletActif()], "2", ongletActif(), 17);
 						}
 						
@@ -2050,7 +2100,7 @@ makeChart13 = function(){
 						var up = new Array();
 						var down = new Array();
 						
-						// ajout automatique des séries
+						// ajout automatique des sï¿½ries
 						var i = 2;
 						while(JsonObjLocalhost[3][ongletActif()].data[i] != null){
 							if( JsonObjLocalhost[3][ongletActif()].data[i].type ==="IN"){
@@ -2105,7 +2155,7 @@ makeChart13 = function(){
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
@@ -2138,12 +2188,12 @@ makeChart13 = function(){
 						
 						
 			
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") != -1){
-							// Création manuelle de la legende des protocoles
+							// Crï¿½ation manuelle de la legende des protocoles
 							creerLegendeProtocole(JsonObjLocalhost[3][ongletActif()], "3", ongletActif(), Vcolor);
 						}else{
-							// Création manuelle de la legende
+							// Crï¿½ation manuelle de la legende
 							creerLegende(JsonObjLocalhost[3][ongletActif()], "3", ongletActif(), 17);
 						}
 						
@@ -2288,7 +2338,7 @@ makeChart14 = function(){
 						var up = new Array();
 						var down = new Array();
 						
-						// ajout automatique des séries
+						// ajout automatique des sï¿½ries
 						var i = 2;
 						while(JsonObjLocalhost[4][ongletActif()].data[i] != null){
 							if( JsonObjLocalhost[4][ongletActif()].data[i].type ==="IN"){
@@ -2345,7 +2395,7 @@ makeChart14 = function(){
 							vAxis: "y",
 							vMajorLines: false,
 							vMinorLines:false,
-							hMajorLines: true,
+							hMajorLines: false,
 							hMinorLines:false
 						});
 						
@@ -2379,12 +2429,12 @@ makeChart14 = function(){
 						
 						
 			
-						// Création manuelle de la legende
+						// Crï¿½ation manuelle de la legende
 						if(jsonNameFromTreePath(ongletActif()).indexOf("Protocole") != -1){
-							// Création manuelle de la legende des protocoles
+							// Crï¿½ation manuelle de la legende des protocoles
 							creerLegendeProtocole(JsonObjLocalhost[4][ongletActif()], "4", ongletActif(), Vcolor);
 						}else{
-							// Création manuelle de la legende
+							// Crï¿½ation manuelle de la legende
 							creerLegende(JsonObjLocalhost[4][ongletActif()], "4", ongletActif(), 17);
 						}
 						
@@ -2583,7 +2633,7 @@ makeChart16a = function(){
 				
 							
 							//Legende
-							// On remplace les valeurs des legendes du camemberts par celles données dans le Json
+							// On remplace les valeurs des legendes du camemberts par celles donnï¿½es dans le Json
 							var pieDivs = document.getElementById('camembert1').getElementsByTagName("div");
 							//var ess = document.getElementById('camembert1').getElementsByTagName("path");
 							var pieData = chart16a.series[0].data;
@@ -2728,7 +2778,7 @@ makeChart16b = function(){
 							})
 							
 							//Legende
-							// On remplace les valeurs des legendes du camemberts par celles données dans le Json
+							// On remplace les valeurs des legendes du camemberts par celles donnï¿½es dans le Json
 							var pieDivs = document.getElementById('camembert2').getElementsByTagName("div");
 							var pieData = chart16b.series[0].data;
 							var ySum = 0;
@@ -2839,7 +2889,7 @@ makeChartProtoAccurate = function(divID){
 													switch(JsonAccurate.data[i].type){
 														case "IN":
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	others_in.push(JsonAccurate.data[i].tab[j].y[k]*-1); 
@@ -2848,7 +2898,7 @@ makeChartProtoAccurate = function(divID){
 														break;
 														case "OUT":
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	others_out.push(JsonAccurate.data[i].tab[j].y[k]); 
@@ -2864,7 +2914,7 @@ makeChartProtoAccurate = function(divID){
 													switch(JsonAccurate.data[i].type){
 														case "IN":
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	tcp_in.push(JsonAccurate.data[i].tab[j].y[k]*-1); 
@@ -2873,7 +2923,7 @@ makeChartProtoAccurate = function(divID){
 														break;
 														case "OUT":
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	tcp_out.push(JsonAccurate.data[i].tab[j].y[k]); 
@@ -2889,7 +2939,7 @@ makeChartProtoAccurate = function(divID){
 													switch(JsonAccurate.data[i].type){
 														case "IN":
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	udp_in.push(JsonAccurate.data[i].tab[j].y[k]*-1); 
@@ -2985,7 +3035,7 @@ makeChartProtoAccurate = function(divID){
 								c.addSeries("tcp", tcp_out, {plot: "default", stroke: {color: blue_Color_Stroke}, fill: blue_Color});
 								
 								
-								// Ajout des axes X et Y (abscisse et ordonnée)
+								// Ajout des axes X et Y (abscisse et ordonnï¿½e)
 								
 								/*c.addAxis("x", {fixLower: "major", fixUpper: "major"});*/
 								var labels = new Array();
@@ -3016,7 +3066,7 @@ makeChartProtoAccurate = function(divID){
 								}
 								
 								
-								// ajouter l'axe des ordonnées et ajuster les unites au dessus
+								// ajouter l'axe des ordonnï¿½es et ajuster les unites au dessus
 								addVerticalAxisAccurate(c, serie_cumul_all, tcp_out, JsonAccurate);
 								//c.addAxis("y", {vertical: true, fixLower: "minor", fixUpper: "minor", natural: true, includeZero: true});
 							
@@ -3126,7 +3176,7 @@ makeChartNetworkNbHostsAccurate = function(divID){
 									try{
 										if(JsonAccurate.data[i].name){
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	nbHosts.push(JsonAccurate.data[i].tab[j].y[k]); 
@@ -3240,7 +3290,7 @@ makeChartLocalhostsNbHostsAccurate = function(divID){
 											switch(JsonAccurate.data[i].name){
 												case "NBDIFFHOSTSINC":
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	nbHosts_inc.push(JsonAccurate.data[i].tab[j].y[k]*-1); 
@@ -3249,7 +3299,7 @@ makeChartLocalhostsNbHostsAccurate = function(divID){
 												break;
 												case "NBDIFFHOSTSOUT":
 															for(var j = 0; j < JsonAccurate.data[i].tab.length; j++){
-																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique à 0");
+																if(JsonAccurate.data[i].tab[j].y.length == 0)console.log("champ y VIDE !!! ===> remplissage automatique ï¿½ 0");
 																if(JsonAccurate.data[i].tab[j].y.length == 0)JsonAccurate.data[i].tab[j].y=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 																for(var k = 0; k < JsonAccurate.data[i].tab[j].y.length; k++){
 																	nbHosts_out.push(JsonAccurate.data[i].tab[j].y[k]); 

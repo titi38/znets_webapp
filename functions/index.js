@@ -10,16 +10,16 @@
 		
 		var Vcolor = [  '#FFC8A3' , '#61F554' , '#A3C6FF' ];
 		
-		// variable mémorisant l'arbre de stats des localhosts
+		// variable mï¿½morisant l'arbre de stats des localhosts
 		var myStore = null;
 		
-		// variable indicative du cycle de la dernière rawdata dessinée dans le tableau de rawdata
+		// variable indicative du cycle de la derniï¿½re rawdata dessinï¿½e dans le tableau de rawdata
 		var last_Cycle = null;
 		
-		// variable indicative du cycle de la dernière rawdata dessinée dans le tableau de rawdata
+		// variable indicative du cycle de la derniï¿½re rawdata dessinï¿½e dans le tableau de rawdata
 		//var compteur_Cycle = 0;
 		
-		// tableau de variables contenant l'index du graph courrament affiché
+		// tableau de variables contenant l'index du graph courrament affichï¿½
 		var current_shown_graph_index = new Object();
 		
 		// variable contenant la <tr> courrante du tableau des alertes 
@@ -255,13 +255,13 @@
 		var num_id_flow_INDEX = 17;
 		
 	
-		// index de la dernière alerte connue
+		// index de la derniï¿½re alerte connue
 		var lastAlertIdx = null;
 		
 		// compteur de "startup" de la tab container ( lancer le click on tree au 4eme startup qui est le dernier)
 		var startupCount = 0;
 		
-		askWhere = "";/*"/hell/";*/
+		askWhere = "/znets/";/*"/hell/";*/
 		
 		divSizePercent = "80%";
 		

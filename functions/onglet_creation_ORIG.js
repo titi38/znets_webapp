@@ -127,7 +127,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 			
 			if(isClosable){ 	// si isClosable = true alors il s'agit soit d'un onglet data, soit d'un onglet localhost
 				
-				if(estData){ // s'il est un onglet data alors l'"attache" à 'RawDataTabContainer'
+				if(estData){ // s'il est un onglet data alors l'"attache" ï¿½ 'RawDataTabContainer'
 					
 					
 						Elem = document.createElement("div");
@@ -162,7 +162,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 						tabOngletsIds.push(NouvelOnglet+"");
 
 					
-				}else{ // sinon, c'est un onglet localhost alors l'"attache" à 'LocalhostsTabContainer'
+				}else{ // sinon, c'est un onglet localhost alors l'"attache" ï¿½ 'LocalhostsTabContainer'
 				
 					
 						Elem = document.createElement("div");
@@ -199,9 +199,9 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 					
 				};
 				
-			}else{ 			// sinon c'est soit un onglet réseau, soit un onglet groupe de réseau
+			}else{ 			// sinon c'est soit un onglet rï¿½seau, soit un onglet groupe de rï¿½seau
 				
-				if(estGroupe){ // s'il est un groupe de réseaux, alors c'est un "TabContainer" et on l'"attache" à 'NetworksTabContainer'
+				if(estGroupe){ // s'il est un groupe de rï¿½seaux, alors c'est un "TabContainer" et on l'"attache" ï¿½ 'NetworksTabContainer'
 					
 					var TabContainer = registry.byId('NetworksTabContainer');
 					
@@ -221,7 +221,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 					
 				}else{
 				
-					if(!underGroup){ // s'il n'est pas dans un groupe de réseaux, alors, on l'"attache" à 'NetworksTabContainer'
+					if(!underGroup){ // s'il n'est pas dans un groupe de rï¿½seaux, alors, on l'"attache" ï¿½ 'NetworksTabContainer'
 					
 						Elem = document.createElement("div");
 						Elem.setAttribute('id', "Div"+NouvelOnglet);
@@ -244,7 +244,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 						tabOngletsIds.push(NouvelOnglet+"");
 						
 						
-					}else{		// sinon, on l'"attache" au groupe de réseaux correspondant
+					}else{		// sinon, on l'"attache" au groupe de rï¿½seaux correspondant
 						
 						// Creation du nouvel onglet dojo
 						Elem = document.createElement("div");
@@ -470,7 +470,7 @@ function creerDivGraphique(Onglet){
 		mettreChampsAJour(document.getElementById('presets'+Onglet).value, 'presets'+Onglet, Onglet);
 		
 		
-		// l'affichage de l'interval de temps affiché par les graphes
+		// l'affichage de l'interval de temps affichï¿½ par les graphes
 		E1 = document.createElement("div");
 		E1.innerHTML = '<table cellspacing=0 cellpadding=0><tr><td style="width: 50%"><center><table><tr><td><img src="images/clock.png" title="Current selection"></td><td><i>:<font id="timeSpace'+Onglet+'" style="margin-left: 15px;"></font></i></td></tr></table></center></td><td id="timeSpaceChange'+Onglet+'" style="width: 50%"></td></tr></table>'
 		
@@ -1112,7 +1112,7 @@ function creerDivData(Onglet){
 		
 		E2 = document.createElement("div");
 		E2.setAttribute('id',"TabData"+Onglet);
-		// inutile car nous la rendrons visible une fois que le tableau sera completé a 100%
+		// inutile car nous la rendrons visible une fois que le tableau sera completï¿½ a 100%
 		//E2.setAttribute('style', "width: 100%; border: 1px solid #6c6; margin: 2px; height: 98%; overflow-y: auto;");
 		E1.appendChild(E2);
 		
@@ -1339,7 +1339,7 @@ function creerDivGraphiqueReseau(Onglet){
 		mettreChampsAJour(document.getElementById('presets'+Onglet).value, 'presets'+Onglet, Onglet);
 		
 		
-		// l'affichage de l'interval de temps affiché par les graphes
+		// l'affichage de l'interval de temps affichï¿½ par les graphes
 		E1 = document.createElement("div");
 		E1.innerHTML ='<table cellspacing=0 cellpadding=0><tr><td style="width: 50%"><center><table><tr><td><img src="images/clock.png" title="Current selection"></td><td><i>:<font id="timeSpace'+Onglet+'" style="margin-left: 15px;"></font></i></td></tr></table></center></td><td id="timeSpaceChange'+Onglet+'" style="width: 50%"></td></tr></table>'
 		
@@ -2100,7 +2100,7 @@ function creerDivGraphiqueReseau(Onglet){
 	
 function ChargerLogs(){
 	
-		// si un chargement a déja echoué (car serveur introuvable) !
+		// si un chargement a dï¿½ja echouï¿½ (car serveur introuvable) !
 		if (pending>=2)  return;
 		
 		//sinon
@@ -2115,11 +2115,12 @@ function ChargerLogs(){
 			}else{
 				xhr.open("GET", "getLogs.json?dh="+decalageHoraire+"&id="+document.getElementById("Logs").value, true);
 			}
+			lockScreen();
 			xhr.onreadystatechange=function() 
 			{
 				if (xhr.readyState == 4) 
 				{
-					//alert("Chargé");
+					//alert("Chargï¿½");
 					
 					if (xhr.status == 200) 
 					{
@@ -2265,7 +2266,7 @@ function ChargerLogs(){
 					}
 				}else if (xhr.readyState == 0) 
 				{
-					//alert("Non initialisé");
+					//alert("Non initialisï¿½");
 				}else if (xhr.readyState == 1) 
 				{
 					//alert("Ouvert");
@@ -2277,11 +2278,13 @@ function ChargerLogs(){
 						dialogAlert.show();
 					}
 					//pending =0;
+				
 				}else if (xhr.readyState == 3) 
 				{
 					//alert("pending=0");
 					pending =0;
 				}
+				
 			}
 			xhr.send(null);
 		}catch(e){
@@ -2345,6 +2348,7 @@ function ChargerData(Onglet, force){
 			xhr.open("GET",  "rawDataFlow.json?"+parameters+dataPage+"&force=true", true);
 		else
 			xhr.open("GET",  "rawDataFlow.json?"+parameters+dataPage, true);
+		//lockScreen();
 		xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
@@ -2868,7 +2872,7 @@ function ChargerData(Onglet, force){
 						
 						
 						
-						// création de l'icone "save to CSV"
+						// crï¿½ation de l'icone "save to CSV"
 						E1 = document.createElement("button");
 						E1.setAttribute('type', "button");
 						//E1.setAttribute('onclick', "this.disabled = true; body.style.cursor = 'wait'; self.location.href='http://lpsc-znets:8443/rawDataFlow.csv?'+parameters;");
@@ -2926,6 +2930,7 @@ function ChargerData(Onglet, force){
 			}else{
 				
 			}
+		//	unlockScreen();	
 		}
 		xhr.send(null);
 	}

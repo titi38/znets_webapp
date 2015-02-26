@@ -3164,6 +3164,7 @@ function ChargerLogs(){
 					//open xml element (case as first run)
 					xhr.open("GET", askWhere + "getLogs.json?dh="+decalageHoraire, true);
 				}
+				
 				xhr.onreadystatechange=function() 
 				{
 					if (xhr.readyState == 4) 
@@ -3525,6 +3526,7 @@ function ChargerLogs(){
 						//alert("pending=0");
 						pending =0;
 					}
+			
 				}
 				xhr.send(null);
 			}catch(e){
@@ -3551,6 +3553,7 @@ function ChargerData(Onglet, force){
 			xhr.open("GET", askWhere +  "rawDataFlow.json?"+parameters+"&force=true", true);
 		else
 			xhr.open("GET", askWhere +  "rawDataFlow.json?"+parameters, true);
+		lockScreen();
 		xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
@@ -4028,6 +4031,8 @@ function ChargerData(Onglet, force){
 						alert("chargerData error : "+ e)
 					}
 				}
+				unlockScreen();	
+				
 			}
 		}
 	
@@ -4089,7 +4094,7 @@ function ChargerData(Onglet, force){
 			xhr.open("GET", askWhere +  "rawDataFlow.json?"+parameters+dataPage+"&force=true", true);
 		else
 			xhr.open("GET", askWhere +  "rawDataFlow.json?"+parameters+dataPage, true);
-		xhr.onreadystatechange=function() 
+		lockScreen();xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
 			{
@@ -4712,6 +4717,7 @@ function chargerAlerts(){
 		xhr.open("GET",    askWhere +"getAlertList.json?"+document.getElementById("Alerts").getAttribute('params'), true);
 		
 	
+		lockScreen();
 		xhr.onreadystatechange=function() 
 		{
 		
@@ -5301,8 +5307,10 @@ function chargerAlerts(){
 					document.getElementById('TabData'+Onglet).innerHTML = 'Json not found';
 				}
 				//unLoading();
+				unlockScreen();	
 				
 			}
+		//	
 		}
 		
 		xhr.send(null);
@@ -5332,6 +5340,7 @@ function rechargerAlerts(page){
 		xhr.open("GET",  askWhere +"getAlertList.json?"+document.getElementById("Alerts").getAttribute('params')+"&page="+page, false);
 	
 	
+		lockScreen();
 		xhr.onreadystatechange=function() 
 		{
 		
@@ -5422,8 +5431,9 @@ function rechargerAlerts(page){
 					document.getElementById('TabData'+Onglet).innerHTML = 'Json not found';
 				}
 				//unLoading();
+				unlockScreen();	
 				
-			}
+			}	
 		}
 		
 		xhr.send(null);

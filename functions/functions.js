@@ -1,3 +1,33 @@
+
+
+var cptRequest=0;
+
+
+function lockScreen()
+	{	
+		if(cptRequest==0)
+		{
+			document.getElementById('disablingDiv').style.display='block';
+			//alert('lock:'+cptRequest);	
+		}
+		cptRequest++;
+		
+	}
+	
+
+function unlockScreen()
+{
+
+	cptRequest--;
+	if(cptRequest==0)
+	{
+		document.getElementById('disablingDiv').style.display='none';
+		//alert('unlock:'+cptRequest);
+	}
+	
+}
+	
+	
 function selectGrapheOption(numGraphe, Onglet){
 	
 	initZoom(numGraphe, Onglet);	
@@ -166,7 +196,7 @@ function makeWhoIs( ip, server ){
 			xhr.open("GET", askWhere +  "whois.json?ip="+ip+"&server="+server, true);
 		else
 			xhr.open("GET", askWhere +  "whois.json?ip="+ip, true);
-		xhr.onreadystatechange=function() 
+		lockScreen();xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
 			{
@@ -198,7 +228,7 @@ function makeWhoIs( ip, server ){
 				
 				dialogWhoIs.show();
 			}
-
+			unlockScreen();	
 		}
 		xhr.send(null);
 	
@@ -285,7 +315,7 @@ function solveIpExt(element){
 			var xhr = createXhrObject();
 			
 				xhr.open("GET", askWhere +  "resolv.json?ip="+element.getAttribute('host'), true);
-			xhr.onreadystatechange=function() 
+			lockScreen();xhr.onreadystatechange=function() 
 			{
 				if (xhr.readyState == 4) 
 				{
@@ -312,6 +342,7 @@ function solveIpExt(element){
 						element.title = "None";
 					}
 				}
+				unlockScreen();	
 			}
 			xhr.send(null);
 		}	
@@ -398,7 +429,7 @@ function resolveProto(element){
 			var xhr = createXhrObject();
 			
 				xhr.open("GET", askWhere +  "getProtoDesc.json?proto="+element.innerHTML, true);
-			xhr.onreadystatechange=function() 
+			lockScreen();xhr.onreadystatechange=function() 
 			{
 				if (xhr.readyState == 4) 
 				{
@@ -434,6 +465,7 @@ function resolveProto(element){
 						element.title = "Can't resolve";
 					}
 				}
+				unlockScreen();	
 			}
 			xhr.send(null);
 		}	
@@ -454,7 +486,7 @@ function resolveService(element){
 			var xhr = createXhrObject();
 			
 				xhr.open("GET", askWhere +  "getPortServiceName.json?proto="+element.getAttribute('proto')+"&port="+element.innerHTML, true);
-			xhr.onreadystatechange=function() 
+			lockScreen();xhr.onreadystatechange=function() 
 			{
 				if (xhr.readyState == 4) 
 				{
@@ -481,6 +513,7 @@ function resolveService(element){
 						element.title = "Can't resolve";
 					}
 				}
+				unlockScreen();	
 			}
 			xhr.send(null);
 		}	
@@ -615,7 +648,7 @@ function makeConf(){
 		var xhr = createXhrObject();
 
 		xhr.open("GET", askWhere + "getConfig.json", true);
-		xhr.onreadystatechange=function() 
+		lockScreen();xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
 			{	
@@ -1828,7 +1861,7 @@ function makeConf(){
 				}
 								dialogConf.show();
 			}
-
+			unlockScreen();	
 		}
 		xhr.send(null);
 	

@@ -17,6 +17,7 @@ function initFunction(){
 		var xhr = createXhrObject();
 
 		xhr.open("GET", askWhere + "getConfig.json", true);
+		lockScreen();
 		xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
@@ -42,7 +43,7 @@ function initFunction(){
 						if(dRDTD)document.getElementById("2ndPartDetailTab").style.display="none" ;
 						else document.getElementById("2ndPartDetailTab").style.display="block" ;
 								
-						//verification de la validité de la clé produit
+						//verification de la validitï¿½ de la clï¿½ produit
 						//alert(json.validKey+" : "+json.validKey == "true");
 						//alert(json.validKey);
 						if(json.validKey == "true"){
@@ -97,7 +98,7 @@ function initFunction(){
 							document.getElementById('dh2').setAttribute('value', document.getElementById('dh').value);
 							document.getElementById('dhAlerts').setAttribute('value', document.getElementById('dh').value);
 							
-							// obtention des divers reseaux existants et créations des onglets correspondants
+							// obtention des divers reseaux existants et crï¿½ations des onglets correspondants
 							setNetworksTabs();
 		
 				
@@ -176,7 +177,9 @@ function initFunction(){
 					//setTimeout(initFunction(), 10000);
 					reload();
 				}
+				unlockScreen();	
 			}
+			
 		}
 		xhr.send(null);
 		

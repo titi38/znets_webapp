@@ -10,7 +10,8 @@
 	 
 	
 	xhr.open("GET", askWhere +  jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params') , true);
-	xhr.onreadystatechange=function() 
+	
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -380,7 +381,7 @@
 			}
 			
 			//unLoading();
-			
+			unlockScreen();	
 		}
 		
 	}
@@ -403,7 +404,7 @@ makeChart2 = function(){
 
 	
 	xhr.open("GET", askWhere +  jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params'), true);
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -690,9 +691,10 @@ makeChart2 = function(){
 			
 		
 			//unLoading();
+			unlockScreen();
 		
 		}
-		
+			
 	}
 	xhr.send(null);
 
@@ -710,7 +712,7 @@ makeChart3 = function(){
 
 	
 	xhr.open("GET", askWhere +  jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&service=loc", true);
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -929,6 +931,7 @@ makeChart3 = function(){
 			}
 			
 			//unLoading();
+			unlockScreen();	
 		
 		}
 		
@@ -949,7 +952,7 @@ makeChart4 = function(){
 	
 	
 	xhr.open("GET", askWhere +  jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&service=ext", true);
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -1161,7 +1164,7 @@ makeChart4 = function(){
 			}
 			
 			//unLoading();
-		
+			unlockScreen();	
 		}
 		
 	}
@@ -1187,7 +1190,7 @@ makeChart5 = function(){
 
 	
 	xhr.open("GET", askWhere +   jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params'), true);//"netTop10NbExtHosts.json?"+
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -1386,6 +1389,7 @@ makeChart5 = function(){
 			}
 			
 			//unLoading();
+			unlockScreen();	
 		
 		}
 		
@@ -1411,7 +1415,7 @@ makeChart6 = function(){
 
 	
 	xhr.open("GET", askWhere +   jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params'), true);//"netNbExternalHosts.json?"+
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -1519,6 +1523,7 @@ makeChart6 = function(){
 			}
 			
 			//unLoading();
+			unlockScreen();	
 		
 		}
 		
@@ -1544,7 +1549,7 @@ makeChart7 = function(){
 	
 	
 	xhr.open("GET", askWhere + jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params'), true);//  "netNbLocalHosts.json?"+
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -1659,6 +1664,7 @@ makeChart7 = function(){
 			}
 			
 			//unLoading();
+			unlockScreen();	
 		
 		}
 		
@@ -1688,7 +1694,7 @@ makeChart11 = function(){
 
 	
 	xhr.open("GET", askWhere +   jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params'), true);
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -1803,7 +1809,7 @@ makeChart11 = function(){
 			}
 			
 			//unLoading();
-		
+			unlockScreen();	
 		}
 		
 	}
@@ -1820,7 +1826,7 @@ makeChart12 = function(){
 
 	
 	xhr.open("GET", askWhere +   jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params'), true);
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -2064,6 +2070,7 @@ makeChart12 = function(){
 			}
 			
 			//unLoading();
+			unlockScreen();	
 		
 		}
 		
@@ -2083,7 +2090,7 @@ makeChart13 = function(){
 
 	
 	xhr.open("GET", askWhere +   jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&service=loc", true);
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -2302,7 +2309,7 @@ makeChart13 = function(){
 			}
 			
 			//unLoading();
-		
+			unlockScreen();	
 		}
 		
 	}
@@ -2323,7 +2330,7 @@ makeChart14 = function(){
 
 	
 	xhr.open("GET", askWhere +   jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&service=ext", true);
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -2544,6 +2551,7 @@ makeChart14 = function(){
 			}
 			
 			//unLoading();
+			unlockScreen();	
 		
 		}
 		
@@ -2565,7 +2573,7 @@ makeChart16a = function(){
 	
 	xhr.open("GET", askWhere +   JsonName+"?"+parameters, true);
 	
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -2697,6 +2705,7 @@ makeChart16a = function(){
 			}
 			
 			//unLoading();
+			unlockScreen();	
 		
 		}
 		
@@ -2717,7 +2726,7 @@ makeChart16b = function(){
 	
 	xhr.open("GET", askWhere +   JsonName+"?"+parameters, true);
 	
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -2835,7 +2844,7 @@ makeChart16b = function(){
 			}
 			
 			//unLoading();
-		
+			unlockScreen();	
 		}
 		
 		
@@ -2862,7 +2871,7 @@ makeChartProtoAccurate = function(divID){
 	xhr.open("GET", askWhere + jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+((document.getElementById("Button"+graphIndexFromTreePath(ongletActif())+ongletActif())) ?  "&accurate=true&": ""), true);
 	//xhr.open("GET", "netProtocolesTrafficAccurate.json" , true);
 	
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -3128,7 +3137,7 @@ makeChartProtoAccurate = function(divID){
 			}
 			
 			//unLoading();
-		
+			unlockScreen();	
 		}
 		
 		
@@ -3159,7 +3168,7 @@ makeChartNetworkNbHostsAccurate = function(divID){
 	xhr.open("GET", askWhere + jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&accurate=true&", true);
 	//xhr.open("GET", "netProtocolesTrafficAccurate.json" , true);
 	
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -3242,7 +3251,7 @@ makeChartNetworkNbHostsAccurate = function(divID){
 			}
 			
 			//unLoading();
-		
+			unlockScreen();	
 		}
 		
 		
@@ -3270,7 +3279,7 @@ makeChartLocalhostsNbHostsAccurate = function(divID){
 	xhr.open("GET", askWhere + jsonNameFromTreePath(ongletActif())+document.getElementById(ongletActif()).getAttribute('params')+"&accurate=true&", true);
 	//xhr.open("GET", "netProtocolesTrafficAccurate.json" , true);
 	
-	xhr.onreadystatechange=function() 
+	lockScreen();xhr.onreadystatechange=function() 
 	{
 		if (xhr.readyState == 4) 
 		{
@@ -3370,7 +3379,7 @@ makeChartLocalhostsNbHostsAccurate = function(divID){
 			}
 			
 			//unLoading();
-		
+			unlockScreen();	
 		}
 		
 		

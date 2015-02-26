@@ -435,6 +435,30 @@ function remplissageCorrespondance(JsonLocalhosts, JsonCountry){
 		TabNAME=  new Array();
 	
 		
+		
+		/*
+		 * 
+		 
+		if(JsonLocalhosts == null || JsonLocalhosts.item == null){
+			return
+		}
+			var absent = true;
+			for(var j=0; j<TabNAME.length; j++) if(TabNAME[j] == JsonLocalhosts.items[i].name) absent =false;
+			if(absent){
+				var i=0;
+				
+				
+				while(i<JsonLocalhosts.item.length){
+					TabNAME[i] = JsonLocalhosts.items[i].name;
+					TabIP[i] =  JsonLocalhosts.items[i].ip;
+					i++;
+				}
+				
+				
+			}
+	
+		 */
+		
 			var absent = true;
 			for(var j=0; j<TabNAME.length; j++) if(TabNAME[j] == JsonLocalhosts.items[i].name) absent =false;
 			if(absent){
@@ -595,7 +619,7 @@ function setPlusTabProto(label, proto){
 				var DD =  extractDate(date,"y")+"-"+m+myParseInt(label.split("/")[1])+"-"+d+myParseInt(label.split("/")[0])+" "+"00"+":"+"00";
 				//alert(DD);
 				/*if( myParseInt(label.split("/")[0]) > myParseInt(extractDate(date,"d")) )DD = decalerDate( DD,0,-1,0,0,0 ); // si la date du click > la date de fin alors on a clickï¿½ sur un jour du mois precedent !
-				if( myParseInt(label.split("/")[1]) > myParseInt(extractDate(date,"m")) )DD = decalerDate( DD,-1,0,0,0,0 ); // si le mois du click > au mois de fin alors on a clickï¿½ sur l'année precedente !
+				if( myParseInt(label.split("/")[1]) > myParseInt(extractDate(date,"m")) )DD = decalerDate( DD,-1,0,0,0,0 ); // si le mois du click > au mois de fin alors on a clickï¿½ sur l'annï¿½e precedente !
 				alert(DD);*/
 				document.getElementById("dateDebData").value =  DD;			
 				document.getElementById("dateDebData").onchange();	
@@ -1846,13 +1870,13 @@ function clickOnglet(id)
 		
 	
 	// changer la variable  indiquant l'onglet courrant
-	if(id != "Networks" && id != "Localhosts" && id != "RawData"){ // ces 3 onglets sont particuliers car ils possèdent des sous onglets et ce sont ces derniers qui nous interressent
+	if(id != "Networks" && id != "Localhosts" && id != "RawData"){ // ces 3 onglets sont particuliers car ils possï¿½dent des sous onglets et ce sont ces derniers qui nous interressent
 		activeTab = id;
 	}else{
 		setActiveTab(id);
 		
 		
-		//  si c'est longlet Network et que c'est le premier click, alors lancer la présentation du graphe par default
+		//  si c'est longlet Network et que c'est le premier click, alors lancer la prï¿½sentation du graphe par default
 		if(id == "Networks" && document.getElementById(id).getAttribute("firstClick") == "false"){
 			document.getElementById(id).setAttribute("firstClick", "true");
 			require(["dojo/ready","dijit/registry"], function(ready, registry){
@@ -1898,7 +1922,7 @@ var localhostAlreadyOpened2 =  function(id){
 
 
 /*	Met en forme le json pour qu'il soit exploitable par la librairie de dessin DOJO
-	Renvoie le json modifié
+	Renvoie le json modifiï¿½
 */
 function jsonChartingModifier( myJson ){
 	
@@ -1906,7 +1930,7 @@ function jsonChartingModifier( myJson ){
 	
 	if(myJson.data != null){
 		
-		//retournement des données
+		//retournement des donnï¿½es
 		for(var j = 0; j < myJson.data.length; j++){
 			TabDeDonnees[j] = myJson.data[j];							
 		}
@@ -2310,7 +2334,7 @@ function setLegendDataIndex(rawDataJson){
 		}
 	}
 	
-	// ajout de la légende dans le json
+	// ajout de la lï¿½gende dans le json
 	rawDataJson = jsonConcat(rawDataJson, {legend: legendTab});
 
 	return rawDataJson;

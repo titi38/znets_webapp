@@ -19,6 +19,7 @@ function unlockScreen()
 {
 
 	cptRequest--;
+	
 	if(cptRequest==0)
 	{
 		document.getElementById('disablingDiv').style.display='none';

@@ -1,5 +1,6 @@
 function creerLegende( jsonObj, suffixe1, suffixe2, nbMaxLines){
 	
+	
 	// Cr�ation manuelle de la legende
 	var LTab = document.getElementById("legend"+suffixe1+"Tab"+suffixe2);
 						
@@ -11,7 +12,15 @@ function creerLegende( jsonObj, suffixe1, suffixe2, nbMaxLines){
 		} 
 	}
 	
-						
+	var isApp = false;	
+	
+	if(jsonObj.data[0].graph.indexOf("application") >0)
+			{
+			isApp=true;
+		
+			}
+	
+	
 	var TBody = document.createElement("tbody");
 						
 	LTab.appendChild(TBody);
@@ -28,23 +37,40 @@ function creerLegende( jsonObj, suffixe1, suffixe2, nbMaxLines){
 	
 	var Ntr = document.createElement("tr");
 	
+
+	
 	while(jsonObj.data[2+x] != null){
 		while(jsonObj.data[2+x].tab[y] !=null){
 			if(jsonObj.data[2+x].tab[y].item != null){
 				var existant = false;
 				
 				for( var i = 0; i< tableau.length; i++) {
+				
+					
 					if (tableau[i][0] == jsonObj.data[2+x].tab[y].item)
 						existant = true;
+					
+					
 				};
 				
 				if(!existant){
 					tableau[i] = new Array(4)
 					//if(j>=61)alert(">=");
-					tableau[j][0] = jsonObj.data[2+x].tab[y].item;
+					
+  					  tableau[j][0] = jsonObj.data[2+x].tab[y].item;
+				
+						
 					tableau[j][1] = jsonObj.data[2+x].tab[y].color;
 					if(jsonObj.data[2+x].tab[y].c){ if(x==0 && y ==0) alert('hi'); tableau[j][2] = jsonObj.data[2+x].tab[y].c.toLowerCase();}
 					if(jsonObj.data[2+x].tab[y].tooltip) tableau[j][3] = jsonObj.data[2+x].tab[y].tooltip.split("(")[0];
+					
+					
+					
+					
+					
+					
+					
+					
 					j++;
 				}
 			}
@@ -154,8 +180,15 @@ function creerLegende( jsonObj, suffixe1, suffixe2, nbMaxLines){
 		font.setAttribute('size', 1);
 		font.setAttribute('id', 'font'+suffixe1+suffixe2+tableau[i][0]);
 		TD.appendChild(font);
-																																																						 
-		var text = document.createTextNode(tableau[i][0]);
+								
+		
+		var legend = tableau[i][0];
+		
+		if(isApp)
+			legend = legend.split("(")[0];
+			
+		
+		var text = document.createTextNode(legend);
 		font.appendChild(text);
 
 

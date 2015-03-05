@@ -427,7 +427,7 @@ function functionAutoRemplissageCorrespondance(){
 }
 	
 
-function remplissageCorrespondance(JsonLocalhosts, JsonCountry){
+function remplissageCorrespondance(JsonLocalhosts, JsonCountry,JsonApp){
 	//if(!mouseDown){
 		
 		// remplissage des noms et ip des machines
@@ -472,6 +472,9 @@ function remplissageCorrespondance(JsonLocalhosts, JsonCountry){
 		
 		
 		
+		
+			
+			
 		// remplissage des noms et codes lettres des pays
 		TabCOUNTRY =  new Array();
 		for(var i=0; i<JsonCountry.items.length; i++){
@@ -485,6 +488,27 @@ function remplissageCorrespondance(JsonLocalhosts, JsonCountry){
 			}
 		}
 	//}
+		
+	
+		
+		// remplissage des nom d app
+		TabAPP =  new Array();
+		//alert(JsonApp.items.length);
+		
+		for(var i=0; i<JsonApp.items.length; i++){
+			
+			if(TabAPP[JsonApp.items[i].n]){
+			}else{
+				var i=0;
+				while(JsonCountry.items[i] != null){
+					TabAPP[JsonApp.items[i].n] = JsonApp.items[i].id;
+					i++;
+				}
+			
+			}
+		}
+		
+		
 }
 		
 

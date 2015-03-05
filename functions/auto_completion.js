@@ -6,6 +6,7 @@ var autoCompletion = function(){
 		ready(function(){
 
 			var JsonCountry = null;
+			var JsonApp= null;
 			var JsonLocalhosts = null;
 			
 		//alert("hi1");
@@ -255,7 +256,7 @@ var autoCompletion = function(){
 							//tri du tableau
 							JsonCountry.items.sort(compareNInJsonArray); 
 							
-							// inversion pour rajouter un champs en tête de liste
+							// inversion pour rajouter un champs en tï¿½te de liste
 							// rajout du champ "All" en fin de liste (soit en debut dans l'ordre du tri)
 							// inversion pour retrouver l'ordre de tri
 							JsonCountry.items.reverse();
@@ -306,8 +307,84 @@ var autoCompletion = function(){
 						
 					}
 				}
+				
+				
+				
+				
+				// auto completion des noms d'application
+				var xhr2 = createXhrObject();
+				
+								//alert("h9i");
+				xhr2.open("GET", askWhere +  "getAppList.json", false);
+				xhr2.send(null);
+					if (xhr2.readyState == 4) 
+					{
+						if (xhr2.status == 200) 
+						{
+							if( xhr2.responseText == "") {}
+							else{
+								
+								var JsonApp = jsonFormModifier(eval("(" + xhr2.responseText + ")"));
+								if(JsonApp.errMsg)alert("getAppList.json Bug Report: "+JsonApp.errMsg);	
+								
+								
+								
+								//tri du tableau
+								JsonApp.items.sort(compareNInJsonArray); 
+								
+								// inversion pour rajouter un champs en tï¿½te de liste
+								// rajout du champ "All" en fin de liste (soit en debut dans l'ordre du tri)
+								// inversion pour retrouver l'ordre de tri
+								//JsonApp.items.reverse();
+								JsonApp.items.push({ n:"All", id:""});
+								//JsonApp.items.reverse();	
+								
+								
+								//alert("h10i");
+								var stateStore2 = new dojo.data.ItemFileReadStore({
+								    data: JsonApp
+								});
+								//alert("h10bis");
+								//alert(TabAPP.length);
+								var filteringSelectApp = new dijit.form.ComboBox({
+								    id: "SelectApp",
+								    //name: "country",
+								    value: "All",
+								    style: {width: "24em"},
+								    onChange: function(evt){
+									 
+										    if(evt == "N/A") evt="All";
+										    if(TabAPP[evt]){
+											document.getElementById("hiddenApp").value=TabAPP[evt];
+										    }else{
+											this.value="All";
+											this.setAttribute('value', 'All');
+											document.getElementById("hiddenApp").value="";
+											
+										    }
+									 
+									},
+								    store: stateStore2,
+								    sort: {attribute:"n",descending: true},
+								    searchAttr: "n", 
+								    pageSize: 20,
+								    disabled: false
+								},
+								"app");
+								
+								//alert("h11i");
+								filteringSelectApp.set("class", "appTextBox");
+								
+								//alert("h12i");
+								
+							}
+						} else {
+							
+						}
+					}
+				
 			
-			
+					
 			// auto completion des serveurs "whois"
 			serverWhoIsList.items.sort(compareServerInJsonArray); 
 			/*var stateStore = new dojo.data.ItemFileReadStore({
@@ -351,8 +428,8 @@ var autoCompletion = function(){
 						//select.startup();
 					
 			
-			
-			remplissageCorrespondance(JsonAuto, JsonCountry);
+						
+			remplissageCorrespondance(JsonAuto, JsonCountry, JsonApp);
 			autoRemplissageCorrespondance();
 			//alert("end");
 		});

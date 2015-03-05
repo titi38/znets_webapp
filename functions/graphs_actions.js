@@ -69,7 +69,8 @@ function clickLegende(id){
 				else{					
 					document.getElementById("AS").setAttribute("value", tabFont[0].innerHTML.split("(")[1].split(")")[0]);
 					document.getElementById("AS").value = tabFont[0].innerHTML.split("(")[1].split(")")[0];
-					document.getElementById("AS").onchange();
+					
+					//document.getElementById("AS").onchange();
 				}
 			}catch(e){
 			}			
@@ -245,7 +246,7 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 		if(as!=""){
 			document.getElementById("AS").setAttribute("value", as);
 			document.getElementById("AS").value = as;
-			document.getElementById("AS").onchange();
+			//document.getElementById("AS").onchange();
 			//alert(label);
 			if(isApp)
 				{

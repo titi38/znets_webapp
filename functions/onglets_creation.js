@@ -42,6 +42,20 @@ function addNewIpTab(ip){
 	initZoomVar(ip);
 	
 	AjouterOnglet(ip, false, true, false, "");
+
+/*
+	require(["dojo/ready","dijit/registry"], function(ready, registry){
+ 		ready(function(){
+ 		var TabContainer = registry.byId('LocalhostsTabContainer');
+ 		
+ 		var mainTab = registry.byId("LocalhostsTabContainer"); //Tr
+ 		var subTab = registry.byId("Div"+ip); //tab Id which you want to show
+ 		mainTab.selectChild(subTab); //Show the selected Tab
+ 		
+ 		
+ 		});
+ 	});
+	*/
 	
 	/*if(document.getElementById(ip) == null){
 		if(localhostAlreadyOpened()){
@@ -117,6 +131,10 @@ function addNewDataTab(){
 		});
 	});
 	
+	
+ 
+
+	
 	//document.getElementById("Results"+j).onclick();
 	return "Results"+j;
 }
@@ -171,7 +189,12 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 					
 				}else{ // sinon, c'est un onglet localhost alors l'"attache" � 'LocalhostsTabContainer'
 				
+					//alert(NouvelOnglet);
 					
+					if(!document.getElementById(NouvelOnglet))
+						{
+						
+						
 						Elem = document.createElement("div");
 						Elem.setAttribute('id', "Div"+NouvelOnglet);
 						body.appendChild(Elem);
@@ -205,7 +228,11 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 						
 						// ajout de l'onglet dans le tableau d'onglets
 						tabOngletsIds.push(NouvelOnglet+"");
-
+						
+						
+						}
+					
+					
 					
 				};
 				
@@ -286,10 +313,10 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 				};
 				
 			};
-			
-
+		
 
 	});
+	
 	
 }
 
@@ -6643,6 +6670,7 @@ function localhostsTabCompletion(Json){
 				     menusObject.rowMenu.addChild(new dijit.MenuItem({
 																label: "Open clicked localhost",
 																onClick: function(e){
+																	
 																	addNewIpTab(menusObject.rightClickedItem.ip);
 																	require(["dojo/ready", "dijit/registry"], function(ready, registry){
 																		ready(function(){
@@ -6656,11 +6684,13 @@ function localhostsTabCompletion(Json){
 																	var selectedRow = grid.selection.getSelected();
 																	//alert(menusObject.selectedRow);
 																	for(var i = 0; i< selectedRow.length; i++){
+																		
 																		addNewIpTab(selectedRow[i].ip);
 																	}
 																	require(["dojo/ready", "dijit/registry"], function(ready, registry){
 																		ready(function(){
 																			registry.byId("LocalhostsTabContainer").resize();
+																			
 																		});
 																	});
 																}
@@ -6669,6 +6699,9 @@ function localhostsTabCompletion(Json){
 				     //menusObject.rowMenu.addChild(new dijit.MenuItem({label: "Row Menu Item 4"}));
 				     menusObject.rowMenu.startup();
 
+
+				 	
+				     
 				     //menusObject.cellMenu.addChild(new dijit.MenuItem({label: "Cell Menu Item 1"}));
 				     //menusObject.cellMenu.addChild(new dijit.MenuItem({label: "Cell Menu Item 2"}));
 				     //menusObject.cellMenu.addChild(new dijit.MenuItem({label: "Cell Menu Item 3"}));
@@ -6701,8 +6734,18 @@ function localhostsTabCompletion(Json){
 							var selectedRowIndex = this.selection.getSelected();
 							for(var i = 0; i< selectedRowIndex.length; i++){
 								//alert(selectedRow[i].ip);
+								
+								
 								addNewIpTab(selectedRowIndex[i].ip);
+								
+								
+								
+								
 							}
+							
+
+							
+							
 							require(["dojo/ready", "dijit/registry"], function(ready, registry){
 								ready(function(){
 									registry.byId("LocalhostsTabContainer").resize();
@@ -6794,6 +6837,8 @@ function localhostsTabCompletion(Json){
 
 	
 	});
+	
+	
 }
 
 

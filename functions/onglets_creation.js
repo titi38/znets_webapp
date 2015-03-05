@@ -190,6 +190,7 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 				}else{ // sinon, c'est un onglet localhost alors l'"attache" � 'LocalhostsTabContainer'
 				
 					//alert(NouvelOnglet);
+					var TabContainer = registry.byId('LocalhostsTabContainer');
 					
 					if(!document.getElementById(NouvelOnglet))
 						{
@@ -201,7 +202,6 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 						
 						creerDivGraphique(NouvelOnglet+"");
 						
-						var TabContainer = registry.byId('LocalhostsTabContainer');
 						
 						var tabName = NouvelOnglet;
 						if(autoIptoName(NouvelOnglet+"") != "") tabName = autoIptoName(NouvelOnglet+"");
@@ -231,8 +231,10 @@ function AjouterOnglet(NouvelOnglet, estData, isClosable, estGroupe, underGroup)
 						
 						
 						}
+					//TabContainer.selectChild(registry.byId("Div"+NouvelOnglet));
 					
-					
+					//alert('yo');
+						
 					
 				};
 				
@@ -582,16 +584,31 @@ function creerDivGraphique(Onglet){
 				});
 				
 				aspect.after(tree, "onClick", function(item, node, evt){
-					if(!tree.selectedNode.isExpandable){
+				
+					if(!tree.selectedNode)
+						{
+						alert('no node selected');
+						}
+					
+					
+					if(tree.selectedNode && !tree.selectedNode.isExpandable){
 						try{
 							current_shown_graph_index[Onglet] = graphIndexFromTreePath(Onglet);
 							clickTitreOpen(graphIndexFromTreePath(Onglet), Onglet);
 						}catch(e){alert(":::"+e)}
 					}
+					else
+						{
+						current_shown_graph_index[Onglet] = graphIndexFromTreePath(Onglet);
+						clickTitreOpen(graphIndexFromTreePath(Onglet), Onglet);
+						}
 				});
 				
 				aspect.before(tree, "onClick", function(item, node, evt){
-					if(!tree.selectedNode.isExpandable){
+					
+					
+					
+					if(tree.selectedNode && !tree.selectedNode.isExpandable){
 						try{
 							if(current_shown_graph_index[Onglet] != null){
 								clickTitreClose(current_shown_graph_index[Onglet], Onglet)
@@ -1067,6 +1084,7 @@ function creerDivGraphiqueReseau(Onglet){
 				
 				
 				aspect.after(tree, "onClick", function(item){
+				
 					if(!tree.selectedNode.isExpandable){
 						try{
 							current_shown_graph_index[Onglet] = graphIndexFromTreePath(Onglet);
@@ -1076,6 +1094,7 @@ function creerDivGraphiqueReseau(Onglet){
 				});
 				
 				aspect.before(tree, "onClick", function(item){
+					
 					if(!tree.selectedNode.isExpandable){
 						try{
 							if(current_shown_graph_index[Onglet] != null){

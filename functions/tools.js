@@ -500,7 +500,7 @@ function remplissageCorrespondance(JsonLocalhosts, JsonCountry,JsonApp){
 			if(TabAPP[JsonApp.items[i].n]){
 			}else{
 				var i=0;
-				while(JsonCountry.items[i] != null){
+				while(JsonApp.items[i] != null){
 					TabAPP[JsonApp.items[i].n] = JsonApp.items[i].id;
 					i++;
 				}
@@ -1534,7 +1534,7 @@ function setASValueTO(value){
 		document.getElementById("AS").setAttribute("value", "");
 		document.getElementById("AS").value = "";
 	}
-	document.getElementById("AS").onchange();
+	//document.getElementById("AS").onchange();
 }
 
 	
@@ -1550,6 +1550,8 @@ function setIpExtValue(){
 			document.getElementById("AS").onchange();
 			document.getElementById("lhNameDataExt").innerHTML = "";
 		}else{
+			
+			if(document.getElementById("lhNameDataExt"))
 			document.getElementById("lhNameDataExt").innerHTML = returnSolvedIpExt(document.getElementById("ipext").value);
 		}
 	}else{

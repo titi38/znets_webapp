@@ -335,9 +335,9 @@ var autoCompletion = function(){
 								// inversion pour rajouter un champs en t�te de liste
 								// rajout du champ "All" en fin de liste (soit en debut dans l'ordre du tri)
 								// inversion pour retrouver l'ordre de tri
-								//JsonApp.items.reverse();
+								JsonApp.items.reverse();
 								JsonApp.items.push({ n:"All", id:""});
-								//JsonApp.items.reverse();	
+								JsonApp.items.reverse();	
 								
 								
 								//alert("h10i");

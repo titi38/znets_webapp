@@ -330,6 +330,9 @@ var autoCompletion = function(){
 								
 								
 								//tri du tableau
+								
+								
+								
 								JsonApp.items.sort(compareNInJsonArray); 
 								
 								// inversion pour rajouter un champs en t�te de liste

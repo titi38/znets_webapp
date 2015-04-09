@@ -113,6 +113,12 @@
 <!--script type="text/javascript" src="functions/ongletCrea2.js"></script-->
 
 
+
+
+
+
+
+
 </head>
 
 
@@ -796,62 +802,10 @@
 						});		
 					</script-->
 					<li style="display:none;" id="Global"></li>
-					<div style="position: relative; background-color: #EEE;">
-						<form id="formulaireGlobal" onsubmit="return false;" style="margin-bottom: 0px;">
-							<font>Presets : </font>
-							<select id='presetsGlobal'  onchange='mettreChampsAJour(this.value, this.id,"Global"); ' style=' cursor: pointer;'>
-								<option id="defaultPresetGlobal" value='2' selected>Last 24 Hours</option>
-								<option id="defaultMonthPresetGlobal" value='1' >Last Month</option>
-								<option id="HourPresetGlobal" value='2'>24 Hours</option>
-								<option id="MonthPresetGlobal" value='1'>1 Month</option>
-							</select>
-							<input type='hidden' name='pset' id='presetsAppliedGlobal' value=' '/>
-							<img title="Previous Month" style="margin-left: 25px;" src="images/prevMonth.png" disabled
-								onmouseover="if(!this.disabled)this.src = 'images/prevMonthMO.png'; "
-								onmouseout="if(!this.disabled)this.src = 'images/prevMonth.png'; "
-								onclick="if(!this.disabled){ document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,-1,0,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
-							<img title="Previous Day" src="images/prevDay.png" 
-								onmouseover="if(!this.disabled)this.src = 'images/prevDayMO.png'; "
-								onmouseout="if(!this.disabled)this.src = 'images/prevDay.png'; "
-								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,0,-1,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
-							<font style="margin-left: 5px;" >From :  </font>
-							<input  class="datePicker" id="dateDebGlobal" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsGlobal').value, this.id, 'Global');" /> 
-							<input type='hidden' name='dd' id='dateDebAppliedGlobal' value='' />
-							<font>&nbsp;&nbsp;&nbsp;To :  </font>
-							<input  class="datePicker" id="dateFinGlobal" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsGlobal').value, this.id, 'Global');" /> 
-							<input type='hidden' name='df' id='dateFinAppliedGlobal' value=''  />
-							<img title="Next Day"  style="margin-left: 5px;" src="images/nextDay.png" 
-								onmouseover="if(!this.disabled)this.src = 'images/nextDayMO.png'; " 
-								onmouseout="if(!this.disabled)this.src = 'images/nextDay.png'; "
-								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,0,1,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
-							<img title="Next Month" src="images/nextMonth.png" 
-								onmouseover="if(!this.disabled)this.src = 'images/nextMonthMO.png'; "
-								onmouseout="if(!this.disabled)this.src = 'images/nextMonth.png'; "
-								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,1,0,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
-							<input  style="margin-left: 25px;" type='button' id= 'ApplyGlobal' disabled='true' value='Apply' title='Apply to charts' onclick=" clickApply('Global'); setParameters(document.getElementById('Global'), $('formulaireGlobal').serialize());"/>
-							<input type='hidden' id='dh' name='dh' value=0 /> 
-						</form>
-					</div>
-					<div>
-						<table cellspacing=0 cellpadding=0>
-							<tr>
-								<td style="width: 50%">
-									<table>
-										<tr>
-											<td>
-												<img src="images/clock.png" title="Current selection"/>
-											</td>
-											<td>
-												<i>:<font id="timeSpaceGlobal" style="margin-left: 15px;"></font></i>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td id="timeSpaceChangeGlobal" style="width: 50%">
-								</td>
-							</tr>
-						</table>
-					</div>
+					
+					
+					
+		
 					
 					
 					<div id="triangle_des_bermudes" style="display:none;" dojoType="dijit.layout.BorderContainer">
@@ -960,6 +914,66 @@
 							</div>	
 						</div>
 						<div id="contentPaneGlobal" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+								
+								
+					<div>
+						<table cellspacing=0 cellpadding=0>
+							<tr>
+								<td style="width: 50%">
+									<table>
+										<tr>
+											<td>
+												<img src="images/clock.png" title="Current selection"/>
+											</td>
+											<td>
+												<i>:<font id="timeSpaceGlobal" style="margin-left: 15px;"></font></i>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td id="timeSpaceChangeGlobal" style="width: 50%">
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div style="position: relative; background-color: #EEE;">
+						<form id="formulaireGlobal" onsubmit="return false;" style="margin-bottom: 0px;">
+							<font>Presets : </font>
+							<select id='presetsGlobal'  onchange='mettreChampsAJour(this.value, this.id,"Global"); ' style=' cursor: pointer;'>
+								<option id="defaultPresetGlobal" value='2' selected>Last 24 Hours</option>
+								<option id="defaultMonthPresetGlobal" value='1' >Last Month</option>
+								<option id="HourPresetGlobal" value='2'>24 Hours</option>
+								<option id="MonthPresetGlobal" value='1'>1 Month</option>
+							</select>
+							<input type='hidden' name='pset' id='presetsAppliedGlobal' value=' '/>
+							<img title="Previous Month" style="margin-left: 25px;" src="images/prevMonth.png" disabled
+								onmouseover="if(!this.disabled)this.src = 'images/prevMonthMO.png'; "
+								onmouseout="if(!this.disabled)this.src = 'images/prevMonth.png'; "
+								onclick="if(!this.disabled){ document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,-1,0,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<img title="Previous Day" src="images/prevDay.png" 
+								onmouseover="if(!this.disabled)this.src = 'images/prevDayMO.png'; "
+								onmouseout="if(!this.disabled)this.src = 'images/prevDay.png'; "
+								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,0,-1,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<font style="margin-left: 5px;" >From :  </font>
+							<input  class="datePicker" id="dateDebGlobal" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsGlobal').value, this.id, 'Global');" /> 
+							<input type='hidden' name='dd' id='dateDebAppliedGlobal' value='' />
+							<font>&nbsp;&nbsp;&nbsp;To :  </font>
+							<input  class="datePicker" id="dateFinGlobal" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsGlobal').value, this.id, 'Global');" /> 
+							<input type='hidden' name='df' id='dateFinAppliedGlobal' value=''  />
+							<img title="Next Day"  style="margin-left: 5px;" src="images/nextDay.png" 
+								onmouseover="if(!this.disabled)this.src = 'images/nextDayMO.png'; " 
+								onmouseout="if(!this.disabled)this.src = 'images/nextDay.png'; "
+								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,0,1,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<img title="Next Month" src="images/nextMonth.png" 
+								onmouseover="if(!this.disabled)this.src = 'images/nextMonthMO.png'; "
+								onmouseout="if(!this.disabled)this.src = 'images/nextMonth.png'; "
+								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,1,0,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<input  style="margin-left: 25px;" type='button' id= 'ApplyGlobal' disabled='true' value='Apply' title='Apply to charts' onclick=" clickApply('Global'); setParameters(document.getElementById('Global'), $('formulaireGlobal').serialize());"/>
+							<input type='hidden' id='dh' name='dh' value=0 /> 
+						</form>
+			
+					</div>
+			
 							<div style="height: 100%;"><!--((BBQ=="hi") ? "hidden" : "")-->
 										<div id="DivGraphe1Global"  style="position: relative; display: none; overflow : auto; height: 100%;">
 											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">

@@ -345,7 +345,7 @@ function creerDivGraphique(Onglet){
 		DIV.appendChild(E1);
 		
 		var E2 = document.createElement("font");
-		var text = document.createTextNode("Presets : ");
+		var text = document.createTextNode("Presets C: ");
 		E2.appendChild(text);	
 		E1.appendChild(E2);
 		
@@ -744,215 +744,7 @@ function creerDivGraphiqueReseau(Onglet){
 			
 			document.getElementById('Div'+Onglet).innerHTML = '<li style = "display : none;" id="'+Onglet+'"></li>';
 		
-			var DIV = document.createElement("div");
-			DIV.setAttribute('style', "position: relative; background-color: #EEE;");
-			document.getElementById('Div'+Onglet).appendChild(DIV);
-			
-		
-			var E1 = document.createElement("form");
-			E1.setAttribute('id','formulaire'+Onglet);
-			E1.setAttribute('onsubmit',"return false;");
-			E1.setAttribute('style', "margin-bottom: 0px;");
-			
-			DIV.appendChild(E1);
-			
-			var E2 = document.createElement("font");
-			var text = document.createTextNode("Presets : ");
-			E2.appendChild(text);	
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("select");
-			E2.setAttribute('id','presets'+Onglet);
-			E2.setAttribute('style','cursor: pointer;');
-			E2.setAttribute('onchange', 'mettreChampsAJour(this.value, this.id, "'+Onglet+'");');
-			E1.appendChild(E2);
-						
-			var E3 = document.createElement("option");
-			E3.setAttribute('id','defaultPreset'+Onglet);
-			E3.setAttribute('value', '2');
-			E3.setAttribute('selected', 'selected');
-			text = document.createTextNode("Last 24 Hours");
-			E3.appendChild(text);
-			E2.appendChild(E3);
-			
-			
-			E3 = document.createElement("option");
-			E3.setAttribute('id','defaultMonthPreset'+Onglet);
-			E3.setAttribute('value', '1');
-			//E3.selected;
-			text = document.createTextNode("Last Month");
-			E3.appendChild(text);
-			E2.appendChild(E3);
-			
-			E3 = document.createElement("option");
-			E3.setAttribute('value', '2');
-			text = document.createTextNode("24 Hours");
-			E3.appendChild(text);
-			E2.appendChild(E3);
-			
-			E3 = document.createElement("option");
-			E3.setAttribute('value', '1');
-			text = document.createTextNode("1 Month");
-			E3.appendChild(text);
-			E2.appendChild(E3);
-			
-			E2 = document.createElement("input");
-			E2.setAttribute('type','hidden');
-			E2.setAttribute('name', 'pset');		
-			E2.setAttribute('id','presetsApplied'+Onglet);
-			E2.setAttribute('value','');
-			E1.appendChild(E2);
-		
-		
-			E2 = document.createElement("img");       
-			E2.setAttribute('title','Previous Month');       
-			E2.setAttribute('style','margin-left: 30px' );
-			E2.setAttribute('src', '/images/prevMonth.png');
-			E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/prevMonth.png"');
-			E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/prevMonthMO.png"');	
-			E2.setAttribute('onclick','if(!this.disabled){ document.getElementById("dateDeb"+ongletActif()).value = decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,-1,0,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("img");
-			E2.setAttribute('title','Previous Day');
-			E2.setAttribute('style','margin-left: 5px' );
-			E2.setAttribute('src', '/images/prevDay.png');	
-			E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/prevDay.png"');
-			E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/prevDayMO.png"');
-			E2.setAttribute('onclick','if(!this.disabled){ document.getElementById("dateDeb"+ongletActif()).value = decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,0,-1,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
-			E1.appendChild(E2);
-			
-			
-			E2 = document.createElement("font");
-			E2.setAttribute('style','margin-left: 10px' );
-			text = document.createTextNode("From : ");
-			E2.appendChild(text);	
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("input");
-			//E2.setAttribute('readOnly','true');
-			E2.setAttribute('class','datePicker');
-			E2.setAttribute('id','dateDeb'+Onglet);
-			E2.setAttribute('value','');
-			E2.setAttribute('onchange', "this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presets"+Onglet+"').value, this.id, '"+Onglet+"');");
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("input");
-			E2.setAttribute('type','hidden');
-			E2.setAttribute('name', 'dd');	
-			E2.setAttribute('id','dateDebApplied'+Onglet);
-			E2.setAttribute('value','');
-			E1.appendChild(E2);
-			
-			
-			E2 = document.createElement("font");
-			E2.innerHTML="&nbsp;&nbsp;&nbsp;";
-			text = document.createTextNode(" To : ");
-			E2.appendChild(text);	
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("input");
-			E2.setAttribute('class','datePicker');
-			E2.setAttribute('id','dateFin'+Onglet);
-			E2.setAttribute('value','');
-			E2.setAttribute('onchange', "this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presets"+Onglet+"').value, this.id, '"+Onglet+"');");
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("input");
-			E2.setAttribute('type','hidden');
-			E2.setAttribute('name', 'df');		
-			E2.setAttribute('id','dateFinApplied'+Onglet);
-			E2.setAttribute('value','');
-			E1.appendChild(E2);
-		
-			
-			E2 = document.createElement("img");
-			E2.setAttribute('title','Next Day');
-			E2.setAttribute('style','margin-left: 10px' );
-			E2.setAttribute('src', '/images/nextDay.png');	
-			E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/nextDay.png"');
-			E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/nextDayMO.png"');
-			E2.setAttribute('onclick',' if(!this.disabled){document.getElementById("dateDeb"+ongletActif()).value = decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,0,1,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("img");
-			E2.setAttribute('title','Next Month');
-			E2.setAttribute('style','margin-left: 5px' );
-			E2.setAttribute('src', '/images/nextMonth.png');	
-			E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/nextMonth.png"');
-			E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/nextMonthMO.png"');
-			E2.setAttribute('onclick',' if(!this.disabled){document.getElementById("dateDeb"+ongletActif()).value =  decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,1,0,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
-			E2.setAttribute('id','dateDebApplied'+Onglet);
-			E1.appendChild(E2);
-			
-			
-			E2 = document.createElement("font");
-			E2.innerHTML="&nbsp;&nbsp;&nbsp;";
-			
-			//var i = 0;
-			//while(TabNAME[i] != Onglet && i<TabNAME.length) i++;
 					
-			//if(i==TabNAME.length) text = document.createTextNode(" Ip : "+Onglet+"     ");
-			//else	text = document.createTextNode(" Ip : "+TabIP[i]+"     ");
-			//E2.appendChild(text);	
-			
-			//E1.appendChild(E2);
-			
-			//E2 = document.createElement("font");
-			//E2.innerHTML="&nbsp;&nbsp;&nbsp;";
-			//E1.appendChild(E2);
-			
-			E2 = document.createElement("input");
-			E2.setAttribute('type','hidden');
-			E2.setAttribute('name','net');
-			E2.setAttribute('value', Onglet);
-			//E2.setAttribute('id','formIp'+Onglet);
-			//E2.setAttribute('title', 'formIp field');
-			//E2.setAttribute('size', '15');
-			
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("input");
-			E2.setAttribute('type','button');
-			E2.setAttribute('id', 'Apply'+Onglet);
-			E2.setAttribute('style', 'margin-left: 25px;');
-			E2.setAttribute('value', 'Apply');
-			E2.setAttribute('title', 'Apply to charts');
-			E2.setAttribute('onclick', " clickApply('"+Onglet+"'); setParameters(document.getElementById('"+Onglet+"') , $('formulaire"+Onglet+"').serialize()); ");
-			E1.appendChild(E2);
-			
-			E2 = document.createElement("input");
-			E2.setAttribute('type','hidden');
-			E2.setAttribute('name', 'dh');
-			E2.setAttribute('value', document.getElementById('dh').value);
-			E1.appendChild(E2);
-			
-			mettreChampsAJour(document.getElementById('presets'+Onglet).value, 'presets'+Onglet, Onglet);
-			
-			
-			// l'affichage de l'interval de temps affich� par les graphes
-			E1 = document.createElement("div");
-			E1.innerHTML ='<table cellspacing=0 cellpadding=0><tr><td style="width: 50%"><center><table><tr><td><img src="images/clock.png" title="Current selection"></td><td><i>:<font id="timeSpace'+Onglet+'" style="margin-left: 15px;"></font></i></td></tr></table></center></td><td id="timeSpaceChange'+Onglet+'" style="width: 50%"></td></tr></table>'
-			
-			document.getElementById('Div'+Onglet).appendChild(E1);
-			
-			
-			
-			/*var E4 = document.createElement("table");
-			E4.setAttribute('height', "90%");
-			document.getElementById('Div'+Onglet).appendChild(E4);
-			
-			var E5 = document.createElement("tbody");
-			E4.appendChild(E5);
-			
-			var E6 = document.createElement("tr");
-			E5.appendChild(E6);
-			
-			var E7 = document.createElement("td");
-			E6.appendChild(E7);*/
-			
-			//var thisInnerHTML = innerHTMLDivGraphsNetworks(Onglet);
-			
 					var  E4 = document.createElement("div");
 					/*E4.innerHTML = '<div id="borderContainer'+Onglet+'" >\
 									<div id="expandoPane'+Onglet+'" >\
@@ -1050,9 +842,6 @@ function creerDivGraphiqueReseau(Onglet){
 			});	*/	
 
 
-
-
-
 			require(["dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dojox/layout/ExpandoPane", "dijit/Tree", "dojo/aspect", "dojo/domReady!"], function(BorderContainer, ContentPane, ExpandoPane, Tree, aspect){
 				// create a BorderContainer as the top widget in the hierarchy
 				var bc = new BorderContainer({
@@ -1070,6 +859,9 @@ function creerDivGraphiqueReseau(Onglet){
 					previewOnDblClick : "true"
 				});
 				bc.addChild(cp1);
+				
+				
+			
 				
 				
 				// Create the Tree.
@@ -1138,6 +930,9 @@ function creerDivGraphiqueReseau(Onglet){
 					id : 'contentPane'+Onglet,
 					region: "center"
 				});
+				
+				
+				
 				bc.addChild(cp2);
 
 				// put the top level widget into the document, and then call startup()
@@ -1148,6 +943,9 @@ function creerDivGraphiqueReseau(Onglet){
 				// create ContentPane's content
 				createNetworkContentPaneSContent(Onglet);
 				//innerHTMLDivGraphsLocalhosts(Onglet);
+
+				
+				
 			});
 			
 			
@@ -1162,6 +960,7 @@ function creerDivGraphiqueReseau(Onglet){
 			dojo.addOnLoad(makeCalendar);
 
 			setParameters(document.getElementById(Onglet) , $('formulaire'+Onglet).serialize());
+			
 			
 		});
 	});
@@ -1266,7 +1065,8 @@ function createLocalhostContentPaneSContent(Onglet){
 				});
 				bc.addChild(cp1);
 				
-	
+				mettreChampsAJour(document.getElementById('presets'+Onglet).value, 'presets'+Onglet, Onglet);
+				
 				
 				EE = document.createElement("div");
 				
@@ -1984,8 +1784,237 @@ function createNetworkContentPaneSContent(Onglet){
 			*/	
 					
 				var globalDiv = document.createElement("div");
+				
+				
+				
+				var DIV = document.createElement("div");
+				DIV.setAttribute('style', "position: relative; background-color: #EEE;");
+				document.getElementById('Div'+Onglet).appendChild(DIV);
+				
 			
+				var E1 = document.createElement("form");
+				E1.setAttribute('id','formulaire'+Onglet);
+				E1.setAttribute('onsubmit',"return false;");
+				E1.setAttribute('style', "margin-bottom: 0px;");
+				
+				DIV.appendChild(E1);
+				
+				var E2 = document.createElement("font");
+				var text = document.createTextNode("Presets: ");
+				E2.appendChild(text);	
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("select");
+				E2.setAttribute('id','presets'+Onglet);
+				E2.setAttribute('style','cursor: pointer;');
+				E2.setAttribute('onchange', 'mettreChampsAJour(this.value, this.id, "'+Onglet+'");');
+				E1.appendChild(E2);
+							
+				var E3 = document.createElement("option");
+				E3.setAttribute('id','defaultPreset'+Onglet);
+				E3.setAttribute('value', '2');
+				E3.setAttribute('selected', 'selected');
+				text = document.createTextNode("Last 24 Hours");
+				E3.appendChild(text);
+				E2.appendChild(E3);
+				
+				
+				E3 = document.createElement("option");
+				E3.setAttribute('id','defaultMonthPreset'+Onglet);
+				E3.setAttribute('value', '1');
+				//E3.selected;
+				text = document.createTextNode("Last Month");
+				E3.appendChild(text);
+				E2.appendChild(E3);
+				
+				E3 = document.createElement("option");
+				E3.setAttribute('value', '2');
+				text = document.createTextNode("24 Hours");
+				E3.appendChild(text);
+				E2.appendChild(E3);
+				
+				E3 = document.createElement("option");
+				E3.setAttribute('value', '1');
+				text = document.createTextNode("1 Month");
+				E3.appendChild(text);
+				E2.appendChild(E3);
+				
+				E2 = document.createElement("input");
+				E2.setAttribute('type','hidden');
+				E2.setAttribute('name', 'pset');		
+				E2.setAttribute('id','presetsApplied'+Onglet);
+				E2.setAttribute('value','');
+				E1.appendChild(E2);
+			
+			
+				E2 = document.createElement("img");       
+				E2.setAttribute('title','Previous Month');       
+				E2.setAttribute('style','margin-left: 30px' );
+				E2.setAttribute('src', '/images/prevMonth.png');
+				E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/prevMonth.png"');
+				E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/prevMonthMO.png"');	
+				E2.setAttribute('onclick','if(!this.disabled){ document.getElementById("dateDeb"+ongletActif()).value = decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,-1,0,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("img");
+				E2.setAttribute('title','Previous Day');
+				E2.setAttribute('style','margin-left: 5px' );
+				E2.setAttribute('src', '/images/prevDay.png');	
+				E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/prevDay.png"');
+				E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/prevDayMO.png"');
+				E2.setAttribute('onclick','if(!this.disabled){ document.getElementById("dateDeb"+ongletActif()).value = decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,0,-1,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
+				E1.appendChild(E2);
+				
+				
+				E2 = document.createElement("font");
+				E2.setAttribute('style','margin-left: 10px' );
+				text = document.createTextNode("From : ");
+				E2.appendChild(text);	
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("input");
+				//E2.setAttribute('readOnly','true');
+				E2.setAttribute('class','datePicker');
+				E2.setAttribute('id','dateDeb'+Onglet);
+				E2.setAttribute('value','');
+				E2.setAttribute('onchange', "this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presets"+Onglet+"').value, this.id, '"+Onglet+"');");
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("input");
+				E2.setAttribute('type','hidden');
+				E2.setAttribute('name', 'dd');	
+				E2.setAttribute('id','dateDebApplied'+Onglet);
+				E2.setAttribute('value','');
+				E1.appendChild(E2);
+				
+				
+				E2 = document.createElement("font");
+				E2.innerHTML="&nbsp;&nbsp;&nbsp;";
+				text = document.createTextNode(" To : ");
+				E2.appendChild(text);	
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("input");
+				E2.setAttribute('class','datePicker');
+				E2.setAttribute('id','dateFin'+Onglet);
+				E2.setAttribute('value','');
+				E2.setAttribute('onchange', "this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presets"+Onglet+"').value, this.id, '"+Onglet+"');");
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("input");
+				E2.setAttribute('type','hidden');
+				E2.setAttribute('name', 'df');		
+				E2.setAttribute('id','dateFinApplied'+Onglet);
+				E2.setAttribute('value','');
+				E1.appendChild(E2);
+			
+				
+				E2 = document.createElement("img");
+				E2.setAttribute('title','Next Day');
+				E2.setAttribute('style','margin-left: 10px' );
+				E2.setAttribute('src', '/images/nextDay.png');	
+				E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/nextDay.png"');
+				E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/nextDayMO.png"');
+				E2.setAttribute('onclick',' if(!this.disabled){document.getElementById("dateDeb"+ongletActif()).value = decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,0,1,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("img");
+				E2.setAttribute('title','Next Month');
+				E2.setAttribute('style','margin-left: 5px' );
+				E2.setAttribute('src', '/images/nextMonth.png');	
+				E2.setAttribute('onmouseout','if(!this.disabled)this.src = "images/nextMonth.png"');
+				E2.setAttribute('onmouseover','if(!this.disabled)this.src = "images/nextMonthMO.png"');
+				E2.setAttribute('onclick',' if(!this.disabled){document.getElementById("dateDeb"+ongletActif()).value =  decalerDate( document.getElementById("dateDeb"+ongletActif()).value,0,1,0,0,0 ); document.getElementById("dateDeb"+ongletActif()).onchange();} ');
+				E2.setAttribute('id','dateDebApplied'+Onglet);
+				E1.appendChild(E2);
+				
+				
+				E2 = document.createElement("font");
+				E2.innerHTML="&nbsp;&nbsp;&nbsp;";
+				
+				//var i = 0;
+				//while(TabNAME[i] != Onglet && i<TabNAME.length) i++;
+						
+				//if(i==TabNAME.length) text = document.createTextNode(" Ip : "+Onglet+"     ");
+				//else	text = document.createTextNode(" Ip : "+TabIP[i]+"     ");
+				//E2.appendChild(text);	
+				
+				//E1.appendChild(E2);
+				
+				//E2 = document.createElement("font");
+				//E2.innerHTML="&nbsp;&nbsp;&nbsp;";
+				//E1.appendChild(E2);
+				
+				E2 = document.createElement("input");
+				E2.setAttribute('type','hidden');
+				E2.setAttribute('name','net');
+				E2.setAttribute('value', Onglet);
+				//E2.setAttribute('id','formIp'+Onglet);
+				//E2.setAttribute('title', 'formIp field');
+				//E2.setAttribute('size', '15');
+				
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("input");
+				E2.setAttribute('type','button');
+				E2.setAttribute('id', 'Apply'+Onglet);
+				E2.setAttribute('style', 'margin-left: 25px;');
+				E2.setAttribute('value', 'Apply');
+				E2.setAttribute('title', 'Apply to charts');
+				E2.setAttribute('onclick', " clickApply('"+Onglet+"'); setParameters(document.getElementById('"+Onglet+"') , $('formulaire"+Onglet+"').serialize()); ");
+				E1.appendChild(E2);
+				
+				E2 = document.createElement("input");
+				E2.setAttribute('type','hidden');
+				E2.setAttribute('name', 'dh');
+				E2.setAttribute('value', document.getElementById('dh').value);
+				E1.appendChild(E2);
+				
+				
+				
+				// l'affichage de l'interval de temps affich� par les graphes
+			
+				/*
+				E1 = document.createElement("div");
+				E1.innerHTML ='<table cellspacing=0 cellpadding=0><tr><td style="width: 50%"><center><table><tr><td><img src="images/clock.png" title="Current selection"></td><td><i>:<font id="timeSpace'+Onglet+'" style="margin-left: 15px;"></font></i></td></tr></table></center></td><td id="timeSpaceChange'+Onglet+'" style="width: 50%"></td></tr></table>'
+				
+				document.getElementById('Div'+Onglet).appendChild(E1);
+				*/
+				
+				
+				/*var E4 = document.createElement("table");
+				E4.setAttribute('height', "90%");
+				document.getElementById('Div'+Onglet).appendChild(E4);
+				
+				var E5 = document.createElement("tbody");
+				E4.appendChild(E5);
+				
+				var E6 = document.createElement("tr");
+				E5.appendChild(E6);
+				
+				var E7 = document.createElement("td");
+				E6.appendChild(E7);*/
+				
+				//var thisInnerHTML = innerHTMLDivGraphsNetworks(Onglet);
 		
+				globalDiv.appendChild(E1);
+				
+				
+				
+				//haaa
+				EPreset = document.createElement("div");
+				EPreset.innerHTML = '<table cellspacing=0 cellpadding=0><tr><td style="width: 50%"><center><table><tr><td><img src="images/clock.png" title="Current selection"></td><td><i>:<font id="timeSpace'+Onglet+'" style="margin-left: 15px;"></font></i></td></tr></table></center></td><td id="timeSpaceChange'+Onglet+'" style="width: 50%"></td></tr></table>'
+				globalDiv.appendChild(EPreset);
+				
+		
+				
+				
+				
+				
+				
+				
+				
+				
 				//1ere fenetre (Graphe1)
 				
 				var E = document.createElement("div");
@@ -2004,6 +2033,9 @@ function createNetworkContentPaneSContent(Onglet){
 	
 				
 				EE = document.createElement("div");
+				
+			
+				
 				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"legend1"+Onglet);
@@ -2029,6 +2061,8 @@ function createNetworkContentPaneSContent(Onglet){
 	
 				
 				EE = document.createElement("div");
+			
+				
 				
 				E1 = document.createElement("button");
 				E1.setAttribute('id',"Button1"+Onglet);
@@ -2081,6 +2115,9 @@ function createNetworkContentPaneSContent(Onglet){
 				ETD.setAttribute('width',"90%");
 				ETR.appendChild(ETD);
 				
+				
+			
+				
 				E2 = document.createElement("div");
 				E2.setAttribute('id',"chart1"+Onglet);
 				E2.setAttribute('style', "width: 95%; height: 99%; float:left; margin-left:1px;");
@@ -2091,9 +2128,9 @@ function createNetworkContentPaneSContent(Onglet){
 				ETD.setAttribute('style',"border: solid 1px #759dc0;");
 				ETR.appendChild(ETD);
 				
+	
 				
-				
-				
+			
 				E2 = document.createElement("table");
 				E2.setAttribute('style',"width: 100%; height: 100%;");
 				ETD.appendChild(E2);

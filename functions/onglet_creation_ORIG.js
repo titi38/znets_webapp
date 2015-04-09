@@ -298,7 +298,7 @@ function creerDivGraphique(Onglet){
 		DIV.appendChild(E1);
 		
 		var E2 = document.createElement("font");
-		var text = document.createTextNode("Presets : ");
+		var text = document.createTextNode("Presets A: ");
 		E2.appendChild(text);	
 		E1.appendChild(E2);
 		

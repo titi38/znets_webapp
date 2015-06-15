@@ -15,7 +15,7 @@ function creerLegende( jsonObj, suffixe1, suffixe2, nbMaxLines){
 	var TBody = document.createElement("tbody");
 						
 	LTab.appendChild(TBody);
-	//LTab.insertBefore(TBody, LTab.firstChild);
+	LTab.insertBefore(TBody, LTab.firstChild);
 					
 	var x=0;
 	var y=0;
@@ -62,7 +62,7 @@ function creerLegende( jsonObj, suffixe1, suffixe2, nbMaxLines){
 	var nbColonne = tableau.length / nbMaxLines;
 	
  
-	/*for (var l = nbMaxLines -1 ; l >= 0 ; l--){
+	for (var l = nbMaxLines -1 ; l >= 0 ; l--){
 		var position = TBody.firstChild;
 		var Ntr = document.createElement("tr");
 		TBody.appendChild(Ntr);
@@ -117,56 +117,6 @@ function creerLegende( jsonObj, suffixe1, suffixe2, nbMaxLines){
 				
 			}
 		}
-	}*/
-	
-	for (var i = 0 ; i < tableau.length ; i++){
-		
-		var Ntr = document.createElement("tr");
-		TBody.appendChild(Ntr);
-		
-		var Ntd = document.createElement("td");Ntd.setAttribute('id','legend'+suffixe1+suffixe2+tableau[i][0]);
-		Ntd.setAttribute('title',tableau[i][3]);
-		Ntd.setAttribute('onmouseover', ' overLegende("chart'+suffixe1+suffixe2+'", "' +tableau[i][1]+ ' " ); this.setAttribute("style" ,"border: 1px solid black; cursor: pointer;"); ');
-		Ntd.setAttribute('onmouseout', ' outLegende("chart'+suffixe1+suffixe2+'"); this.setAttribute("style","border: 1px solid white; cursor: pointer;"); ');
-		Ntd.setAttribute('onclick', ' clickLegende(this.id); ');
-		Ntd.setAttribute('style','cursor: pointer; border: 1px solid white');
-		Ntr.appendChild(Ntd);
-		
-		var TABLE = document.createElement("table");
-		Ntd.appendChild(TABLE);
-
-		var TR = document.createElement("tr");
-		TABLE.appendChild(TR);
-																																																						 
-		var TD = document.createElement("td");
-		TR.appendChild(TD);
-																																																						 
-		var NDiv = document.createElement("div");
-		NDiv.setAttribute('style', "width:10px; height:10px; background:"+tableau[i][1]);
-		NDiv.setAttribute('align', 'left');
-		TD.appendChild(NDiv);
-
-		TD = document.createElement("td");
-		TD.setAttribute('style','white-space: nowrap');
-		TR.appendChild(TD);
-
-		var font = document.createElement("font");
-		font.setAttribute('size', 1);
-		font.setAttribute('id', 'font'+suffixe1+suffixe2+tableau[i][0]);
-		TD.appendChild(font);
-																																																						 
-		var text = document.createTextNode(tableau[i][0]);
-		font.appendChild(text);
-
-
-		if(tableau[i][2]){
-			var img = document.createElement("img");
-			img.setAttribute('style', 'margin-left: 5px');
-			if(tableau[i][2]=="--") img.setAttribute('src', '/images/flags/unknown.png');
-			else img.setAttribute('src', '/images/flags/'+tableau[i][2]+'.png');
-			TD.appendChild(img);
-		}
- 
 	}
 	
 }
@@ -210,25 +160,8 @@ function creerLegendeProtocole(JsonObj, index, onglet, Vcolor){
 					Ntr.appendChild(Ntd);
 					Ntr.insertBefore(Ntd, Ntr.firstChild);
 					
-					if(JsonObj.data[2+x].name){
-						switch(JsonObj.data[2+x].name){
-							case"OTHERS":
-								var CouleurSerie = Vcolor[0];
-							break;
-							case"UDP":
-								var CouleurSerie = Vcolor[1];
-							break;
-							case"TCP":
-								var CouleurSerie = Vcolor[2];
-							break;
-							default:
-								alert("charting.js : unknown protocole json data name")
-							break;
-						}
-					}
-					
 					var NDiv = document.createElement("div");
-					NDiv.setAttribute('style', "width:10px; height:10px; background: "+CouleurSerie);
+					NDiv.setAttribute('style', "width:10px; height:10px; background: "+Vcolor[x/2]);
 					NDiv.setAttribute('align', 'left');
 					Ntd.appendChild(NDiv);
 					

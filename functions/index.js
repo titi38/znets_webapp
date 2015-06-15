@@ -1,103 +1,38 @@
 
-		var BANC_TEST = null;
-		var BANC_TEST_1 = null;
-		var BANC_TEST_2 = null;
-		var BANC_TEST_3 = null;
-		var BANC_TEST_4 = null;
-		var BANC_TEST_5 = null;
+
 		
 		
 		
-		var Vcolor = [  '#FFC8A3' , '#61F554' , '#A3C6FF' ];
-		
-		// variable m�morisant l'arbre de stats des localhosts
-		var myStore = null;
-		
-		// variable indicative du cycle de la derni�re rawdata dessin�e dans le tableau de rawdata
-		var last_Cycle = null;
-		
-		// variable indicative du cycle de la derni�re rawdata dessin�e dans le tableau de rawdata
-		//var compteur_Cycle = 0;
-		
-		// tableau de variables contenant l'index du graph courrament affich�
-		var current_shown_graph_index = new Object();
-		
-		// variable contenant la <tr> courrante du tableau des alertes 
-		var current_Alerts_TR = null;
-		
-		// tableau de parametres des onglets
-		var tabParameters = new Array();
 		
 		
-						
-		// tableau des onglets
-		var tabOngletsIds = ["Alerts", "RawData", "Global"];
+		var df = dojox.lang.functional;
+		var TabIP=  new Array();
+		var TabNAME=  new Array();
+		var TabCOUNTRY=  new Array();
 		
-		// variable indiquant l'onglet actif
-		var activeTab = "Logs";
-				
+
 		
-		// Tableaux (dynamiques) pr les zooms des networks
-		var ChartNetwork = new Array();
-		ChartNetwork[1] = new Array();
-		ChartNetwork[2] = new Array();
-		ChartNetwork[3] = new Array();
-		ChartNetwork[4] = new Array();
-		ChartNetwork[5] = new Array();
-		ChartNetwork[6] = new Array();
-		ChartNetwork[7] = new Array();
-		
-		var JsonObjNetwork = new Array();
-		JsonObjNetwork[1] = new Array();
-		JsonObjNetwork[2] = new Array();
-		JsonObjNetwork[3] = new Array();
-		JsonObjNetwork[4] = new Array();
-		JsonObjNetwork[5] = new Array();
-		JsonObjNetwork[6] = new Array();
-		JsonObjNetwork[7] = new Array();
-		
-		var ChartLocalhost = new Array();
-		ChartLocalhost[1] = new Array();
-		ChartLocalhost[2] = new Array();
-		ChartLocalhost[3] = new Array();
-		ChartLocalhost[4] = new Array();
-		ChartLocalhost[5] = new Array();
-		ChartLocalhost[6] = new Array();
-		ChartLocalhost[7] = new Array();
-		
-		var JsonObjLocalhost = new Array();
-		JsonObjLocalhost[1] = new Array();
-		JsonObjLocalhost[2] = new Array();
-		JsonObjLocalhost[3] = new Array();
-		JsonObjLocalhost[4] = new Array();
-		JsonObjLocalhost[5] = new Array();
-		JsonObjLocalhost[6] = new Array();
-		JsonObjLocalhost[7] = new Array();
-		
-		var Chart1 = new Array();
-		var Chart2 = new Array();
-		var Chart3 = new Array();
-		var Chart4 = new Array();
-		var Chart5 = new Array();
-		var JsonObj1 = new Array();
-		var JsonObj2 = new Array();
-		var JsonObj3 = new Array();
-		var JsonObj4 = new Array();
-		var JsonObj5 = new Array();
-		
-		
-		// Tableaux (dynamiques) pr les zooms des hosts
-		var Chart12 = new Array();
-		var Chart13 = new Array();
-		var Chart14 = new Array();
-		var JsonObj12 = new Array();
-		var JsonObj13 = new Array();
-		var JsonObj14 = new Array();
-		var MT;
-		
-		
-		var serverWhoIsList = new Object();
-		serverWhoIsList = {"items":[{"server": ""},
+		var parameters="";
+		var dataPage="&page=1";
+		var lastScrollTop=0;
+		var lastDay=null;
+		var lastHour=null;
+		//var mouseDown = 0;
+		var validKey = null;
+		var lastLogEntry="";
+		var JsonName = "";
+		var NbCPH = 0;
+		var dRDTD = false;
+		var geoIpASNum = "disabled";
+		var geoIp = "disabled";
+		var isDBMS = false;
+		var setTOAnim = null;
+		var setTOClign = null;
+		var setTOResolv = null;
+		var tabRect = null;
+		var decalageHoraire = 0;
+		var lastAlertIndex = null;
+		var serverWhoIsList = {"items":[{"server": ""},
 			{"server": "whois.apnic.net"},
 			{"server": "whois.afrinic.net"},
 			{"server": "whois.arin.net"},
@@ -171,48 +106,39 @@
 			{"server": "whois.uaenic.ae"},
 			{"server": "whois.usp.ac.fj"},
 		]};
-		
-		
-		
-		//var df = dojox.lang.functional;
-		var TabIP=  new Array();
-		var TabNAME=  new Array();
-		var TabCOUNTRY=  new Array();
-		
-
-		
-		var parameters="";
-		//var dataPage="&page=1";
-		var lastScrollTop=0;
-		var lastDay=null;
-		var lastHour=null;
-		//var mouseDown = 0;
-		var validKey = null;
-		var lastLogEntry="";
-		var JsonName = "";
-		var NbCPH = 0;
-		var dRDTD = false;
-		var GeoIPASNum = "disabled";
-		var GeoIP = "disabled";
-		var isDBMS = false;
-		var setTOAnim = null;
-		var setTOClign = null;
-		var setTOResolv = null;
-		var tabRect = null;
-		var decalageHoraire = 0;
-		var lastAlertIndex = null;
-		
 		var svgNS = "http://www.w3.org/2000/svg";
 		var xlinkNS = "http://www.w3.org/1999/xlink";
 		
 		
-		var colors = new Array();
+		var colors = [];
 		colors[2] = "rgb(254, 254, 254)";
 		
 		//definitions des onglet et div actifs au demarrage (logs)
 		var AncienOnglet = 'Logs';
 		var AncienneDiv = 'DivLogs';
 		
+		
+		// Tableaux (dynamiques) pr les zooms des networks
+		var Chart1 = new Array();
+		var Chart2 = new Array();
+		var Chart3 = new Array();
+		var Chart4 = new Array();
+		var Chart5 = new Array();
+		var JsonObj1 = new Array();
+		var JsonObj2 = new Array();
+		var JsonObj3 = new Array();
+		var JsonObj4 = new Array();
+		var JsonObj5 = new Array();
+		
+		
+		// Tableaux (dynamiques) pr les zooms des hosts
+		var Chart12 = new Array();
+		var Chart13 = new Array();
+		var Chart14 = new Array
+		var JsonObj12 = new Array();
+		var JsonObj13 = new Array();
+		var JsonObj14 = new Array();
+		var MT;
 		
 		// compteur servant au bipping de l'onglet plus
 		var compteur=0;
@@ -232,38 +158,6 @@
 		var logAutoRefreshTO = null;
 		
 		var jsonLocalhosts = {  "items" : [ ] };
-		
-		// variables de positions des champs dans les tableaux rawdata
-		var cyc_INDEX = 0;
-		var ipl_INDEX = 1;
-		var d_INDEX = 2;
-		var ipo_INDEX = 3;
-		var c_INDEX = 4;
-		var asn_INDEX = 5;
-		var p_INDEX = 6;
-		var pl_INDEX = 7;
-		var po_INDEX = 8;
-		var flg_INDEX = 9;
-		var itr_INDEX = 10;
-		var otr_INDEX = 11;
-		var ipk_INDEX = 12;
-		var opk_INDEX = 13;
-		var fst_INDEX = 13;
-		var lst_INDEX = 14;
-		var dur_INDEX = 15;
-		var application_id_INDEX = 16;
-		var num_id_flow_INDEX = 17;
-		
-	
-		// index de la derni�re alerte connue
-		var lastAlertIdx = null;
-		
-		// compteur de "startup" de la tab container ( lancer le click on tree au 4eme startup qui est le dernier)
-		var startupCount = 0;
-		
-		askWhere = "/znets/";/*"/hell/";*/
-		
-		divSizePercent = "80%";
 		
 	
 	

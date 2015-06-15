@@ -1,27 +1,243 @@
 
 
-.claro .dijitTabContainerTop-tabs .dijitTab {
-    background-image: -moz-linear-gradient(center top , #FFFFFF 0px, #FFFFFF 1px, rgba(200, 200, 200, 0.1) 2px, rgba(200, 200, 200, 0.6) 7px, rgba(200, 200, 200, 0) 100%) !important; 
-	background-repeat: repeat-x;
-    border-bottom-width: 0;
-    box-shadow: 0 -1px 1px rgba(0, 0, 0, 0.04);
-    margin-right: 1px;
-    min-width: 60px;
-    padding: 3px 6px;
-    text-align: center;
-    top: 1px;
+body {
+    font: 100% verdana, arial, sans-serif;
+    background-color: #fff;
+    margin-top: 1px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
-.claro .dijitTabContainerTop-tabs .dijitTabChecked {
-	background-image: -moz-linear-gradient(center top , #FFFFFF 0px, #FFFFFF 1px, rgba(255, 255, 255, 0) 2px, #FFFFFF 7px) !important;
-	background-repeat: repeat-x;
-    border-bottom-width: 0;
-    box-shadow: 0 -1px 1px rgba(0, 0, 0, 0.04);
-    margin-right: 1px;
-    min-width: 60px;
-    padding: 3px 6px;
-    text-align: center;
-    top: 1px;
-    padding-bottom: 4px !important;
-    padding-top: 4px !important;
+div.TabOnglets {
+    font: bold 11px verdana, arial, sans-serif;
+    list-style-type: none;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #6c6;
+    margin: 0;
 }
+
+div.TabOnglets li.active a {
+    color: #000;
+}
+
+div.TabOnglets li font {
+	float: left;
+	margin-top: 3px;
+	margin-left: 8px;
+}
+
+
+div.TabOnglets li table tbody tr td font {
+	font: bold 11px verdana,arial,sans-serif; margin-left:2px;
+}
+
+/*
+#TabOnglets a {
+    float: left;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding: 4px;
+}
+
+#TabOnglets a:hover {
+    background: #fff;
+}
+*/
+
+
+div.TabOnglets li {
+	
+	
+   /* border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;*/
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #E8E8E8;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li:hover {
+    background: #fff;
+}
+
+div.TabOnglets li.active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+   /* border-bottom-left-radius: 0px;
+     border-bottom-right-radius: 0px;*/
+}
+
+div.TabOnglets li.bipping {
+    background-color: #fff;
+}
+
+div.TabOnglets li.bipping {
+    background-color: #FFDFA8;
+}
+
+
+/*GENRE : logs*/
+
+div.TabOnglets li[genre="logs"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	color: white;
+	float: left;
+    height: 21px;
+    background-color: #7e6e8a;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="logs"]:hover {
+    background: #fff;
+	color: black;
+}
+
+div.TabOnglets li[genre="logs"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+	color: black;
+}
+
+div.TabOnglets li[genre="logs"].bipping {
+    background-color: #fff;
+	color: black;
+}
+
+
+/*GENRE : groupe*/
+
+div.TabOnglets li[genre="groupe"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #6ad471;
+    /*margin: 2px 2px 0 2px;*/
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="groupe"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="groupe"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="groupe"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : global*/
+
+div.TabOnglets li[genre="global"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #6ad471;
+    /*margin: 2px 2px 0 2px;*/
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="global"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="global"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="global"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : localhost*/
+
+div.TabOnglets li[genre="localhost"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #dfd;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="localhost"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="localhost"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="localhost"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : data*/
+
+div.TabOnglets li[genre="data"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #d9d1b1;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="data"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="data"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="data"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : ssreseau*/
+
+div.TabOnglets li[genre="ssreseau"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #bbe8bf;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="ssreseau"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="ssreseau"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="ssreseau"].bipping {
+    background-color: #fff;
+}
+

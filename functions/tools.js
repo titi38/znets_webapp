@@ -1,6 +1,6 @@
 function myParseInt( string , base ){
 	
-	var str = new String(string);
+	var str = string;
 	
 	while( str.charAt(0) == "0" && str.length>1){
 		str = str.substring(1,str.length);
@@ -16,7 +16,7 @@ function decalageHoraireLocal(){
 			
 	var xhr = createXhrObject();
 
-	xhr.open("GET", askWhere + "getGMTdate.json", false);
+	xhr.open("GET", "dynamic/getGMTdate.json", false);
 	xhr.send(null);
 			
 	if (xhr.readyState == 4) 
@@ -24,13 +24,13 @@ function decalageHoraireLocal(){
 		if (xhr.status == 200) 
 		{
 			var serverNow = eval("(" + xhr.responseText + ")");
-			if(serverNow.errMsg)alert("getGMTdate.json Bug Report: "+serverNow.errMsg);	
+			if(serverNow.errMsg)alert('getGMTdate.json Bug Report: "+serverNow.errMsg);	
 			
-			var year = myParseInt(serverNow.yr,10);
-			var month = myParseInt(serverNow.m,10);
-			var day = myParseInt(serverNow.d,10);
-			var hours = myParseInt(serverNow.h,10);
-			var minutes = myParseInt(serverNow.mn,10);					
+			var year = myParseInt(serverNow.data[0].yr,10);
+			var month = myParseInt(serverNow.data[0].m,10);
+			var day = myParseInt(serverNow.data[0].d,10);
+			var hours = myParseInt(serverNow.data[0].h,10);
+			var minutes = myParseInt(serverNow.data[0].mn,10);					
 			var now = new Date();
 			
 			hours = hours - now.getTimezoneOffset()/60;
@@ -114,11 +114,11 @@ function decalageHoraireLocal(){
 			if(BIDate<localDate && localDate<BSDate){
 					return -now.getTimezoneOffset()/60 ;
 			}else{
-				if(serverNow.mn < 10) mn = "0"; else mn = ""; 
-				if(serverNow.h < 10) h = "0"; else h = ""; 
-				if(serverNow.d < 10) d = "0"; else d = ""; 
-				if(serverNow.m < 10) m = "0"; else m = ""; 
-				serverN = serverNow.yr +"-"+ m+serverNow.m +"-"+ d+serverNow.d +" "+ h+serverNow.h +":"+ mn+serverNow.mn;
+				if(serverNow.data[0].mn < 10) mn = "0"; else mn = ""; 
+				if(serverNow.data[0].h < 10) h = "0"; else h = ""; 
+				if(serverNow.data[0].d < 10) d = "0"; else d = ""; 
+				if(serverNow.data[0].m < 10) m = "0"; else m = ""; 
+				serverN = serverNow.data[0].yr +"-"+ m+serverNow.data[0].m +"-"+ d+serverNow.data[0].d +" "+ h+serverNow.data[0].h +":"+ mn+serverNow.data[0].mn;
 				
 				if(minutes < 10) mn = "0"; else mn = ""; 
 				if(hours < 10) h = "0"; else h = ""; 
@@ -127,20 +127,20 @@ function decalageHoraireLocal(){
 				localN = year +"-"+ m+month +"-"+ d+day +" "+ h+hours +":"+ mn+minutes;
 			
 				changeDate_ErrorTextDialog(serverN, localN);
-				dialogDateError.show();
+				dijit.byId('dialogDateError').show();
 				return -now.getTimezoneOffset()/60;
 			}
 			/*
 			if( (Math.abs(now.getMinutes()-minutes)<10 && Math.abs(now.getHours()-hours)==0 ) || (Math.abs(now.getMinutes()-minutes)>50 && Math.abs(now.getHours()-hours)==1 ) ){
 				if ( now.getFullYear() != year || now.getMonth()+1 != month || now.getDate() != day){
 					//alert( "Date error !!! Please check your local system's date. Server's date : " +  serverNow.y +"-"+ serverNow.m +"-"+ serverNow.d +"   "+ serverNow.h +":"+ serverNow.mn );
-					changeDate_ErrorTextDialog("modify", serverNow.yr +"-"+ serverNow.m +"-"+ serverNow.d +" "+ serverNow.h +":"+ serverNow.mn, year +"-"+ month +"-"+ day +" "+ hours +":"+ minutes);
+					changeDate_ErrorTextDialog("modify", serverNow.data[0].yr +"-"+ serverNow.data[0].m +"-"+ serverNow.data[0].d +" "+ serverNow.data[0].h +":"+ serverNow.data[0].mn, year +"-"+ month +"-"+ day +" "+ hours +":"+ minutes);
 					dijit.byId('dialogDateError').show();
 					return -now.getTimezoneOffset()/60;
 				}
 				if( Math.abs(now.getHours()-hours)>1 ){
 					//alert( "Date ERROR !!! Your system's clock looks bad. Please adjust it to : " +  year +"-"+ month +"-"+ day +"   "+ hours +":"+ minutes );
-					changeDate_ErrorTextDialog("adjust", serverNow.yr +"-"+ serverNow.m +"-"+ serverNow.d +" "+ serverNow.h +":"+ serverNow.mn, year +"-"+ month +"-"+ day +" "+ hours +":"+ minutes);
+					changeDate_ErrorTextDialog("adjust", serverNow.data[0].yr +"-"+ serverNow.data[0].m +"-"+ serverNow.data[0].d +" "+ serverNow.data[0].h +":"+ serverNow.data[0].mn, year +"-"+ month +"-"+ day +" "+ hours +":"+ minutes);
 					dijit.byId('dialogDateError').show();
 					return -now.getTimezoneOffset()/60;
 				}else{
@@ -149,7 +149,7 @@ function decalageHoraireLocal(){
 			}
 			else{
 				//alert( "Date ERROR !!! More than a 15 minutes difference between server's clock and yours. Please adjust your local system's minutes and refresh. Server's date : " +serverNow.y +"-"+ serverNow.m +"-"+ serverNow.d +"   "+ serverNow.h +" : "+ serverNow.mn );
-				changeDate_ErrorTextDialog("modify", serverNow.yr +"-"+ serverNow.m +"-"+ serverNow.d +" "+ serverNow.h +":"+ serverNow.mn, year +"-"+ month +"-"+ day +" "+ hours +":"+ minutes);
+				changeDate_ErrorTextDialog("modify", serverNow.data[0].yr +"-"+ serverNow.data[0].m +"-"+ serverNow.data[0].d +" "+ serverNow.data[0].h +":"+ serverNow.data[0].mn, year +"-"+ month +"-"+ day +" "+ hours +":"+ minutes);
 				dijit.byId('dialogDateError').show();
 				return -now.getTimezoneOffset()/60;
 			}*/					
@@ -160,7 +160,7 @@ function decalageHoraireLocal(){
 
 
 function changeDate_ErrorTextDialog(stringServer, stringLocal){
-	element = dialogDateError.domNode.getElementsByTagName("textarea")[0];
+	element = document.getElementById('dialogDateError').getElementsByTagName("textarea")[0];
 	element.innerHTML = "ZNeTS noticed that your local system's date and/or location settings are wrong !\nPlease refresh page once changes are done.\nServer UTC Time :  "+ stringServer
 							+"\nYour local system's date should be : "+stringLocal;
 }
@@ -376,45 +376,42 @@ function addToParameters(element, string){
 		
 	
 function autoRemplissageCorrespondance(){
-	//setTimeout("functionAutoRemplissageCorrespondance(); autoRemplissageCorrespondance()", 60000);
+	setTimeout("functionAutoRemplissageCorrespondance(); autoRemplissageCorrespondance()", 60000);
 }
 	
 
 function functionAutoRemplissageCorrespondance(){
-	
+			
 		var xhr = createXhrObject();
 
 	
 		if(jsonLocalhosts.items.length)
-			xhr.open("GET", askWhere +   "getListLocalhosts.json?nb="+jsonLocalhosts.items.length, false);
+			xhr.open("GET", "dynamic/getListLocalhosts.json?nb="+jsonLocalhosts.items.length, false);
 		else
-			xhr.open("GET", askWhere +  "getListLocalhosts.json", false);
+			xhr.open("GET", "dynamic/getListLocalhosts.json", false);
 		xhr.send(null);
 				
 		if (xhr.readyState == 4) 
 		{ 
 			if (xhr.status == 200) 
 			{
-				var jsonO = jsonFormModifier(eval("(" + xhr.responseText + ")"));
-				var jsonO2 = jsonFormModifier(eval("(" + xhr.responseText + ")"));
+				var jsonO = eval("(" + xhr.responseText + ")");
+				var jsonO2 = eval("(" + xhr.responseText + ")");
 				try{
 					//alert(jsonLocalhosts.items.length+" < "+jsonO.items.length+" = "+(jsonLocalhosts.items.length < jsonO.items.length));
 					if(jsonO.items){
 							TabIP=  new Array(); 
 							TabNAME=  new Array();
+							reIpLocAutoCompletion(jsonO, jsonO2);
 							var i=0;
 							while(jsonO.items[i] != null){
 								TabNAME[i] = jsonO.items[i].name;
 								TabIP[i] =  jsonO.items[i].ip;
 								i++;
 							}
-							reIpLocAutoCompletion(jsonO, jsonO2);
-							
-							// remplissage du tableau des localhosts
-							localhostsTabCompletion(jsonO);
 					}
 				}catch(e){
-					if(jsonO.errMsg)alert("getListLocalhosts.json Bug Report: "+jsonO.errMsg);	
+					if(jsonO.errMsg)alert('getListLocalhosts.json Bug Report: "+jsonO.errMsg);	
 				}
 			}else{
 				//alert('errer');
@@ -434,30 +431,6 @@ function remplissageCorrespondance(JsonLocalhosts, JsonCountry){
 		TabIP=  new Array();
 		TabNAME=  new Array();
 	
-		
-		
-		/*
-		 * 
-		 
-		if(JsonLocalhosts == null || JsonLocalhosts.item == null){
-			return
-		}
-			var absent = true;
-			for(var j=0; j<TabNAME.length; j++) if(TabNAME[j] == JsonLocalhosts.items[i].name) absent =false;
-			if(absent){
-				var i=0;
-				
-				
-				while(i<JsonLocalhosts.item.length){
-					TabNAME[i] = JsonLocalhosts.items[i].name;
-					TabIP[i] =  JsonLocalhosts.items[i].ip;
-					i++;
-				}
-				
-				
-			}
-	
-		 */
 		
 			var absent = true;
 			for(var j=0; j<TabNAME.length; j++) if(TabNAME[j] == JsonLocalhosts.items[i].name) absent =false;
@@ -569,10 +542,9 @@ function setPlusTab(label, name, ongletOrigine){
 	
 	if(name != ""){
 		//alert("nam: "+name+"\n ip: "+ipFrom(name));
-		//SelectIp.setAttribute( 'value' , ipFrom(name));
-		//alert("kkk : "+SelectIp.value)
+		dijit.byId("SelectIp").setAttribute( 'value' , ipFrom(name) );
 		//dijit.byId("SelectIp").value = ipFrom(name);
-		SelectIpData.setAttribute( 'value' , ipFrom(name) );	
+		dijit.byId("SelectIpData").setAttribute( 'value' , ipFrom(name) );	
 	}
 	
 	
@@ -619,7 +591,7 @@ function setPlusTabProto(label, proto){
 				var DD =  extractDate(date,"y")+"-"+m+myParseInt(label.split("/")[1])+"-"+d+myParseInt(label.split("/")[0])+" "+"00"+":"+"00";
 				//alert(DD);
 				/*if( myParseInt(label.split("/")[0]) > myParseInt(extractDate(date,"d")) )DD = decalerDate( DD,0,-1,0,0,0 ); // si la date du click > la date de fin alors on a clickï¿½ sur un jour du mois precedent !
-				if( myParseInt(label.split("/")[1]) > myParseInt(extractDate(date,"m")) )DD = decalerDate( DD,-1,0,0,0,0 ); // si le mois du click > au mois de fin alors on a clickï¿½ sur l'annï¿½e precedente !
+				if( myParseInt(label.split("/")[1]) > myParseInt(extractDate(date,"m")) )DD = decalerDate( DD,-1,0,0,0,0 ); // si le mois du click > au mois de fin alors on a clickï¿½ sur l'année precedente !
 				alert(DD);*/
 				document.getElementById("dateDebData").value =  DD;			
 				document.getElementById("dateDebData").onchange();	
@@ -716,8 +688,8 @@ function initPlusData(){
 		}catch(e){}
 	}
 	
-	try{SelectCountry.domNode.setAttribute('value', 'All');}catch(e){}
-	try{SelectIpData.domNode.setAttribute('value', ""); }catch(e){}
+	try{dijit.byId('SelectCountry').setAttribute('value', 'All');}catch(e){}
+	try{dijit.byId("SelectIpData").setAttribute('value', ""); }catch(e){}
 	
 	// initialisation du whois (qui fait aussi partie dde l'onglet "+"
 	document.getElementById("whoIs").setAttribute('value', null);
@@ -913,39 +885,20 @@ function compareItems(a,b,specialChars){
 
 
 
-function setActiveTabDojo(selectedElement){
-	//alert(selectedElement.id+" : "+selectedElement.id.indexOf("'GroupTabContainer'"));
-	if(selectedElement.id.indexOf("GroupTabContainer")>=0){
-		require(["dijit/registry"], function(registry){
-			activeTab = registry.byId(selectedElement.id).selectedChildWidget.id.split('Div')[1];
-		});
-	}else{
-		activeTab = selectedElement.id.split('Div')[1];
-	}
-	//alert(activeTab);
-}
-
-
-function setActiveTab(ongletId){
-	require(["dijit/registry"], function(registry){
-		setActiveTabDojo(registry.byId(ongletId+"TabContainer").selectedChildWidget);
-	});
-}
-
-
-
 function ongletActif(){
-	//alert(activeTab);
-	return activeTab;
+	var Onglets= document.getElementById("AllTabs").getElementsByTagName("li");
+	
+	for(var i = 0; i<=Onglets.length; i++){
+		if(Onglets[i].getAttribute('class') ==  "active" &&  Onglets[i].getAttribute("genre")!="groupe")
+			return Onglets[i].id;
+	}
 	
 }
-
-
 
 function copyPreset(from, to){
-	//alert(" :"+from+" : "+to+": ");
+	//alert(from+" : "+to);
 	
-	if(to !="Data" && to !="Plus"){
+	if(to !="Data"){
 		//for( var i=0; i< document.getElementById("presets"+from).childNodes.length; i++){
 			try{
 				/*ESSS =document.getElementById("presets"+from).childNodes[1];
@@ -969,8 +922,6 @@ function copyPreset(from, to){
 					}
 				}*/
 			}
-			
-			/*---*/
 			if(document.getElementById("presets"+to).options[1].selected || document.getElementById("presets"+to).options[2].selected){
 				document.getElementById('dateFin'+to).disabled = true;
 				document.getElementById('dateDeb'+to).disabled = true;
@@ -978,31 +929,27 @@ function copyPreset(from, to){
 				document.getElementById('dateFin'+to).disabled = false;
 				document.getElementById('dateDeb'+to).disabled = false;
 			}
-			
-			/*---*/
-			try{
-				document.getElementById("presets"+to).onchange();
-			}catch(e){
-				
-			}
-			
-			/*---*/
-			try{
-				document.getElementById("dateDeb"+to).setAttribute('value', document.getElementById("dateDebApplied"+from).value ) ;
-				document.getElementById("dateFin"+to).setAttribute('value', document.getElementById("dateFinApplied"+from).value ) ;
-				document.getElementById("dateDeb"+to).value=document.getElementById("dateDebApplied"+from).value ;
-				document.getElementById("dateFin"+to).value=document.getElementById("dateFinApplied"+from).value ;
+		//}	
+	}
+	
+	try{
+		document.getElementById("presets"+to).onchange();
+	}catch(e){
+		
+	}
+	
+	try{
+		document.getElementById("dateDeb"+to).setAttribute('value', document.getElementById("dateDebApplied"+from).value ) ;
+		document.getElementById("dateFin"+to).setAttribute('value', document.getElementById("dateFinApplied"+from).value ) ;
+		document.getElementById("dateDeb"+to).value=document.getElementById("dateDebApplied"+from).value ;
+		document.getElementById("dateFin"+to).value=document.getElementById("dateFinApplied"+from).value ;
 
-			}catch(e){}
-				
-			document.getElementById("dateDeb"+to).setAttribute('value', document.getElementById("dateDeb"+from).value ) ;
-			document.getElementById("dateFin"+to).setAttribute('value', document.getElementById("dateFin"+from).value ) ;
-			document.getElementById("dateDeb"+to).value=document.getElementById("dateDeb"+from).value ;
-			document.getElementById("dateFin"+to).value=document.getElementById("dateFin"+from).value ;
-			
-				//}	
-			}
-			
+	}catch(e){}
+		
+	document.getElementById("dateDeb"+to).setAttribute('value', document.getElementById("dateDeb"+from).value ) ;
+	document.getElementById("dateFin"+to).setAttribute('value', document.getElementById("dateFin"+from).value ) ;
+	document.getElementById("dateDeb"+to).value=document.getElementById("dateDeb"+from).value ;
+	document.getElementById("dateFin"+to).value=document.getElementById("dateFin"+from).value ;
 	
 }
 
@@ -1164,7 +1111,7 @@ function doneCSV(){
 	
 	
 	function logsAutoRefresh(){
-		//logAutoRefreshTO = setTimeout("logsAutoRefreshFunction(); restartLogsAutoRefresh();", 15000);
+		logAutoRefreshTO = setTimeout("logsAutoRefreshFunction(); logsAutoRefresh();", 15000);
 	}
 	
 	
@@ -1172,9 +1119,9 @@ function doneCSV(){
 	function logsAutoRefreshFunction(){
 		
 		//if(!mouseDown){
-			//lastScrollTop = document.getElementById('TabLogsDiv').scrollTop; 
+			lastScrollTop = document.getElementById('TabLogsDiv').scrollTop; 
 			ChargerLogs(); 
-			//document.getElementById('TabLogsDiv').scrollTop = lastScrollTop;
+			document.getElementById('TabLogsDiv').scrollTop = lastScrollTop;
 		//}
 		
 		var now = new Date();
@@ -1188,32 +1135,32 @@ function doneCSV(){
 		
 		// check du changement d'heure et activation des boutons Apply si changement
 		
-		//var TOC = document.getElementById("AllTabs").getElementsByTagName("li");
+		var TOC = document.getElementById("AllTabs").getElementsByTagName("li");
 		
-		for( var i=0 ; i< tabOngletsIds.length ; i++ ){
-			if(tabOngletsIds[i] != "Alerts" && tabOngletsIds[i] != "Plus"){ // sauf pour les onglets "plus" et "alertes"
+		for( var i=0 ; i< TOC.length ; i++ ){
+			if(TOC[i].id != "Alerts" && TOC[i].id != "Plus"){ // sauf pour les onglets "plus" et "alertes"
 				try{
-					//if(tabOngletsIds[i] == "Global")alert(document.getElementById("presets"+tabOngletsIds[i]).childNodes[0].selected && now.getHours() != lastHour) 
-					//		|| (document.getElementById("presets"+tabOngletsIds[i]).childNodes[1].selected && now.getDate() != lastDay);
-					if( (document.getElementById("presets"+tabOngletsIds[i]).options[0].selected && now.getHours() != lastHour) 
-							|| (document.getElementById("presets"+tabOngletsIds[i]).options[1].selected && now.getDate() != lastDay) ){
+					//if(TOC[i].id == "Global")alert(document.getElementById("presets"+TOC[i].id).childNodes[0].selected && now.getHours() != lastHour) 
+					//		|| (document.getElementById("presets"+TOC[i].id).childNodes[1].selected && now.getDate() != lastDay);
+					if( (document.getElementById("presets"+TOC[i].id).options[0].selected && now.getHours() != lastHour) 
+							|| (document.getElementById("presets"+TOC[i].id).options[1].selected && now.getDate() != lastDay) ){
 						
 						var allClosed = true;
 						var j = 1;
 						
-						while(document.getElementById("DivGraphe"+j+tabOngletsIds[i]) && allClosed){
-							if(document.getElementById("DivGraphe"+j+tabOngletsIds[i]).style.display == "block") allClosed = false;
+						while(document.getElementById("DivGraphe"+j+TOC[i].id) && allClosed){
+							if(document.getElementById("DivGraphe"+j+TOC[i].id).style.display == "block") allClosed = false;
 							j++;
 						}
 						if(allClosed){
-							document.getElementById("Apply"+tabOngletsIds[i]).onclick();
+							document.getElementById("Apply"+TOC[i].id).onclick();
 						}else{
-							document.getElementById("timeSpaceChange"+tabOngletsIds[i]).innerHTML = '<center><table><tr><td><img src="images/Warning.png"></td><td><font style="margin-left: 15px;">: New Data available ! Click "Apply" button to update.</font></td></tr></table></center> ';
-							document.getElementById("Apply"+tabOngletsIds[i]).disabled = false;
+							document.getElementById("timeSpaceChange"+TOC[i].id).innerHTML = '<center><table><tr><td><img src="images/Warning.png"></td><td><font style="margin-left: 15px;">: New Data available ! Click "Apply" button to update.</font></td></tr></table></center> ';
+							document.getElementById("Apply"+TOC[i].id).disabled = false;
 						}		
 					}
 				}catch(e){
-				//alert(e+" : "+tabOngletsIds[i]);
+				//alert(e+" : "+TOC[i].id);
 				}
 			}
 		}
@@ -1234,10 +1181,10 @@ function doneCSV(){
 	function popupShow(){
 		try{
 			// definir la boite de dialogue comme non fermable
-			dialogPopUp.domNode.closable = "false";
+			dijit.byId("dialogPopUp").closable = "false";
 			
 			//document.getElementById("popupDialogContinueButton").disabled = "false";
-			dialogPopUp.show();
+			dijit.byId("dialogPopUp").show();
 			document.getElementById("popupDialogContinueButton").value = 5;
 			document.getElementById("popupDialogContinueButton").disabled = false;
 			document.getElementById("popupDialogContinueButton").innerHTML="Continue free trial"; 
@@ -1250,7 +1197,7 @@ function doneCSV(){
 	function theFinalCountDown(TO){
 		document.getElementById("popupDialogContinueButton").value -- ;
 		if(document.getElementById("popupDialogContinueButton").value == 0){
-			dialogPopUp.hide();
+			dijit.byId('dialogPopUp').hide();
 			setTimeout("popupShow();",300000);
 		}else{
 			document.getElementById("popupDialogContinueButton").innerHTML="Wait... ("+document.getElementById("popupDialogContinueButton").value+")"; 
@@ -1273,35 +1220,28 @@ function doneCSV(){
 		
 		if(input.value == ""){
 			
-			document.getElementById("resolvedAS").title ="";
+			document.getElementById("resolvedAS").innerHTML ="";
 			document.getElementById("resolvedAS").innerHTML ="";
 			
 		}else{
 			
 			var ASName = resolveAS(input);
-			//alert(input+" ==> "+resolveAS(input))
 			
 			document.getElementById("resolvedAS").title = ASName;
 			document.getElementById("resolvedAS").innerHTML = ASName;
 			
 			if(ASName == ""){
-				//setASValueTO("");
-			
-				document.getElementById("resolvedAS").title = input.value+" : unknown AS";
-				document.getElementById("resolvedAS").innerHTML = input.value +" : unknown AS";
-				document.getElementById("AS").value = ''; 
-				
-				/*document.getElementById("AS").style.color = 'red'; 
-				document.getElementById('TabQueryFormData').disabled = true;*/
+				setASValueTO("");
+				document.getElementById("AS").style.color = 'red'; 
+				document.getElementById('TabQueryFormData').disabled = true;
 			}else{
-				//document.getElementById('AS').style.color = 'black'; 
+				document.getElementById("AS").style.color = 'black'; 
 				
-				/*if(//document.getElementById('dateFinData').style.color == 'black' &&
-						document.getElementById('dateDebData').style.color == 'black' && 
-						//document.getElementById('dateFinData').value != "" && 
-						document.getElementById('dateDebData').value != ""){
+				if(document.getElementById('dateFinData').style.color == 'black'
+						&& document.getElementById('dateFinData').style.color == 'black'
+						&& document.getElementById('dateFinData').value != ""
+						&& document.getElementById('dateFinData').value != "")
 					document.getElementById('TabQueryFormData').disabled = false;
-				}*/
 			}
 		}
 	
@@ -1312,7 +1252,6 @@ function doneCSV(){
 	function resolveAS(input){
 		
 		var ASNum = parseInt(input.value);
-		//alert(ASNum);
 		if(isNaN(ASNum))ASNum = "";
 		input.value = ASNum;
 		input.setAttribute('value', ASNum);
@@ -1320,7 +1259,7 @@ function doneCSV(){
 		
 		var xhr = createXhrObject();
 		
-		xhr.open("GET", askWhere +  "getAsName.json?as="+ASNum, false);
+		xhr.open("GET", "dynamic/getAsName.json?as="+ASNum, false);
 		
 		xhr.send(null);
 		
@@ -1330,7 +1269,7 @@ function doneCSV(){
 			{
 				try{
 					var JsonObj = eval("(" + xhr.responseText + ")");	
-					return JsonObj.n;
+					return JsonObj.items[0].n;
 				}catch(e){
 					return "";
 				}
@@ -1346,7 +1285,7 @@ function doneCSV(){
 		
 		var xhr = createXhrObject();
 
-		xhr.open("GET", askWhere + "getAsName.json?as="+num, false);
+		xhr.open("GET", "dynamic/getAsName.json?as="+num, false);
 		xhr.send(null);
 			
 		if (xhr.readyState == 4) { 
@@ -1365,91 +1304,22 @@ function doneCSV(){
 		
 	}
 	
-	function resolveMacAddress(macAddress){
-		//alert(":"+macAddress+":")
-		if(macAddress && macAddress != ""){
-			var xhr = createXhrObject();
-			
-			xhr.open("GET", askWhere +  "getMacOrganization.json?mac="+macAddress, false);
-			
-			xhr.send(null);
-			
-			if (xhr.readyState == 4) 
-			{ 
-				if (xhr.status == 200) 
-				{
-					try{
-						var JsonObj = eval("(" + xhr.responseText + ")");	
-						if(JsonObj.organization && JsonObj.organization != "")
-							return JsonObj.organization;
-						else
-							return "can't find organization"
-					}catch(e){
-						if(JsonObj.errMsg)
-							return "error Message: "+JsonObj.errMsg;
-						else
-							return "can't find organization"
-					}
-					
-				}
-			}
-		}
-		
+	
+	
+	
+function clickLoupe(value, msg){
+
+	var area = document.getElementById('TextArea');
+	if ( area.hasChildNodes() ){
+		while ( area.childNodes.length >= 1 ){
+			area.removeChild( area.firstChild );       
+		} 
 	}
+	var text = document.createTextNode(value);
+	area.appendChild(text);
+	dijit.byId('dialogLogs').setAttribute('title', 'Alert raised by '+msg.split("IPloc: ")[1]+'<br> the '+msg.split("[")[1].split("]")[0].split(" ")[0]+' at '+msg.split("[")[1].split("]")[0].split(" ")[1]);	
+	dijit.byId('dialogLogs').show();
 	
-	
-	
-	
-	
-	function resolveApplication(font){
-		
-		//alert(font.getAttribute("value"));
-		var flowId = font.getAttribute("value");
-		//alert(flowId);
-		
-		
-		var xhr = createXhrObject();
-		
-		xhr.open("GET", askWhere +  "getExtraInfo.json?id="+flowId, false);
-		
-		xhr.send(null);
-		
-		if (xhr.readyState == 4) 
-		{ 
-			if (xhr.status == 200) 
-			{
-				try{
-					var JsonObj = eval("(" + xhr.responseText + ")");	
-					return JsonObj.n;
-				}catch(e){
-					return "";
-				}
-				
-			}
-		}
-		
-	}
-	
-	
-	
-	
-function clickLoupe(severity, value, msg, date){
-	severity = severity+"";
-	value = value+"";
-	msg = msg+"";
-	
-	try{
-		var area = document.getElementById('TextArea');
-		if ( area.hasChildNodes() ){
-			while ( area.childNodes.length >= 1 ){
-				area.removeChild( area.firstChild );       
-			} 
-		}
-		var text = document.createTextNode(value);
-		area.appendChild(text);
-		dialogLogs.setAttribute('title', 'Log entry ('+severity+') : '+date);	
-		dialogLogs.show();
-	}catch(e){alert(e+" : "+e.lineNumber);}
 }
 	
 	
@@ -1466,7 +1336,7 @@ function ordXAxis(chart$){
 	
 	
 function waitForResolving(){
-	if(GeoIPASNum=="disabled"){
+	if(geoIpASNum=="disabled"){
 		document.getElementById("AS").setAttribute("value", "");
 		document.getElementById("AS").value = "";
 	}else{
@@ -1520,7 +1390,7 @@ function setIpExtValue(){
 		document.getElementById('ipextHidden').name = "ipext";
 		document.getElementById('ipextHidden').value = document.getElementById('ipext').value+"/"+document.getElementById('ipextMask').value;
 		if(document.getElementById('ipextMask').value != "32" && document.getElementById('ipextMask').value != "128"){
-			SelectCountry.domNode.attr( 'value' , "");
+			dijit.byId("SelectCountry").attr( 'value' , "");
 			document.getElementById("AS").setAttribute("value", "");
 			document.getElementById("AS").value = "";
 			document.getElementById("AS").onchange();
@@ -1539,10 +1409,9 @@ function setIpExtValue(){
 	
 
 function setIpLocValue(){
-	//alert(document.getElementById('iplocMask').value +":"+ SelectIpData.getValue()+":");
-	if(document.getElementById('iplocMask').value != "" && SelectIpData.getValue() != "" && SelectIpData.getValue()  != " "){
+	if(document.getElementById('iplocMask').value != "" && dijit.byId('SelectIpData').get('value') != "" && dijit.byId('SelectIpData').get('value') != " "){
 		document.getElementById('iplocHidden').name = "iploc";
-		document.getElementById('iplocHidden').value = SelectIpData.getValue() +"/"+document.getElementById('iplocMask').value;
+		document.getElementById('iplocHidden').value = dijit.byId('SelectIpData').get('value')+"/"+document.getElementById('iplocMask').value;
 		if(document.getElementById('iplocMask').value != "32" && document.getElementById('iplocMask').value != "128"){
 			document.getElementById("lhNameData").innerHTML = "";
 		}
@@ -1824,8 +1693,8 @@ function modifDH(element, string, setORadd){
 
 function changeAlertPopupTo(tr)
 {
-	dialogLogs.hide();
-	current_Alerts_TR.onmouseout(); 
+	dijit.byId('dialogLogs').hide();
+	dijit.byId('dialogLogs').get('tr').onmouseout(); 
 	tr.onmouseover(); 
 	setTimeout(function(){clickOnAlert(tr);}, 500);
 }
@@ -1834,16 +1703,16 @@ function changeAlertPopupTo(tr)
 
 function setGI_GIAS(gi, gias)
 {
-	if(gi)GeoIP = gi;
-	if(gias)GeoIPASNum = gias;
+	if(gi)geoIp = gi;
+	if(gias)geoIpASNum = gias;
 	
 	try{
-		if(GeoIP=="disabled") SelectCountry.domNode.set('disabled', "disabled");
-		else SelectCountry.domNode.set('disabled', "");
+		if(geoIp=="disabled") dijit.byId("SelectCountry").set('disabled', "disabled");
+		else dijit.byId("SelectCountry").set('disabled', "");
 	}catch(e){
 	}
 	
-	if(GeoIPASNum=="disabled") document.getElementById("AS").disabled="disabled";
+	if(geoIpASNum=="disabled") document.getElementById("AS").disabled="disabled";
 	else document.getElementById("AS").disabled="";
 	
 }
@@ -1852,618 +1721,88 @@ function setGI_GIAS(gi, gias)
 
 function clickOnglet(id)
 {
+	try{
+		setParameters(null, document.getElementById(id).getAttribute("params"));
+	}catch(e){}
 	
-	/*
-	niveauAncienOnglet = document.getElementById(AncienOnglet).getAttribute("niveauOnglet");
-	niveauOngletSelectionne = document.getElementById(id).getAttribute("niveauOnglet");
+	estGrp = (document.getElementById(id).getAttribute("genre")=="groupe");
+	estUnderGrp = (document.getElementById(id).getAttribute("groupe")!=null);
+	//alert("estGrp: "+estGrp+"    "+"estUnderGrp: "+estUnderGrp);
 	
-	//alert(niveauOngletSelectionne);*/
+	tabGrpsDivs = document.getElementById('TabGroupes').getElementsByTagName("div");
+	allTabs = document.getElementById('AllTabs').getElementsByTagName("li");
 	
-		var siblings = document.getElementById(id).siblings();
-		for(var i=0; i<siblings.length; i++){
-			siblings[i].setAttribute("class", "inactive");
+	if(estGrp){
+		
+		// Desactivations de tous les onglets
+		for(var i=0; i<allTabs.length; i++)allTabs[i].setAttribute("class", 'inactive');
+		
+		tabGrpOnglet = document.getElementById('TabOnglets'+id);
+		tabGrpOngletLi = tabGrpOnglet.getElementsByTagName("li");
+		
+		// Activation de la bonne table de sous onglets
+		for(var i=0; i<tabGrpsDivs.length; i++)tabGrpsDivs[i].style.display='none';
+		tabGrpOnglet.style.display='block'; 
+		
+		
+		// Activation du bon sous onglet
+		for(var i=0; i<tabGrpOngletLi.length; i++){
+			if(tabGrpOngletLi[i].getAttribute("underClass") == "active"){
+				ChangerOnglet(tabGrpOngletLi[i].id); ChangerDiv("Div"+tabGrpOngletLi[i].id);
+				tabGrpOngletLi[i].setAttribute("class", "active");
+			}
 		}
 		
-		// Changer l'onglet et la div
-		ChangerOnglet(id); 
-		ChangerDiv("Div"+id);
+		// Garder l'onglet du groupe actif
+		document.getElementById(id).setAttribute("class", 'active');
 		
-	
-	// changer la variable  indiquant l'onglet courrant
-	if(id != "Networks" && id != "Localhosts" && id != "RawData"){ // ces 3 onglets sont particuliers car ils possï¿½dent des sous onglets et ce sont ces derniers qui nous interressent
-		activeTab = id;
+	}else if(estUnderGrp){
+		
+		tabGrpOnglet = document.getElementById('TabOnglets'+document.getElementById(id).getAttribute("groupe"));
+		tabGrpOngletLi = tabGrpOnglet.getElementsByTagName("li");
+		
+		// Activation du bon sous onglet
+		for(var i=0; i<tabGrpOngletLi.length; i++){
+			tabGrpOngletLi[i].setAttribute("underClass", "inactive");
+		}
+		document.getElementById(id).setAttribute("underClass", "active");
+		
+		ChangerOnglet(id); ChangerDiv("Div"+id);
+		
+		// Garder l'onglet du groupe actif
+		document.getElementById(document.getElementById(id).getAttribute("groupe")).setAttribute("class", 'active');
+		
 	}else{
-		setActiveTab(id);
 		
+		// Desactivation de tous les onglets groupes
+		for(var i=0; i<allTabs.length; i++)allTabs[i].setAttribute("class", 'inactive');
+		document.getElementById(id).setAttribute("class", "active");
 		
-		//  si c'est longlet Network et que c'est le premier click, alors lancer la prï¿½sentation du graphe par default
-		if(id == "Networks" && document.getElementById(id).getAttribute("firstClick") == "false"){
-			document.getElementById(id).setAttribute("firstClick", "true");
-			require(["dojo/ready","dijit/registry"], function(ready, registry){
-				ready(function(){
-					checkForTreeLeafSelected(registry.byId("thinTreeGlobal"));
-				});
-			});
-		}
+		// Desactivation de toutes les tables de sous onglets
+		for(var i=0; i<tabGrpsDivs.length; i++)tabGrpsDivs[i].style.display='none';
+		
+		ChangerOnglet(id); ChangerDiv("Div"+id);
+		
 	}
+	
+	setTabOngletHeight();
+	
 }
-/*
+
 
 function dataAlreadyOpened(){
-	//allTabs = document.getElementById("AllTabs").getElementsByTagName("li");
+	allTabs = document.getElementById("AllTabs").getElementsByTagName("li");
 	for(var i=0; i<allTabs.length; i++)
-		if(allTabs[i].isClosable && allTabs[i].getAttribute("id").indexOf("Result")==0)
+		if(allTabs[i].isClosable && allTabs[i].getAttribute("id").indexOf("Data")==0)
 			return true;
 	return false;
 }
-*/
 
-var localhostAlreadyOpened =  function(id){
-	var retour = false;
-	require(["dojo/ready", "dijit/registry"], function(ready, registry){
-			ready(function(){
-				try{
-					if(registry.byId("Div"+id)) retour = true;
-				}catch(e){alert("eror");}
-			});
-		});
-	return retour;
+
+function localhostAlreadyOpened(){
+	allTabs = document.getElementById("AllTabs").getElementsByTagName("li");
+	for(var i=0; i<allTabs.length; i++)
+		if(allTabs[i].isClosable && allTabs[i].getAttribute("id").indexOf("Data")==-1)
+			return true;
+	return false;
 }
-
-var localhostAlreadyOpened2 =  function(id){
-	var retour = false;
-	var i = 0;
-	while(i<tabOngletsIds.length && !retour){
-		if(tabOngletsIds[i] == id) retour = true;
-		i++
-	}
-	return retour;
-}
-
-
-/*	Met en forme le json pour qu'il soit exploitable par la librairie de dessin DOJO
-	Renvoie le json modifiï¿½
-*/
-function jsonChartingModifier( myJson ){
-	
-	var TabDeDonnees = new Array();
-	
-	if(myJson.data != null){
-		
-		//retournement des donnï¿½es
-		for(var j = 0; j < myJson.data.length; j++){
-			TabDeDonnees[j] = myJson.data[j];							
-		}
-		for(var j = 2; j < TabDeDonnees.length; j++){
-			myJson.data[j] = TabDeDonnees[TabDeDonnees.length-(j-1)];							
-		}
-		// fin de retournement
-		
-		return myJson;
-	}else if(myJson == {}){
-		console.log("empty json in 'jsonChartingModifier' function ! Alert raised at line :"+new Error().lineNumber);
-		return myJson;
-	}else if(myJson.errMsg != null){
-		console.log("error message json in 'jsonChartingModifier' function ! Alert raised at line :"+new Error().lineNumber);
-		return myJson;
-	}else{
-		console.log("no modifiaction to json in 'jsonChartingModifier' function ! Alert raised at line :"+new Error().lineNumber);
-		return myJson;
-	}
-	
-}
-
-
-function jsonFormModifier( myJson ){
-	
-	/*var TabDeDonnees = new Array();
-	
-	for(var j = 0; j < myJson.data.length; j++){
-		TabDeDonnees[j] = myJson.data[j];							
-	}
-	for(var j = 2; j < TabDeDonnees.length; j++){
-		myJson.data[j] = TabDeDonnees[TabDeDonnees.length-(j-1)];							
-	}*/
-	
-	if(myJson.content != null && myJson.data != null){
-		var showMacAddresses = false;
-		var jsonItems = jsonConcat(myJson, {"items" : []});
-		for(var i =0; i<myJson.data.length; i++){
-			var tempItem = {};
-			for(var j =0; j<myJson.content.length; j++){
-				try{
-					switch (myJson.content[j]){
-						case "detail":
-							var newItem = {detail : myJson.data[i][j]};
-						break;
-						case "ip":
-							var newItem = {ip : myJson.data[i][j]};
-						break;
-						case "id":
-							var newItem = {id : myJson.data[i][j]};
-						break;
-						case "name":
-							var newItem = {name : myJson.data[i][j]};
-						break;
-						case "n":
-							var newItem = {n : myJson.data[i][j]};
-						break;
-						case "c":
-							var newItem = {c : myJson.data[i][j]};
-						break;
-						case "date":
-							var newItem = {date : myJson.data[i][j]};
-						break;
-						case "hostname":
-							var newItem = {hostname : myJson.data[i][j]};
-						break;
-						case "msg":
-							var newItem = {msg : myJson.data[i][j]};
-						break;
-						case "severity":
-							var newItem = {severity : myJson.data[i][j]};
-						break;
-						case "datecycle":
-							var newItem = {cyc : myJson.data[i][j]};
-						break;
-						case "cyc":
-							var newItem = {cyc : myJson.data[i][j]};
-						break;
-						case "iplocal":
-							var newItem = {ipl : myJson.data[i][j]};
-						break;
-						case "ipl":
-							var newItem = {ipl : myJson.data[i][j]};
-						break;
-						case "dir":
-							var newItem = {d : myJson.data[i][j]};
-						break;
-						case "d":
-							var newItem = {d : myJson.data[i][j]};
-						break;
-						case "ipextern":
-							var newItem = {ipo : myJson.data[i][j]};
-						break;
-						case "ipo":
-							var newItem = {ipo : myJson.data[i][j]};
-						break;
-						case "asnum":
-							var newItem = {asn : myJson.data[i][j]};
-						break;
-						case "asn":
-							var newItem = {asn : myJson.data[i][j]};
-						break;
-						case "country":
-							var newItem = {c : myJson.data[i][j]};
-						break;
-						case "proto":
-							var newItem = {p : myJson.data[i][j]};
-						break;
-						case "p":
-							var newItem = {p : myJson.data[i][j]};
-						break;
-						case "ptloc":
-							var newItem = {pl : myJson.data[i][j]};
-						break;
-						case "pl":
-							var newItem = {pl : myJson.data[i][j]};
-						break;
-						case "ptext":
-							var newItem = {po : myJson.data[i][j]};
-						break;
-						case "po":
-							var newItem = {po : myJson.data[i][j]};
-						break;
-						case "tcpflg":
-							var newItem = {flg : myJson.data[i][j]};
-						break;
-						case "flg":
-							var newItem = {flg : myJson.data[i][j]};
-						break;
-						case "inctraf":
-							var newItem = {itr : myJson.data[i][j]};
-						break;
-						case "itr":
-							var newItem = {itr : myJson.data[i][j]};
-						break;
-						case "outgtraf":
-							var newItem = {otr : myJson.data[i][j]};
-						break;
-						case "otr":
-							var newItem = {otr : myJson.data[i][j]};
-						break;
-						case "incpkts":
-							var newItem = {ipk : myJson.data[i][j]};
-						break;
-						case "ipk":
-							var newItem = {ipk : myJson.data[i][j]};
-						break;
-						case "outgpkts":
-							var newItem = {opk : myJson.data[i][j]};
-						break;
-						case "opk":
-							var newItem = {opk : myJson.data[i][j]};
-						break;
-						case "firsttime":
-							var newItem = {fst : myJson.data[i][j]};
-						break;
-						case "fst":
-							var newItem = {fst : myJson.data[i][j]};
-						break;
-						case "lasttime":
-							var newItem = {lst : myJson.data[i][j]};
-						break;
-						case "lst":
-							var newItem = {lst : myJson.data[i][j]};
-						break;
-						case "duration":
-							var newItem = {dur : myJson.data[i][j]};
-						break;
-						case "dur":
-							var newItem = {dur : myJson.data[i][j]};
-						break;
-						case "mac":
-							if(myJson.data[i][j] != "" && myJson.data[i][j] != " ") showMacAddresses = true;
-							var newItem = {mac : myJson.data[i][j]};
-						break;
-						case "network":
-							var newItem = {network : myJson.data[i][j]};
-						break;
-						case "lastSeen":
-							var newItem = {lastSeen : myJson.data[i][j]};
-						break;
-						case "nbExtHosts":
-							var newItem = {nbExtHosts : myJson.data[i][j]};
-						break;
-						case "nbFlows":
-							var newItem = {nbFlows : myJson.data[i][j]};
-						break;
-						case "ipExtern":
-							var newItem = {ipExtern : myJson.data[i][j]};
-						break;
-						case "nbFlow":
-							var newItem = {nbFlow : myJson.data[i][j]};
-						break;
-						case "ipProto":
-							var newItem = {ipProto : myJson.data[i][j]};
-						break;
-						case "portLoc":
-							var newItem = {portLoc : myJson.data[i][j]};
-						break;
-						case "portExt":
-							var newItem = {portExt : myJson.data[i][j]};
-						break;
-						case "osName":
-							var newItem = {osName : myJson.data[i][j]};
-						break;
-						case "arch64":
-							var newItem = {arch64 : myJson.data[i][j]};
-						break;
-						case "mobile":
-							var newItem = {mobile : myJson.data[i][j]};
-						break;
-						case "application_id":
-							var newItem = {application_id : myJson.data[i][j]};
-						break;
-						case "num_id_flow":
-							var newItem = {num_id_flow : myJson.data[i][j]};
-						break;
-						default:
-							alert("JSON maker : new item name : "+myJson.content[j])
-						break;
-					}
-					tempItem = jsonConcat(tempItem, newItem) ;
-				}catch(e){alert('erata : '+e+"::: "+i);}
-			}
-			jsonItems.items.push(tempItem);
-		}
-		
-		return jsonConcat(jsonItems, {showMacAddresses : showMacAddresses});
-		
-	}else if(myJson == {}){
-		console.log("empty json in 'jsonChartingModifier' function ! Alert raised at line :"+new Error().lineNumber);
-		return myJson;
-	}else if(myJson.errMsg != null){
-		console.log("error message json in 'jsonChartingModifier' function ! Alert raised at line :"+new Error().lineNumber);
-		return myJson;
-	}else{
-		console.log("no modifiaction to json in 'jsonChartingModifier' function ! Alert raised at line :"+new Error().lineNumber);
-		return myJson;
-	}
-	
-	
-}
-
-
-function jsonConcat(o1, o2) {
- for (var key in o2) {
-  o1[key] = o2[key];
- }
- return o1;
-}
-
-
-function setLegendDataIndex(rawDataJson){
-	
-	var legendTab = [];
-	
-	for(var i=0; i<rawDataJson.content.length; i++){
-		switch (rawDataJson.content[i]){
-			case "datecycle":
-				cyc_INDEX = i;
-			break;
-			case "cyc":
-				cyc_INDEX = i;
-			break;
-			case "iplocal":
-				ipl_INDEX = i;
-				legendTab.push("IpLocal"); 
-			break;
-			case "ipl":
-				ipl_INDEX = i;
-				legendTab.push("IpLocal");
-			break;
-			case "dir":
-				d_INDEX = i;
-				legendTab.push("Dir");
-			break;
-			case "d":
-				d_INDEX = i;
-				legendTab.push("Dir");
-			break;
-			case "ipextern":
-				ipo_INDEX = i;
-				legendTab.push("IpExtern");
-			break;
-			case "ipo":
-				ipo_INDEX = i;
-				legendTab.push("IpExtern");
-			break;
-			case "asnum":
-				asn_INDEX = i;
-				legendTab.push("ASNum");
-			break;
-			case "asn":
-				asn_INDEX = i;
-				legendTab.push("ASNum");
-			break;
-			case "country":
-				c_INDEX = i;
-			break;
-			case "c":
-				c_INDEX = i;
-			break;
-			case "proto":
-				p_INDEX = i;
-				legendTab.push("Proto");
-			break;
-			case "p":
-				p_INDEX = i;
-				legendTab.push("Proto");
-			break;
-			case "ptloc":
-				pl_INDEX = i;
-				legendTab.push("PtLoc");
-			break;
-			case "pl":
-				pl_INDEX = i;
-				legendTab.push("PtLoc");
-			break;
-			case "ptext":
-				po_INDEX = i;
-				legendTab.push("PtExt");
-			break;
-			case "po":
-				po_INDEX = i;
-				legendTab.push("PtExt");
-			break;
-			case "tcpflg":
-				flg_INDEX = i;
-				legendTab.push("TcpFlg");
-			break;
-			case "flg":
-				flg_INDEX = i;
-				legendTab.push("TcpFlg");
-			break;
-			case "inctraf":
-				itr_INDEX = i;
-				legendTab.push("IncTraf");
-			break;
-			case "itr":
-				itr_INDEX = i;
-				legendTab.push("IncTraf");
-			break;
-			case "outgtraf":
-				otr_INDEX = i;
-				legendTab.push("OutgTraf");
-			break;
-			case "otr":
-				otr_INDEX = i;
-				legendTab.push("OutgTraf");
-			break;
-			case "incpkts":
-				ipk_INDEX = i;
-				legendTab.push("IncPkts");
-			break;
-			case "ipk":
-				ipk_INDEX = i;
-				legendTab.push("IncPkts");
-			break;
-			case "outgpkts":
-				opk_INDEX = i;
-				legendTab.push("OutgPkts");
-			break;
-			case "opk":
-				opk_INDEX = i;
-				legendTab.push("OutgPkts");
-			break;
-			case "firsttime":
-				fst_INDEX = i;
-				legendTab.push("FirstTime");
-			break;
-			case "fst":
-				fst_INDEX = i;
-				legendTab.push("FirstTime");
-			break;
-			case "lasttime":
-				lst_INDEX = i;
-				legendTab.push("LastTime");
-			break;
-			case "lst":
-				lst_INDEX = i;
-				legendTab.push("LastTime");
-			break;
-			case "duration":
-				dur_INDEX = i;
-				legendTab.push("Duration");
-			break;
-			case "dur":
-				dur_INDEX = i;
-				legendTab.push("Duration");
-			break;
-			case "application_id":
-				application_id_INDEX = i;
-				legendTab.push("Application");
-			break;
-			case "num_id_flow":
-				num_id_flow_INDEX = i;
-			break;
-			default:
-				alert("setLegendDataIndex : new item name : "+rawDataJson.content[i]);
-			break;
-		}
-	}
-	
-	// ajout de la lï¿½gende dans le json
-	rawDataJson = jsonConcat(rawDataJson, {legend: legendTab});
-
-	return rawDataJson;
-}
-
-
-function jsonNameFromTreePath(ongletId){
-	
-	
-	var pref = "";
-	var suff = "";
-
-	require(["dijit/registry"], function(registry){
-		var treePath = registry.byId("thinTree"+ongletId).path;
-		
-		for(var i=treePath.length-1; i>0; i--){
-			//alert(i+" : "+treePath[i].valuePrefixe+" : "+treePath[i].valueSuffixe);
-			pref += treePath[i].valuePrefixe;
-			suff += treePath[i].valueSuffixe;
-		}
-	});
-	
-	//alert(pref+suff);
-	return pref+suff;
-}
-
-
-
-var graphIndexFromTreePath = function(ongletId){
-	
-	var treePath = null;
-	
-	require(["dijit/registry"], function(registry){
-		treePath = registry.byId("thinTree"+ongletId).path;
-	});
-			
-	for(var i=0; i<treePath.length ; i++){
-		//alert(treePath[i].graphIndex);
-		if(treePath[i].graphIndex){
-			//alert("in");
-			return treePath[i].graphIndex+"";
-		}
-	}
-			
-}
-
-
-
-var pathToFirstLeaf = function(tree){
-	
-	var path = [tree.model.root]
-	
-	var node = tree.model.root;
-	
-	while( node.children ){
-		node = node.children[0];
-		path.push(node);
-	}
-	
-	return path;
-	
-}
-
-
-var clickOnFirstLeaf = function(tree){
-	
-	require(["dijit/registry", "dojo/ready", "dojo/domReady!"], function(registry, ready){
-		ready(function(){
-			try{
-				var pathToLeaf = pathToFirstLeaf(tree);
-				var leaf = pathToLeaf[pathToLeaf.length-1];
-				tree.set("path", pathToLeaf);
-				tree.onClick(leaf);
-				//alert("done");
-			}catch(e){alert("error : "+e+" \n alert raised inss tools.js at line "+e.lineNumber);}
-		});
-	});
-	
-}
-
-
-
-
-
-var checkForTreeLeafSelected = function(tree){
-	
-	require(["dijit/registry", "dojo/ready", "dojo/domReady!"], function(registry, ready){
-		ready(function(){
-			try{
-				if(tree.get("selectedItem")){
-					
-					tree.onClick(tree.get("selectedItem"));
-					// DO NOTHING : item already selected
-				}else{
-					// no selected item : select first tree leaf !
-					clickOnFirstLeaf(tree);
-				}
-			}catch(e){alert("error : "+e+" \n alert raised in tools.js asst line "+e.lineNumber);}
-		});
-	});
-	
-}
-
-
-
-
-
-function moreRDSearch(){
-	
-}
-
-var pluriel = function(value){
-	if(value > 1) return "s";
-	else return "";
-}
-
-
-function presenteContainerProperly(){
-	require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
-		ready(function(){
-			
-			// redraw tabcontainers to ensure correct presentation of all dojo elements
-			registry.byId('LocalhostsTabContainer').resize();
-			registry.byId('NetworksTabContainer').resize();
-			
-	//alert("presenteContainerProperly : DONE !");
-		});
-	});
-}
-
-
-

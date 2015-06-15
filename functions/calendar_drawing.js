@@ -1,6 +1,7 @@
 	
-var makeCalendar = function(){
-	//alert('in');
+dojo.require("dojox.widget.Calendar");
+makeCalendar = function(){
+	
 	// create a new instance of calendar
 	
 	dojo.extend(dojo.NodeList, {
@@ -55,15 +56,7 @@ var makeCalendar = function(){
 						}else{
 							calendarDisplay(true,true,n.id);
 						}
-						//alert("ko");
-						
-						//dojo.ready(function(){
-						dialogCalendar.show();
-							
-							
-
-							
-						//});
+						dijit.byId("dialogCalendar").show();
 						
 					}
 				})

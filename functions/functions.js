@@ -1,33 +1,3 @@
-
-
-var cptRequest=0;
-
-
-function lockScreen()
-	{	
-		if(cptRequest==0)
-		{
-			document.getElementById('disablingDiv').style.display='block';
-			//alert('lock:'+cptRequest);	
-		}
-		cptRequest++;
-		
-	}
-	
-
-function unlockScreen()
-{
-
-	cptRequest--;
-	if(cptRequest==0)
-	{
-		document.getElementById('disablingDiv').style.display='none';
-		//alert('unlock:'+cptRequest);
-	}
-	
-}
-	
-	
 function selectGrapheOption(numGraphe, Onglet){
 	
 	initZoom(numGraphe, Onglet);	
@@ -164,25 +134,20 @@ function nameOfCountry( id ){
 }
 
 function setCursors( id, tag ){
-	//alert(id+"   _   "+tag);
 	
 	var rect = document.getElementById(id).getElementsByTagName(tag);
 	
 	for(var i = 0; i< rect.length; i++) {
-		try{
-			var ess = rect[i].getAttribute("fill").replace(/ /, "");
-			ess = ess.replace(/rgb\(/, "");
-			ess = ess.replace(/\)/, "");
-			
-			var rgb = ess.split(",");
-			
-			for(var j=0; j< rgb.length; j++) rgb[j] = myParseInt(rgb[j]);
-			
-			if(rgb[0] != rgb[1] || rgb[0] != rgb[2]){
-				rect[i].setAttribute("style", "cursor: pointer;");
-			}
-		}catch(e){
-			//alert("errrrrrrrrrr in here");
+		var ess = rect[i].getAttribute("fill").replace(/ /, "");
+		ess = ess.replace(/rgb\(/, "");
+		ess = ess.replace(/\)/, "");
+		
+		var rgb = ess.split(",");
+		
+		for(var j=0; j< rgb.length; j++) rgb[j] = myParseInt(rgb[j]);
+		
+		if(rgb[0] != rgb[1] || rgb[0] != rgb[2]){
+			rect[i].setAttribute("style", "cursor: pointer;");
 		}
 	}
 	
@@ -193,19 +158,19 @@ function makeWhoIs( ip, server ){
 		var xhr = createXhrObject();
 
 		if(server)
-			xhr.open("GET", askWhere +  "whois.json?ip="+ip+"&server="+server, true);
+			xhr.open("GET",  "dynamic/whois.json?ip="+ip+"&server="+server, true);
 		else
-			xhr.open("GET", askWhere +  "whois.json?ip="+ip, true);
-		lockScreen();xhr.onreadystatechange=function() 
+			xhr.open("GET",  "dynamic/whois.json?ip="+ip, true);
+		xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
 			{
-				dialogWhoIs.setAttribute('title', 'Whois: '+ip);	
+				dijit.byId('dialogWhoIs').setAttribute('title', 'Whois: '+ip);	
 				
 				if (xhr.status == 200) 
 				{
 					var JsonWhoIs = eval("(" + xhr.responseText + ")");
-					if(JsonWhoIs.errMsg)alert("whois.json Bug Report: "+ JsonWhoIs.errMsg);	
+					if(JsonWhoIs.errMsg)alert("dynamic/whois.json Bug Report: "+ JsonWhoIs.errMsg);	
 					
 					var area = document.getElementById('whoIsTextArea');
 					if ( area.hasChildNodes() ){
@@ -223,12 +188,12 @@ function makeWhoIs( ip, server ){
 					}
 					
 				}else {
-					document.getElementById('whoIsTextArea').innerHTML = "whois.json?ip="+ip+" not found";
+					document.getElementById('whoIsTextArea').innerHTML = "dynamic/whois.json?ip="+ip+" not found";
 				}
 				
-				dialogWhoIs.show();
+				dijit.byId('dialogWhoIs').show();
 			}
-			unlockScreen();	
+
 		}
 		xhr.send(null);
 	
@@ -314,8 +279,8 @@ function solveIpExt(element){
 			
 			var xhr = createXhrObject();
 			
-				xhr.open("GET", askWhere +  "resolv.json?ip="+element.getAttribute('host'), true);
-			lockScreen();xhr.onreadystatechange=function() 
+				xhr.open("GET",  "dynamic/resolv.json?ip="+element.getAttribute('host'), true);
+			xhr.onreadystatechange=function() 
 			{
 				if (xhr.readyState == 4) 
 				{
@@ -342,7 +307,6 @@ function solveIpExt(element){
 						element.title = "None";
 					}
 				}
-				unlockScreen();	
 			}
 			xhr.send(null);
 		}	
@@ -360,7 +324,7 @@ function returnSolvedIpExt(value){
 	try{
 			var xhr = createXhrObject();
 			
-				xhr.open("GET", askWhere +  "resolv.json?ip="+value, false);
+				xhr.open("GET",  "dynamic/resolv.json?ip="+value, false);
 				xhr.send(null);
 				if (xhr.readyState == 4) 
 				{
@@ -428,8 +392,8 @@ function resolveProto(element){
 			
 			var xhr = createXhrObject();
 			
-				xhr.open("GET", askWhere +  "getProtoDesc.json?proto="+element.innerHTML, true);
-			lockScreen();xhr.onreadystatechange=function() 
+				xhr.open("GET",  "dynamic/getProtoDesc.json?proto="+element.innerHTML, true);
+			xhr.onreadystatechange=function() 
 			{
 				if (xhr.readyState == 4) 
 				{
@@ -465,7 +429,6 @@ function resolveProto(element){
 						element.title = "Can't resolve";
 					}
 				}
-				unlockScreen();	
 			}
 			xhr.send(null);
 		}	
@@ -485,8 +448,8 @@ function resolveService(element){
 			
 			var xhr = createXhrObject();
 			
-				xhr.open("GET", askWhere +  "getPortServiceName.json?proto="+element.getAttribute('proto')+"&port="+element.innerHTML, true);
-			lockScreen();xhr.onreadystatechange=function() 
+				xhr.open("GET",  "dynamic/getPortServiceName.json?proto="+element.getAttribute('proto')+"&port="+element.innerHTML, true);
+			xhr.onreadystatechange=function() 
 			{
 				if (xhr.readyState == 4) 
 				{
@@ -513,7 +476,6 @@ function resolveService(element){
 						element.title = "Can't resolve";
 					}
 				}
-				unlockScreen();	
 			}
 			xhr.send(null);
 		}	
@@ -647,8 +609,8 @@ function makeConf(){
 	
 		var xhr = createXhrObject();
 
-		xhr.open("GET", askWhere + "getConfig.json", true);
-		lockScreen();xhr.onreadystatechange=function() 
+		xhr.open("GET", "dynamic/getConfig.json", true);
+		xhr.onreadystatechange=function() 
 		{
 			if (xhr.readyState == 4) 
 			{	
@@ -656,7 +618,7 @@ function makeConf(){
 				if (xhr.status == 200) 
 				{
 					var JsonConf = eval("(" + xhr.responseText + ")");
-					if(JsonConf.errMsg)alert("getConfig.json Bug Report: "+JsonConf.errMsg);	
+					if(JsonConf.errMsg)alert("dynamic/getConfig.json Bug Report: "+JsonConf.errMsg);	
 					
 					var table = document.getElementById('dialogConfTable');
 					if ( table.hasChildNodes() ){
@@ -665,15 +627,8 @@ function makeConf(){
 						} 
 					}
 					
-					
-					button = document.createElement("button");
-					button.innerHTML = "Edit";
-					button.setAttribute('onClick', "javascript:document.location.href='config.html'")
-					table.appendChild(button);
-					
 					var TBody = document.createElement("tbody");
 					table.appendChild(TBody);
-					
 					
 					var Ntr;
 					var Ntd;
@@ -1617,11 +1572,11 @@ function makeConf(){
 						TBody.appendChild(Ntr);
 						Ntd = document.createElement("td");
 						Ntd.setAttribute("class","left");
-						text = document.createTextNode("pcapIgnoreMac");
+						text = document.createTextNode("checkMacAddress");
 						Ntd.appendChild(text);
 						Ntr.appendChild(Ntd);
 						Ntd = document.createElement("td");
-						text = document.createTextNode(JsonConf.pcapIgnoreMac);
+						text = document.createTextNode(JsonConf.checkMacAddress);
 						Ntd.appendChild(text);
 						Ntr.appendChild(Ntd);
 						
@@ -1857,18 +1812,16 @@ function makeConf(){
 					
 
 				}else {
-					document.getElementById('confTexttable').innerHTML = "getConfig.json?ip="+ip+" not found";
+					document.getElementById('confTexttable').innerHTML = "dynamic/getConfig.json?ip="+ip+" not found";
 				}
-								dialogConf.show();
+								dijit.byId('dialogConf').show();
 			}
-			unlockScreen();	
+
 		}
 		xhr.send(null);
 	
 }
-
-/*
-	var startButton = dojo.byId("startButton"),
+var startButton = dojo.byId("startButton"),
 		reverseButton = dojo.byId("reverseButton"),
 		anim8target = dojo.byId("anim8target");
 
@@ -1885,139 +1838,3 @@ function makeConf(){
 			properties: { width: 100 }
 		}).play();
 	});
-*/	
-	
-function makeWhoisSearchBar(){	
-	require(["dijit/Toolbar", "dijit/form/Button", "dojo/_base/array", "dojo/domReady!"], function(Toolbar, Button, array){
-	    var toolbar = new Toolbar({}, "whoisSearchBar");
-	    /*array.forEach(["Cut", "Copy", "Paste"], function(label){
-		var button = new Button({
-		    // note: should always specify a label, for accessibility reasons.
-		    // Just set showLabel=false if you don't want it to be displayed normally
-		    label: label,
-		    showLabel: false,
-		    iconClass: "dijitEditorIcon dijitEditorIcon"+label
-		});
-		toolbar.addChild(button);
-	    });*/
-		    toolbar.startup();
-	});
-}
-
-
-
-function showAccurate (button, numGraphe, Onglet){
-	
-	//alert("DivChart"+numGraphe+Onglet);
-	
-	if(document.getElementById("DivChart"+numGraphe+Onglet).style.display == 'block' ){
-		
-		button.innerHTML = "Show Default Chart";
-		
-		document.getElementById("DivChart"+numGraphe+Onglet).setAttribute("style", "display: none;");
-		document.getElementById("DivChart"+numGraphe+Onglet+"Accurate").setAttribute("style", "display: block;");
-		
-		drawChart(numGraphe, Onglet, true);
-		
-	}else{
-		
-		button.innerHTML = "Show Accurate Chart";
-		
-		document.getElementById("DivChart"+numGraphe+Onglet).setAttribute("style", "display: block;");
-		document.getElementById("DivChart"+numGraphe+Onglet+"Accurate").setAttribute("style", "display: none;");
-		
-		drawChart(numGraphe, Onglet, false);
-		
-	}
-	
-}
-
-
-
-function setToDefault (numGraphe, Onglet){
-	
-	try{
-		var button = document.getElementById("Button"+graphIndexFromTreePath(Onglet)+Onglet);
-	
-		button.innerHTML = "Show Accurate Chart";
-		
-		document.getElementById("DivChart"+numGraphe+Onglet).setAttribute("style", "display: block;");
-		document.getElementById("DivChart"+numGraphe+Onglet+"Accurate").setAttribute("style", "display: none;");
-		
-	}catch(e){/*alert("hifunction");*/}
-		
-}
-
-
-
-var newDivMinimisable = function(id, height, width, margin, padding, headerPosition, headerSize){
-	
-	var div = document.createElement("div");
-	div.setAttribute("id", id);
-	if(height) div.setAttribute("height", height);
-	if(width) div.setAttribute("width", width);
-	if(margin) div.setAttribute("margin", margin);
-	if(padding) div.setAttribute("padding", padding);
-	alert("in")
-	
-	var headerDiv =  document.createElement("div");
-	headerDiv.setAttribute("style", "background: red");
-	var bodyDiv =  document.createElement("div");
-	bodyDiv.setAttribute("style", "background: yellow");
-	
-	switch(headerPosition){
-		case "top":
-			headerDiv.setAttribute("id", id+"_headerDiv");
-			if(headerSize) headerDiv.setAttribute("height", headerSize);
-			headerDiv.setAttribute("width", "100%");
-			headerDiv.innerHTML = "<font align='center' valign='center'>v<font/>";
-			div.appendChild(headerDiv);
-		
-			bodyDiv.setAttribute("id", id+"_bodyDiv");
-			bodyDiv.setAttribute("height", "100%");
-			bodyDiv.setAttribute("width", "100%");
-			div.appendChild(bodyDiv);
-		break;
-		case "bottom":
-			bodyDiv.setAttribute("id", id+"_bodyDiv");
-			bodyDiv.setAttribute("height", "100%");
-			bodyDiv.setAttribute("width", "100%");
-			div.appendChild(bodyDiv);
-		
-			headerDiv.setAttribute("id", id+"_headerDiv");
-			if(headerSize) headerDiv.setAttribute("height", headerSize);
-			headerDiv.setAttribute("width", "100%");
-			headerDiv.innerHTML = "<font align='center' valign='center'>^<font/>";
-			div.appendChild(headerDiv);
-		break;
-		case "left":
-			headerDiv.setAttribute("id", id+"_headerDiv");
-			if(headerSize) headerDiv.setAttribute("width", headerSize);
-			headerDiv.setAttribute("height", "100%");
-			headerDiv.innerHTML = "<font align='center' valign='center'>><font/>";
-			div.appendChild(headerDiv);
-		
-			bodyDiv.setAttribute("id", id+"_bodyDiv");
-			bodyDiv.setAttribute("height", "100%");
-			bodyDiv.setAttribute("width", "100%");
-			div.appendChild(bodyDiv);
-		break;
-		case "right":
-			bodyDiv.setAttribute("id", id+"_bodyDiv");
-			bodyDiv.setAttribute("height", "100%");
-			bodyDiv.setAttribute("width", "100%");
-			div.appendChild(bodyDiv);
-			
-			headerDiv.setAttribute("id", id+"_headerDiv");
-			if(headerSize) headerDiv.setAttribute("width", headerSize);
-			headerDiv.setAttribute("height", "100%");
-			headerDiv.innerHTML = "<font align='center' valign='center'><<font/>";
-			div.appendChild(headerDiv);
-		break;
-		default:
-		break;
-	
-	}
-	
-	return div;
-}

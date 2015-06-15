@@ -5,18 +5,16 @@ function overLegende(chart, couleur){
 	var red = parseInt(""+couleur.charAt(1)+couleur.charAt(2), 16);
 	var green = parseInt(""+couleur.charAt(3)+couleur.charAt(4), 16);
 	var blue = parseInt(""+couleur.charAt(5)+couleur.charAt(6), 16);
-		
+						
 	if(red != green || red != blue ){
-
 		colors[1] =  "rgb("+red+", "+green+", "+blue+")";
 	
 		tabRect = document.getElementById(chart).getElementsByTagName("rect");
 	
 		clignote();
-		clignoteGraph();
+		clignoteGraph(tabRect,colors[1] );
 		
 	}
-
 }
 
 function outLegende(chart){
@@ -65,19 +63,18 @@ function clickLegende(id){
 			//alert(isNaN(tabFont[0].innerHTML.split("(")[1].split(")")[0]))
 			try{
 				if(isNaN(tabFont[0].innerHTML.split("(")[1].split(")")[0]))
-					SelectCountry.setAttribute( 'value' , tabFont[0].innerHTML.split("(")[0] );		
+					dijit.byId("SelectCountry").setAttribute( 'value' , tabFont[0].innerHTML.split("(")[0] );		
 				else{					
 					document.getElementById("AS").setAttribute("value", tabFont[0].innerHTML.split("(")[1].split(")")[0]);
 					document.getElementById("AS").value = tabFont[0].innerHTML.split("(")[1].split(")")[0];
-					
-					//document.getElementById("AS").onchange();
+					document.getElementById("AS").onchange();
 				}
 			}catch(e){
 			}			
 		/*}else if(tabFont[0].innerHTML == "TCP" || "UDP" || "OTHERS"){
 			alert("hi");*/
 		}else{// machine (ip ou name)
-			//SelectIp.setAttribute( 'value' , ipFrom(tabFont[0].innerHTML));
+			dijit.byId("SelectIp").setAttribute( 'value' , ipFrom(tabFont[0].innerHTML));
 		}
 		
 		animatePlusTab();
@@ -109,7 +106,7 @@ function clignote(){
 						tabRect[i].setAttribute('fill', colors[2]);
 						tabRect[i].setAttribute('stroke', "rgb(255, 0 ,0)");
 						tabRect[i].setAttribute('stroke-width', "2");
-					}catch(e){alert(e);}
+					}catch(e){}
 					break;
 
 				case colors[2]:
@@ -117,7 +114,7 @@ function clignote(){
 							tabRect[i].setAttribute('fill', colors[1]);
 							tabRect[i].setAttribute('stroke', "rgb(0, 0 ,0)");
 							tabRect[i].setAttribute('stroke-width', "1");
-					}catch(e){alert(e);}
+					}catch(e){}
 				break;
 
 				default:
@@ -130,30 +127,21 @@ function clignote(){
 	
 }
 
-function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, service, country, as,isApp){
-	
+function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, service, country, as){
 	//alert(name+" : "+ipFrom(name));
-	//alert("label : "+label+"\n name : "+name+"("+ipFrom(name)+")"+"\n port : "+port+"\n proto : "+proto+"\n dir : "+dir+"\n direction : "+direction+"\n multiplePie : "+multiplePie+"\n JN : "+JN+"\n service : "+service+"\n country : "+country+"\n as : "+as)
-	
-	try{
-	
+//alert("label : "+label+"\n name : "+name+"("+ipFrom(name)+")"+"\n port : "+port+"\n proto : "+proto+"\n dir : "+dir+"\n direction : "+direction+"\n multiplePie : "+multiplePie+"\n JN : "+JN+"\n service : "+service+"\n country : "+country+"\n as : "+as)
 	// initialisation du formulaire
 	initPlusData();
-		
 	
 	// remplissage des champs de l'onglet plus (1er partie)
-	
 	setPlusTab(label, name, ongletActif());
-		
 	
 	// check de la valeur de dRDTD egale a celle du champ "disabledRecordDataflowToDatabase" du fichier de conf
 	// si dRDTD == false ( !dRDTD == true ) alors affichage des camemberts; sinon, non
 	if(!dRDTD && name != " Remainder " && port != " Remainder " && proto != "OTH" && country != " Remainder "){
 		
-		
 		// sauvegarde du nom du json a utiliser pour le camembert
 		JsonName = JN;
-		
 		
 		// pretraitement du parametre proto
 		switch(proto){
@@ -170,18 +158,15 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 				break;
 			}
 		
-		
 		// remplissage des champs de l'onglet plus (2eme partie)
 		setPlusTabProto(label, proto);
 			
-		
 			
 		try{
 			document.getElementById("dir").value = dir;
 		}catch(e){
 			document.getElementById("dir").value = "";
 		}
-		
 		
 		
 		if(port != ""){
@@ -194,7 +179,7 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 			}
 		} 
 		
-		dialogCamemberts.show();
+		dijit.byId("dialogCamemberts").show();
 		document.getElementById("divC2").style.display='none';
 		
 		if(multiplePie){
@@ -225,7 +210,7 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 		var DF = document.getElementById("dateFinData").value;
 		DF = DF.replace(/ /, "%20");
 		DF = DF.replace(/:/,"%3A");
-		//alert("in");
+		
 		
 		// ecriture :
 		setParameters( null, "dd="+DD+"&df="+DF );
@@ -246,17 +231,9 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 		if(as!=""){
 			document.getElementById("AS").setAttribute("value", as);
 			document.getElementById("AS").value = as;
-			//document.getElementById("AS").onchange();
-			//alert(label);
-			if(isApp)
-				{
-				addToParameters( null, "&app="+as );
-				}
-			else
-				{
-				addToParameters( null, "&as="+as );
-				}
+			document.getElementById("AS").onchange();
 			
+			addToParameters( null, "&as="+as );
 		}
 		if(ongletActif() != "Global" && !document.getElementById(ongletActif()).isClosable) addToParameters( null, "&net="+ongletActif() );
 		
@@ -264,32 +241,30 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 		// if(port == "") addToParameters( "&type="+direction+"&ip="+ipFrom(name) );
 		
 		datesTitle = "<br>"+document.getElementById("dateDebData").value+"<img style='margin-left: 15px; margin-right: 15px;' src='/images/arrow_right.png'>"+document.getElementById("dateFinData").value;
-		if(name != "" && proto =="") dialogCamemberts.setAttribute('title', "<center>Traffic of "+name+datesTitle+"<center>");
-		else if(country != "") dialogCamemberts.setAttribute('title', "<center>Traffic in "+country+datesTitle+"<center>");
-		else if(as != "") dialogCamemberts.setAttribute('title', "<center>Traffic of ASN "+as+": "+ resolveASNum(as)+datesTitle+"<center>" );
+		if(name != "" && proto =="") dijit.byId("dialogCamemberts").set('title', "<center>Traffic of "+name+datesTitle+"<center>");
+		else if(country != "") dijit.byId("dialogCamemberts").set('title', "<center>Traffic in "+country+datesTitle+"<center>");
+		else if(as != "") dijit.byId("dialogCamemberts").set('title', "<center>Traffic of ASN "+as+": "+ resolveASNum(as)+datesTitle+"<center>" );
 		else if(port != "") {
-			if(name != "") dialogCamemberts.setAttribute('title', "<center>Traffic of "+name+" using port "+port+"/"+proto+datesTitle+"<center>");
-			else dialogCamemberts.setAttribute('title', "<center>Using port "+port+"/"+proto+datesTitle+"<center>");
+			if(name != "") dijit.byId("dialogCamemberts").set('title', "<center>Traffic of "+name+" using port "+port+"/"+proto+datesTitle+"<center>");
+			else dijit.byId("dialogCamemberts").set('title', "<center>Using port "+port+"/"+proto+datesTitle+"<center>");
 		}
 		else if(proto != "") {
-			if(name != "") dialogCamemberts.setAttribute('title', "<center>Traffic of "+name+" using protocole "+proto+datesTitle+"<center>");
-			else dialogCamemberts.setAttribute('title', "<center>Using protocole "+proto+datesTitle+"<center>"); 
+			if(name != "") dijit.byId("dialogCamemberts").set('title', "<center>Traffic of "+name+" using protocole "+proto+datesTitle+"<center>");
+			else dijit.byId("dialogCamemberts").set('title', "<center>Using protocole "+proto+datesTitle+"<center>"); 
 		}
-		else dialogCamemberts.setAttribute('title', "<center>"+datesTitle+"<center>");
+		else dijit.byId("dialogCamemberts").setA('title', "<center>"+datesTitle+"<center>");
 		
-		
-		dialogCamemberts.setAttribute('alt', "");
-		//document.getElementById("dialogCamemberts").setAttribute('alt', "");
+		dijit.byId("dialogCamemberts").setAttribute('alt', "");
+		document.getElementById("dialogCamemberts").setAttribute('alt', "");
 		
 		// Resizing dialog widget if necessary
-		if(dialogCamemberts.title.length > 200){
-			dialogCamemberts.setAttribute('dimensions', [400, 240+dialogCamemberts.title.length]);
-			dialogCamemberts.layout();
+		if(dijit.byId("dialogCamemberts").title.length > 200){
+			dijit.byId("dialogCamemberts").set('dimensions', [400, 240+dijit.byId("dialogCamemberts").title.length]);
+			dijit.byId("dialogCamemberts").layout();
 		}else{
-			dialogCamemberts.setAttribute('dimensions', [400, 430]);
-			dialogCamemberts.layout();
+			dijit.byId("dialogCamemberts").setAttribute('dimensions', [400, 430]);
+			dijit.byId("dialogCamemberts").layout();
 		}
-		
 		
 		// dessin du graphe par dojo
 		dojo.empty("camembert1");
@@ -298,27 +273,20 @@ function clickToPie(label, name, port, proto, dir, direction, multiplePie, JN, s
 	}else{
 		animatePlusTab();
 	}
-}catch(e){alert(e+" : "+e.lineNumber);}
 	
 }
 
 
 
 function clickMore(){
-	if(dialogCamemberts.dimensions[0] == 800){
+	if(dijit.byId("dialogCamemberts").dimensions[0] == 800){
 		clickMoreAction();
-		dialogCamemberts.set('dimensions', [400, dialogCamemberts.get('dimensions')[1]]); 
-		dialogCamemberts.startup();
-		dialogCamemberts.layout();
-		dialogCamemberts.resize();
-		//setTimeout("dialogCamemberts.layout()", 6000);
+		dijit.byId("dialogCamemberts").setAttribute('dimensions', [400, dijit.byId("dialogCamemberts").get('dimensions')[1]]); 
+		dijit.byId("dialogCamemberts").layout();
 	}else{
-		clickMoreAction();
-		dialogCamemberts.set('dimensions', [800, dialogCamemberts.get('dimensions')[1]]); 
-		dialogCamemberts.startup();
-		dialogCamemberts.layout();
-		dialogCamemberts.resize();
-		//setTimeout("dialogCamemberts.layout()", 6000);
+		dijit.byId("dialogCamemberts").setAttribute('dimensions', [800, dijit.byId("dialogCamemberts").get('dimensions')[1]]); 
+		dijit.byId("dialogCamemberts").layout();
+		setTimeout("clickMoreAction()", 600);
 	}
 	
 }
@@ -385,12 +353,7 @@ function eventMouse(evt, suffixe1, suffixe2){
 			overLegende("chart"+suffixe1+suffixe2, couleur);
 									
 			// modif legende
-			document.getElementById( "legend"+suffixe1+suffixe2+item).setAttribute('style','border:  1px solid black');	
-			//document.getElementById( "legend"+suffixe1+"Tab"+suffixe2).scrollTo(document.getElementById( "legend"+suffixe1+suffixe2+item).parentNode);
-			//document.getElementById( "legend"+suffixe1+"Tab"+suffixe2).scrollTo(document.getElementById( "legend"+suffixe1+suffixe2+item).parentElement);
-			
-			// scroll legend to element
-			document.getElementById( "legend"+suffixe1+suffixe2).scrollTop = document.getElementById( "legend"+suffixe1+suffixe2+item).offsetTop;
+			document.getElementById( "legend"+suffixe1+suffixe2+item).setAttribute('style','border:  1px solid black');						
 		
 	}
 	

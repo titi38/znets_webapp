@@ -14,55 +14,19 @@ function chargeZoomVar(chart,  idNum, json) {
 
 
 function zoomYAxis(id){
-	
+
 	try{
-		
 		var scale = dijit.byId(id).value
-		
-		var min = chart$.getAxis("y").getScaler().bounds.lower;
-		var max = chart$.getAxis("y").getScaler().bounds.upper;
-		
-		
-		if(scale == 0){
-			
-			chart$.zoomIn("y", [min, max]);
-			chart$.zoomIn("autre y", [min, max]);
-			mySetTheme(chart$);
-			
-		}else{
-			
-			if(min == 0){
-				
-				while(scale > 0){
-					max = max/2.0;
-					scale--;
-				}
-			
-			}else{
-				
-				max = Math.min(Math.abs(min), Math.abs(max));
-				scale--;
-				
-				while(scale > 0){
-					max = max/2.0;
-					scale--;
-				}
-				
-				min = max*-1;
-				
-			}
-			
-			chart$.zoomIn("y", [min, max]);
-			chart$.zoomIn("autre y",  [min, max]);
-			mySetTheme(chart$);
-		}
-		
+		chart$.zoomIn("y",scale);
+		chart$.zoomIn("autre y",scale);
+		mySetTheme(chart$);
+		chart$.zoomIn("y",scale);
+		chart$.zoomIn("autre y",scale);
+		mySetTheme(chart$);
 		changeAxes(chart$, divIdNum$, json$);
 		
-		setCursors(chart$.node.id, "rect");
-		
+		setCursor(chart$.node.id, "rect");
 	}catch(e){
-		//alert("errr :\n"+e+" \n alert raised in zooms.js at line "+e.lineNumber);
 	}
 }
 
@@ -88,22 +52,17 @@ function initZoom(numGraphe, Onglet){
 
 
 function initAllZooms(Onglet){
-	require(["dojo/ready", "dijit/registry"], function(ready, registry){
-		ready(function(){
-			//alert(registry.byId("Div"+Onglet).get("closable"));
-			if(registry.byId("Div"+Onglet).get("closable")){
-				try{registry.byId('zoomProto'+Onglet).setAttribute('value', 1);}catch(e){};
-				try{registry.byId('zoomLoc'+Onglet).setAttribute('value', 1);}catch(e){};
-				try{registry.byId('zoomExt'+Onglet).setAttribute('value', 1);}catch(e){};
-			}else{
-				try{registry.byId("zoomTraffic"+Onglet).setAttribute('value', 1);}catch(e){};
-				try{registry.byId("zoomPackets"+Onglet).setAttribute('value', 1);}catch(e){};
-				try{registry.byId("zoomLoc"+Onglet).setAttribute('value', 1);}catch(e){};
-				try{registry.byId("zoomExt"+Onglet).setAttribute('value', 1);}catch(e){};
-				try{registry.byId('zoomNb'+Onglet).setAttribute('value', 1);}catch(e){};
-			}
-		});
-	});
+	if(document.getElementById(Onglet).isClosable){
+		try{dijit.byId('zoomProto'+Onglet).setAttribute('value', 1);}catch(e){};
+		try{dijit.byId('zoomLoc'+Onglet).setAttribute('value', 1);}catch(e){};
+		try{dijit.byId('zoomExt'+Onglet).setAttribute('value', 1);}catch(e){};
+	}else{
+		try{dijit.byId("zoomTraffic"+Onglet).setAttribute('value', 1);}catch(e){};
+		try{dijit.byId("zoomPackets"+Onglet).setAttribute('value', 1);}catch(e){};
+		try{dijit.byId("zoomLoc"+Onglet).setAttribute('value', 1);}catch(e){};
+		try{dijit.byId("zoomExt"+Onglet).setAttribute('value', 1);}catch(e){};
+		try{dijit.byId('zoomNb'+Onglet).setAttribute('value', 1);}catch(e){};
+	}
 }
 
 
@@ -120,8 +79,8 @@ function initZoomVar(onglet){
 
 function initZoomVarNetwork(onglet){
 	
-	try{Chart1[onglet] = "";}catch(e){alert(e);}
-	try{Chart2[onglet] = "";}catch(e){alert(e);}
+	Chart1[onglet] = "";
+	Chart2[onglet] = "";
 	Chart3[onglet] = "";
 	Chart4[onglet] = "";
 	Chart5[onglet] = "";

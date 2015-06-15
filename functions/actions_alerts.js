@@ -1,43 +1,38 @@
-function clickOnAlert(element){
+function clickOnAlert(tr){
 	
-	value = element.attr("value")+"";
-	date = element.attr("date")+"";
-	localhost = element.attr("localhost")+"";
-	
+	value = tr.getAttribute("value");
+	date = tr.getAttribute("date");
+	localhost = tr.getAttribute("localhost");
 	
 	// cookie ===> memorisation des alertes lues
 	if(document.cookie.indexOf(":"+value+":") == -1)
 		document.cookie += (value+":");
 	
-	
-	/*divs = element.getElementsByTagName("div");
+	divs = tr.getElementsByTagName("div");
 	for(var i =0; i<divs.length; i++){
 		divs[i].style.setProperty("font-weight", "normal", null);
 	}
-	*/
-
+	
 	// pre-remplissage de l'onglet plus
-	// initialisation
+		// initialisation
 	initPlusData();
 	
-	// definition des dates
+		// definition des dates
 	document.getElementById("dateFinData").value = date;
 	document.getElementById("dateFinData").onchange();
-	
 	if(debutDeCycle(document.getElementById("dateFinData").value) == document.getElementById("dateFinData").value)
 		document.getElementById("dateDebData").value = debutDeCycle(decalerDate(document.getElementById("dateFinData").value,0,0,0,0,-1)) ;
 	else
 		document.getElementById("dateDebData").value = debutDeCycle(document.getElementById("dateFinData").value) ;
-		
 	document.getElementById("dateDebData").onchange();
 	
-	// definition du localhost
-	SelectIpData.setAttribute('value', localhost);
-	SelectIpAlerts.setAttribute("value", localhost);
+		// definition du localhost
+	dijit.byId("SelectIpData").setAttribute('value', localhost);
+	dijit.byId("SelectIpAlerts").setAttribute("value", localhost);
 	
-	// si alert SMTP, alors port Ext => 25/TCP
-	// if( tr.getAttribute("SMTP") == "true"){
-	if( element.attr("alertType") == "SMTP"){
+		// si alert SMTP, alors port Ext => 25/TCP
+//	if( tr.getAttribute("SMTP") == "true"){
+	if( tr.getAttribute("alertType") == "SMTP"){
 		document.getElementById("proto").value= "tcp";
 		document.getElementById("proto").onchange();
 		document.getElementById("portExt").value= "25";
@@ -56,7 +51,7 @@ function clickOnAlert(element){
 	
 		var xhr = createXhrObject();
 		
-		xhr.open("GET", askWhere +  "getAlertDetail.json?id="+value, false);
+		xhr.open("GET",  "dynamic/getAlertDetail.json?id="+value, false);
 		xhr.send(null);
 			
 		if (xhr.readyState == 4){
@@ -64,64 +59,57 @@ function clickOnAlert(element){
 					
 				var JsonAlert = eval("(" + xhr.responseText + ")");
 				if(JsonAlert.errMsg)
-					alert("getAlertDetail.json Bug Report: "+JsonAlert.errMsg);	
+					alert("dynamic/getAlertDetail.json Bug Report: "+JsonAlert.errMsg);	
 				
 				// si alert SUSPICIOUS, alors ip EXT => suspicious ip
 //				if( tr.getAttribute("SUSPICIOUS") == "true"){
-				if( element.attr("alertType") == "SUSPICIOUS"){
+				if( tr.getAttribute("alertType") == "SUSPICIOUS"){
 					try{
-						if( JsonAlert.details.split('IP address: ')[1].split('type:')[0].length < JsonAlert.details.split('IP address: ')[1].split('\nhostname:')[0].length )
-							document.getElementById("ipext").value= JsonAlert.details.split('IP address: ')[1].split('type:')[0];
+						if( JsonAlert.data[0].details.split('IP address: ')[1].split('type:')[0].length < JsonAlert.data[0].details.split('IP address: ')[1].split('\nhostname:')[0].length )
+							document.getElementById("ipext").value= JsonAlert.data[0].details.split('IP address: ')[1].split('type:')[0];
 						else
-							document.getElementById("ipext").value= JsonAlert.details.split('IP address: ')[1].split('\nhostname:')[0];
+							document.getElementById("ipext").value= JsonAlert.data[0].details.split('IP address: ')[1].split('\nhostname:')[0];
 						document.getElementById("ipext").onchange();	
 					}catch(e){}
 				}
-				
 
 				// si alert SCAN, alors ip EXT => suspicious ip
 //				if( tr.getAttribute("SCAN") == "true"){
-				if( element.attr("alertType") == "SCAN"){
+				if( tr.getAttribute("alertType") == "SCAN"){
 					try{
-						document.getElementById("ipext").value= JsonAlert.details.split(' host ')[2].split(' ')[0];
+						document.getElementById("ipext").value= JsonAlert.data[0].details.split(' host ')[2].split(' ')[0];
 						document.getElementById("ipext").onchange();	
 
 					}catch(e){}
 				}
 				
-				
-				var text = document.createTextNode(JsonAlert.details);
+				var text = document.createTextNode(JsonAlert.data[0].details);
 				area.appendChild(text);
 				
-				
-				dialogLogs.setAttribute( 'title', '<center>Alert raised by  '+localhost+'<br> on '+date.split(" ")[0]+' at '+date.split(" ")[1]+'<center>' );	
-				//dialogLogs.domNode.title = '<center>Alert raised by  '+localhost+'<br> on '+date.split(" ")[0]+' at '+date.split(" ")[1]+'<center>'  ;	
-				
-				
-				
-				/*current_Alerts_TR = element ;
+
+				dijit.byId('dialogLogs').set( 'title', '<center>Alert raised by  '+localhost+'<br> on '+date.split(" ")[0]+' at '+date.split(" ")[1]+'<center>' );	
+				//dijit.byId('dialogLogs').title = '<center>Alert raised by  '+localhost+'<br> on '+date.split(" ")[0]+' at '+date.split(" ")[1]+'<center>'  ;	
+				dijit.byId('dialogLogs').setAttribute( 'tr', tr );
 	
-				
-				if( !current_Alerts_TR.nextSiblings()[0] )
+		
+		
+				if( !dijit.byId('dialogLogs').get('tr').nextSiblings()[0] )
 					document.getElementById("prevAlertButt").disabled="disabled";	
 				else
 					document.getElementById("prevAlertButt").disabled="";	
-				if( !current_Alerts_TR.previousSiblings()[0] )
+				if( !dijit.byId('dialogLogs').get('tr').previousSiblings()[0] )
 					document.getElementById("nextAlertButt").disabled="disabled";
 				else
 					document.getElementById("nextAlertButt").disabled="";
-				*/
+				
+				
+				dijit.byId('dialogLogs').show();
 				
 
 			}else{
 				area.innerHTML = 'Json not found';
 			}
 		}
-		
-		//alert(dialogLogs);
-		//afficher la pop up
-		dialogLogs.show();
-		
 }
 
 	
@@ -165,7 +153,7 @@ function setToDefaultHiddenAlertsForm(){
 function resetFilterAlerts(){
 	
 	document.getElementById('presetsAlerts').value = 0;
-	SelectIpAlerts.setAttribute('value', "");
+	dijit.byId('SelectIpAlerts').setAttribute('value', "");
 	applyAlertsFormChanges();
 	setTimeout("document.getElementById('ResetFilterAlerts').disabled='disabled';", 100);
 	
@@ -176,10 +164,10 @@ function nouvellesAlertes(newLastAlertIndex){
 	
 	isAll = "false";
 	isNoIp = "true";
-	//alert(dialogLogs.domNode.get('tr').getAttribute("value"));
+	//alert(dijit.byId('dialogLogs').get('tr').getAttribute("value"));
 	//
 	shownAlertId = null;
-	if(dialogLogs.domNode.get('tr')) shownAlertId = dialogLogs.domNode.get('tr').getAttribute("value");
+	if(dijit.byId('dialogLogs').get('tr')) shownAlertId = dijit.byId('dialogLogs').get('tr').getAttribute("value");
 	//alert(shownAlertId);
 	
 	try{
@@ -205,7 +193,7 @@ function nouvellesAlertes(newLastAlertIndex){
 			document.getElementById('newAlertsTabGif').style.display = "block";
 		}else{
 		}
-		chargerAlerts();
+		chargerAlerts(null);
 		lastAlertIndex =  newLastAlertIndex;
 	}else{
 		document.getElementById('newAlertsTabGif').style.display = "block";
@@ -213,9 +201,9 @@ function nouvellesAlertes(newLastAlertIndex){
 		document.getElementById('newAlertsMessage').getElementsByTagName("button")[0].value = newLastAlertIndex;
 	}
 	
-	/*alert(dialogLogs.domNode.get('tr').value);
+	/*alert(dijit.byId('dialogLogs').get('tr').value);
 	// si on regarde de près une alerte (pop up alertes ouverte) verifier et réactiver si necessaire le bouton "next(alerte)"
-	if( !dialogLogs.domNode.get('tr').previousSiblings()[0] )
+	if( !dijit.byId('dialogLogs').get('tr').previousSiblings()[0] )
 		document.getElementById("nextAlertButt").disabled="disabled";
 	else
 		document.getElementById("nextAlertButt").disabled="";
@@ -231,9 +219,9 @@ function nouvellesAlertes(newLastAlertIndex){
 		//alert(sameTrNewId)
 		if(sameTrNewId){
 			//changeAlertPopupTo(sameTrNewId);
-			dialogLogs.domNode.setAttribute('tr', sameTrNewId);
+			dijit.byId('dialogLogs').setAttribute('tr', sameTrNewId);
 			sameTrNewId.onmouseover();
-			if( !dialogLogs.domNode.get('tr').previousSiblings()[0] )
+			if( !dijit.byId('dialogLogs').get('tr').previousSiblings()[0] )
 				document.getElementById("nextAlertButt").disabled="disabled";
 			else
 				document.getElementById("nextAlertButt").disabled="";
@@ -244,11 +232,11 @@ function nouvellesAlertes(newLastAlertIndex){
 
 function afficherNouvellesAlertes(newLastAlertIndex){
 	document.getElementById('presetsAlerts').value = 0;
-	SelectIpAlerts.setAttribute("value","");
+	dijit.byId("SelectIpAlerts").setAttribute("value","");
 	document.getElementById('sortAlerts').value = 0;
 	document.getElementById("descAlerts").value = "true"
 	applyAlertsFormChanges();
-	//chargerAlerts();	
+	//chargerAlerts(null);	
 	//lastAlertIndex =  newLastAlertIndex;
 	document.getElementById('newAlertsTabGif').style.display = "none";
 	document.getElementById('newAlertsMessage').style.display = "none";

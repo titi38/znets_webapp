@@ -43,53 +43,37 @@ function animation(element){
 }
 
 function loading(divId){
-	//alert(divId);
+	
 	// pour eviter tout conflit et perte de la div de chargement, on decharge la div
 	unLoading();
-	//alert("loading secure unloding done");
 	
-	
-	if(divId != null && divId != "") document.getElementById(divId).appendChild(document.getElementById("divLoading"));
-	
-	/*try{
+	try{
 		
+		if(divId != null && divId != "") document.getElementById(divId).appendChild(document.getElementById("divdiv"));
 		
 		// redimensionement du tableau pr center la gif de chargement
-		document.getElementById("divLoading").setAttribute("height", document.getElementById(divId).getHeight());
-		document.getElementById("divLoading").getElementsByTagName('tr')[0].setAttribute("height", document.getElementById(divId).getHeight());
-		document.getElementById("divLoading").setAttribute("width", document.getElementById(divId).getWidth());
-		document.getElementById("divLoading").getElementsByTagName('td')[0].setAttribute("width", document.getElementById(divId).getWidth());
+		document.getElementById("divdiv").setAttribute("height", document.getElementById(divId).getHeight());
+		document.getElementById("divdiv").getElementsByTagName('tr')[0].setAttribute("height", document.getElementById(divId).getHeight());
+		document.getElementById("divdiv").setAttribute("width", document.getElementById(divId).getWidth());
+		document.getElementById("divdiv").getElementsByTagName('td')[0].setAttribute("width", document.getElementById(divId).getWidth());
 	}catch(e){
 		
 		// redimensionement du tableau pr center la gif de chargement
-		document.getElementById("divLoading").setAttribute("height", document.body.getHeight());
-		document.getElementById("divLoading").getElementsByTagName('tr')[0].setAttribute("height", document.body.getHeight());
-		document.getElementById("divLoading").setAttribute("width", document.body.getWidth());
-		document.getElementById("divLoading").getElementsByTagName('td')[0].setAttribute("width", document.body.getWidth());
-	}*/
+		document.getElementById("divdiv").setAttribute("height", document.body.getHeight());
+		document.getElementById("divdiv").getElementsByTagName('tr')[0].setAttribute("height", document.body.getHeight());
+		document.getElementById("divdiv").setAttribute("width", document.body.getWidth());
+		document.getElementById("divdiv").getElementsByTagName('td')[0].setAttribute("width", document.body.getWidth());
+	}
 		
-	document.getElementById("divLoading").style.display = "block";
+	document.getElementById("divdiv").style.display = "block";
 		
 }
 
 function unLoading(){
 	
+	document.body.appendChild(document.getElementById("divdiv"));
 	
-	require(["dojo/ready", "dojo/domReady!"], function(ready){
-		ready(function(){	
-			
-			//alert("unloading");
-			try{
-				//alert(document.getElementById("divLoading"));
-			document.body.appendChild(document.getElementById("divLoading"));
-			
-			document.getElementById("divLoading").style.display = "none";
-			}catch(e){
-				alert(e);
-			}
-			//alert("unloading done");
-		});
-	});
+	document.getElementById("divdiv").style.display = "none";
 	
 }
 

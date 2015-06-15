@@ -30,45 +30,40 @@ function clickApply(Onglet){
 	}
 	
 	if(Onglet == "Plus"){
-		// clickApply onglet "Plus" inexistant à présent
-		
-		/*require(["dojo/ready", "dijit/registry"], function(ready, registry){
-			ready(function(){
-				if( registry.byId("SelectIp").value == ""){
-					
-					if(!document.getElementById('ApplyPlus').disabled)
-						alert("Please enter a valid Ip Address or Host Name ");
-					
-				}else{
-					
-					if( estMachine(registry.byId("SelectIp").value) ){
-						var i = 0;
-						while(TabIP[i] != registry.byId("SelectIp").value && i<TabIP.length) i++;
-						
-						if(i == TabIP.length){
-							i = 0;
-							while(TabNAME[i] != registry.byId("SelectIp").value && i<TabNAME.length) i++;
-							if(i == TabNAME.length){
-								alert("Host not found 1");
-							}else{
-								addNewIpTab(TabNAME[i]);	
-							}
-						}else{
-							if(TabNAME[i]=="") addNewIpTab(registry.byId("SelectIp").value);
-							else addNewIpTab(TabNAME[i]);
-						}
+			
+		if( dijit.byId("SelectIp").value == ""){
+			
+			if(!document.getElementById('ApplyPlus').disabled)
+				alert("Please enter a valid Ip Adress or Host Name ");
+			
+		}else{
+			
+			if( estMachine(dijit.byId("SelectIp").value) ){
+				var i = 0;
+				while(TabIP[i] != dijit.byId("SelectIp").value && i<TabIP.length) i++;
+				
+				if(i == TabIP.length){
+					i = 0;
+					while(TabNAME[i] != dijit.byId("SelectIp").value && i<TabNAME.length) i++;
+					if(i == TabNAME.length){
+						alert("Host not found");
 					}else{
-						alert("Host not found 2");
+						addNewIpTab(TabNAME[i]);	
 					}
+				}else{
+					if(TabNAME[i]=="") addNewIpTab(dijit.byId("SelectIp").value);
+					else addNewIpTab(TabNAME[i]);
 				}
-			});
-		});*/
+			}else{
+				alert("Host not found");
+			}
+		}
 	
 	}else if(Onglet == "PlusData"){
 		
 		var O = addNewDataTab();
 		
-		//dataPage='&page=1';
+		dataPage='&page=1';
 		
 		setTimeout('ChargerData("'+O+'", "false"); ', 500);
 		
@@ -106,34 +101,32 @@ function clickApply(Onglet){
 		// on a 4 ou 6 fenetres de graphes suivant l'onglet
 		var nbFenetres = 4; // 4 fenetres dans les autres onglet que le global
 		
-		
-		require(["dojo/ready", "dijit/registry"], function(ready, registry){
-			ready(function(){
-				if (registry.byId("Div"+Onglet).get("closable")){
-					try{dojo.empty("chart1"+Onglet);}catch(e){}
-					try{dojo.empty("chart2"+Onglet);}catch(e){}
-					try{dojo.empty("chart3"+Onglet);}catch(e){}
-					try{dojo.empty("chart4"+Onglet);}catch(e){}
-				}else{ // 6 fenetres ds le global
-					nbFenetres = 7;
-					try{dojo.empty("chart1"+Onglet);}catch(e){}
-					try{dojo.empty("chart2"+Onglet);}catch(e){}
-					try{dojo.empty("chart3"+Onglet);}catch(e){}
-					try{dojo.empty("chart4"+Onglet);}catch(e){}
-					try{dojo.empty("chart5"+Onglet);}catch(e){}
-					try{dojo.empty("chart6"+Onglet);}catch(e){}
-					try{dojo.empty("chart7"+Onglet);}catch(e){}
-				}
-				
-				//checkForTreeLeafSelected(registry.byId("thinTree"+Onglet));
-			});
-		});
+		if (document.getElementById(Onglet).isClosable){
+			try{dojo.empty("chart1"+Onglet);}catch(e){}
+			try{dojo.empty("chart2"+Onglet);}catch(e){}
+			try{dojo.empty("chart3"+Onglet);}catch(e){}
+			try{dojo.empty("chart4"+Onglet);}catch(e){}
+		}else{ // 6 fenetres ds le global
+			nbFenetres = 7;
+			try{dojo.empty("chart1"+Onglet);}catch(e){}
+			try{dojo.empty("chart2"+Onglet);}catch(e){}
+			try{dojo.empty("chart3"+Onglet);}catch(e){}
+			try{dojo.empty("chart4"+Onglet);}catch(e){}
+			try{dojo.empty("chart5"+Onglet);}catch(e){}
+			try{dojo.empty("chart6"+Onglet);}catch(e){}
+			try{dojo.empty("chart7"+Onglet);}catch(e){}
+		}
 		
 		try{
 			for( var i=1 ; i<=nbFenetres; i++){
 				var div = document.getElementById("DivGraphe"+i+Onglet);
+				var bouton = document.getElementById("BoutonGraphe"+i+Onglet);
+				//var boutonActu = document.getElementById("BoutonActu"+i+Onglet);
 				
+				//boutonActu.style.visibility = 'hidden';
 				div.style.display = 'none';
+				getParent(bouton, "div").setAttribute('style', 'margin-top: 25px; border: 3px solid #1CC48B;');
+				bouton.setAttribute("src", "/images/smallGreenButtonDown.png");
 			}
 		}catch(e){
 		}
@@ -151,65 +144,7 @@ function clickApply(Onglet){
 
 
 		
-function clickTitreOpen(numGraphe, Onglet){
-	
-	console.log("click open     :   "+numGraphe+" : "+Onglet);
-	
-	// Faire un "mini-Apply" () avant toute action
-	
-	effacerNone( numGraphe, Onglet );
-	
-	setToDefault (numGraphe, Onglet)
-	
-	//setParameters($('formulaire'+Onglet).serialize());
-		
-	var div = document.getElementById("DivGraphe"+numGraphe+Onglet);
-	
-	
-	// setting size of div when opened
-	/*if( div.getDimensions().height != 0 && div.getAttribute('openedHeight') ==0 ){
-		div.setAttribute('openedHeight', div.getDimensions().height+30);
-	}else if( div.getDimensions().height == 0 && div.getAttribute('openedHeight') ==0 ){
-		div.setAttribute('openedHeight', 530);
-	}*/
-			
-		
-		
-				
-		require(["dojo/ready", "dijit/registry"], function(ready, registry){
-			ready(function(){
-				// animate opening of the div
-				dojo.animateProperty({
-					node: div,
-				//	properties: { height: div.getAttribute('openedHeight') },
-					onEnd: function(){
-						//div.style.height='0px';
-						div.style.display = 'block';	
-						//alert("in event_actions");
-						if(numGraphe == "6" || numGraphe == "7")
-							drawChart(numGraphe, Onglet, true);	
-						else
-							drawChart(numGraphe, Onglet, false);	
-						
-						
-						// redraw tabcontainers to ensure correct presentation of all dojo elements
-						presenteContainerProperly();
-					}
-				}).play();
-				
-			});
-		});
-		
-		
-			
-	initZoom(numGraphe, Onglet);
-}
-
-
-		
-function clickTitreClose(numGraphe, Onglet){
-	
-	console.log("!!!!!!!!!!!!!!!!!!!!==========>click close     :   "+numGraphe+" : "+Onglet);
+function clickTitre(numGraphe, Onglet){
 	
 	// Faire un "mini-Apply" () avant toute action
 	
@@ -218,31 +153,56 @@ function clickTitreClose(numGraphe, Onglet){
 	//setParameters($('formulaire'+Onglet).serialize());
 		
 	var div = document.getElementById("DivGraphe"+numGraphe+Onglet);
+	var bouton = document.getElementById("BoutonGraphe"+numGraphe+Onglet);
 	
 	
 	// setting size of div when opened
-	/*if( div.getDimensions().height != 0 && div.getAttribute('openedHeight') ==0 ){
+	if( div.getDimensions().height != 0 && div.getAttribute('openedHeight') ==0 ){
 		div.setAttribute('openedHeight', div.getDimensions().height+30);
 	}else if( div.getDimensions().height == 0 && div.getAttribute('openedHeight') ==0 ){
 		div.setAttribute('openedHeight', 530);
-	}*/
-	
-	
+	}
 			
-	require(["dojo/ready"], function(ready){
-		ready(function(){
-			// animate closing of the div
-			dojo.animateProperty({
-				node: div,
-			//	properties: { height: 0 },
-				onEnd: function(){
-					div.style.display = 'none';
-					emptyChart(numGraphe, Onglet);
-				}
-			}).play();
-		});
-	});
 	
+	
+	if( div.style.display == 'none' ){
+		
+		div.style.height='0px';
+		
+		div.style.display = 'block';		
+		
+		// animate opening of the div
+		dojo.animateProperty({
+			node: div,
+			properties: { height: div.getAttribute('openedHeight') },
+			onEnd: function(){
+				drawChart(numGraphe, Onglet);
+			}
+		}).play();
+		
+		
+		getParent(bouton, "div").setAttribute('class', 'graphWinOpened');
+		bouton.setAttribute("src", "/images/smallGreenButtonUp.png");
+		
+		
+	}else if( div.style.display == 'block' ){
+		
+		// animate opening of the div
+		dojo.animateProperty({
+			node: div,
+			properties: { height: 0 },
+			onEnd: function(){ 
+				emptyChart(numGraphe, Onglet);
+				div.style.display = 'none'; 
+			}
+		}).play();
+		
+		
+		getParent(bouton, "div").setAttribute('class', 'graphWinClosed');
+		bouton.setAttribute("src", "/images/smallGreenButtonDown.png");
+	}else{
+		alert("ERR2 : in function 'clickTitre'");
+	}
 			
 	initZoom(numGraphe, Onglet);
 }

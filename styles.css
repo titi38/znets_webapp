@@ -1,0 +1,710 @@
+.cal_j_semaines {
+font-family:'Verdana',Times,serif;font-size:80%
+}
+
+.cal_j_semaines th
+{
+background-color:#d6dcff;
+}
+
+.cal_calendar
+{
+        border:0px solid black;
+        padding:0px;
+        background-color:#d6dcff;
+        //width:250px;
+        margin:auto;
+        //height:200px;
+        //background-image:url('http://www.supportduweb.com/ftp/ybouane/scripts_astuces/javascript/calendar/fond-250-200.gif');
+        font-family: Verdana; font-size: 80%;
+}
+.cal_calendar td
+{
+        border:1px solid black;
+        background-color:#ffffff;
+        text-align:center;
+	width: 25px;
+	height: 25px;
+}
+.cal_calendar tr
+{
+	height: 25px;
+}
+
+td.hoverOn:hover 
+{ background-color: #e6ecec;
+	cursor : pointer;
+}
+
+td.selection {
+color: #0;
+background-color: #b5f3a8;
+}
+
+.cal_aujourdhui
+{
+        color:#ff0000;
+}
+.cal_jours_av_ap
+{
+        color:#5a779e;
+}
+
+#dialogPopUp .dijitDialogTitleBar .dijitDialogCloseIcon {
+    display:none;
+}
+
+
+#conEchecDialog .dijitDialogTitleBar .dijitDialogCloseIcon {
+    display:none;
+}
+
+#dialogDateError .dijitDialogTitleBar .dijitDialogCloseIcon {
+    display:none;
+}
+
+table#dialogConfTable {
+	white-space: pre-wrap;
+}
+
+
+table#dialogConfTable td {
+	
+    font: 15px verdana, arial, sans-serif;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #666;
+    border-left: 0px solid #ccc;
+	
+}
+
+
+table#dialogConfTable td.left {
+    
+    font: 15px verdana, arial, sans-serif;
+    border-bottom: 1px solid #ccc;
+    border-right: 0px solid #ccc;
+    border-left: 1px solid #666;
+	
+}
+
+
+table#dialogConfTable td.bottom {
+    
+    border-bottom: 1px solid #666;
+	
+}
+
+
+table#dialogConfTable td.leftbottom {
+    
+    border-right: 0px solid #ccc;
+    border-left: 1px solid #666;
+    border-bottom: 1px solid #666;
+	
+}
+
+
+table#dialogConfTable th{
+    font-size:120%;
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+    border-bottom: 1px solid #666;
+    white-space: pre-wrap;
+}
+
+
+table#dialogConfTable th.space{
+    padding-top: 20px;
+    border-right: 0px solid #666;
+    border-left: 0px solid #666;
+    white-space: pre-wrap;
+}
+
+
+table#dialogConfTable th.spaceUB{
+    padding-top: 10px;
+    border-right: 0px solid #666;
+    border-left: 0px solid #666;
+    white-space: pre-wrap;
+}
+
+table.formulaire {
+    /* border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     box-shadow: 2px 2px 5px 2px grey;*/
+	font-family: sans-serif;
+	border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 5px 3px lightgrey;
+	border: 3px solid #1CC48B;
+     /*margin-top: 0;
+     padding-bottom: 5px;
+     padding-left: 1.3em;
+     padding-top: 5px;*/
+}
+
+table.formulaire th {
+     border-top-right-radius: 10px;
+     border-top-left-radius: 10px;
+	border-bottom: 1px solid #1CC48B;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	background: #dfd;
+	font-weight:bold;
+}
+
+
+.countryTextBox {
+	    width: 11em !important;
+}
+
+.ASTextBox {
+	    width: 11em !important;
+}
+
+.timeFilter
+{
+position:absolute;
+top:4em;
+left:1em;
+}
+
+.hostsFilter
+{
+position:absolute;
+top:15em;
+left: 1em;
+}
+
+
+.submit2 input 
+{
+cursor: pointer;
+position:absolute;
+top:28em;
+left:58em;
+color: #000;
+background: #cdffca;
+border: 2px outset #d7b9c9
+}
+
+.submit2 input:disabled
+{
+cursor: pointer;
+position:absolute;
+top:28em;
+left:58em;
+color: #fff;
+background: #ccc;
+border: 2px outset #d7b9c9
+}
+
+
+.trafficFilter
+{
+position:absolute;
+top:4em;
+left:20em;
+}
+
+.pktsFilter
+{
+position:absolute;
+top:17.45em;
+left:20em;
+}
+
+.protoFilter
+{
+position:absolute;
+top:4em;
+left:39em;
+}
+
+.asterisk
+{
+position:relative;
+top:0em;
+left:0em;
+}
+
+.AddHostTab
+{
+position:absolute;
+top: 0em;
+width: 99%;
+}
+
+.AddQueryTab
+{
+position:absolute;
+top: 18em;
+width: 99%;
+}
+
+.timehost
+{
+position:absolute;
+top: 4em;
+left: 1em;
+}
+
+.localhost
+{
+position:absolute;
+top: 4em;
+left: 20em;
+}
+
+
+/*table.formulaire {
+	border-width: thick;
+	border-spacing: 0px;
+	border-style: outset;
+	border-color: gray;
+	border-collapse: separate;
+	background-color: #EEE;
+	font-family: sans-serif
+}
+table.formulaire th {
+	border-width: 2px;
+	padding: 4px;
+	border-style: ridge;
+	border-color: black;
+	color:#fff;
+	font-weight:bold;
+	background-color: #5a704b;
+	-moz-border-radius: ;
+}*/
+
+
+.submit1
+{
+color: #000;
+background: #dfd;
+border: 2px outset #d7b9c9;
+width: 20em;
+height: 3em;
+}
+
+label#TabQueryForm
+{
+font-family:sans-serif;
+/*font-size:80%;*/
+width: 9em;
+float: left;
+text-align: right;
+margin-right: 0.5em;
+display: block
+}
+
+table#TabQueryFormTcpFlags
+{
+width: 4em;
+color: black;
+border: 1px solid #727272
+}
+
+table#TabQueryFormTcpFlags td {
+font-family:sans-serif;
+/*font-size:80%;*/
+padding:3px;
+text-align:center;
+}
+
+
+fieldset#TabQueryForm
+{
+	
+     border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+font-family:sans-serif;
+/*font-size:90%;*/
+border: 1px solid #1CC48B;
+width: 22em
+}
+
+
+fieldset#TabQueryForm table label
+{
+	width: 4em
+}
+
+legend#TabQueryForm
+{
+     border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+color: black;
+background: #dfd;
+border: 1px solid #1CC48B;
+padding: 2px 6px
+}
+
+input#TabQueryForm
+{
+color: #0;
+background: #cdffca;
+padding: 7px;
+}
+
+input#TabQueryFormData
+{
+color: #0;
+padding: 7px;
+}
+
+
+h2#TabQueryForm {
+	font-family:sans-serif;
+	/*font-size: 12pt;*/
+	text-align: center;
+	background-color: #dfd;
+	border: 1px solid #6c6;
+	padding: 10px 6px;
+}
+
+.zoomAxisSlider .dijitSliderProgressBar{
+	width: 12px;
+	/*overflow: visible;*/
+	margin-left: -5px;
+}
+
+.graphWinClosed {
+	 border-bottom-left-radius: 10px;
+     border-bottom-right-radius: 10px;
+     border-top-left-radius: 10px;
+     border-top-right-radius: 10px;
+     box-shadow: 0px 0px 5px 3px lightgrey;
+}
+
+.graphWinOpened {
+	 border-bottom-left-radius: 10px;
+     border-bottom-right-radius: 10px;
+     border-top-left-radius: 10px;
+     border-top-right-radius: 10px;
+     box-shadow: 0px 0px 5px 2px lightgrey;
+}
+
+.dojoxDialogTitle {
+    padding: 0px 0px !important;
+    margin: 0px 10px !important;
+}
+table#TabLogs {
+	white-space: pre-wrap;
+}
+
+table#TabLogs tr:hover{
+	background-color: #dfd;
+}
+
+table#TabLogs td {
+    /*height: 20px;*/
+    font: 15px verdana, arial, sans-serif;
+    border-bottom: 1px solid #cfc;
+	
+}
+
+table#TabLogsHeaders {
+    border-bottom: 1px solid #6c6;
+	white-space: pre-wrap;
+}
+
+table#TabLogsHeaders td {
+    font: bold 15px verdana, arial, sans-serif;
+}
+
+.entete{
+	border-right: 1px solid #6c6;
+	border-left: 1px solid #6c6;
+	text-align: center;
+	background-color: #dfd;
+	/*padding: 9px;*/
+}
+
+
+.icone{
+	text-align: center;
+	width: 65px;
+}
+ 
+ 
+#dialogAlert .dijitDialogTitleBar .dijitDialogCloseIcon {
+    display:none;
+}
+
+
+
+body {
+    font: 100% verdana, arial, sans-serif;
+    background-color: #fff;
+    margin-top: 1px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+div.TabOnglets {
+    font: bold 11px verdana, arial, sans-serif;
+    list-style-type: none;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #6c6;
+    margin: 0;
+}
+
+div.TabOnglets li.active a {
+    color: #000;
+}
+
+div.TabOnglets li font {
+	float: left;
+	margin-top: 3px;
+	margin-left: 8px;
+}
+
+
+div.TabOnglets li table tbody tr td font {
+	font: bold 11px verdana,arial,sans-serif; margin-left:2px;
+}
+
+/*
+#TabOnglets a {
+    float: left;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding: 4px;
+}
+
+#TabOnglets a:hover {
+    background: #fff;
+}
+*/
+
+
+div.TabOnglets li {
+	
+	
+   /* border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;*/
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #E8E8E8;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li:hover {
+    background: #fff;
+}
+
+div.TabOnglets li.active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+   /* border-bottom-left-radius: 0px;
+     border-bottom-right-radius: 0px;*/
+}
+
+div.TabOnglets li.bipping {
+    background-color: #fff;
+}
+
+div.TabOnglets li.bipping {
+    background-color: #FFDFA8;
+}
+
+
+/*GENRE : logs*/
+
+div.TabOnglets li[genre="logs"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	color: white;
+	float: left;
+    height: 21px;
+    background-color: #7e6e8a;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="logs"]:hover {
+    background: #fff;
+	color: black;
+}
+
+div.TabOnglets li[genre="logs"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+	color: black;
+}
+
+div.TabOnglets li[genre="logs"].bipping {
+    background-color: #fff;
+	color: black;
+}
+
+
+/*GENRE : groupe*/
+
+div.TabOnglets li[genre="groupe"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #6ad471;
+    /*margin: 2px 2px 0 2px;*/
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="groupe"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="groupe"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="groupe"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : global*/
+
+div.TabOnglets li[genre="global"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #6ad471;
+    /*margin: 2px 2px 0 2px;*/
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="global"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="global"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="global"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : localhost*/
+
+div.TabOnglets li[genre="localhost"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #dfd;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="localhost"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="localhost"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="localhost"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : data*/
+
+div.TabOnglets li[genre="data"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #d9d1b1;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="data"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="data"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="data"].bipping {
+    background-color: #fff;
+}
+
+
+/*GENRE : ssreseau*/
+
+div.TabOnglets li[genre="ssreseau"] {
+	cursor: pointer;
+    font-style: margin-left: 5px;
+	float: left;
+    height: 21px;
+    background-color: #bbe8bf;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #6c6;
+}
+
+div.TabOnglets li[genre="ssreseau"]:hover {
+    background: #fff;
+}
+
+div.TabOnglets li[genre="ssreseau"].active {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+div.TabOnglets li[genre="ssreseau"].bipping {
+    background-color: #fff;
+}
+
+
+
+tbody.BodyTable td {
+    /*height: 20px;*/
+    font: 15px verdana, arial, sans-serif;
+    border-bottom: 1px solid #cfc;
+    border-right: 1px solid #cfc;
+    text-align: center;
+}
+
+
+thead.HeadersTable th{
+	font: bold 15px verdana, arial, sans-serif;
+	border-right: 1px solid #cfc;
+    border-bottom: 1px solid #cfc;
+	text-align: center;
+	background-color: #dfd ;
+}
+
+thead.HeadersTable th table tbody tr td div{
+	font: bold 15px verdana, arial, sans-serif;
+}
+
+
+
+
+
+

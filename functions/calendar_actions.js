@@ -26,7 +26,7 @@ function calendarTheEnd()
 	document.getElementById(fieldId).value = newDate;
 	document.getElementById(fieldId).onchange();
 	
-	dialogCalendar.hide();
+	dijit.byId("dialogCalendar").hide();
 	
 }
 

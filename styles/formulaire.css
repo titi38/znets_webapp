@@ -1,47 +1,28 @@
 
 table.formulaire {
-			/* border-bottom-left-radius: 5px;
-			 border-bottom-right-radius: 5px;
-			 border-top-left-radius: 5px;
-			 border-top-right-radius: 5px;
-			 box-shadow: 2px 2px 5px 2px grey;*/
-	/*font-family: sans-serif;
+    /* border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     box-shadow: 2px 2px 5px 2px grey;*/
+	font-family: sans-serif;
 	border-radius: 10px 10px 10px 10px;
     box-shadow: 0 0 5px 3px lightgrey;
-	border: 3px solid #d5d5d5;*/
-			 /*margin-top: 0;
-			 padding-bottom: 5px;
-			 padding-left: 1.3em;
-			 padding-top: 5px;*/
-	margin-top: 10px;
-	font-size:13px;
+	border: 3px solid #1CC48B;
+     /*margin-top: 0;
+     padding-bottom: 5px;
+     padding-left: 1.3em;
+     padding-top: 5px;*/
 }
 
 table.formulaire th {
-    /* border-top-right-radius: 10px;
+     border-top-right-radius: 10px;
      border-top-left-radius: 10px;
-	border-bottom: 1px solid #d5d5d5;
+	border-bottom: 1px solid #1CC48B;
 	padding-bottom: 5px;
 	padding-top: 5px;
-	background: #e5e5e5;
-	font-size:13px;
-	font-weight:bold;*/
-}
-
-td.TabQueryFormTD {
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	font-size:13px;
-	/*border: 2px solid #e5e5e5;*/
-	/*background: #f0f7ff;*/
-	border: 1px solid #f0f7ff;
-}
-
-td.TabQueryFormTD label.TabQueryFormTDLabel {
-	width: 100%;
-	background: #f0f7ff;
+	background: #dfd;
+	font-weight:bold;
 }
 
 
@@ -172,7 +153,7 @@ table.formulaire th {
 .submit1
 {
 color: #000;
-background: #e5e5e5;
+background: #dfd;
 border: 2px outset #d7b9c9;
 width: 20em;
 height: 3em;
@@ -180,22 +161,20 @@ height: 3em;
 
 label#TabQueryForm
 {
-/*font-family:sans-serif;*/
-			/*font-size:80%;*/
-/*width: 9em;
+font-family:sans-serif;
+/*font-size:80%;*/
+width: 9em;
 float: left;
 text-align: right;
 margin-right: 0.5em;
-display: block*/
-	font-size:13px;
+display: block
 }
 
 table#TabQueryFormTcpFlags
 {
 width: 4em;
 color: black;
-border: 1px solid #727272;
-	font-size:13px;
+border: 1px solid #727272
 }
 
 table#TabQueryFormTcpFlags td {
@@ -203,7 +182,6 @@ font-family:sans-serif;
 /*font-size:80%;*/
 padding:3px;
 text-align:center;
-	font-size:13px;
 }
 
 
@@ -215,55 +193,16 @@ fieldset#TabQueryForm
      border-top-left-radius: 5px;
      border-top-right-radius: 5px;
 font-family:sans-serif;
-	font-size:13px;
 /*font-size:90%;*/
-border: 1px solid #d5d5d5;
-height: 90%;
-width: 90%;
+border: 1px solid #1CC48B;
+width: 22em
 }
 
 
-fieldset#TabQueryFormMore
-{
-	
-     border-bottom-left-radius: 5px;
-     border-bottom-right-radius: 5px;
-     border-top-left-radius: 5px;
-     border-top-right-radius: 5px;
-font-family:sans-serif;
-	font-size:13px;
-/*font-size:90%;*/
-border: 1px solid #d5d5d5;
-margin: 20px;
-}
-
-
-legend#TabQueryFormMore
-{
-     border-bottom-left-radius: 5px;
-     border-bottom-right-radius: 5px;
-     border-top-left-radius: 5px;
-     border-top-right-radius: 5px;
-color: black;
-background-color: #cfe5fa;
-  background-image: url("images/standardGradient.png");
-  background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  _background-image: none;
-border: 1px solid #d5d5d5;
-padding: 2px 6px;
-	font-size:13px;
-}
-
-
-
-/*fieldset#TabQueryForm table label
+fieldset#TabQueryForm table label
 {
 	width: 4em
-}*/
+}
 
 legend#TabQueryForm
 {
@@ -271,19 +210,10 @@ legend#TabQueryForm
      border-bottom-right-radius: 5px;
      border-top-left-radius: 5px;
      border-top-right-radius: 5px;
-color: black; 
-background-color: #cfe5fa;
-  background-image: url("images/standardGradient.png");
-  background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  _background-image: none;
-border: 1px solid #d5d5d5;
-padding: 2px 6px;
-	font-size:13px;
-/*width: 100%;*/
+color: black;
+background: #dfd;
+border: 1px solid #1CC48B;
+padding: 2px 6px
 }
 
 input#TabQueryForm
@@ -291,14 +221,12 @@ input#TabQueryForm
 color: #0;
 background: #cdffca;
 padding: 7px;
-	font-size:13px;
 }
 
 input#TabQueryFormData
 {
 color: #0;
 padding: 7px;
-	font-size:13px;
 }
 
 
@@ -306,8 +234,7 @@ h2#TabQueryForm {
 	font-family:sans-serif;
 	/*font-size: 12pt;*/
 	text-align: center;
-	background-color: #e5e5e5;
+	background-color: #dfd;
 	border: 1px solid #6c6;
 	padding: 10px 6px;
-	font-size:13px;
 }

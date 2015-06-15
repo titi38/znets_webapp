@@ -2,137 +2,129 @@
 
 
 var mySetTheme = function(chart$){
-		
-	require(["dojox/charting/Theme", "dojox/gfx/gradutils"], function(Theme, gradutils){
-		
-		var tabes = document.getElementById(chart$.node.getAttribute('id')).getElementsByTagName('rect');
-		//alert(tabes.length);
-		var i = 0
-		var element = null;
-		while(i < tabes.length && element == null){
-			if(tabes[i].getAttribute('width') == chart$.plotArea.width+2 && tabes[i].getAttribute('height') == chart$.plotArea.height+2){
-				element = tabes[i];
-				i = tabes.length;
-			}else{
-				i++;
-			}
-		}
-		/*
-				element = document.createElement("img");
-				element.setAttribute('style', "width:600px; height:300px;");
-				element.setAttribute('src', '/images/smallGreenButtonDown.png');
-		*/
-		
-		/*var parent = getParent(element, "svg");
-		var insertBefore = null;
-		i=0;
-		for( i=0; i< parent.childNodes.length; i++){
-			if(parent.childNodes[i] == element) insertBefore = parent.childNodes[i+1];
-		}
-
-		E = document.createElement("img");
-		E.setAttribute('style', "width:600px; height:300px;");
-		E.setAttribute('src', '/images/smallGreenButtonDown.png');
-		
-		insertBefore.appendChild(E);*/
-		
-		
-		
-		
-		
-		var ord = ordXAxis(chart$);
-
-		if(chart$.theme.plotArea){
-			
-			chart$.theme.plotarea.fill.y2 = ord;
-			chart$.theme.plotarea.fill.y1 = ord-0.1;
-			
-			
+	
+	var tabes = document.getElementById(chart$.node.getAttribute('id')).getElementsByTagName('rect');
+	//alert(tabes.length);
+	var i = 0
+	var element = null;
+	while(i < tabes.length && element == null){
+		if(tabes[i].getAttribute('width') == chart$.plotArea.width+2 && tabes[i].getAttribute('height') == chart$.plotArea.height+2){
+			element = tabes[i];
+			i = tabes.length;
 		}else{
-				
-				var MT = null;
-				
-				defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
-				//alert(chart$.theme.axis.minorTick);
-				if(chart$.getAxis("y").getScaler().bounds.from < 0 && chart$.getAxis("y").getScaler().bounds.to > 0){
-					MT  = new Theme({
-						plotarea: {
-							fill:{
-								type: "linear",
-								x1: 0, x2: 0, y1: ord-0.1, y2: ord,
-								colors: [
-									{ offset: 0, color: "#ffffff" },
-									{ offset: 1, color: "#eeeeee" }
-								]
-							}
-						},
-						axis:{
-							majorTick: {color: "#777", width: .5, length: 6},
-							minorTick: {color: "#777", width: .5, length: 3}
-						}			
-					});
-				}else if( chart$.getAxis("y").getScaler().bounds.from >= 0 ){
-					MT  = new Theme({
-						plotarea:{
-							stroke: null,
-							fill: "#ffffff"
-							//style: {backgroundColor: "red", backgroundImage: "/images/redButton.png", color: "inherit"}
-						},
-						axis:{
-							majorTick: {color: "#777", width: .5, length: 6},
-							minorTick: {color: "#777", width: .5, length: 3}
-						}
-					});
-				}else{
-					MT  = new Theme({
-						plotarea:{
-							stroke: null,
-							fill: "#e5e5e5"
-						},
-						axis:{
-							majorTick: {color: "#777", width: .5, length: 6},
-							minorTick: {color: "#777", width: .5, length: 3}
-						}
-					});
+			i++;
+		}
+	}
+	/*
+			element = document.createElement("img");
+			element.setAttribute('style', "width:600px; height:300px;");
+			element.setAttribute('src', '/images/smallGreenButtonDown.png');
+	*/
+	
+	/*var parent = getParent(element, "svg");
+	var insertBefore = null;
+	i=0;
+	for( i=0; i< parent.childNodes.length; i++){
+		if(parent.childNodes[i] == element) insertBefore = parent.childNodes[i+1];
+	}
+
+	E = document.createElement("img");
+	E.setAttribute('style', "width:600px; height:300px;");
+	E.setAttribute('src', '/images/smallGreenButtonDown.png');
+	
+	insertBefore.appendChild(E);*/
+	
+	
+	
+	
+	
+	var ord = ordXAxis(chart$);
+
+	if(chart$.theme.plotArea){
+		
+		chart$.theme.plotarea.fill.y2 = ord;
+		chart$.theme.plotarea.fill.y1 = ord-0.1;
+		
+		
+	}else{
+		var MT = null;
+		var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
+		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
+		//alert(chart$.theme.axis.minorTick);
+		if(chart$.getAxis("y").getScaler().bounds.from < 0 && chart$.getAxis("y").getScaler().bounds.to > 0){
+			MT = dojox.charting.themes.Mytheme = new dojox.charting.Theme({
+				plotarea: {
+					fill:{
+						type: "linear",
+						x1: 0, x2: 0, y1: ord-0.1, y2: ord,
+						colors: [
+							{ offset: 0, color: "#ffffff" },
+							{ offset: 1, color: "#e5e5e5" }
+						]
+					}
+				},
+				axis:{
+					majorTick: {color: "#777", width: .5, length: 6},
+					minorTick: {color: "#777", width: .5, length: 3}
+				}			
+			});
+		}else if( chart$.getAxis("y").getScaler().bounds.from >= 0 ){
+			MT = dojox.charting.themes.Mytheme = new dojox.charting.Theme({
+				plotarea:{
+					stroke: null,
+					fill: "#ffffff"
+					//style: {backgroundColor: "red", backgroundImage: "/images/redButton.png", color: "inherit"}
+				},
+				axis:{
+					majorTick: {color: "#777", width: .5, length: 6},
+					minorTick: {color: "#777", width: .5, length: 3}
 				}
-				
-				
-				MT.next = function(elementType, mixin, doPost){
-					//ESSS = MT;
-					var theme = Theme.prototype.next.apply(this, arguments);
-					if(elementType == "line"){
-						theme.marker.outline = {width: 2, color: "#fff"};
-						theme.series.stroke.width = 3.5;
-						theme.marker.stroke.width = 2;
-					} else if (elementType == "candlestick"){
-						theme.series.stroke.width = 1;
-					} else {
-						theme.series.stroke.color = "#fff";
-					}
-					return theme;
-				};
-			
-						
-				MT.post = function(theme, elementType){
-					theme = Theme.prototype.post.apply(this, arguments);
-					if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-						theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
-					}
-					return theme;
-				};
-				
-				
-				chart$ = chart$.setTheme(MT);
-			
+			});
+		}else{
+			MT = dojox.charting.themes.Mytheme = new dojox.charting.Theme({
+				plotarea:{
+					stroke: null,
+					fill: "#e5e5e5"
+				},
+				axis:{
+					majorTick: {color: "#777", width: .5, length: 6},
+					minorTick: {color: "#777", width: .5, length: 3}
+				}
+			});
 		}
 		
 		
-		chart$.fullRender();
-
+		MT.next = function(elementType, mixin, doPost){
+			//ESSS = MT;
+			var theme = dc.Theme.prototype.next.apply(this, arguments);
+		if(elementType == "line"){
+			theme.marker.outline = {width: 2, color: "#fff"};
+			theme.series.stroke.width = 3.5;
+			theme.marker.stroke.width = 2;
+		} else if (elementType == "candlestick"){
+			theme.series.stroke.width = 1;
+		} else {
+			theme.series.stroke.color = "#fff";
+		}
+		return theme;
+				};
+	
+				
+		MT.post = function(theme, elementType){
+			theme = Theme.prototype.post.apply(this, arguments);
+			if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
+				theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
+			}
+			return theme;
+		};
 		
-		addPlotIOLabels(chart$);
 		
-	});
+		chart$ = chart$.setTheme(MT);
+		
+	}
+	
+	
+	addPlotIOLabels(chart$);
 	
 }
 
@@ -145,7 +137,7 @@ var mySetTheme = function(chart$){
 
 
 
-var addVerticalAxis = function(chart$, down, up, unitL, unitR, factD){
+var addVerticalRightAxis = function(chart$, down, up){
 
 	var from = 0;
 	var to = 0;
@@ -156,213 +148,87 @@ var addVerticalAxis = function(chart$, down, up, unitL, unitR, factD){
 	for(var i = 0; i< up.length; i++){
 		if(up[i]>to)to = up[i];
 	}
-		
 	
-	var myLabelFuncL = function(text, value, precision){
-		return text+" "+unitL;
-	};
+	chart$.addAxis("autre y", {min: from, max: to, leftBottom: false, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true});
 	
-	var myLabelFuncR = function(text, value, precision){
-	   
-		if(Math.abs(value * factD)>0 && Math.abs(value * factD)<10)
-			return (value * factD).toFixed(3)+" "+unitR;
-		else if(Math.abs(value * factD)>=10 && Math.abs(value * factD)<100)
-			return (value * factD).toFixed(2)+" "+unitR;
-		else if(Math.abs(value * factD)>=100 && Math.abs(value * factD)<1000)
-			return (value * factD).toFixed(1)+" "+unitR;
-		else
-			return (value * factD).toFixed(0)+" "+unitR;
-		
-	};
-
-
-	// ajout de l'axe y de gauche
-	if(unitR)
-		chart$.addAxis("y", {labelFunc: myLabelFuncR, min: from, max: to, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true});
-	else{
-		if(unitL)
-			chart$.addAxis("y", {labelFunc: myLabelFuncL, min: from, max: to, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true, tick:{stroke: {color:"blue"}, width: 1}});
-		else
-			chart$.addAxis("y", {min: from, max: to, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true, tick:{stroke: {color:"blue"}, width: 1}});
-	}
-			
-	/*// ajout de l'axe y de droite
-	if(unitR)
-		chart$.addAxis("autre y", {labelFunc: myLabelFuncR, min: from, max: to, leftBottom: false, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true});
-	else
-		chart$.addAxis("autre y", {min: from, max: to, leftBottom: false, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true});
-	
-		
 	chart$.addPlot("default1", {type: "Columns", hAxis: "x", vAxis: "autre y"});
-	*/
+
 	
 }
 
 
 
 
-var addVerticalAxisAccurate = function(chart$, down, up, json$){
-	
-	var unit = json$.data[0].unit;
-	var puissance = 0;
-	var from= 0;
-	var to = 0
-	var top = 0;
-	var unitPrefixe = 0;
-
-	for(var i = 0; i< down.length; i++){
-		if(down[i]<from)from = down[i];
-	}
-	for(var i = 0; i< up.length; i++){
-		if(up[i]>to)to = up[i];
-	}
-	
-	top = Math.max(Math.abs(from), Math.abs(to));
-	
-	while(top >=10000){
-		puissance++;
-		top = top/1024;
-	}
-	if(puissance>8)puissance = 8; //on ne dépasse pas le "yotta"
-	
-	switch(puissance){
-		case 0:
-			unitPrefixe = "";
-		break;
-		case 1:
-			unitPrefixe = "K";
-		break;
-		case 2:
-			unitPrefixe = "M";
-		break;
-		case 3:
-			unitPrefixe = "G";
-		break;
-		case 4:
-			unitPrefixe = "T";
-		break;
-		case 5:
-			unitPrefixe = "P";
-		break;
-		case 6:
-			unitPrefixe = "E";
-		break;
-		case 7:
-			unitPrefixe = "Z";
-		break;
-		case 8:
-			unitPrefixe = "Y";
-		break;
-		default:
-			unitPrefixe = "Y";
-		break;
-	}
-	
-	var myLabelFunc = function(text, value, precision){
-		
-		return_value = Math.abs(value)/Math.pow(1024,puissance);
-		
-		if(return_value>0 && return_value<10)
-			return return_value.toFixed(3)+" "+unitPrefixe+unit;
-		else if(return_value>=10 && return_value<100)
-			return return_value.toFixed(2)+" "+unitPrefixe+unit;
-		else if(return_value>=100 && return_value<1000)
-			return return_value.toFixed(1)+" "+unitPrefixe+unit;
-		else
-			return return_value.toFixed(0)+" "+unitPrefixe+unit;
-		
-	};
-	//alert('hooo');
-	chart$.addAxis("y", {labelFunc: myLabelFunc, vertical:true, fixLower: "minor", fixUpper: "minor", natural: true, includeZero: true});
-	
-	// changing axis X stroke to white
-	//addWhiteAxisX(chart$);
-
-}
-
-
-var OLD_changeAxes = function(chart$, chartNum, json$){
+var changeAxes = function(chart$, chartNum, json$){
 	
 	unit = json$.data[0].unit;
 	factD = json$.data[0].factD;
 	unitD = json$.data[0].unitD;
 	
 	// legende des ordonnées de gauche
-	/*try{
+	try{
 		try{
 		document.getElementById("unit"+chartNum+ongletActif()).removeChild( document.getElementById("unit"+chartNum+ongletActif()).firstChild ); 
 		}catch(e){} 
 		
 		var text = document.createTextNode(unit);
 		document.getElementById("unit"+chartNum+ongletActif()).appendChild(text);
-	}catch(e){}  */
+	}catch(e){}  
 		
 		
 	// legende des ordonnées de droite
-	/*try{
+	try{
 		try{
 		document.getElementById("unitD"+chartNum+ongletActif()).removeChild( document.getElementById("unitD"+chartNum+ongletActif()).firstChild ); 
 		}catch(e){} 
 			
 		var text = document.createTextNode(unitD);
 		document.getElementById("unitD"+chartNum+ongletActif()).appendChild(text);
-	}catch(e){}  */
+	}catch(e){}  
 
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!! 	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!down!!!!!!		TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
 	// changement des labels de l'axe vertical de droite
-	/*try{	
+	try{	
 		line = document.getElementById("chart"+chartNum+ongletActif()).getElementsByTagName("line");
 		
 		if(line.length>0){
 			rightestLineX = limitLineX("right", line);
 			leftestLineX = limitLineX("left", line);
 			
-			var chartDivs = document.getElementById("chart"+chartNum+ongletActif()).getElementsByTagName("div");
-			var neg = false;
-			
+			var chartDivs = document.getElementById("chart"+chartNum+ongletActif()).getElementsByTagName("text");
+				var neg = false;
 			for(var i=0; i<chartDivs.length; i++){
 				try{
-					if(chartDivs[i].childNodes[0].innerHTML){
-						if(rightestLineX < chartDivs[i].scrollWidth){
+					if(rightestLineX < chartDivs[i].x.baseVal[0].value){
+						
+						//if(chartDivs[i].textContent.replace(/,/g,'').indexOf("h")==-1 && chartDivs[i].textContent.replace(/,/g,'').indexOf("/")==-1){ // on s'assure kan mm que ce n'est pas une legende de l'axe des abscisse (heures "h" ou jours "/")
 							
-							//if(chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'').indexOf("h")==-1 && chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'').indexOf("/")==-1){ // on s'assure kan mm que ce n'est pas une legende de l'axe des abscisse (heures "h" ou jours "/")
-								
-								if(parseInt(chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'')) < 0) chartDivs[i].childNodes[0].innerHTML = (chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * (-1));
-								
-								if(parseInt(chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD)!=(chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD)){
-									try{
-										if(parseInt((chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD))<10)
-											chartDivs[i].childNodes[0].innerHTML = (chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD).toFixed(3);
-										else if(parseInt((chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD))>=10 && parseInt((chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD))<100)
-											chartDivs[i].childNodes[0].innerHTML = (chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD).toFixed(2);
-										else if(parseInt((chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD))>=100 && parseInt((chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD))<1000)
-											chartDivs[i].childNodes[0].innerHTML = (chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD).toFixed(1);
-										else
-											chartDivs[i].childNodes[0].innerHTML = parseInt(chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD);
-									}catch(e){
-									}
-								}else{
-									chartDivs[i].childNodes[0].innerHTML = parseInt(chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * factD);
+							if(parseInt(chartDivs[i].textContent.replace(/,/g,'')) < 0) chartDivs[i].textContent = (chartDivs[i].textContent.replace(/,/g,'') * (-1));
+							
+							if(parseInt(chartDivs[i].textContent.replace(/,/g,'') * factD)!=(chartDivs[i].textContent.replace(/,/g,'') * factD)){
+								try{
+									if(parseInt((chartDivs[i].textContent.replace(/,/g,'') * factD))<10)
+										chartDivs[i].textContent = (chartDivs[i].textContent.replace(/,/g,'') * factD).toFixed(3);
+									else if(parseInt((chartDivs[i].textContent.replace(/,/g,'') * factD))>=10 && parseInt((chartDivs[i].textContent.replace(/,/g,'') * factD))<100)
+										chartDivs[i].textContent = (chartDivs[i].textContent.replace(/,/g,'') * factD).toFixed(2);
+									else if(parseInt((chartDivs[i].textContent.replace(/,/g,'') * factD))>=100 && parseInt((chartDivs[i].textContent.replace(/,/g,'') * factD))<1000)
+										chartDivs[i].textContent = (chartDivs[i].textContent.replace(/,/g,'') * factD).toFixed(1);
+									else
+										chartDivs[i].textContent = parseInt(chartDivs[i].textContent.replace(/,/g,'') * factD);
+								}catch(e){
 								}
-								
-							//}
-							
-						}
-						if(chartDivs[i].scrollWidth < leftestLineX){
-							
-							if(parseInt(chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'')) < 0) {
-								chartDivs[i].childNodes[0].innerHTML = (chartDivs[i].childNodes[0].innerHTML.replace(/,/g,'') * (-1));
-								neg = true;
+							}else{
+								chartDivs[i].textContent = parseInt(chartDivs[i].textContent.replace(/,/g,'') * factD);
 							}
+							
+						//}
+						
+					}
+					if(chartDivs[i].x.baseVal[0].value < leftestLineX){
+						
+						if(parseInt(chartDivs[i].textContent.replace(/,/g,'')) < 0) {
+							chartDivs[i].textContent = (chartDivs[i].textContent.replace(/,/g,'') * (-1));
+							neg = true;
 						}
 					}
 				}catch(e){}
@@ -370,27 +236,16 @@ var OLD_changeAxes = function(chart$, chartNum, json$){
 			}
 		}
 		
-	}catch(e){}*/
+	}catch(e){}
 
 		
 	// changing axis X stroke to white
-	//addWhiteAxisX(chart$);
+	addWhiteAxisX(chart$);
 
 }
 
 
 function addWhiteAxisX(chart){
-
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!! 	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!!!!!!!!!!!!!!	TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	WARNING	!!!!!!down!!!!!!		TODO	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	try{
 	
@@ -409,12 +264,7 @@ function addWhiteAxisX(chart){
 		}
 		alert(aff);*/
 		
-		
-		
-		
-		//////////////////////////////////////addWhiteAxisX Starts here/////////////////////////////////////////////////
-		
-		/*var ord = ordXAxis(chart);
+		var ord = ordXAxis(chart);
 		var td = getParent(chart.node, 'td');
 		
 		if(td.childNodes.length >1 && td.lastChild.tagName == "DIV")
@@ -447,10 +297,10 @@ function addWhiteAxisX(chart){
 				E.appendChild(E1);
 			}
 			
-		}*/
+		}
 		
 	}catch(e){
-		alert(e+" in graph_drawing.js at line "+e.lineNumber)
+		alert(e+" : "+e.lineNo);
 	}
 }
 
@@ -500,7 +350,7 @@ function addZoomZero(chart){
 	
 		
 	}catch(e){
-		alert(e+" in graph_drawing.js at line "+e.lineNumber)
+		alert(e+" : "+e.lineNo);
 	}
 }
 
@@ -574,70 +424,29 @@ function addPlotIOLabels(chart){
 
 
 
-function drawChart(numGraphe, Onglet, isAccurate){
+function drawChart(numGraphe, Onglet){
 	
-	//alert(numGraphe+" : "+Onglet+" : "+isAccurate);
-	
-	//alert(document.getElementById(Onglet).getAttribute("isClosable"));
-
-	
-	if(document.getElementById(Onglet).getAttribute("isClosable") == "true"){	// onglet machine (de 1 à 4) ou data (6)
-			//alert("f");
-			if(numGraphe == "2"){
+	if(document.getElementById(Onglet).isClosable){	// onglet machine (de 1 à 4) ou data (6)
 			
-				if(jsonNameFromTreePath(Onglet).indexOf("Protocole")!=-1){
-					document.getElementById("Button"+numGraphe+Onglet).setAttribute("style", "display: block;"); 
-				}else{
-					document.getElementById("Button"+numGraphe+Onglet).setAttribute("style", "display: none;");
-				}
-			
-			}	
-			
-			//alert("f1");
 			if(numGraphe == 1){	
-				
-				if(!isAccurate){
-					dojo.empty("chart1"+Onglet);
-					loading("chart1"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart11); ', 50);
-				}else{
-					dojo.empty("chart1"+Onglet+"Accurate");
-					loading("chart1"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartLocalhostsNbHostsAccurate("chart1'+Onglet+'Accurate"));', 50);
-				}
+				dojo.empty("chart1"+Onglet);
+				loading("chart1"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart11); ', 50);
 			}
 			else if(numGraphe == 2){	
-				if(!isAccurate){
-					dojo.empty("chart2"+Onglet);
-					loading("chart2"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart12); ', 50);
-				}else{
-					dojo.empty("chart2"+Onglet+"Accurate");
-					loading("chart2"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartProtoAccurate("chart2'+Onglet+'Accurate"));', 50);
-				}
+				dojo.empty("chart2"+Onglet);
+				loading("chart2"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart12); ', 50);
 			}
 			else if(numGraphe == 3){	
-				if(!isAccurate){
-					dojo.empty("chart3"+Onglet);
-					loading("chart3"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart13); ', 50);
-				}else{
-					dojo.empty("chart3"+Onglet+"Accurate");
-					loading("chart3"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartProtoAccurate("chart3'+Onglet+'Accurate"));', 50);
-				}
+				dojo.empty("chart3"+Onglet);
+				loading("chart3"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart13); ', 50);
 			}
 			else if(numGraphe == 4){
-				if(!isAccurate){
-					dojo.empty("chart4"+Onglet);
-					loading("chart4"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart14); ', 50);
-				}else{
-					dojo.empty("chart4"+Onglet+"Accurate");
-					loading("chart4"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartProtoAccurate("chart4'+Onglet+'Accurate"));', 50);
-				}
+				dojo.empty("chart4"+Onglet);
+				loading("chart4"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart14); ', 50);
 			}
 			else if(numGraphe == 5){
 				alert("error: found a 5");				
@@ -646,47 +455,19 @@ function drawChart(numGraphe, Onglet, isAccurate){
 				ChargerData(Onglet, "false");
 			}
 			else {	alert("ERR1 : in function 'clickTitre'");	}
-		//alert("f2");
+		
 			
 		}else { // onglet global ou reseau
 			
-			//alert("t1");
-			if(numGraphe == "1" || numGraphe == "2"){
-			
-				if(jsonNameFromTreePath(Onglet).indexOf("Protocole")!=-1){
-					document.getElementById("Button"+numGraphe+Onglet).setAttribute("style", "display: block;"); 
-				}else{
-					document.getElementById("Button"+numGraphe+Onglet).setAttribute("style", "display: none;");
-				}
-			
-			}	
-			
-			
 			if(numGraphe == 1){	
-				
-				if(!isAccurate){
-					dojo.empty("chart1"+Onglet);
-					loading("chart1"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart1);', 50);
-				}else{
-					dojo.empty("chart1"+Onglet+"Accurate");
-					loading("chart1"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartProtoAccurate("chart1'+Onglet+'Accurate"));', 50);
-				}
-				
+				dojo.empty("chart1"+Onglet);
+				loading("chart1"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart1); ', 50);
 			}
 			else if(numGraphe == 2){	
-				
-				if(!isAccurate){
-					dojo.empty("chart2"+Onglet);
-					loading("chart2"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart2); ', 50);
-				}else{
-					dojo.empty("chart2"+Onglet+"Accurate");
-					loading("chart2"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartProtoAccurate("chart2'+Onglet+'Accurate"));', 50);
-				}
-				
+				dojo.empty("chart2"+Onglet);
+				loading("chart2"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart2); ', 50);
 			}
 			else if(numGraphe == 3){	
 				dojo.empty("chart3"+Onglet);
@@ -704,36 +485,19 @@ function drawChart(numGraphe, Onglet, isAccurate){
 				setTimeout('dojo.addOnLoad(makeChart5); ', 50);
 			}
 			else if(numGraphe == 6){	
-				
-				if(!isAccurate){
-					dojo.empty("chart6"+Onglet);	
-					loading("chart6"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart6); ', 50);
-				}else{
-					dojo.empty("chart6"+Onglet+"Accurate");
-					loading("chart6"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartNetworkNbHostsAccurate("chart6'+Onglet+'Accurate"));', 50);
-				}
-				
+				dojo.empty("chart6"+Onglet);	
+				loading("chart6"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart6); ', 50);
 			}
 			else if(numGraphe == 7){	
-				
-				if(!isAccurate){
-					dojo.empty("chart7"+Onglet);	
-					loading("chart7"+Onglet);
-					setTimeout('dojo.addOnLoad(makeChart7); ', 50);
-				}else{
-					dojo.empty("chart7"+Onglet+"Accurate");
-					loading("chart7"+Onglet+"Accurate");
-					setTimeout('dojo.addOnLoad(makeChartNetworkNbHostsAccurate("chart7'+Onglet+'Accurate"));', 50);
-				}
-				
+				dojo.empty("chart7"+Onglet);	
+				loading("chart7"+Onglet);
+				setTimeout('dojo.addOnLoad(makeChart7); ', 50);
 			}
 			else {	alert("ERR1 : in function 'clickTitre'");	}
 			
 			
 		}
-		//alert("out");
 		
 }
 
@@ -745,7 +509,6 @@ function emptyChart(numGraphe, Onglet){
 		if(document.getElementById(Onglet).isClosable){	// onglet machine (de 1 à 4) ou data (6)
 			if(numGraphe == 1){
 				unLoading();
-				dojo.empty("chart1"+Onglet);	
 				dojo.empty("chart1"+Onglet);	
 			}else if(numGraphe == 2){
 				unLoading();
@@ -763,11 +526,9 @@ function emptyChart(numGraphe, Onglet){
 			if(numGraphe == 1){
 				unLoading();
 				dojo.empty("chart1"+Onglet);
-				dojo.empty("chart1"+Onglet+"Accurate");
 			}else if(numGraphe == 2){
 				unLoading();
 				dojo.empty("chart2"+Onglet);
-				dojo.empty("chart2"+Onglet+"Accurate");
 			}else if(numGraphe == 3){
 				unLoading();
 				dojo.empty("chart3"+Onglet);
@@ -780,38 +541,11 @@ function emptyChart(numGraphe, Onglet){
 			}else if(numGraphe == 6){
 				unLoading();
 				dojo.empty("chart6"+Onglet);		
-				dojo.empty("chart6"+Onglet+"Accurate");
 			}else if(numGraphe == 7){
 				unLoading();
-				dojo.empty("chart7"+Onglet);	
-				dojo.empty("chart7"+Onglet+"Accurate");	
+				dojo.empty("chart7"+Onglet);		
 			}else {	alert("ERR1 : in function 'clickTitre'");	}
 		}
 		
 		
-}
-
-
-function setZoomBar(zoomBar, chart){
-	
-	//var zoomRuleLabel = zoomBar.getChildren()[0];
-	//zoomBar.setAttribute("minimum", chart.getAxis("y").scaler.bounds.lower);
-	//zoomBar.setAttribute("maximum", chart.getAxis("y").scaler.bounds.upper);
-	zoomBar.setAttribute("value", 0);
-	
-	//zoomBar.setAttribute("value", [chart.getAxis("y").scaler.bounds.lower, chart.getAxis("y").scaler.bounds.upper]);
-		
-	/*
-	zoomRuleLabel.setAttribute("minimum", chart.getAxis("y").scaler.bounds.lower);
-	zoomRuleLabel.setAttribute("maximum", chart.getAxis("y").scaler.bounds.upper);
-	zoomRuleLabel.setAttribute("count", 20);
-	zoomRuleLabel.setAttribute("labels", [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
-	
-	zoomRuleLabel.startup();
-	
-	
-	zoomRuleLabel.setAttribute("labels", ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"]);
-	*/
-	//alert("done");
-	
 }

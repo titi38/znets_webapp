@@ -718,7 +718,7 @@ function addRow2Col(tableID, name, hiddenName)
 
 	element2.value=name;
 	element2.id="data";
-	element2.readOnly=true
+	element2.readOnly=true;
 	element2.size=70;
     cell3.appendChild(element2);
 

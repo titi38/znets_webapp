@@ -1,3 +1,4 @@
+
 function mouseOverTitre(numGraphe , Onglet){
 
 	var input = document.getElementById("BoutonGraphe"+numGraphe+Onglet);
@@ -30,7 +31,7 @@ function clickApply(Onglet){
 	}
 	
 	if(Onglet == "Plus"){
-		// clickApply onglet "Plus" inexistant à présent
+		// clickApply onglet "Plus" inexistant ï¿½ prï¿½sent
 		
 		/*require(["dojo/ready", "dijit/registry"], function(ready, registry){
 			ready(function(){

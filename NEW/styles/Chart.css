@@ -1,0 +1,106 @@
+
+/*body
+{
+  font: 10px sans-serif;
+}*/
+
+.drag{
+  cursor: grabbing !important;
+}
+
+.label
+{
+  font-weight: bold;
+    font-size: 100%;
+}
+
+.title {
+
+    font-size:120%;
+    font-weight: bolder;
+
+}
+
+.bin {
+    fill: #39537b;
+}
+
+.tile
+{
+  shape-rendering: crispEdges;
+}
+
+
+
+.lineEnergy {
+    fill: none;
+    stroke: #805500;
+    stroke-width: 1;
+}
+
+.areaEnergy {
+    fill: #dfd8e6;
+    stroke-width: 0;
+}
+
+.axis path,
+.axis line
+{
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.rectSelec {
+
+    fill: #b3ffb3;
+    opacity : 0.5;
+    stroke-width : 1.5;
+    stroke: #006600;
+
+}
+
+.rectV1 {
+    fill : #001c9c; 
+}
+
+
+.rectV2 {
+    fill : #4682b4;
+}
+
+.line_scatterLine {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%; /* aspect ratio */
+  vertical-align: top;
+  overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+svg {
+  font: 15px arial;
+}
+

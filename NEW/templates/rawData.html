@@ -1,0 +1,531 @@
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class='col-sm-3'>
+
+            <form class="form-horizontal" onsubmit="getRawData(serializeRawDataForm()); return false" id="rawData_form">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <fieldset>
+                            <legend>Timestamp Filter</legend>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="dateDebData">From:</label>
+                                <div class="col-xs-10">
+                                    <div class='input-group date' id='fromDate_RawDataForm'>
+                                        <input type='text' class="form-control" id="dateDebData" name='dd'required/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="toDate_RawDataForm">To:</label>
+                                <div class="col-xs-10">
+                                    <div class='input-group date' id='toDate_RawDataForm'>
+                                        <input type='text' class="form-control"  id="dateFinData" name='df' required/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-6" for="duration">Duration(sec.):</label>
+                                <div class="col-xs-6">
+                                    <input type='text' class="form-control" id="duration" name='dur'/>
+                                </div>
+                            </div>
+
+
+                        </fieldset>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <fieldset>
+
+                            <legend>Hosts filter
+                                <div class="pull-left">
+                                    <a class="collapsed pull-right carret-down-expander btn btn-sm btn-default" data-toggle="collapse" data-target="#hostsFilter" ></a>
+                                </div>
+                            </legend>
+
+
+                            <div class="panel-collapse collapse" id="hostsFilter">
+
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Localhost</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="iploc">Ip:</label>
+                                            <div class="col-xs-7 paddingRight5">
+                                                <input class="form-control" type="text" id="iploc" size="17" maxlength="39" value="" onchange="setIpLocValue(); if(!this.value.split('/')[1])SelectIp.attr('value', this.value );"/>
+                                            </div>
+                                            <div class="col-xs-3 paddingLeft5">
+                                                <p class="slashMask">/</p>
+                                                <input class="form-control" type="text" id="iplocMask"  size="3" maxlength="3" value="" onchange="setIpLocValue();"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="nameloc">Name:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control"  type="text" id="nameloc" size="17" maxlength="39" value="" onchange="setIpLocValue(); if(!this.value.split('/')[1])SelectIp.attr('value', this.value );"/>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="iploc" id="iplocHidden"  value=""/>
+
+                                    </div>
+
+                                </section>
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Direction</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="dir"  class="TabQueryFormTDLabel">Dir:</label>
+                                            <div class="col-xs-10">
+                                                <select class="form-control" id="dir" name="dir" onchange="display(this.value)">
+                                                    <option value="" selected="selected">All</option>
+                                                    <option value=">" >Loc -> Ext</option>
+                                                    <option value="<">Loc <- Ext</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </section>
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">External Host</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="ipext">Ip:</label>
+                                            <div class="col-xs-7 paddingRight5">
+                                                <input class="form-control" type="text" id="ipext"  size="17" maxlength="39" value="" onchange="if(this.value.indexOf(':')!=-1)document.getElementById('ipextMask').value = 128; else if(this.value.indexOf('.')!=-1) document.getElementById('ipextMask').value = 32; else document.getElementById('ipextMask').value = ''; document.getElementById('whoIs').value = this.value; setIpExtValue(); "/>
+                                            </div>
+                                            <div class="col-xs-3 paddingLeft5">
+                                                <p class="slashMask">/</p>
+                                                <input class="form-control" type="text" id="ipextMask"  size="3" maxlength="3" value="" onchange="setIpExtValue();"/>
+                                            </div>
+
+                                            <input type="hidden" name="ipext" id="ipextHidden"  value=""/>
+
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-4" for="Country">Country:</label>
+                                            <div class="col-xs-8">
+                                                <input class="form-control countryTextBox" type="text" id="country"  size="26" maxlength="26" value=""/>
+                                                <input type="hidden" name="country" id="hiddenCountry" value=""/>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-4" for="AS">AS(number):</label>
+                                            <div class="col-xs-8">
+                                                <input class="form-control" type="text" name="as" id="AS"  size="17" maxlength="39" value="" />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-4" for="app">Application:</label>
+                                            <div class="col-xs-8">
+                                                <input class="form-control" type="text" id="app"  class="appTextBox"  size="26" maxlength="26" value=""/>
+                                                <input type="hidden" name="app" id="hiddenApp" value=""/>
+                                                <i id="resolvedAS" size=1> </i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </section>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <fieldset>
+
+                            <legend>Traffic Filter
+                                <div class="pull-left">
+                                    <a class="collapsed pull-right carret-down-expander btn btn-sm btn-default" data-toggle="collapse" data-target="#trafficFilter" ></a>
+                                </div>
+                            </legend>
+
+
+                            <div class="panel-collapse collapse" id="trafficFilter">
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Outgoing Traffic (Bytes)</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="minOutTraffic">Min.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="minOutTraffic"  name="minOutTraf" size="12" maxlength="12" value=""/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="maxOutTraffic">Max.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="maxOutTraffic" name="maxOutTraf" size="12" maxlength="12" value=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </section>
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Incoming Traffic (Bytes)</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="minInTraffic">Min.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="minInTraffic" name="minIncTraf"  size="12" maxlength="12" value=""/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="maxInTraffic">Max.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="maxInTraffic" name="maxIncTraf" size="12" maxlength="12" value=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </section>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <fieldset>
+
+                            <legend>Packets filter
+                                <div class="pull-left">
+                                    <a class="collapsed pull-right carret-down-expander btn btn-sm btn-default" data-toggle="collapse" data-target="#packetsFilter" ></a>
+                                </div>
+                            </legend>
+
+
+                            <div class="panel-collapse collapse" id="packetsFilter">
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Outgoing Packets</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="minOutPkts">Min.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="minOutPkts" name="minOutPkts" size="12" value=""/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="maxOutPkts">Max.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="maxOutPkts" name="maxOutPkts" size="12" value=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </section>
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Incoming Packets</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="minIncPkts">Min.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="minIncPkts" name="minIncPkts" size="12" value=""/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="maxIncPkts">Max.:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" type="text" id="maxIncPkts" name="maxIncPkts" size="12" value=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </section>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <fieldset>
+
+                            <legend>Protocole filter
+                                <div class="pull-left">
+                                    <a class="collapsed pull-right carret-down-expander btn btn-sm btn-default" data-toggle="collapse" data-target="#protocoleFilter" ></a>
+                                </div>
+                            </legend>
+
+
+                            <div class="panel-collapse collapse" id="protocoleFilter">
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Protocole</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-4" for="proto"  class="TabQueryFormTDLabel">Protocole:</label>
+                                            <div class="col-xs-8">
+                                                <select class="form-control" name="proto" id="proto" onchange="updateProtoFilter(this.value)" style=' cursor: pointer;'>
+                                                    <option value="" selected=true>All</option>
+                                                    <option value="tcp" >TCP</option>
+                                                    <option value="udp">UDP</option>
+                                                    <option value="others">Others</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </section>
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Ports</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-4" for="minIncPkts">Local:</label>
+                                            <div class="col-xs-8">
+                                                <input class="form-control" type="text" id="portLoc" name='portL' size="5" maxlength="5" value="" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-4" for="maxIncPkts">External:</label>
+                                            <div class="col-xs-8">
+                                                <input class="form-control" type="text" id="portExt" name='portE' size="5" maxlength="5" value=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </section>
+
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Mask TCP Flags</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+
+                                            <div class="col-xs-12 text-center">
+
+                                                <div class="checkbox">
+
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagC" value='C'/> C</label>
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagE" value='E'/> E</label>
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagU" value='U'/> U</label>
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagA" value='A'/> A</label>
+
+                                                </div>
+
+                                                <div class="checkbox">
+
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagP" value='P'/> P</label>
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagR" value='R'/> R</label>
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagS" value='S'/> S</label>
+                                                    <label class="checkbox-inline"><input type="checkbox" checked="checked" id="tcpflagF" value='F'/> F</label>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </section>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <fieldset>
+
+                            <legend>Application Filter
+                                <div class="pull-left">
+                                    <a class="collapsed pull-right carret-down-expander btn btn-sm btn-default" data-toggle="collapse" data-target="#applicationFilter" ></a>
+                                </div>
+                            </legend>
+
+
+                            <div class="panel-collapse collapse" id="applicationFilter">
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Application</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="appId"  class="TabQueryFormTDLabel">Search:</label>
+                                            <div class="col-xs-10">
+                                                <select multiple class="form-control" id="appId" name="appId">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </section>
+
+                                <section class="form-section">
+
+                                    <label class="form-section-title">Pattern</label>
+
+                                    <div class="form-section-content">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-2" for="appPattern"  class="TabQueryFormTDLabel">Search:</label>
+                                            <div class="col-xs-10">
+                                                <input class="form-control" name="appPattern" id="appPattern"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </section>
+
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+                <p class="optionalNotification">(*) optional entry</p>
+
+                <div class="text-center">
+                    <!--button type="button" class="btn btn-default" onclick="addTab()" >View raw data</button-->
+                    <button type="submit" class="btn btn-default">View raw data</button>
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class='col-sm-9'>
+            <div class="container">
+                <div>
+                    <div class="dropdown pull-right">
+                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Shown Columns
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" id="shownColumns">
+                        </ul>
+                    </div>
+                </div>
+
+                <br>
+
+                <div>
+                    <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <div class="wrapper">
+                        <ul class="nav nav-tabs list rawdata-tab-list" id="rawdataTabsContainer">
+                        </ul>
+                    </div>
+
+                    <div class="tab-content rawdata-tab-content">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

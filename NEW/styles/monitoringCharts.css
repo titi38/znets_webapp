@@ -1,0 +1,84 @@
+
+/* tell the SVG path to be a thin blue line without any area fill */
+
+
+
+#monitoring svg {
+    border-radius: 10px;
+}
+
+#monitoring svg.planSvg{
+    background: #f6fff4;
+    border: 1px solid #ccddcc;
+}
+
+#monitoring svg.globalMonitoringSvg{
+    background: #ffffef;
+    border: 1px solid #ffddbb;
+}
+
+
+path.line {
+    /*stroke: green;*/
+    stroke: steelblue;
+    stroke-width: 1;
+    fill: none;
+}
+
+
+path.line.nbElements {
+    stroke: steelblue;
+}
+
+
+path.line.nbSqlFiles {
+    stroke: steelblue;
+}
+
+
+path.line.duration {
+    /*stroke: salmon;*/
+    stroke: #dd7722;
+}
+
+
+.axis {
+    shape-rendering: crispEdges;
+    font-size: 0.6em;
+}
+.x.axis line {
+    stroke: steelblue;
+}
+.x.axis .minor {
+    stroke-opacity: .5;
+}
+.x.axis line, .x.axis path {
+    fill: none;
+    stroke: #000;
+}
+.y.axis line, .y.axis path {
+    fill: none;
+    stroke: #000;
+}
+
+.y.axis.duration {
+    /*fill: salmon;*/
+    fill: #dd7722;
+}
+
+.y.axis.duration line {
+    /*stroke: salmon;*/
+    stroke: #dd7722;
+}
+
+.y.axis.nbElements {
+    fill: steelblue;
+}
+
+.y.axis.nbElements line {
+    stroke: steelblue;
+}
+
+.margin-right-4 {
+    margin-right: 4px;
+}

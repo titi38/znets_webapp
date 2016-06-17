@@ -1706,7 +1706,7 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
 
 
 
-function $(element) {
+function setTimeout(function(){$('#tableRawdata'+rawdataTabID).DataTable().draw();})$(element) {
   if (arguments.length > 1) {
     for (var i = 0, elements = [], length = arguments.length; i < length; i++)
       elements.push($(arguments[i]));

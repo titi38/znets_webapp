@@ -1,0 +1,214 @@
+.axis
+{
+    fill: none;
+    stroke: #000;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 300;
+    font-size: 15px;
+
+}
+
+.rectSelec {
+
+    fill: #b3ffb3;
+    opacity : 0.5;
+    stroke-width : 1.5;
+    stroke: #006600;
+
+}
+svg{
+    shape-rendering: crispEdges;
+}
+
+svg.svgline{
+    shape-rendering: optimizeSpeed;
+}
+.lgd{
+    width: 0.75em;
+    height: 0.75em;
+}
+
+.line{
+    fill: none;
+    stroke: #805500;
+    stroke-width: 1;
+}
+
+.grid{
+    stroke:#b3b3b3;
+    shape-rendering: crispEdges;
+    fill: none;
+
+}
+
+.area {
+    fill: #dfd8e6;
+    stroke-width: 0;
+}
+
+.tableTitle{
+    border-bottom-style: ridge;
+    margin-top: 0em;
+    margin-bottom: 0em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    text-align: center;
+}
+
+.frame{
+    fill:none;
+}
+.divtable{
+    vertical-align: top;
+    border-style: ridge;
+
+}
+table{
+
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    overflow: scroll;
+    cursor: default;
+}
+
+
+tr.outlined td{
+    border-top: 1px double black;
+    border-bottom: 1px solid black;
+}
+
+tr.outlined td:nth-of-type(1){
+    border-left: 1px solid black;
+}
+
+
+tr.outlined td:nth-of-type(2){
+    border-right: 1px solid black;
+}
+
+td{
+    padding: 5px;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+
+}
+
+td:nth-of-type(1){
+    border-left: 1px solid transparent;
+}
+
+td:nth-of-type(2){
+    width: 100%;
+    border-right: 1px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+}
+
+.rectAxis{
+    fill:#ffffff;
+    stroke:#ffffff;
+}
+.data{
+    stroke-width: 1;
+}
+
+.part path{
+
+    stroke-width: 1;
+    stroke: #fff6f6;
+
+}
+
+
+.container{
+    position: relative;
+}
+
+
+.graph{
+    width:100%;
+    position:relative;
+    background-color: #fcfcfc;
+}
+.diagram{
+    display: inline-block;
+}
+
+
+
+.font2{
+    font-weight: 400;
+
+}
+
+.hidden{
+    text-decoration : line-through;
+    color:grey;
+}
+
+.popup{
+    position:absolute;
+    background-color: #fff6f6;
+    border: 1px #ccc solid;
+    border-radius: 6px;
+    box-shadow: #333 2px 2px 4px;
+
+}
+
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+table tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+
+
+.overlay{
+    position:absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+
+.elemtext {
+    font: 10px arial;
+    text-anchor: middle;
+
+}
+
+.bckgr-txt{
+    text-anchor: middle;
+    font: 50px sans-serif;
+    font-weight:900;
+
+
+}
+
+.pieSvg{
+    shape-rendering: geometricPrecision;
+
+}
+
+.geometricPrecision{
+    shape-rendering: geometricPrecision;
+}
+
+.countries_boundaries {
+    fill:none;
+    stroke-linejoin: round;
+    stroke: #777;
+}
+
+
+.backgroundSea{
+
+    fill: #bdeeff;
+
+
+}

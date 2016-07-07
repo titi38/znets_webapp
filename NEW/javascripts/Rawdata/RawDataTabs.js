@@ -2,14 +2,14 @@
  * Created by smile on 14/06/16.
  */
 
-function addTab(rawdataTabID){
+function addRawDataTab(rawdataTabID){
 
     var element_tab = $('<li class="tab'+rawdataTabID+' tab"><a data-toggle="tab" href="#divRawdata'+rawdataTabID+'">RawData <span class="closeTab close-icon" title="Remove this page">&#x2715</span></a></li>');
     var element_div = $('<div class="tab-pane fade" id="divRawdata'+rawdataTabID+'"></div>');
 
     element_tab.click(adjustOnTabClick);
 
-    $(".list").append(element_tab);
+    $(".list.rawdata-tab-list").append(element_tab);
     $(".tab-content.rawdata-tab-content").append(element_div);
 
     reAdjust();
@@ -50,10 +50,12 @@ function addTab(rawdataTabID){
 
 }
 
+
 function adjustTableColumns(rawdataTabID) {
     // Cheat : trigger draw to call drawCallback function in order to adjust column's width
     $('#tableRawdata' + rawdataTabID).DataTable().draw();
 }
+
 
 function adjustOnTabClick(event) {
 
@@ -128,7 +130,7 @@ var scrollBarWidths = 40;
 
 function initializeRawData() {
 
-    $("button.addTab").on("click", addTab);
+    //$("button.addRawDataTab").on("click", addRawDataTab);
 
     reAdjust();
 

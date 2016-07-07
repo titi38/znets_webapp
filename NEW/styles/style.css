@@ -328,6 +328,13 @@ iframe {
 }
 
 
+hr.myhr{
+    margin-top:10px;
+    margin-bottom:15px;
+    border-top: 1px solid #e5e5e5;
+}
+
+
 /*************************************************
 * Styles for collapsible panel arrows
 */
@@ -368,11 +375,16 @@ iframe {
 */
 
 .form-group {
-    margin-bottom: 5px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .panel {
     margin-bottom: 5px;
+}
+
+.panel-heading.padding2px {
+    padding: 2px;
 }
 
 .panel-body.panel-sensorMap-view {

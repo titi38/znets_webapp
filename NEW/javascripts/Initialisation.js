@@ -69,6 +69,14 @@ function initialisation(){
     activateTabOfClass("rawdata");
 
 
+
+
+    /*********************************************************************************************************
+     Activate rawdata tab
+     ********************************************************************************************************/
+    activateTabOfClass("network");
+
+
     /*********************************************************************************************************
      Initialize RawData known Application's Ids
      ********************************************************************************************************/
@@ -160,37 +168,152 @@ function initializeRawDataForm() {
 
 
     });
-    /*$("#fromDate_RawDataForm").on("dp.change", function (e) {
-     $('#toDate_RawDataForm').data("DateTimePicker").minDate(e.date);
-     });*/
 
-    $("#toDate_RawDataForm").on("dp.change", function (e) {
-        console.log("to changed : "+e.date);
-        if(e.date)
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(e.date);
-        else
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
-    });
-
-    $("#toDate_RawDataForm").on("dp.show", function (e) {
-        console.log("showing to : setting max date to (now) "+moment()+" : "+moment().format('YYYY-MM-DD HH:mm'));
-        $('#toDate_RawDataForm').data("DateTimePicker").maxDate(moment());
-    });
 
     $("#fromDate_RawDataForm").on("dp.show", function (e) {
         if($('#toDate_RawDataForm').data("DateTimePicker").maxDate())
             $('#fromDate_RawDataForm').data("DateTimePicker").maxDate($('#toDate_RawDataForm').data("DateTimePicker").maxDate());
         else
             $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
+
     });
 
-    /*$('#datetimepicker1').on("dp.change", function(){
-     console.log("hey");
-     $('#datetimepicker1').data("DateTimePicker").viewDate(moment());
-     console.log("hey1");
-     });*/
+    $("#fromDate_RawDataForm").on("dp.change", function (e) {
+        if(!e.date)
+            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
 
-};
+    });
+
+    $("#toDate_RawDataForm").on("dp.change", function (e) {
+        $(this).data("DateTimePicker").maxDate(moment());
+
+        if(e.date)
+            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(e.date);
+        else {
+            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
+            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
+        }
+    });
+
+    $("#toDate_RawDataForm").on("dp.show", function (e) {
+        $(this).data("DateTimePicker").maxDate(moment());
+    });
+
+}
+
+
+
+
+
+
+
+function initializeChartsTimesliceForm() {
+
+    $('#fromDate_ChartsForm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        defaultDate: moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm'),
+
+
+    });
+    $('#toDate_ChartsForm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        defaultDate: moment(),
+
+
+    });
+
+
+    $("#fromDate_ChartsForm").on("dp.show", function (e) {
+        if($('#toDate_ChartsForm').data("DateTimePicker").maxDate())
+            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate($('#toDate_ChartsForm').data("DateTimePicker").maxDate());
+        else
+            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment());
+
+    });
+
+    $("#fromDate_ChartsForm").on("dp.change", function (e) {
+        if(!e.date)
+            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
+
+    });
+
+    $("#toDate_ChartsForm").on("dp.change", function (e) {
+        $(this).data("DateTimePicker").maxDate(moment());
+
+        if(e.date)
+        {
+
+            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(e.date);
+
+            switch ($("#timesliceCharts").val()) {
+                case "lastDay" :
+                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
+                    break;
+                case "lastMonth" :
+                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'months').format('YYYY-MM-DD HH:mm'));
+                    break;
+                case "hourly" :
+                case "daily" :
+                    // DO NOTHING
+                    break;
+                default :
+                    console.error("UNEXPECTED ChartsTimeslice select value (Initialisation.js), %i ", 103);
+                    break;
+            }
+
+        }
+        else
+        {
+            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment());
+            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
+        }
+    });
+
+    $("#toDate_ChartsForm").on("dp.show", function (e) {
+        $(this).data("DateTimePicker").maxDate(moment());
+    });
+
+}
+
+function addNetworksTabs(networksNamesTable) {
+
+    for(var i=0 ; i<networksNamesTable.length; i++){
+        addNetworkTab(networksNamesTable[i]);
+        getHtmlTemplate("#divNetwork"+networksNamesTable[i], "NEW/templates/networksTabsContent.html", "");
+    }
+
+}
+
+function initNetworksChartsNavTabs() {
+
+    $('ul.nav-nest a[data-toggle="tab"]').on('click', function (e) {
+        $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
+    });
+
+    $('ul.nav-nest a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        // TODO : Load chart and remove temporary text
+        console.warn('TODO : Load chart and remove temporary text');
+        console.warn(e);
+        console.warn("json file : "+e.target.dataset.chartJson);
+        console.warn("target div (jquery selector) : "+e.target.hash);
+    });
+}
+
+function initializeNetwork() {
+
+    initializeChartsTimesliceForm();
+
+    var testTabs=["Global", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork1", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork2",
+        "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork3", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork4"];
+
+
+    addNetworksTabs(testTabs);
+
+    initNetworksChartsNavTabs();
+
+}
+
+
 
 
 
@@ -209,10 +332,15 @@ $( document ).ready(function() {
 
     getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", initializeRawDataForm);
 
+    // TODO START : embed this
+    getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetwork);
+    //getHtmlTemplate("#network", "NEW/templates/networksTabsContent.html", initializeNetwork);
+
+    // TODO END
+
     tryRestaureConnectSession();
 
-});
-
+})
 
 
 

@@ -1,0 +1,74 @@
+
+<br>
+
+
+<form class="form-horizontal container" id="charts_form"> <!--onsubmit="getRawData(serializeRawDataForm()); return false" -->
+
+    <div class="panel panel-default">
+        <div class="panel-heading padding2px">
+            <fieldset>
+                <!--legend>Timestamp Filter</legend-->
+                <div class="form-group col-md-4">
+                    <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
+                    <div class="col-xs-10 col-md-8">
+                        <select class="form-control" id="timesliceCharts" name="timesliceCharts" onchange="updateChartsTimeslice(this.value)">
+                            <option value="lastDay" selected="selected">Last 24h</option>
+                            <option value="lastMonth" >Last Month</option>
+                            <option value="hourly">Custom (Hourly)</option>
+                            <option value="daily" >Custom (Daily)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
+                    <div class="col-xs-10">
+                        <div class='input-group date' id='fromDate_ChartsForm'>
+                            <input type='text' class="form-control" id="dateDebCharts" name='dd' required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
+                    <div class="col-xs-10">
+                        <div class='input-group date' id='toDate_ChartsForm'>
+                            <input type='text' class="form-control"  id="dateFinCharts" name='df' required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-12 col-md-1 text-center">
+                    <button type="submit" class="btn btn-default">Apply</button>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+
+</form>
+
+<hr class="myhr">
+
+<div class="container-fluid">
+    <div>
+        <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
+        <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
+        <div class="wrapper">
+            <ul class="nav nav-tabs list network-tab-list" id="networkTabsContainer">
+                <!--li class="active"><a data-toggle="tab" href="#divNetworkGlobal"> Global</a></li-->
+            </ul>
+        </div>
+
+        <div class="tab-content network-tab-content">
+            <!--div class="tab-pane fade in network active" data-network="Global" data-toggle="tab" id="divNetworkGlobal" >Global Network Content</div-->
+        </div>
+    </div>
+
+</div>

@@ -26,7 +26,8 @@ function callAJAX(url, params, outputType, callback, callbackParams)
             url: callURL,
             type: "POST",
             dataType : "json",
-            data:  params+"&dh="+parseInt(moment(moment.now()).tz(moment.tz.guess()).format("Z")),
+            //data:  params+"&dh="+parseInt(moment(moment.now()).tz(moment.tz.guess()).format("Z")),
+            data:  params+"&dh="+parseInt(moment().format("Z"))
         });
 
     request.done(function(msg)

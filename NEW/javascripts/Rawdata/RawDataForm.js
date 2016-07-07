@@ -20,7 +20,9 @@ function getRawData(paramRawData){
 
 function addRawDataResults(jsonResponse){
 
-    var rawdataTabID = moment.now();
+    var rawdataTabID = moment();
+
+    addRawDataTab(rawdataTabID);
 
     drawRawdataDatatable(rawdataTabID, jsonResponse);
 
@@ -30,8 +32,6 @@ function addRawDataResults(jsonResponse){
 
 
 function drawRawdataDatatable(rawdataTabID, jsonResponse) {
-
-    addTab(rawdataTabID);
 
 
     var tableColumns = [];
@@ -127,8 +127,6 @@ function switchShownColumnState(a_element) {
     // Get the input checkbox object
     var input = a_element.find('input');
 
-    console.error("hell" + input);
-
     // Toggle the checked state
     if (input.prop('checked'))
         input.prop('checked', false);
@@ -139,4 +137,21 @@ function switchShownColumnState(a_element) {
     changeRawdataShownColumnsSessionVariableKey(a_element.attr('data-column-name'));
 
 
+}
+
+
+
+
+function invalidMsg(textbox) {
+    if (textbox.value == '') {
+        textbox.setCustomValidity('');
+    }
+    else if (textbox.validity.typeMismatch) {
+        textbox.setCustomValidity('please enter a valid email address');
+    }
+    else
+    {
+        textbox.setCustomValidity('');
+    }
+    return true;
 }

@@ -13,7 +13,7 @@
                                 <label class="control-label col-xs-2" for="dateDebData">From:</label>
                                 <div class="col-xs-10">
                                     <div class='input-group date' id='fromDate_RawDataForm'>
-                                        <input type='text' class="form-control" id="dateDebData" name='dd'required/>
+                                        <input type='text' class="form-control" id="dateDebData" name='dd' oninput="invalidMsg(this)" required/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -24,7 +24,7 @@
                                 <label class="control-label col-xs-2" for="toDate_RawDataForm">To:</label>
                                 <div class="col-xs-10">
                                     <div class='input-group date' id='toDate_RawDataForm'>
-                                        <input type='text' class="form-control"  id="dateFinData" name='df' required/>
+                                        <input type='text' class="form-control"  id="dateFinData" name='df' oninput="invalidMsg(this)" required/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -488,7 +488,7 @@
                 <p class="optionalNotification">(*) optional entry</p>
 
                 <div class="text-center">
-                    <!--button type="button" class="btn btn-default" onclick="addTab()" >View raw data</button-->
+                    <!--button type="button" class="btn btn-default" onclick="addRawDataTab()" >View raw data</button-->
                     <button type="submit" class="btn btn-default">View raw data</button>
                 </div>
 

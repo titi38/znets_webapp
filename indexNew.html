@@ -2,8 +2,18 @@
 <html>
 <head>
 
-    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <!-- DATATABLES -->
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 
 
@@ -15,20 +25,21 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 
 
+
     <!-- Sidebar's styles -->
     <link rel="stylesheet" type="text/css" href="NEW/styles/sideBar.css">
 
 
 
     <!-- MOMENT -->
-    <script type="text/javascript" src="NEW/bower_components/moment/min/moment.min.js"></script>
-    <script type="text/javascript" src="NEW/bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <!--script type="text/javascript" src="NEW/bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script-->
+
+
 
     <!-- DATETIMEPICKER -->
-    <script type="text/javascript" src="NEW/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
     <link rel="stylesheet" href="NEW/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
-
-
 
 
 
@@ -36,13 +47,12 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"-->
-
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script-->
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
 
     <!-- NOUISLIDER -->
     <script src="NEW/bower_components/nouislider/distribute/nouislider.min.js"></script>
@@ -88,6 +98,8 @@
     <script type="text/javascript" src="NEW/javascripts/Rawdata/RawDataTabs.js"></script>
     <script type="text/javascript" src="NEW/javascripts/Rawdata/RawDataForm.js"></script>
     <script type="text/javascript" src="NEW/javascripts/Rawdata/RawDataApplications.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/ChartsFormular.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Networks.js"></script>
 
 
     <script type="text/javascript" src="NEW/javascripts/D3JSCharts/MonitoringCharts.js"></script>
@@ -98,13 +110,14 @@
 
 
 
+    <link rel="stylesheet" href="NEW/styles/chartNavigation.css">
+
 
 </head>
 
 
 <!-- BODY with disabled right-click -->
 <body oncontextmenu="return false;">
-
 
 <div class="fullWidth"></div>
 <div class="row">
@@ -133,7 +146,7 @@
                 <li class="active home"><a href="#home"><i class="fa fa-home fa-1_3x" aria-hidden="true"></i></a></li>
                 <li class="disabled alerts"><a href="#alerts" class="alertTab">Alerts</a></li>
                 <li class="disabled network"><a href="#network">Network</a></li>
-                <li class="disabled rawdata"><a href="#rawdata">Raw Data</a></li>
+                <li class="disabled rawdata"><a href="#rawdata">Flows</a></li>
                 <li class="disabled logs"><a href="#logs" class="logTab">Logs</a></li>
             </ul>
 

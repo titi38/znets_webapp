@@ -12,12 +12,19 @@ function drawChartDouble(svg,newHeightOutput,newHOmarg){
 
   var dataWidth = 0.75*(svg.newX(svg.newX.domain()[0] + 1) - svg.newX.range()[0]);
 
-  svg.chartInput.selectAll(".data")
-    .attr("x",function(d){return svg.newX(d.x - 0.375);})
-    .attr("y", function(d){return svg.newYInput(d.y) - ((d.y===0&&d.height !==0)?0.5:0);})
-    .attr("height", function(d){return svg.newYInput(d.height) - newHOmarg + ((d.y===0&&d.height !==0)?0.5:0);})
-    .attr("width", dataWidth);
 
+
+  var adjust;
+
+  svg.chartInput.selectAll(".data").each(function(d){
+    adjust = (d.y===0&&d.height !==0)?0.5:0;
+
+    this.setAttribute("x",svg.newX(d.x - 0.375));
+    this.setAttribute("y", svg.newYInput(d.y) - adjust);
+    this.setAttribute("height",svg.newYInput(d.height) - newHOmarg + adjust);
+    this.setAttribute("width",dataWidth);
+
+  });
 
 
 

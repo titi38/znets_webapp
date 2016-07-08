@@ -1315,6 +1315,8 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
 
         svg.transition("hideshow").duration(duration).tween("",function(){
 
+
+
             var x;
             var sum;
             var i;
@@ -1453,13 +1455,19 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
                 totalInTrans = oldTotalIn* t0 + newTotalIn*t;
                 totalOutTrans = oldTotalOut*t0 + newTotalOut*t;
                 var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
+
                 svg.heightOutput = (svg.height - svg.margin.zero)*totalOutTrans/(totalInTrans+totalOutTrans);
+
+                var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
+                  svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
+                var marginViewBottom = marginViewTop + svg.margin.zero;
+
                 svg.yInput.range([svg.heightOutput+svg.margin.zero,svg.height]);
                 svg.yOutput.range([svg.heightOutput,0]);
                 svg.yInput.domain([0,totalInTrans*1.1]);
                 svg.yOutput.domain([0,totalOutTrans*1.1]);
-                svg.newYOutput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y)),0]);
-                svg.newYInput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y + svg.margin.zero)),svg.height]);
+                svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
+                svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
                 svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate1),
                     svg.yOutput.invert(actTranslate1)]);
 
@@ -1628,12 +1636,18 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
                 totalOutTrans = oldTotalOut*t0 + newTotalOut*t;
                 var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
                 svg.heightOutput = (svg.height - svg.margin.zero)*totalOutTrans/(totalInTrans+totalOutTrans);
+
+                var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
+                  svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
+
+                var marginViewBottom = marginViewTop + svg.margin.zero;
+
                 svg.yInput.range([svg.heightOutput+svg.margin.zero,svg.height]);
                 svg.yOutput.range([svg.heightOutput,0]);
                 svg.yInput.domain([0,totalInTrans*1.1]);
                 svg.yOutput.domain([0,totalOutTrans*1.1]);
-                svg.newYOutput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y)),0]);
-                svg.newYInput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y + svg.margin.zero)),svg.height]);
+                svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
+                svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
                 svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate1),
                     svg.yOutput.invert(actTranslate1)]);
 
@@ -1722,8 +1736,7 @@ function updateHisto1DStackDouble(svg){
     var newHOmarg = svg.newYInput(svg.yInput.domain()[0]);
 
     var effectiveNewHeightOutput = Math.min(newHeightOutput, svg.height);
-    svg.rectInput.attr("y", newHOmarg).attr("height",svg.height-newHOmarg);
-
+    svg.rectInput.attr("y", newHOmarg).attr("height",Math.max(0,svg.height-newHOmarg));
     svg.textOutput.attr("transform", "translate(" + (svg.width/2) + "," +(effectiveNewHeightOutput/8 +
         parseFloat(getComputedStyle(svg.textOutput.node()).fontSize)) + ")");
 
@@ -1807,6 +1820,7 @@ function addZoomDouble(svg,updateFunction){
 
     var event = {k:1,x:0,y:0};
 
+    var marginViewTop, marginViewBottom;
     var calcCoord = [];
 
 
@@ -1890,13 +1904,16 @@ function addZoomDouble(svg,updateFunction){
                 actTranslate[0] = -svg.transform.x/(svg.scalex*event.k);
                 actTranslate[1] = -svg.transform.y/(svg.scaley*event.k);
 
+                marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
+                  svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
 
+                marginViewBottom = marginViewTop + svg.margin.zero;
 
                 //actualization of the current (newX&Y) scales domains
                 svg.newX.domain([ svg.x.invert(actTranslate[0]), svg.x.invert(actTranslate[0] + svg.width/(svg.transform.k*svg.scalex)) ]);
 
-                svg.newYOutput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y)),0]);
-                svg.newYInput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y + svg.margin.zero)),svg.height]);
+                svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
+                svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
 
                 svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate[1]),
                     svg.yOutput.invert(actTranslate[1])]);
@@ -2005,12 +2022,16 @@ function addZoomDouble(svg,updateFunction){
 
 
                     actTranslate[1] = -svg.transform.y/(svg.scaley*svg.transform.k);
+                    marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
+                      svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
+                    marginViewBottom = marginViewTop + svg.margin.zero;
 
 
                     //actualization of the current (newX&Y) scales domains
                     svg.newX.domain([ svg.newX.invert(xmin), svg.newX.invert(xmin + sqwidth)]);
-                    svg.newYOutput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y)),0]);
-                    svg.newYInput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y + svg.margin.zero)),svg.height]);
+
+                    svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
+                    svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
 
                     svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate[1]),
                         svg.yOutput.invert(actTranslate[1])]);
@@ -2108,8 +2129,14 @@ function redrawHisto2DStackDouble(div,svg){
     svg.scaley = scaleytot/svg.transform.k;
 
     svg.newX.range([0,svg.width]);
-    svg.newYOutput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*scaleytot+svg.transform.y)),0]);
-    svg.newYInput.range([Math.min(svg.height,Math.max(0,svg.heightOutput*scaleytot+svg.transform.y + svg.margin.zero)),svg.height]);
+
+    var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
+      svg.heightOutput*scaleytot+svg.transform.y));
+
+    var marginViewBottom = marginViewTop + svg.margin.zero;
+
+    svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
+    svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
 
 
     svg._groups[0][0].__zoom.k =svg.transform.k;
@@ -3702,11 +3729,11 @@ d3.select(window).on("keydown",function (){
 
 
 //drawChart("/dynamic/netNbLocalHosts.json?accurate=true&dd=2016-06-20%2011%3A44&df=2016-06-27%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-06-22%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netProtocolesPackets.json?dd=2016-06-18%2011%3A44&df=2016-06-23%2011%3A44&pset=2", "Graph");
+//drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
+//drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
-//drawChart("./netTop10appTraffic.json", "Graph");
+//drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
+drawChart("./netTop10appTraffic.json", "Graph");
 //drawChart("./netTop10NbExtHosts.json", "Graph");
 //drawChart("./netNbLocalHosts.json", "Graph");
-drawChart("worldmap.json","Graph");
+//drawChart("worldmap.json","Graph");

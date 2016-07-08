@@ -10,6 +10,11 @@
 
 }
 
+.crisp{
+    shape-rendering: crispEdges;
+}
+
+
 .rectSelec {
 
     fill: #b3ffb3;
@@ -18,11 +23,8 @@
     stroke: #006600;
 
 }
-svg{
-    shape-rendering: crispEdges;
-}
 
-svg.svgline{
+.svgline{
     shape-rendering: optimizeSpeed;
 }
 .lgd{
@@ -65,7 +67,7 @@ svg.svgline{
     border-style: ridge;
 
 }
-table{
+.tableLegend{
 
     width: 100%;
     border-collapse: collapse;
@@ -74,39 +76,40 @@ table{
     cursor: default;
 }
 
-
-tr.outlined td{
-    border-top: 1px double black;
-    border-bottom: 1px solid black;
-}
-
-tr.outlined td:nth-of-type(1){
-    border-left: 1px solid black;
-}
-
-
-tr.outlined td:nth-of-type(2){
-    border-right: 1px solid black;
-}
-
-td{
+.tableLegend td{
     padding: 5px;
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
-
 }
 
-td:nth-of-type(1){
+.tableLegend td:nth-of-type(1){
     border-left: 1px solid transparent;
 }
 
-td:nth-of-type(2){
+.tableLegend td:nth-of-type(2){
     width: 100%;
     border-right: 1px solid transparent;
     white-space: nowrap;
     overflow: hidden;
     text-overflow:ellipsis;
 }
+
+
+.outlined td{
+    border-top: 1px double black;
+    border-bottom: 1px solid black;
+}
+
+.outlined td:nth-of-type(1){
+    border-left: 1px solid black;
+}
+
+
+.outlined td:nth-of-type(2){
+    border-right: 1px solid black;
+}
+
+
 
 .rectAxis{
     fill:#ffffff;
@@ -159,10 +162,10 @@ td:nth-of-type(2){
 
 }
 
-table tr:nth-child(even) {
+.tableLegend tr:nth-child(even) {
     background-color: #eee;
 }
-table tr:nth-child(odd) {
+.tableLegend tr:nth-child(odd) {
     background-color: #fff;
 }
 

@@ -1,6 +1,6 @@
 function drawChartFromInterface(urlJson, mydiv) {
     var div = d3.select(mydiv);
-    var svg = div.select("svg");
+    var svg = div.select("svg").classed("crisp",true);
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
 
@@ -14,7 +14,7 @@ function drawChartFromInterface(urlJson, mydiv) {
 function drawChart(urlJson, mydiv) {
 
     var div = d3.select('#' + mydiv);
-    var svg = div.select("svg");
+    var svg = div.select("svg").classed("crisp",true);
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
 
@@ -102,7 +102,7 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
 
         var divtable = div.append("div").classed("diagram divtable", true);
         divtable.append("h4").classed("tableTitle", true).text("Legend");
-        var table = divtable.append("table").classed("diagram font2", true).style("width", svg.tableWidth + "px").style("max-height",
+        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
           (divHeight - 2 * parseFloat(getComputedStyle(div.select("h4").node()).fontSize) - 60) + "px");
 
 
@@ -121,7 +121,7 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
 
         svg.yOutput = d3.scaleLinear().clamp(true);
 
-        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.height);
+        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.height).classed("crisp",true);
 
 
         //Will contain the chart itself, without the axis
@@ -660,7 +660,7 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
 
         var divtable = div.append("div").classed("diagram divtable", true);
         divtable.append("h4").classed("tableTitle", true).text("Legend");
-        var table = divtable.append("table").classed("diagram font2", true).style("width", svg.tableWidth + "px").style("max-height",
+        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
           (divHeight - 2 * parseFloat(getComputedStyle(div.select("h4").node()).fontSize) - 60) + "px");
 
 
@@ -677,7 +677,7 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
 
         svg.y = d3.scaleLinear().clamp(true);
 
-        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.height);
+        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.height).classed("crisp",true);
 
         svg.grid = svg.svg.append("g").classed("grid", true);
 

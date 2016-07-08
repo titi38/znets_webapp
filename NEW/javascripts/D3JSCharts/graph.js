@@ -1,3 +1,16 @@
+function drawChartFromInterface(urlJson, mydiv) {
+    var div = d3.select(mydiv);
+    var svg = div.select("svg");
+    svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
+
+
+    whichCreationFunction(urlJson)(div,svg,urlJson,mydiv)
+
+}
+
+
+
+
 function drawChart(urlJson, mydiv) {
 
     var div = d3.select('#' + mydiv);

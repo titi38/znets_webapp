@@ -33,3 +33,33 @@ function updateChartsTimeslice( timesliceValue ){
     }
 
 }
+
+function serializeChartsTimesliceForm(){
+
+    var returnParamsJSON = "";
+
+    var returnConfigParamJSON = {};
+
+    console.warn($("form[id='charts_form'] input"));
+
+    var serializedInputs = $("form[id='charts_form'] input").serializeArray();
+    console.warn("hey");
+    $.each(serializedInputs, function(i, field){
+        console.warn(field);
+        if(field.value !== "") {
+            //if(field.name === "cyclesLength" || field.name === "eventsLength" )
+                returnParamsJSON = field.name+"="+parseInt(field.value)+"&";
+            /*else if (field.name === "daqThreshold" || field.name === "postMax" || field.name === "electronicsSerial")
+                returnConfigParamJSON[field.name] = parseInt(field.value);
+            else if (field.name === "selectionMode")
+                returnConfigParamJSON[field.name] = (field.value === "on") ? true : false;
+            /*else if (field.value !== "on") // WARNING ! Do not serialize un-wanted radio buttons or check boxes ! This line avoid it ;)
+             returnConfigParamJSON[field.name] = field.value || '';*/
+        }
+    });
+
+    console.warn(returnParamsJSON+"config="+JSON.stringify(returnConfigParamJSON));
+
+    return returnParamsJSON+"config="+JSON.stringify(returnConfigParamJSON);
+
+}

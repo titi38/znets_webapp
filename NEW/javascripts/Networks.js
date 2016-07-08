@@ -20,6 +20,9 @@ function addNetworkTab(networkName){
 
     //element_tab.click(adjustOnTabClick);
 
+
+    element_div.html(JST["networksTabsContent"]);
+
     $(".list.network-tab-list").append(element_tab);
     $(".tab-content.network-tab-content").append(element_div);
 
@@ -28,7 +31,7 @@ function addNetworkTab(networkName){
         rivets.bind(
             $(element_div),
             {network: networkName}
-        )
+        );
     });
 
 

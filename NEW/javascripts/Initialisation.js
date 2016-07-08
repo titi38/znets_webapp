@@ -7,11 +7,11 @@ function initialisation(){
     /*********************************************************************************************************
      Load all templates inside the JST global variable
      ********************************************************************************************************/
-    /*JST["sensorView"] = doT.template(getTemplate("Templates/Views/sensorView.html"));
-    JST["planView"] = doT.template(getTemplate("Templates/Views/planView.html"));
-    JST["configPopup"] = doT.template(getTemplate("Templates/config_sensor-popup_content.html"));
-    JST["debugPopup"] = doT.template(getTemplate("Templates/debug_sensor-popup_content.html"));
-    JST["nrjSpectrumPopup"] = doT.template(getTemplate("Templates/nrjSpectrum_sensor-popup_content.html"));*/
+    JST["networksTabsContent"] = doT.template(getTemplate("NEW/templates/networksTabsContent.html"));
+    /*JST["planView"] = doT.template(getTemplate("Templates/Views/planView.html"));
+     JST["configPopup"] = doT.template(getTemplate("Templates/config_sensor-popup_content.html"));
+     JST["debugPopup"] = doT.template(getTemplate("Templates/debug_sensor-popup_content.html"));
+     JST["nrjSpectrumPopup"] = doT.template(getTemplate("Templates/nrjSpectrum_sensor-popup_content.html"));*/
 
 
     /*********************************************************************************************************
@@ -63,12 +63,6 @@ function initialisation(){
 
 
 
-    /*********************************************************************************************************
-     Activate rawdata tab
-     ********************************************************************************************************/
-    activateTabOfClass("rawdata");
-
-
 
 
     /*********************************************************************************************************
@@ -78,9 +72,24 @@ function initialisation(){
 
 
     /*********************************************************************************************************
+     Initialize NetworkTab
+     ********************************************************************************************************/
+    $( document ).ready(function() {
+        initializeNetwork();
+    });
+
+
+    /*********************************************************************************************************
+     Activate rawdata tab
+     ********************************************************************************************************/
+    activateTabOfClass("rawdata");
+
+
+    /*********************************************************************************************************
      Initialize RawData known Application's Ids
      ********************************************************************************************************/
-    initializeApplicationsId()
+    initializeApplicationsId();
+
 
 }
 
@@ -121,7 +130,7 @@ function setHomePage()
 {
     //callAJAX('info.json', '', 'json', setHP, '');
     /**
-    callAJAX('info.json', '', 'json', '', '');
+     callAJAX('info.json', '', 'json', '', '');
      */
 
 }
@@ -275,12 +284,19 @@ function initializeChartsTimesliceForm() {
 
 }
 
-function addNetworksTabs(networksNamesTable) {
+function addNetworksTabs(networksNamesArrayObject) {
 
-    for(var i=0 ; i<networksNamesTable.length; i++){
-        addNetworkTab(networksNamesTable[i]);
-        getHtmlTemplate("#divNetwork"+networksNamesTable[i], "NEW/templates/networksTabsContent.html", "");
+    var networksNamesArray = networksNamesArrayObject.data;
+
+     if( !networksNamesArray.includes("Global") )
+     networksNamesArray.unshift("Global");
+
+    for(var i=0 ; i<networksNamesArray.length; i++){
+        addNetworkTab(networksNamesArray[i]);
     }
+
+
+    initNetworksChartsNavTabs();
 
 }
 
@@ -296,25 +312,42 @@ function initNetworksChartsNavTabs() {
         console.warn(e);
         console.warn("json file : "+e.target.dataset.chartJson);
         console.warn("target div (jquery selector) : "+e.target.hash);
+
+        loadChartJsonToDiv(e.target.dataset.chartJson, e.target.hash);
+
+
+        drawChartFromInterface("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-06-22%2011%3A44&df=2016-06-23%2011%3A44&dh=2", e.target.hash);
     });
 }
 
-function initializeNetwork() {
+function loadChartJsonToDiv(jsonData, jqueryTarget) {
+
+
+}
+
+function initializeNetworkCallback() {
 
     initializeChartsTimesliceForm();
 
-    var testTabs=["Global", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork1", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork2",
+    /*var testTabs=["Global", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork1", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork2",
         "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork3", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork4"];
 
+    addNetworksTabs(testTabs);*/
 
-    addNetworksTabs(testTabs);
-
-    initNetworksChartsNavTabs();
+    callAJAX("getNetworkList.json", "", "json", addNetworksTabs, null);
 
 }
 
 
+function initializeNetwork() {
 
+// TODO START : embed this
+    getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetworkCallback);
+//getHtmlTemplate("#network", "NEW/templates/networksTabsContent.html", initializeNetwork);
+
+// TODO END
+
+}
 
 
 
@@ -331,12 +364,6 @@ $( document ).ready(function() {
     activateTabOfClass("home");
 
     getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", initializeRawDataForm);
-
-    // TODO START : embed this
-    getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetwork);
-    //getHtmlTemplate("#network", "NEW/templates/networksTabsContent.html", initializeNetwork);
-
-    // TODO END
 
     tryRestaureConnectSession();
 

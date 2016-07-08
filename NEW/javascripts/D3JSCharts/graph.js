@@ -1124,7 +1124,7 @@ function hideShowValuesSimple(svg,trSelec,selection,xlength){
             if( index === -1){
                 //Hide the data
                 hiddenValues.push(d.item);
-                clickedRow.classed("hidden",true);
+                clickedRow.classed("strikedRow",true);
 
 
 
@@ -1147,7 +1147,7 @@ function hideShowValuesSimple(svg,trSelec,selection,xlength){
             }else{
                 //Show the data
                 hiddenValues.splice(index,1);
-                clickedRow.classed("hidden",false);
+                clickedRow.classed("strikedRow",false);
 
 
                 while(x < xlength){
@@ -1222,8 +1222,8 @@ function hideShowValuesSimple(svg,trSelec,selection,xlength){
                 hiddenValues = trSelec.data().map(function(elem){return elem.item;});
                 hiddenValues.splice(hiddenValues.indexOf(d.item),1);
 
-                trSelec.classed("hidden",true);
-                clickedRow.classed("hidden",false);
+                trSelec.classed("strikedRow",true);
+                clickedRow.classed("strikedRow",false);
 
                 while(x < xlength){
                     sum=0;
@@ -1245,7 +1245,7 @@ function hideShowValuesSimple(svg,trSelec,selection,xlength){
                 //index === -1 && hiddenValues.length == trSelec.size() -1
                 // ->show all data.
                 hiddenValues = [];
-                trSelec.classed("hidden",false);
+                trSelec.classed("strikedRow",false);
 
                 while(x < xlength){
                     sum=0;
@@ -1330,7 +1330,7 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
             if( index === -1){
                 //Hide the data
                 hiddenValues.push(d.item);
-                clickedRow.classed("hidden",true);
+                clickedRow.classed("strikedRow",true);
 
 
 
@@ -1373,7 +1373,7 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
             }else{
                 //Show the data
                 hiddenValues.splice(index,1);
-                clickedRow.classed("hidden",false);
+                clickedRow.classed("strikedRow",false);
 
 
                 x=svg.valuesIn[0].x;
@@ -1516,8 +1516,8 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
                 });
                 hiddenValues.splice(hiddenValues.indexOf(d.item), 1);
 
-                trSelec.classed("hidden", true);
-                clickedRow.classed("hidden", false);
+                trSelec.classed("strikedRow", true);
+                clickedRow.classed("strikedRow", false);
 
 
 
@@ -1566,7 +1566,7 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
                 //index === -1 && hiddenValues.length == trSelec.size() -1
                 // ->show all data.
                 hiddenValues = [];
-                trSelec.classed("hidden", false);
+                trSelec.classed("strikedRow", false);
 
                 x=svg.valuesIn[0].x;
                 i=0;
@@ -1801,7 +1801,7 @@ function addZoomDouble(svg,updateFunction){
 
 
     var startCoord = [NaN,NaN];
-    var mouseCoord;
+    var mouseCoord = [NaN,NaN];
 
     svg.scalex = 1;
     svg.scaley = 1;
@@ -1947,10 +1947,11 @@ function addZoomDouble(svg,updateFunction){
         })
 
         .on("start",function () {
+
             clearTimeout(svg.timer);
             event = {k:svg.transform.k,x:svg.transform.x,y:svg.transform.y};
 
-            if(isShiftKeyDown){
+            if(null !== d3.event.sourceEvent && d3.event.sourceEvent.shiftKey){
                 console.log("key is down start");
                 startCoord = d3.mouse(svg.frame.node());
                 startCoord[0] = Math.min(Math.max(startCoord[0],svg.x.range()[0]),svg.x.range()[1]);
@@ -2885,7 +2886,7 @@ function addZoomSimple(svg,updateFunction){
           event = {k:svg.transform.k,x:svg.transform.x,y:svg.transform.y};
 
           console.log("zoomstart");
-          if(isShiftKeyDown){
+          if(null !== d3.event.sourceEvent && d3.event.sourceEvent.shiftKey){
               console.log("key is down start");
               startCoord = d3.mouse(svg.frame.node());
               startCoord[0] = Math.min(Math.max(startCoord[0],svg.x.range()[0]),svg.x.range()[1]);
@@ -3707,25 +3708,6 @@ function addZoomMap(svg){
 }
 
 
-/************************************************************************************************************/
-
-
-
-isShiftKeyDown = false;
-d3.select(window).on("keydown",function (){
-
-        if( d3.event.keyCode == '16'){
-            isShiftKeyDown = true;
-            console.log("shiftdown");
-        }
-    })
-    .on("keyup",function () {
-        if( d3.event.keyCode == '16'){
-            isShiftKeyDown = false;
-
-            console.log("shiftup");
-        }
-    });
 
 
 //drawChart("/dynamic/netNbLocalHosts.json?accurate=true&dd=2016-06-20%2011%3A44&df=2016-06-27%2011%3A44&dh=2", "Graph");

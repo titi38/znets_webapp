@@ -145,7 +145,7 @@ td:nth-of-type(2){
 
 }
 
-.hidden{
+.strikedRow{
     text-decoration : line-through;
     color:grey;
 }

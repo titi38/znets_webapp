@@ -3376,7 +3376,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-//drawChart("./netTop10appTraffic.json", "Graph");
-drawChart("./netTop10NbExtHosts.json", "Graph");
-//drawChart("./netNbLocalHosts.json", "Graph");
+drawChart("./netTop10appTraffic.json", "Graph");
+//drawChart("./netTop10NbExtHosts.json", "Graph2");
+//drawChart("./netNbLocalHosts.json", "Graph2");
 //drawChart("worldmap.json","Graph");

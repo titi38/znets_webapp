@@ -51,7 +51,7 @@ function noData(div,svg,mydiv){
     console.log("incorrect url/data");
 
     var divWidth = parseInt(div.style("width"),10),
-      divHeight = window.innerHeight;
+      divHeight = parseInt(div.style("height"),10);
 
     svg.attr("width",divWidth).attr("height",divHeight);
 
@@ -63,7 +63,7 @@ function noData(div,svg,mydiv){
 
     d3.select(window).on("resize." + mydiv, function(){
         var divWidth = parseInt(div.style("width"),10),
-          divHeight = window.innerHeight;
+          divHeight = parseInt(div.style("height"),10);
 
         svg.attr("width",divWidth).attr("height",divHeight);
 
@@ -98,15 +98,14 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
 
 
         var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, window.innerHeight);
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
 
         var divtable = div.append("div").classed("diagram divtable", true);
         divtable.append("h4").classed("tableTitle", true).text("Legend");
         var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-          (divHeight - 2 * parseFloat(getComputedStyle(div.select("h4").node()).fontSize) - 60) + "px");
+          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
 
 
-        div.style("height", divHeight + "px");
         svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
 
 
@@ -556,42 +555,13 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
           .attr("x", -svg.height / 2)
           .attr("transform", "rotate(-90)")
           .text(json[0].unit);
-
-        svg.side = 0.75 * Math.min(svg.height, svg.width);
-        svg.pieside = 1 * svg.side;
-        div.overlay = div.append("div").classed("overlay", true).style("display", "none").style("width", (svg.width + svg.margin.left + svg.margin.right) + "px");
-        svg.popup = div.append("div").classed("popup", true)
-          .style("width", svg.side + "px")
-          .style("height", svg.side + "px")
-          .style("display", "none")
-          .style("left", ((svg.width - svg.side) / 2 + svg.margin.left) + "px")
-          .style("top", ((svg.height - svg.side) / 2 + svg.margin.top) + "px");
-
-        svg.popup.pieChart = null;
-
-        svg.timer = null;
-        selection
-          .on("click", function (d) {
-
-              clearTimeout(svg.timer);
-              svg.timer = setTimeout(function () {
-                  div.overlay.style("display", null);
-                  desactivationElems();
-                  activationElemsAutoScrollPopup(d);
-                  svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-                  drawComplData("./datacompl.json", svg.popup, svg.pieside, d.height);
-                  svg.popup.style("display", null);
-              }, 500);
-
-          });
-
-        div.overlay.on("click", function () {
-            div.overlay.style("display", "none");
-            svg.popup.style("display", "none");
-            svg.popup.pieChart.remove();
-            svg.popup.pieChart = null;
+        
+        
+        
+        addPopup(selection,div,svg,function(data){
             desactivationElems();
-        });
+            activationElemsAutoScrollPopup(data);},
+            desactivationElems);
 
         //Legend creation
 
@@ -656,15 +626,13 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
 
 
         var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, window.innerHeight);
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
 
         var divtable = div.append("div").classed("diagram divtable", true);
         divtable.append("h4").classed("tableTitle", true).text("Legend");
         var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-          (divHeight - 2 * parseFloat(getComputedStyle(div.select("h4").node()).fontSize) - 60) + "px");
+          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
 
-
-        div.style("height", divHeight + "px");
         svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
 
 
@@ -1026,41 +994,10 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
           .attr("transform", "rotate(-90)")
           .text(json[0].unit);
 
-        svg.side = 0.75 * Math.min(svg.height, svg.width);
-        svg.pieside = 1 * svg.side;
-        div.overlay = div.append("div").classed("overlay", true).style("display", "none").style("width", (svg.width + svg.margin.left + svg.margin.right) + "px");
-        svg.popup = div.append("div").classed("popup", true)
-          .style("width", svg.side + "px")
-          .style("height", svg.side + "px")
-          .style("display", "none")
-          .style("left", ((svg.width - svg.side) / 2 + svg.margin.left) + "px")
-          .style("top", ((svg.height - svg.side) / 2 + svg.margin.top) + "px");
-
-        svg.popup.pieChart = null;
-
-        svg.timer = null;
-        selection
-          .on("click", function (d) {
-
-              clearTimeout(svg.timer);
-              svg.timer = setTimeout(function () {
-                  div.overlay.style("display", null);
-                  desactivationElems();
-                  activationElemsAutoScrollPopup(d);
-                  svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-                  drawComplData("./datacompl.json", svg.popup, svg.pieside, d.height);
-                  svg.popup.style("display", null);
-              }, 500);
-
-          });
-
-        div.overlay.on("click", function () {
-            div.overlay.style("display", "none");
-            svg.popup.style("display", "none");
-            svg.popup.pieChart.remove();
-            svg.popup.pieChart = null;
-            desactivationElems();
-        });
+        addPopup(selection,div,svg,function(data){
+              desactivationElems();
+              activationElemsAutoScrollPopup(data);},
+          desactivationElems);
 
         //Legend creation
 
@@ -1110,8 +1047,9 @@ function hideShowValuesSimple(svg,trSelec,selection,xlength){
     var trSelecSize = trSelec.size();
 
     var hiddenValues = [];
-    var newValues = JSON.parse(JSON.stringify(svg.values));
-    var valuesTrans = JSON.parse(JSON.stringify(svg.values));
+    var stringified = JSON.stringify(svg.values);
+    var newValues = JSON.parse(stringified);
+    var valuesTrans = JSON.parse(stringified);
     selection.data(valuesTrans);
 
     console.log(newValues);
@@ -1313,10 +1251,13 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
     var duration = 800;
     var trSelecSize = trSelec.size();
     var hiddenValues = [];
-    var newValuesIn = JSON.parse(JSON.stringify(svg.valuesIn));
-    var newValuesOut = JSON.parse(JSON.stringify(svg.valuesOut));
-    var valuesInTrans = JSON.parse(JSON.stringify(svg.valuesIn));
-    var valuesOutTrans = JSON.parse(JSON.stringify(svg.valuesOut));
+    var stringifiedIn = JSON.stringify(svg.valuesIn);
+    var stringifiedOut = JSON.stringify(svg.valuesOut);
+
+    var newValuesIn = JSON.parse(stringifiedIn);
+    var newValuesOut = JSON.parse(stringifiedOut);
+    var valuesInTrans = JSON.parse(stringifiedIn);
+    var valuesOutTrans = JSON.parse(stringifiedOut);
     selectionIn.data(valuesInTrans);
     selectionOut.data(valuesOutTrans);
 
@@ -2079,19 +2020,18 @@ function addZoomDouble(svg,updateFunction){
 function redrawHisto2DStackDouble(div,svg){
 
     var divWidth = Math.max(1.15*svg.tableWidth + svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1,window.innerHeight);
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1,parseInt(div.style("height"),10));
     console.log("width " + divWidth );
 
     var oldsvgheight = svg.height;
     var oldsvgwidth = svg.width;
-    div.style("height",divHeight + "px");
 
     svg.attr("width",divWidth-1.15*svg.tableWidth).attr("height",divHeight);
 
     svg.width = divWidth-1.15*svg.tableWidth - svg.margin.left - svg.margin.right;
     svg.height = divHeight - svg.margin.bottom - svg.margin.top;
     div.select("table").style("max-height",
-      (divHeight - 2*parseFloat(getComputedStyle(div.select("h4").node()).fontSize) -60)  + "px");
+      (divHeight - 2*parseInt(div.style("font-size"),10) -60)  + "px");
 
     var oldheightoutput = svg.heightOutput;
 
@@ -2159,46 +2099,7 @@ function redrawHisto2DStackDouble(div,svg){
 
     updateHisto1DStackDouble(svg);
 
-    div.overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
-    svg.side = 0.75*Math.min(svg.height,svg.width);
-    svg.pieside = 1*svg.side;
-
-    svg.popup.style("width",svg.side + "px")
-      .style("height",svg.side + "px")
-      .style("left",((svg.width-svg.side)/2 +svg.margin.left)+"px")
-      .style("top", ((svg.height-svg.side)/2 +svg.margin.top) + "px");
-
-
-
-    if(svg.popup.pieChart != null){
-        svg.popup.pieChart.attr("width", svg.pieside).attr("height", svg.pieside);
-        var chartside = 0.75*svg.pieside;
-        svg.popup.innerRad = 0;
-        svg.popup.outerRad = chartside/2;
-        svg.popup.pieChart.g.attr("transform","translate(" + (svg.pieside/2) + "," + (svg.pieside/2) + ")");
-
-
-        var arc = d3.arc()
-          .innerRadius(svg.popup.innerRad)
-          .outerRadius(svg.popup.outerRad)
-          .startAngle(function(d){return d.startAngle})
-          .endAngle(function(d){return d.endAngle});
-
-
-        svg.popup.pieChart.g.selectAll("path").attr("d",arc);
-        svg.popup.pieChart.g.selectAll("text").attr("transform",function(d){
-            var midAngle = (d.endAngle + d.startAngle)/2;
-            var dist = svg.popup.outerRad * 0.8;
-            return "translate(" + (Math.sin(midAngle)*dist) + "," +(-Math.cos(midAngle)*dist) +")";});
-
-
-        svg.popup.dist = svg.popup.outerRad * 0.8;
-        svg.popup.distTranslTemp = svg.popup.outerRad/4;
-        svg.popup.distTransl = svg.popup.outerRad/10;
-
-
-
-    }
+    redrawPopup(div, svg);
 
 
 }
@@ -2208,19 +2109,18 @@ function redrawHisto2DStackDouble(div,svg){
 function redrawHisto2DStackSimple(div,svg){
 
     var divWidth = Math.max(1.15*svg.tableWidth + svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1,window.innerHeight);
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1,parseInt(div.style("height"),10));
     console.log("width " + divWidth );
 
     var oldsvgheight = svg.height;
     var oldsvgwidth = svg.width;
-    div.style("height",divHeight + "px");
 
     svg.attr("width",divWidth-1.15*svg.tableWidth).attr("height",divHeight);
 
     svg.width = divWidth-1.15*svg.tableWidth - svg.margin.left - svg.margin.right;
     svg.height = divHeight - svg.margin.bottom - svg.margin.top;
     div.select("table").style("max-height",
-      (divHeight - 2*parseFloat(getComputedStyle(div.select("h4").node()).fontSize) -60)  + "px");
+      (divHeight - 2*parseInt(div.style("font-size"),10) -60)  + "px");
 
 
     var ratiox = svg.width/oldsvgwidth;
@@ -2258,257 +2158,14 @@ function redrawHisto2DStackSimple(div,svg){
 
     updateHisto1DStackSimple(svg);
 
-    div.overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
-    svg.side = 0.75*Math.min(svg.height,svg.width);
-    svg.pieside = 1*svg.side;
-
-    svg.popup.style("width",svg.side + "px")
-      .style("height",svg.side + "px")
-      .style("left",((svg.width-svg.side)/2 +svg.margin.left)+"px")
-      .style("top", ((svg.height-svg.side)/2 +svg.margin.top) + "px");
-
-
-
-    if(svg.popup.pieChart != null){
-        svg.popup.pieChart.attr("width", svg.pieside).attr("height", svg.pieside);
-        var chartside = 0.75*svg.pieside;
-        svg.popup.innerRad = 0;
-        svg.popup.outerRad = chartside/2;
-        svg.popup.pieChart.g.attr("transform","translate(" + (svg.pieside/2) + "," + (svg.pieside/2) + ")");
-
-
-        var arc = d3.arc()
-          .innerRadius(svg.popup.innerRad)
-          .outerRadius(svg.popup.outerRad)
-          .startAngle(function(d){return d.startAngle})
-          .endAngle(function(d){return d.endAngle});
-
-
-        svg.popup.pieChart.g.selectAll("path").attr("d",arc);
-        svg.popup.pieChart.g.selectAll("text").attr("transform",function(d){
-            var midAngle = (d.endAngle + d.startAngle)/2;
-            var dist = svg.popup.outerRad * 0.8;
-            return "translate(" + (Math.sin(midAngle)*dist) + "," +(-Math.cos(midAngle)*dist) +")";});
-
-
-        svg.popup.dist = svg.popup.outerRad * 0.8;
-        svg.popup.distTranslTemp = svg.popup.outerRad/4;
-        svg.popup.distTransl = svg.popup.outerRad/10;
-
-
-
-    }
+    redrawPopup(div, svg);
 
 
 }
 
 
 
-/************************************************************************************************************/
 
-function drawComplData(urlJson,popup,pieside,total){
-
-    var chartside = 0.75*pieside;
-
-
-    //TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
-    console.log(total);
-    total=6000000000;
-    //TEMPORAIRE
-
-
-    //Some values relative to the popup dimensions
-    popup.innerRad = 0;
-    popup.outerRad = chartside/2;
-    popup.dist = popup.outerRad * 0.8;
-    popup.distTranslTemp = popup.outerRad/4;
-    popup.distTransl = popup.outerRad/10;
-
-
-    d3.json(urlJson,function(error, json){
-
-        var values = json.data;
-
-        //data are prepared
-
-        var sum = d3.sum(values,function(e){
-            return e.y;
-        });
-
-        //sorted
-        values.sort(function(a,b){
-            return a.y -b.y;
-        });
-
-        //We attribute a color to each
-        var f = colorEval();
-        var listColors = [];
-        var length = values.length;
-
-
-        for(var w = 0; w < length; w++){
-
-            listColors.push(f())
-
-        }
-
-        values.push({y: total -sum, hostname:" Remainder ",amount:bytesConvert(total-sum)});
-
-        listColors.push("#f2f2f2");
-
-
-        //The angles of the pie arcs are evaluated
-
-        function anglesCalc(){
-            var posAngle = 0;
-            return function(value){
-                value.startAngle = posAngle;
-                posAngle += 2*Math.PI * value.y / total;
-                value.endAngle = posAngle;
-            }
-        }
-
-        var functAngles = anglesCalc();
-
-        values.forEach(functAngles);
-
-        var arc = d3.arc()
-          .innerRadius(popup.innerRad)
-          .outerRadius(popup.outerRad);
-
-        //The arc template is readied
-        function interpolateArc(d){
-
-            //.toFixed(5) avoid having complete circles at the beginning of the transition,
-            //if start and end angles are too close, the precision isn't good enough to order them
-            //correctly and d3 can creates a 2PI angle.
-
-            return function(t){
-                return (arc
-                  .innerRadius(popup.innerRad)
-                  .outerRadius(popup.outerRad)
-                  .startAngle(d.startAngle)
-                  .endAngle((d.startAngle + t * (d.endAngle - d.startAngle)).toFixed(5)))();
-            }
-
-        }
-
-        //g element parent of path and text components of the pie chart
-        popup.pieChart.g = popup.pieChart.append("g")
-          .attr("transform","translate(" + (pieside/2) + "," + (pieside/2) + ")")
-          .classed("part",true).classed("elemtext",true);
-
-        //path elements, the arcs themselves
-        var pathSelec = popup.pieChart.g.selectAll("path").data(values).enter().append("path")
-          .attr("d","")
-          .style("fill",function(d,i){ return listColors[i]; });
-        pathSelec.append("svg:title").text(function(d){
-            return  d.hostname + "\n" + d.amount});
-
-        //text elements, the arcs' legends
-        var textSelec = popup.pieChart.g.selectAll("text").data(values).enter().append("text")
-          .attr("transform",function(d){
-            var midAngle = (d.endAngle + d.startAngle)/2;
-            return "translate(" + (Math.sin(midAngle)*popup.dist) + "," +(-Math.cos(midAngle)*popup.dist) +")";})
-          .text(function(d){ return d.amount;});
-
-
-        //transition on paths for fanciness
-        pathSelec.transition("creation").ease(easeFct(3)).duration(800).attrTween("d",interpolateArc);
-
-        //name of the current element being hovered, at first none then null.
-        var activeHostname = null;
-
-        //Hover listener on the pie chart svg.
-        popup.pieChart
-          .on("mouseover", mouseoverFunction);
-
-
-        function mouseoverFunction(){
-
-            var target = d3.event.target;
-            var path;
-            var text;
-            var d;
-
-            //hostname of the element being hovered currently
-            var hostname;
-
-            //detection of the element being hovered
-            switch (target.tagName){
-              //if path or text, variables are being instantiated accordingly.
-                case "path":
-                    path = d3.select(target);
-                    d = path.datum();
-                    hostname = d.hostname;
-                    text = textSelec.filter(function(data){return data.hostname === hostname;});
-                    break;
-
-                case "text":
-                    text = d3.select(target);
-                    d = text.datum();
-                    hostname = d.hostname;
-                    path = pathSelec.filter(function(data){return data.hostname === hostname;});
-                    break;
-
-                //if svg, no pie element is hovered.
-                case "svg":
-                default:
-                    hostname = null;
-                    break;
-            }
-
-            //activeHostname records the last element hovered (before this one)
-
-            //if the cursor is hovering between text and path of the same data (or comes and goes on the svg), nothing
-            //should be done.
-            if(activeHostname === hostname){
-                return;
-            }
-
-            //From here, the last hovered element and the current have different hostnames (one of them can be null)
-
-            //if the last hovered element wasn't the svg (the "background"), the corresponding path and text should
-            //be translated to their initial position.
-            if(activeHostname !== null){
-                var textOut, pathOut;
-                textOut = textSelec.filter(function(data){return data.hostname === activeHostname;});
-                pathOut = pathSelec.filter(function(data){return data.hostname === activeHostname;});
-
-                var dOut = textOut.datum();
-                var midAngleOut = (dOut.endAngle + dOut.startAngle)/2;
-
-                var transitionOut = pathOut.transition().attr("transform", "translate(0,0)");
-                textOut.transition(transitionOut).attr("transform", "translate(" + (Math.sin(midAngleOut)*popup.dist) + "," +(-Math.cos(midAngleOut)*popup.dist) +")");
-            }
-
-            //the activeHostname variable has no further use here, it can be updated with the current hostname.
-            activeHostname = hostname;
-
-            //if the current hovered element is the svg, end of the event.
-            if(hostname === null){
-                return;
-            }
-
-
-            //Finally, the current element hovered and associated path/text can be translated.
-
-            var midAngle = (d.endAngle + d.startAngle)/2;
-            var transition = path.transition()
-              .attr("transform","translate(" + (Math.sin(midAngle)*popup.distTranslTemp) + "," +(-Math.cos(midAngle)*popup.distTranslTemp) +")" )
-              .transition()
-              .attr("transform","translate(" + (Math.sin(midAngle)*popup.distTransl) + "," +(-Math.cos(midAngle)*popup.distTransl) +")" );
-
-            text.transition(transition)
-              .attr("transform","translate(" + (Math.sin(midAngle)*(popup.distTranslTemp + popup.dist)) + "," +(-Math.cos(midAngle)*(popup.distTranslTemp+popup.dist)) +")" )
-              .transition()
-              .attr("transform","translate(" + (Math.sin(midAngle)*(popup.distTransl+popup.dist)) + "," +(-Math.cos(midAngle)*(popup.distTransl+popup.dist)) +")" );
-
-        }
-
-
-    }); //end json
-}
 
 /************************************************************************************************************
 
@@ -3006,10 +2663,8 @@ function createCurve(div,svg,urlJson,mydiv){
         console.log(json);
 
         var divWidth = Math.max(svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1, window.innerHeight);
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1, parseInt(div.style("height"),10));
 
-
-        div.style("height", divHeight + "px");
         svg.attr("width", divWidth).attr("height", divHeight);
 
 
@@ -3168,12 +2823,11 @@ function createCurve(div,svg,urlJson,mydiv){
 function redrawCurve(div,svg){
 
     var divWidth = Math.max(svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,window.innerHeight);
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,parseInt(div.style("height"),10));
     console.log("width " + divWidth );
 
     var oldsvgheight = svg.height;
     var oldsvgwidth = svg.width;
-    div.style("height",divHeight + "px");
 
     svg.attr("width",divWidth).attr("height",divHeight);
 
@@ -3370,12 +3024,9 @@ function createMap(div,svg,urlJson,mydiv){
     //finding/computing the div dimensions
 
     var divWidth = Math.max(svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,window.innerHeight);
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,parseInt(div.style("height"),10));
 
 
-    //div height instantiated
-
-    div.style("height",divHeight + "px");
 
     //Some pre-computation to find the dimensions of the map (with a determined height/width ratio
     // for a given standard latitude)
@@ -3594,11 +3245,8 @@ function addResizeMap(div,svg,mydiv){
         //finding/computing the div dimensions
 
         divWidth = Math.max(svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10));
-        divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,window.innerHeight);
+        divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,parseInt(div.style("height"),10));
 
-        //div height updated
-
-        div.style("height",divHeight + "px");
 
         //Some computation to find the new dimensions of the map (with a constant height/width ratio)
 
@@ -3728,7 +3376,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-drawChart("./netTop10appTraffic.json", "Graph");
-//drawChart("./netTop10NbExtHosts.json", "Graph");
+//drawChart("./netTop10appTraffic.json", "Graph");
+drawChart("./netTop10NbExtHosts.json", "Graph");
 //drawChart("./netNbLocalHosts.json", "Graph");
 //drawChart("worldmap.json","Graph");

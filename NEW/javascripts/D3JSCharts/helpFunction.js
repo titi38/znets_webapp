@@ -231,7 +231,7 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
     });
 
     //We attribute a color to each
-    var f = colorEval();
+    var f = colorEval(170);
     var listColors = [];
     var length = values.length;
 
@@ -443,20 +443,7 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
         return;
       }
 
-      var tableViewHeight = svg.popup.pieChart.table.property("clientHeight");
-      //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-      var tableScrollTop = svg.popup.pieChart.table.property("scrollTop");
-      var elemOffsetHeight = elem.property("offsetHeight");
-      var elemOffsetTop = elem.property("offsetTop");
-      var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
-
-
-      svg.popup.pieChart.table.transition(transition).tween("scrolltoptween", function () {
-        var tab = this;
-        return function (t) {
-          tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-        };
-      });
+      scrollToElementTableTransition(elem,svg.popup.pieChart.table)
 
     }
 
@@ -472,4 +459,22 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
 
 /************************************************************************************************************/
 
+function scrollToElementTableTransition(elem, table){
+
+  var tableViewHeight = table.property("clientHeight");
+  //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
+  var tableScrollTop = table.property("scrollTop");
+  var elemOffsetHeight = elem.property("offsetHeight");
+  var elemOffsetTop = elem.property("offsetTop");
+  var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+
+
+  table.transition().tween("scrolltoptween", function () {
+    var tab = this;
+    return function (t) {
+      tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
+    };
+  });
+
+}
 

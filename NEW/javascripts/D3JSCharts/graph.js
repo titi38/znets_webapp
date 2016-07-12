@@ -452,22 +452,8 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
-
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
+            
+            scrollToElementTableTransition(elem,table);
 
             selection.filter(testitem).each(blink);
 
@@ -485,22 +471,8 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+            scrollToElementTableTransition(elem,table);
 
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
 
         }
 
@@ -897,22 +869,8 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+            scrollToElementTableTransition(elem,table);
 
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
 
             selection.filter(testitem).each(blink);
 
@@ -930,22 +888,8 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+            scrollToElementTableTransition(elem,table);
 
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
 
         }
 
@@ -2363,7 +2307,7 @@ function colorEval(firstValue){
         s = y*segmy +starty;
         l= z*segmz +startz;
 
-        //console.log(color);
+        console.log(color.h);
 
         return color;
     }

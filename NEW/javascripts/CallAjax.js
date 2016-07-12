@@ -87,3 +87,26 @@ function callAJAX(url, params, outputType, callback, callbackParams)
 
 /**********************************************************************************/
 
+
+
+function setChartJsonFUllURL (jsonData, ajaxParams, subNetwork){
+
+    var myform = $('#charts_form');
+
+    // Find disabled inputs, and remove the "disabled" attribute
+    var disabled = myform.find(':input:disabled').prop('disabled', false);
+
+    // serialize the form
+    var serializedTimesliceForm = myform.serialize();
+
+    // re-disabled the set of inputs that you previously enabled
+    disabled.prop('disabled',true);
+
+    var serializedSubNet = (subNetwork === "") ? "" : "&net="+subNetwork;
+
+    console.warn(proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimesliceForm+"&dh="+parseInt(moment().format("Z")));
+
+
+    return proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimesliceForm+"&dh="+parseInt(moment().format("Z"));
+
+}

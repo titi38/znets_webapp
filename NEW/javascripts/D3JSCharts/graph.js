@@ -570,10 +570,10 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
             return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + json[0].unit;
         });
-        trSelec.append("td").classed("color", true).append("div").classed("lgd", true).style("background-color", function (d) {
+        trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
-        trSelec.append("td").classed("item", true).text(function (d) {
+        trSelec.append("td").text(function (d) {
             return d.item;
         });
         trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
@@ -1006,10 +1006,10 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
             return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + json[0].unit;
         });
-        trSelec.append("td").classed("color", true).append("div").classed("lgd", true).style("background-color", function (d) {
+        trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
-        trSelec.append("td").classed("item", true).text(function (d) {
+        trSelec.append("td").text(function (d) {
             return d.item;
         });
         trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
@@ -3376,7 +3376,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-drawChart("./netTop10appTraffic.json", "Graph");
-//drawChart("./netTop10NbExtHosts.json", "Graph2");
+//drawChart("./netTop10appTraffic.json", "Graph");
+drawChart("./netTop10NbExtHosts.json", "Graph");
 //drawChart("./netNbLocalHosts.json", "Graph2");
 //drawChart("worldmap.json","Graph");

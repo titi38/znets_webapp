@@ -144,6 +144,8 @@
     display: inline-block;
     left:0;
     bottom:0;
+    padding-bottom: 10px;
+
 }
 
 .tableLegend tr:nth-child(even) {
@@ -210,7 +212,6 @@
     vertical-align: top;
     border: 2px ridge;
     margin-right:10px;
-    padding-bottom: 10px;
 
 }
 

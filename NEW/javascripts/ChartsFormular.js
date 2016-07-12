@@ -3,7 +3,11 @@
  */
 
 
-function updateChartsTimeslice( timesliceValue ){
+function updateChartsTimeslice( element ){
+
+    console.warn(element);
+
+    var timesliceValue = $(element).val();
 
     console.log(timesliceValue);
 
@@ -29,37 +33,61 @@ function updateChartsTimeslice( timesliceValue ){
             break;
         default :
             console.error("UNEXPECTED ChartsTimeslice select value (ChartsFormular.js), %i ", 101);
+            console.error(timesliceValue);
             break;
     }
 
 }
 
-function serializeChartsTimesliceForm(){
 
-    var returnParamsJSON = "";
+function onChangeChartsTimeslice() {
 
-    var returnConfigParamJSON = {};
+    $("#applyBtn_charts_form").prop("disabled", false);
+    $("#resetBtn_charts_form").prop("disabled", false);
 
-    console.warn($("form[id='charts_form'] input"));
+}
 
-    var serializedInputs = $("form[id='charts_form'] input").serializeArray();
-    console.warn("hey");
-    $.each(serializedInputs, function(i, field){
-        console.warn(field);
-        if(field.value !== "") {
-            //if(field.name === "cyclesLength" || field.name === "eventsLength" )
-                returnParamsJSON = field.name+"="+parseInt(field.value)+"&";
-            /*else if (field.name === "daqThreshold" || field.name === "postMax" || field.name === "electronicsSerial")
-                returnConfigParamJSON[field.name] = parseInt(field.value);
-            else if (field.name === "selectionMode")
-                returnConfigParamJSON[field.name] = (field.value === "on") ? true : false;
-            /*else if (field.value !== "on") // WARNING ! Do not serialize un-wanted radio buttons or check boxes ! This line avoid it ;)
-             returnConfigParamJSON[field.name] = field.value || '';*/
-        }
-    });
 
-    console.warn(returnParamsJSON+"config="+JSON.stringify(returnConfigParamJSON));
 
-    return returnParamsJSON+"config="+JSON.stringify(returnConfigParamJSON);
+function applyChartsTimeslice(){
+
+    var timesliceValue = $("#timesliceCharts").val();
+
+    console.warn(timesliceValue);
+
+    switch (timesliceValue) {
+        case "lastDay" :
+        case "hourly" :
+            $("#preset_ChartsForm").val("hourly");
+            break;
+        case "lastMonth" :
+        case "daily" :
+            $("#preset_ChartsForm").val("daily");
+            break;
+        default :
+            console.error("UNEXPECTED ChartsTimeslice select value (ChartsFormular.js), %i ", 102);
+            break;
+    }
+
+
+    $("#dateDebCharts").val($("#fromDate_ChartsForm").data("DateTimePicker").date().format('YYYY-MM-DD HH:mm'));
+    $("#dateFinCharts").val($("#toDate_ChartsForm").data("DateTimePicker").date().format('YYYY-MM-DD HH:mm'));
+
+    $("#applyBtn_charts_form").prop("disabled", true);
+    $("#resetBtn_charts_form").prop("disabled", true);
+
+}
+
+
+function resetChartsTimeslice(){
+
+    $("#timesliceCharts").val($("#preset_ChartsForm").val());
+    updateChartsTimeslice($("#timesliceCharts"));
+
+    $("#fromDate_ChartsForm").data("DateTimePicker").date($("#dateDebCharts").val());
+    $("#toDate_ChartsForm").data("DateTimePicker").date($("#dateFinCharts").val());
+
+    $("#applyBtn_charts_form").prop("disabled", true);
+    $("#resetBtn_charts_form").prop("disabled", true);
 
 }

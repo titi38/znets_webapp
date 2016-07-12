@@ -4,44 +4,44 @@
         <div class="col-xs-3">
             <ul class="nav nav-tabs nav-stacked nav-nest">
                 <li><a data-toggle="collapse" rv-href="network | prepend '#trafficBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> Traffic by</a></li>
-                <ul rv-id="network | prepend 'trafficBy'" class="nav nav-tabs nav-stacked collapse in">
-                    <li class="active"><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByLocalhosts'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Localhosts</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByCountries'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Countries</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByAutonomousSystems'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Autonomous Systems</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByProtocoles'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Protocoles</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByApplications'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Applications</a></li>
+                <ul rv-id="network | prepend 'trafficBy'" class="nav nav-tabs nav-stacked collapse">
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByLocalhosts'" rv-data-network="network" data-chart-json="netTop10appTraffic.json" data-ajax-params="service=loc"><i class="fa fa-area-chart" aria-hidden="true"></i> Localhosts</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByCountries'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Countries</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByAutonomousSystems'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Autonomous Systems</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByProtocoles'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Protocoles</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByApplications'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Applications</a></li>
                 </ul>
 
                 <li><a data-toggle="collapse" rv-href="network | prepend '#packetsBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> Packets by</a></li>
                 <ul rv-id="network | prepend 'packetsBy'" class="nav nav-tabs nav-stacked collapse">
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByLocalhosts'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Localhosts</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByCountries'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Countries</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByAutonomousSystems'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Autonomous Systems</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByProtocoles'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Protocoles</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByApplications'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Applications</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByLocalhosts'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Localhosts</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByCountries'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Countries</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByAutonomousSystems'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Autonomous Systems</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByProtocoles'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Protocoles</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByApplications'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Applications</a></li>
                 </ul>
 
                 <li><a data-toggle="collapse" rv-href="network | prepend '#localServiceBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> Local Services by</a></li>
                 <ul rv-id="network | prepend 'localServiceBy'" class="nav nav-tabs nav-stacked collapse">
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#localServiceByTraffic'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Traffic</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#localServiceByPacketsNumber'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Packets Number</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#localServiceByTraffic'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Traffic</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#localServiceByPacketsNumber'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Packets Number</a></li>
                 </ul>
 
                 <li><a data-toggle="collapse" rv-href="network | prepend '#externalServiceBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> External Services by</a></li>
                 <ul rv-id="network | prepend 'externalServiceBy'" class="nav nav-tabs nav-stacked collapse">
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#externalServiceByTraffic'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Traffic</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#externalServiceByPacketsNumber'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Packets Number</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#externalServiceByTraffic'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Traffic</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#externalServiceByPacketsNumber'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Packets Number</a></li>
                 </ul>
 
                 <li><a data-toggle="collapse" rv-href="network | prepend '#nbActive'"><i class="fa fa-plus-square " aria-hidden="true"></i> Number of Active</a></li>
                 <ul rv-id="network | prepend 'nbActive'" class="nav nav-tabs nav-stacked collapse">
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbActiveLocalHosts'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Local Hosts</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbActiveExternalHosts'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> External Hosts</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbActiveLocalHosts'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Local Hosts</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbActiveExternalHosts'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> External Hosts</a></li>
                 </ul>
 
-                <li><a data-toggle="collapse" rv-href="network | prepend '#nbDestinations'"><i class="fa fa-plus-square " aria-hidden="true"></i> Number of Destinations</a></li>
+                <li><a data-toggle="collapse" rv-href="network | prepend '#nbDestinations'"><i class="fa fa-plus-square " aria-hidden="true" data-ajax-params=""></i> Number of Destinations</a></li>
                 <ul rv-id="network | prepend 'nbDestinations'" class="nav nav-tabs nav-stacked collapse">
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbDestinationsLocalHosts'" data-chart-json="test.json"><i class="fa fa-area-chart" aria-hidden="true"></i> Local Hosts</a></li>
+                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbDestinationsLocalHosts'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Local Hosts</a></li>
                 </ul>
             </ul>
         </div>
@@ -49,65 +49,65 @@
 
             <div class="tab-content">
 
-                <div class="tab-pane fade in active" rv-id="network | prepend 'trafficByLocalhosts'">trafficByLocalhosts
+                <div class="tab-pane fade " rv-id="network | prepend 'trafficByLocalhosts'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'trafficByCountries'">trafficByCountries
+                <div class="tab-pane fade " rv-id="network | prepend 'trafficByCountries'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'trafficByAutonomousSystems'">trafficByAutonomousSystems
+                <div class="tab-pane fade " rv-id="network | prepend 'trafficByAutonomousSystems'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'trafficByProtocoles'">trafficByProtocoles
+                <div class="tab-pane fade " rv-id="network | prepend 'trafficByProtocoles'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'trafficByApplications'">trafficByApplications
+                <div class="tab-pane fade " rv-id="network | prepend 'trafficByApplications'">
                     <svg class = "diagram" ></svg>
                 </div>
 
                 <!--"Packets by"-->
-                <div class="tab-pane fade " rv-id="network | prepend 'packetsByLocalhosts'">packetsByLocalhosts
+                <div class="tab-pane fade " rv-id="network | prepend 'packetsByLocalhosts'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'packetsByCountries'">packetsByCountries
+                <div class="tab-pane fade " rv-id="network | prepend 'packetsByCountries'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'packetsByAutonomousSystems'">packetsByAutonomousSystems
+                <div class="tab-pane fade " rv-id="network | prepend 'packetsByAutonomousSystems'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'packetsByProtocoles'">packetsByProtocoles
+                <div class="tab-pane fade " rv-id="network | prepend 'packetsByProtocoles'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'packetsByApplications'">packetsByApplications
+                <div class="tab-pane fade " rv-id="network | prepend 'packetsByApplications'">
                     <svg class = "diagram" ></svg>
                 </div>
 
                 <!--"Local Services by"-->
-                <div class="tab-pane fade " rv-id="network | prepend 'localServiceByTraffic'">localServiceByTraffic
+                <div class="tab-pane fade " rv-id="network | prepend 'localServiceByTraffic'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'localServiceByPacketsNumber'">localServiceByPacketsNumber
+                <div class="tab-pane fade " rv-id="network | prepend 'localServiceByPacketsNumber'">
                     <svg class = "diagram" ></svg>
                 </div>
 
                 <!--"External Services by"-->
-                <div class="tab-pane fade " rv-id="network | prepend 'externalServiceByTraffic'">externalServiceByTraffic
+                <div class="tab-pane fade " rv-id="network | prepend 'externalServiceByTraffic'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'externalServiceByPacketsNumber'">externalServiceByPacketsNumber
+                <div class="tab-pane fade " rv-id="network | prepend 'externalServiceByPacketsNumber'">
                     <svg class = "diagram" ></svg>
                 </div>
 
                 <!--"Number of Active"-->
-                <div class="tab-pane fade " rv-id="network | prepend 'nbActiveLocalHosts'">nbActiveLocalHosts
+                <div class="tab-pane fade " rv-id="network | prepend 'nbActiveLocalHosts'">
                     <svg class = "diagram" ></svg>
                 </div>
-                <div class="tab-pane fade " rv-id="network | prepend 'nbActiveExternalHosts'">nbActiveExternalHosts
+                <div class="tab-pane fade " rv-id="network | prepend 'nbActiveExternalHosts'">
                     <svg class = "diagram" ></svg>
                 </div>
 
                 <!--"Number of Destinations"-->
-                <div class="tab-pane fade " rv-id="network | prepend 'nbDestinationsLocalHosts'">nbDestinationsLocalHosts
+                <div class="tab-pane fade " rv-id="network | prepend 'nbDestinationsLocalHosts'">
                     <svg class = "diagram" ></svg>
                 </div>
 

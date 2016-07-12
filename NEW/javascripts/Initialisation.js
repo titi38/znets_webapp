@@ -307,32 +307,28 @@ function initNetworksChartsNavTabs() {
     });
 
     $('ul.nav-nest a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        // TODO : Load chart and remove temporary text
-        console.warn('TODO : Load chart and remove temporary text');
-        console.warn(e);
-        console.warn("json file : "+e.target.dataset.chartJson);
-        console.warn("target div (jquery selector) : "+e.target.hash);
 
-        loadChartJsonToDiv(e.target.dataset.chartJson, e.target.hash);
+        loadChartJsonToDiv(e.target);
 
-
-        drawChartFromInterface("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-06-22%2011%3A44&df=2016-06-23%2011%3A44&dh=2", e.target.hash);
     });
 }
 
-function loadChartJsonToDiv(jsonData, jqueryTarget) {
+function loadChartJsonToDiv(selectedNavChart) {
 
+    var jsonData = selectedNavChart.dataset.chartJson;
+    var ajaxParams = selectedNavChart.dataset.ajaxParams;
+    var subNetwork = (selectedNavChart.dataset.network === "Global") ? "" : selectedNavChart.dataset.network;
+    var jqueryTarget = selectedNavChart.hash;
+
+    emptyChartContainer(jqueryTarget);
+
+    drawChartFromInterface(setChartJsonFUllURL(jsonData, ajaxParams, subNetwork), jqueryTarget);
 
 }
 
 function initializeNetworkCallback() {
 
     initializeChartsTimesliceForm();
-
-    /*var testTabs=["Global", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork1", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork2",
-        "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork3", "Networkworkworkworkworkworkworkworkworkworkworkworkworkworkwork4"];
-
-    addNetworksTabs(testTabs);*/
 
     callAJAX("getNetworkList.json", "", "json", addNetworksTabs, null);
 

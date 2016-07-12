@@ -1,3 +1,15 @@
+
+
+function emptyChartContainer(jqueryElement) {
+
+    d3.select(jqueryElement).select(".diagram").selectAll("*").remove();
+
+    d3.select(jqueryElement).select(".diagram.divtable").remove();
+
+}
+
+
+
 function drawChartFromInterface(urlJson, mydiv) {
     var div = d3.select(mydiv);
     var svg = div.select("svg").classed("crisp",true);

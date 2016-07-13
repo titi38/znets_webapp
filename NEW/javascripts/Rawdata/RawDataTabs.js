@@ -66,7 +66,7 @@ function adjustOnTabClick(event) {
     // if tab element is cut on the right side
     if( ( tabElement.position().left + tabElement.outerWidth() ) > ( Math.abs(tabList.position().left) + tabListWrapper.outerWidth() ) )
     {
-        $('.list').animate({left: "-="+ ( ( tabElement.position().left + tabElement.outerWidth() + parseInt(tabList.css("margin-left")) ) - ( Math.abs(tabList.position().left) + tabListWrapper.outerWidth() ) ) +"px"},'slow', function(){
+        $('.list.rawdata-tab-list').animate({left: "-="+ ( ( tabElement.position().left + tabElement.outerWidth() + parseInt(tabList.css("margin-left")) ) - ( Math.abs(tabList.position().left) + tabListWrapper.outerWidth() ) ) +"px"},'slow', function(){
             reAdjust();
         });
     }
@@ -74,7 +74,7 @@ function adjustOnTabClick(event) {
     // if tab element is cut to the right side
     if( tabElement.position().left < Math.abs(tabList.position().left) )
     {
-        $('.list').animate({left: "+="+ ( Math.abs(tabList.position().left)  - tabElement.position().left - parseInt(tabList.css("margin-left")) ) +"px"},'slow', function(){
+        $('.list.rawdata-tab-list').animate({left: "+="+ ( Math.abs(tabList.position().left)  - tabElement.position().left - parseInt(tabList.css("margin-left")) ) +"px"},'slow', function(){
             reAdjust();
         });
     }
@@ -105,7 +105,7 @@ var reAdjust = function(){
 
 var widthOfList = function(){
     var itemsWidth = 0;
-    $('.list li').each(function(){
+    $('.list.rawdata-tab-list li').each(function(){
         var itemWidth = $(this).outerWidth();
         itemsWidth+=itemWidth;
     });
@@ -117,7 +117,7 @@ var widthOfHidden = function(){
 };
 
 var getLeftPosi = function(){
-    return $('.list').position().left;
+    return $('.list.rawdata-tab-list').position().left;
 };
 
 
@@ -143,12 +143,12 @@ function initializeRawData() {
         $(this).prop("disabled", true);
 
         if (Math.abs(widthOfHidden()) < $('.wrapper').outerWidth()) {
-            $('.list').animate({left: "+=" + widthOfHidden() + "px"}, 'slow', function () {
+            $('.list.rawdata-tab-list').animate({left: "+=" + widthOfHidden() + "px"}, 'slow', function () {
                 reAdjust();
             });
         }
         else {
-            $('.list').animate({left: "+=" + ($('.wrapper').outerWidth() * -1) + "px"}, 'slow', function () {
+            $('.list.rawdata-tab-list').animate({left: "+=" + ($('.wrapper').outerWidth() * -1) + "px"}, 'slow', function () {
                 reAdjust();
             });
         }
@@ -160,13 +160,13 @@ function initializeRawData() {
         $(this).prop("disabled", true);
 
         if(Math.abs(getLeftPosi()) < $('.wrapper').outerWidth()){
-            $('.list').animate({left: "-="+getLeftPosi()+"px"}, 'slow', function() {
+            $('.list.rawdata-tab-list').animate({left: "-="+getLeftPosi()+"px"}, 'slow', function() {
                 reAdjust();
             });
         }
         else
         {
-            $('.list').animate({left: "-="+($('.wrapper').outerWidth() *-1 ) +"px"},'slow', function(){
+            $('.list.rawdata-tab-list').animate({left: "-="+($('.wrapper').outerWidth() *-1 ) +"px"},'slow', function(){
                 reAdjust();
             });
         }

@@ -8,6 +8,7 @@ function initialisation(){
      Load all templates inside the JST global variable
      ********************************************************************************************************/
     JST["networksTabsContent"] = doT.template(getTemplate("NEW/templates/networksTabsContent.html"));
+    //JST["rawDataDropdownMenu"] = doT.template(getTemplate("NEW/templates/rawDataDropdownMenu.html"));
     /*JST["planView"] = doT.template(getTemplate("Templates/Views/planView.html"));
      JST["configPopup"] = doT.template(getTemplate("Templates/config_sensor-popup_content.html"));
      JST["debugPopup"] = doT.template(getTemplate("Templates/debug_sensor-popup_content.html"));
@@ -30,6 +31,12 @@ function initialisation(){
      ********************************************************************************************************/
     var myAlerts = new Alerts(myWSEventNotifier);
     myAlerts.init();
+
+    /*********************************************************************************************************
+     New Localhosts Object
+     ********************************************************************************************************/
+    var myLocalhosts = new Localhosts(myWSEventNotifier);
+    myLocalhosts.init();
 
 
     /*********************************************************************************************************
@@ -60,23 +67,31 @@ function initialisation(){
     });
 
 
+    /*********************************************************************************************************
+     Activate localhosts tab
+     ********************************************************************************************************/
+    activateTabOfClass("localhosts");
+
+
+    /**
+     * Adjust alert's dataTable column's widths
+     */
+    $('a.localhostTab').on('shown.bs.tab', function (e) {
+        $('#tableLocalhosts').DataTable().columns.adjust();
+    });
+
+
 
 
 
 
 
     /*********************************************************************************************************
-     Activate rawdata tab
+     Activate network tab
      ********************************************************************************************************/
     activateTabOfClass("network");
 
 
-    /*********************************************************************************************************
-     Initialize NetworkTab
-     ********************************************************************************************************/
-    $( document ).ready(function() {
-        initializeNetwork();
-    });
 
 
     /*********************************************************************************************************
@@ -89,6 +104,21 @@ function initialisation(){
      Initialize RawData known Application's Ids
      ********************************************************************************************************/
     initializeApplicationsId();
+
+
+    $( document ).ready(function() {
+
+        /*********************************************************************************************************
+         Initialize NetworkTab
+         ********************************************************************************************************/
+        initializeNetwork();
+
+        /*********************************************************************************************************
+         Initialize Chart Formular
+         ********************************************************************************************************/
+        applyChartsTimeslice();
+
+    });
 
 
 }

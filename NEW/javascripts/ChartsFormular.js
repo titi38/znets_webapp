@@ -91,3 +91,4 @@ function resetChartsTimeslice(){
     $("#resetBtn_charts_form").prop("disabled", true);
 
 }
+

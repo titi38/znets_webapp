@@ -101,6 +101,7 @@ html, body {
     width: 100%;
 }
 
+
 div.logDetailIcon, div.alertDetailIcon {
     content:url('../../images/more.png');
     float: right;

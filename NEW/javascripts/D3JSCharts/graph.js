@@ -2306,15 +2306,11 @@ function colorEval(firstValue){
 
     var color;
 
-    /* à voir pour répartition non homogène autour cercle hsl
-
-    var coef = 3 * 20 / Math.PI;
-
-
-    function disp(x){
-        return x + coef * Math.sin(x * Math.PI/60);
+    //non homogeneous repartition circle hsl. (usefulness to be tested)
+    function display(x){
+        return x + 15*Math.sin(Math.PI/60*x);
+        //return x;
     }
-    */
 
     var y = 5;
     var z = 5;
@@ -2330,7 +2326,7 @@ function colorEval(firstValue){
 
     return function(){
         i++;
-        color = d3.hsl(val,s,l);
+        color = d3.hsl(display(val),s,l);
         exp = Math.floor(Math.log(i)/Math.log(2));
         idecal = i - Math.pow(2,exp);
         calcexpmin =  1;
@@ -3378,5 +3374,5 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");
 //drawChart("./netTop10NbExtHosts.json", "Graph");
-drawChart("./netNbLocalHosts.json", "Graph");
-//drawChart("worldmap.json","Graph");
+//drawChart("./netNbLocalHosts.json", "Graph");
+drawChart("worldmap.json","Graph");

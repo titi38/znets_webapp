@@ -11,12 +11,33 @@ function emptyChartContainer(jqueryElement) {
 
 
 function drawChartFromInterface(urlJson, mydiv) {
-    var div = d3.select(mydiv);
-    var svg = div.select("svg").classed("crisp",true);
+    var div = d3.select('#' + mydiv);
+    if(div.size() === 0){
+        return;
+    }
+
+    var svg = div.select("svg");
+    if(svg.size() === 0){
+        return;
+    }
+
+    if(svg.node().firstChild){
+        var divNode = div.node();
+        var divChild = divNode.firstChild;
+        while(divChild){
+
+            divNode.removeChild(divChild);
+            divChild = divNode.firstChild;
+
+        }
+
+        svg = div.append("svg");
+    }
+    svg.classed("crisp",true);
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
 
-    whichCreationFunction(urlJson)(div,svg,urlJson,mydiv)
+    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson)
 
 }
 
@@ -26,11 +47,32 @@ function drawChartFromInterface(urlJson, mydiv) {
 function drawChart(urlJson, mydiv) {
 
     var div = d3.select('#' + mydiv);
-    var svg = div.select("svg").classed("crisp",true);
+    if(div.size() === 0){
+        return;
+    }
+
+    var svg = div.select("svg");
+    if(svg.size() === 0){
+        return;
+    }
+
+    if(svg.node().firstChild){
+        var divNode = div.node();
+        var divChild = divNode.firstChild;
+        while(divChild){
+
+            divNode.removeChild(divChild);
+            divChild = divNode.firstChild;
+
+        }
+
+        svg = div.append("svg");
+    }
+    svg.classed("crisp",true);
+
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
-
-    whichCreationFunction(urlJson)(div,svg,urlJson,mydiv);
+    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson);
 
 
 }
@@ -54,6 +96,8 @@ var typeGraph = urlJson.split(/[\.\/]+/);
         //for now
         case "worldmap":
             return createMap;
+        default:
+            return noData;
     }
 
 }
@@ -86,7 +130,7 @@ function noData(div,svg,mydiv){
 }
 /***********************************************************************************************************/
 
-function createHisto2DStackDouble(div,svg,urlJson,mydiv){
+function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     d3.json(urlJson, function (error, json) {
 
@@ -585,7 +629,7 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
 
 /***********************************************************************************************************/
 
-function createHisto2DStackSimple(div,svg,urlJson,mydiv){
+function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     d3.json(urlJson, function (error, json) {
 
@@ -2597,7 +2641,7 @@ function addZoomSimple(svg,updateFunction){
 
 /************************************************************************************************************/
 
-function createCurve(div,svg,urlJson,mydiv){
+function createCurve(div,svg,mydiv,urlJson){
 
 
     d3.json(urlJson, function (error, json) {
@@ -2975,7 +3019,7 @@ function gridDoubleGraph(svg){
  *
  ***********************************************************************************************************/
 
-function createMap(div,svg,urlJson,mydiv){
+function createMap(div,svg,mydiv, urlJson){
 
     //finding/computing the div dimensions
 
@@ -3331,8 +3375,8 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
+//drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");
-drawChart("./netTop10NbExtHosts.json", "Graph");
-//drawChart("./netNbLocalHosts.json", "Graph2");
+//drawChart("./netTop10NbExtHosts.json", "Graph");
+drawChart("./netNbLocalHosts.json", "Graph");
 //drawChart("worldmap.json","Graph");

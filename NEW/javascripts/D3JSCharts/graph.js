@@ -86,12 +86,23 @@ var typeGraph = urlJson.split(/[\.\/]+/);
     console.log(typeGraph);
     switch(typeGraph){
         case "netNbLocalHosts":
+        case "netNbExternalHosts":
             return createCurve;
-        case "netTop10appTraffic":
-        case "netProtocolesPackets":
-        case "netTop10CountryTraffic":
+        case "netNbFlow":
+        case "netProtocoleTraffic":
+        case "netTopHostsTraffic":
+        case "netTopServicesTraffic":
+        case "netTopAsTraffic":
+        case "netTopAppTraffic":
+        case "netTopCountryTraffic":
+        case "netTopHostsNbFlow":
+        case "netTopCountryNbFlow":
+        case "netTopAsNbFlow":
+        case "netTopAppNbFlow":
+        case "netProtocolePackets":
             return createHisto2DStackDouble;
-        case "netTop10NbExtHosts":
+        case "netTopServicesNbFlow":
+        case "netTopNbExtHosts":
             return createHisto2DStackSimple;
         //for now
         case "worldmap":

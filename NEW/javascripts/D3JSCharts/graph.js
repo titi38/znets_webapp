@@ -11,7 +11,7 @@ function emptyChartContainer(jqueryElement) {
 
 
 function drawChartFromInterface(urlJson, mydiv) {
-    var div = d3.select('#' + mydiv);
+    var div = d3.select(mydiv);
     if(div.size() === 0){
         return;
     }

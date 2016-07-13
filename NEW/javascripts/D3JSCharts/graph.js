@@ -11,12 +11,33 @@ function emptyChartContainer(jqueryElement) {
 
 
 function drawChartFromInterface(urlJson, mydiv) {
-    var div = d3.select(mydiv);
-    var svg = div.select("svg").classed("crisp",true);
+    var div = d3.select('#' + mydiv);
+    if(div.size() === 0){
+        return;
+    }
+
+    var svg = div.select("svg");
+    if(svg.size() === 0){
+        return;
+    }
+
+    if(svg.node().firstChild){
+        var divNode = div.node();
+        var divChild = divNode.firstChild;
+        while(divChild){
+
+            divNode.removeChild(divChild);
+            divChild = divNode.firstChild;
+
+        }
+
+        svg = div.append("svg");
+    }
+    svg.classed("crisp",true);
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
 
-    whichCreationFunction(urlJson)(div,svg,urlJson,mydiv);
+    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson)
 
 }
 
@@ -26,11 +47,32 @@ function drawChartFromInterface(urlJson, mydiv) {
 function drawChart(urlJson, mydiv) {
 
     var div = d3.select('#' + mydiv);
-    var svg = div.select("svg").classed("crisp",true);
+    if(div.size() === 0){
+        return;
+    }
+
+    var svg = div.select("svg");
+    if(svg.size() === 0){
+        return;
+    }
+
+    if(svg.node().firstChild){
+        var divNode = div.node();
+        var divChild = divNode.firstChild;
+        while(divChild){
+
+            divNode.removeChild(divChild);
+            divChild = divNode.firstChild;
+
+        }
+
+        svg = div.append("svg");
+    }
+    svg.classed("crisp",true);
+
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
-
-    whichCreationFunction(urlJson)(div,svg,urlJson,mydiv);
+    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson);
 
 
 }
@@ -54,6 +96,8 @@ var typeGraph = urlJson.split(/[\.\/]+/);
         //for now
         case "worldmap":
             return createMap;
+        default:
+            return noData;
     }
 
 }
@@ -86,7 +130,7 @@ function noData(div,svg,mydiv){
 }
 /***********************************************************************************************************/
 
-function createHisto2DStackDouble(div,svg,urlJson,mydiv){
+function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     d3.json(urlJson, function (error, json) {
 
@@ -452,22 +496,8 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
-
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
+            
+            scrollToElementTableTransition(elem,table);
 
             selection.filter(testitem).each(blink);
 
@@ -485,22 +515,8 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+            scrollToElementTableTransition(elem,table);
 
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
 
         }
 
@@ -582,10 +598,10 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
             return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + json[0].unit;
         });
-        trSelec.append("td").classed("color", true).append("div").classed("lgd", true).style("background-color", function (d) {
+        trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
-        trSelec.append("td").classed("item", true).text(function (d) {
+        trSelec.append("td").text(function (d) {
             return d.item;
         });
         trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
@@ -613,7 +629,7 @@ function createHisto2DStackDouble(div,svg,urlJson,mydiv){
 
 /***********************************************************************************************************/
 
-function createHisto2DStackSimple(div,svg,urlJson,mydiv){
+function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     d3.json(urlJson, function (error, json) {
 
@@ -897,22 +913,8 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+            scrollToElementTableTransition(elem,table);
 
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
 
             selection.filter(testitem).each(blink);
 
@@ -930,22 +932,8 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
             }
 
             var elem = trSelec.filter(testitem).classed("outlined", true);
-            var tableViewHeight = table.property("clientHeight");
-            //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
-            var tableScrollTop = table.property("scrollTop");
-            var elemOffsetHeight = elem.property("offsetHeight");
-            var elemOffsetTop = elem.property("offsetTop");
-            var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+            scrollToElementTableTransition(elem,table);
 
-            console.log("elemoffsettop " + elemOffsetTop);
-
-
-            table.transition().ease(easeFct(3)).tween("scrolltoptween", function () {
-                var tab = this;
-                return function (t) {
-                    tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
-                };
-            });
 
         }
 
@@ -1018,10 +1006,10 @@ function createHisto2DStackSimple(div,svg,urlJson,mydiv){
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
             return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + json[0].unit;
         });
-        trSelec.append("td").classed("color", true).append("div").classed("lgd", true).style("background-color", function (d) {
+        trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
-        trSelec.append("td").classed("item", true).text(function (d) {
+        trSelec.append("td").text(function (d) {
             return d.item;
         });
         trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
@@ -2318,15 +2306,11 @@ function colorEval(firstValue){
 
     var color;
 
-    /* à voir pour répartition non homogène autour cercle hsl
-
-    var coef = 3 * 20 / Math.PI;
-
-
-    function disp(x){
-        return x + coef * Math.sin(x * Math.PI/60);
+    //non homogeneous repartition circle hsl. (usefulness to be tested)
+    function display(x){
+        return x + 15*Math.sin(Math.PI/60*x);
+        //return x;
     }
-    */
 
     var y = 5;
     var z = 5;
@@ -2342,7 +2326,7 @@ function colorEval(firstValue){
 
     return function(){
         i++;
-        color = d3.hsl(val,s,l);
+        color = d3.hsl(display(val),s,l);
         exp = Math.floor(Math.log(i)/Math.log(2));
         idecal = i - Math.pow(2,exp);
         calcexpmin =  1;
@@ -2363,7 +2347,7 @@ function colorEval(firstValue){
         s = y*segmy +starty;
         l= z*segmz +startz;
 
-        //console.log(color);
+        console.log(color.h);
 
         return color;
     }
@@ -2653,7 +2637,7 @@ function addZoomSimple(svg,updateFunction){
 
 /************************************************************************************************************/
 
-function createCurve(div,svg,urlJson,mydiv){
+function createCurve(div,svg,mydiv,urlJson){
 
 
     d3.json(urlJson, function (error, json) {
@@ -3031,7 +3015,7 @@ function gridDoubleGraph(svg){
  *
  ***********************************************************************************************************/
 
-function createMap(div,svg,urlJson,mydiv){
+function createMap(div,svg,mydiv, urlJson){
 
     //finding/computing the div dimensions
 
@@ -3387,8 +3371,8 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-drawChart("./netTop10appTraffic.json", "Graph");
-//drawChart("./netTop10NbExtHosts.json", "Graph2");
-//drawChart("./netNbLocalHosts.json", "Graph2");
-//drawChart("worldmap.json","Graph");
+//drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
+//drawChart("./netTop10appTraffic.json", "Graph");
+//drawChart("./netTop10NbExtHosts.json", "Graph");
+//drawChart("./netNbLocalHosts.json", "Graph");
+drawChart("worldmap.json","Graph");

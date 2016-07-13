@@ -87,25 +87,8 @@
 .tableLegend td:nth-of-type(2){
     width: 100%;
     border-right: 1px solid transparent;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow:ellipsis;
 }
 
-
-.outlined td{
-    border-top: 1px double black;
-    border-bottom: 1px solid black;
-}
-
-.outlined td:nth-of-type(1){
-    border-left: 1px solid black;
-}
-
-
-.outlined td:nth-of-type(2){
-    border-right: 1px solid black;
-}
 
 
 
@@ -159,6 +142,9 @@
     border-radius: 6px;
     box-shadow: #333 2px 2px 4px;
     display: inline-block;
+    left:0;
+    bottom:0;
+    padding-bottom: 10px;
 
 }
 
@@ -193,10 +179,6 @@
 
 }
 
-.pieSvg{
-    shape-rendering: geometricPrecision;
-
-}
 
 .geometricPrecision{
     shape-rendering: geometricPrecision;
@@ -214,4 +196,72 @@
     fill: #bdeeff;
 
 
+}
+
+.pieSvg{
+    shape-rendering: geometricPrecision;
+
+}
+
+.popupTitle{
+    text-align:center ;
+}
+
+.popupTableDiv{
+    display:inline-block;
+    vertical-align: top;
+    border: 2px ridge;
+    margin-right:10px;
+
+}
+
+.popupTableLegend{
+    display: inline-block;
+    border-collapse: collapse;
+    table-layout: fixed;
+    overflow-y: auto;
+    overflow-x: scroll;
+    cursor: default;
+    margin-bottom: 0;
+}
+
+
+.popupTableLegend tr:nth-child(even) {
+    background-color: #eee;
+}
+.popupTableLegend tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+
+
+.popupTableLegend td{
+    padding: 5px;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+.popupTableLegend td:nth-of-type(1){
+    border-left: 1px solid transparent;
+}
+
+.popupTableLegend td:nth-of-type(2){
+    border-right: 1px solid transparent;
+}
+
+
+
+
+.outlined td{
+    border-top: 1px double black;
+    border-bottom: 1px solid black;
+}
+
+.outlined td:nth-of-type(1){
+    border-left: 1px solid black;
+}
+
+
+.outlined td:nth-of-type(2){
+    border-right: 1px solid black;
 }

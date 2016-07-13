@@ -94,19 +94,15 @@ function ticksSecondAxisXDouble(svg){
 function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
 
-  svg.side = 0.75 * Math.min(svg.height, svg.width);
-  svg.pieside = 1 * svg.side;
+  svg.pieside = 0.75 * Math.min(svg.height, svg.width);
   div.overlay = div.append("div").classed("overlay", true).style("display", "none").style("width", (svg.width + svg.margin.left + svg.margin.right) + "px");
-  svg.popup = div.append("div").classed("popup", true)
-    .style("width", svg.side + "px")
-    .style("height", svg.side + "px")
-    .style("display", "none")
-    .style("left", ((svg.width - svg.side) / 2 + svg.margin.left) + "px")
-    .style("top", ((svg.height - svg.side) / 2 + svg.margin.top) + "px");
+  svg.popup = div.append("div").classed("popup", true).style("display", "none");
+
+  svg.popup.title = svg.popup.append("h3").classed("popupTitle",true);
+
 
   svg.popup.pieChart = null;
   svg.timer = null;
-
 
 
   selection
@@ -117,8 +113,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         div.overlay.style("display", null);
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        drawComplData("./datacompl.json", svg.popup, svg.pieside, d.height);
-        svg.popup.style("display", null);
+        drawComplData("./datacompl.json", svg, svg.pieside, d,div.overlay);
       }, 500);
 
     });
@@ -127,13 +122,25 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
     div.overlay.style("display", "none");
     svg.popup.style("display", "none");
     svg.popup.pieChart.remove();
+    svg.popup.pieChart.divTable.remove();
     svg.popup.pieChart = null;
     onSupprFunct();
   });
 
 
 }
+/***********************************************************************************************************/
 
+function positionPopup(svg){
+
+
+  svg.popup.style("left", ((svg.width - parseInt(svg.popup.style("width"),10)) / 2 + svg.margin.left) + "px")
+    .style("bottom", ((svg.height - parseInt(svg.popup.style("height"),10)) / 2 + svg.margin.bottom) + "px");
+
+  svg.popup.pieChart.divTable.style("margin-top",(svg.pieside - svg.popup.pieChart.divTable.node().offsetHeight)/2 + "px");
+
+
+}
 
 /***********************************************************************************************************/
 
@@ -141,14 +148,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 function redrawPopup(div, svg){
 
   div.overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
-  svg.side = 0.75*Math.min(svg.height,svg.width);
-  svg.pieside = 1*svg.side;
-
-  svg.popup.style("width",svg.side + "px")
-    .style("height",svg.side + "px")
-    .style("left",((svg.width-svg.side)/2 +svg.margin.left)+"px")
-    .style("top", ((svg.height-svg.side)/2 +svg.margin.top) + "px");
-
+  svg.pieside = 0.75*Math.min(svg.height,svg.width);
 
 
   if(svg.popup.pieChart != null){
@@ -173,6 +173,12 @@ function redrawPopup(div, svg){
       return "translate(" + (Math.sin(midAngle)*dist) + "," +(-Math.cos(midAngle)*dist) +")";});
 
 
+
+    svg.popup.pieChart.table.style("max-height",svg.pieside + "px");
+
+
+    positionPopup(svg);
+
     svg.popup.dist = svg.popup.outerRad * 0.8;
     svg.popup.distTranslTemp = svg.popup.outerRad/4;
     svg.popup.distTransl = svg.popup.outerRad/10;
@@ -185,23 +191,28 @@ function redrawPopup(div, svg){
 
 /************************************************************************************************************/
 
-function drawComplData(urlJson,popup,pieside,total){
+
+function drawComplData(urlJson,svg,pieside,dataInit,overlay){
 
   var chartside = 0.75*pieside;
 
 
   //TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
-  console.log(total);
+  console.log(dataInit.item);
+  console.log(dataInit.height);
   total=6000000000;
   //TEMPORAIRE
 
+  //Title
+  svg.popup.title.text(dataInit.item);
+
 
   //Some values relative to the popup dimensions
-  popup.innerRad = 0;
-  popup.outerRad = chartside/2;
-  popup.dist = popup.outerRad * 0.8;
-  popup.distTranslTemp = popup.outerRad/4;
-  popup.distTransl = popup.outerRad/10;
+  svg.popup.innerRad = 0;
+  svg.popup.outerRad = chartside/2;
+  svg.popup.dist = svg.popup.outerRad * 0.8;
+  svg.popup.distTranslTemp = svg.popup.outerRad/4;
+  svg.popup.distTransl = svg.popup.outerRad/10;
 
 
   d3.json(urlJson,function(error, json){
@@ -220,7 +231,7 @@ function drawComplData(urlJson,popup,pieside,total){
     });
 
     //We attribute a color to each
-    var f = colorEval();
+    var f = colorEval(170);
     var listColors = [];
     var length = values.length;
 
@@ -231,9 +242,9 @@ function drawComplData(urlJson,popup,pieside,total){
 
     }
 
-    values.push({y: total -sum, hostname:" Remainder ",amount:bytesConvert(total-sum)});
+    values.unshift({y: total -sum, hostname:" Remainder ",amount:bytesConvert(total-sum)});
 
-    listColors.push("#f2f2f2");
+    listColors.unshift("#f2f2f2");
 
 
     //The angles of the pie arcs are evaluated
@@ -252,8 +263,8 @@ function drawComplData(urlJson,popup,pieside,total){
     values.forEach(functAngles);
 
     var arc = d3.arc()
-      .innerRadius(popup.innerRad)
-      .outerRadius(popup.outerRad);
+      .innerRadius(svg.popup.innerRad)
+      .outerRadius(svg.popup.outerRad);
 
     //The arc template is readied
     function interpolateArc(d){
@@ -264,8 +275,8 @@ function drawComplData(urlJson,popup,pieside,total){
 
       return function(t){
         return (arc
-          .innerRadius(popup.innerRad)
-          .outerRadius(popup.outerRad)
+          .innerRadius(svg.popup.innerRad)
+          .outerRadius(svg.popup.outerRad)
           .startAngle(d.startAngle)
           .endAngle((d.startAngle + t * (d.endAngle - d.startAngle)).toFixed(5)))();
       }
@@ -273,34 +284,57 @@ function drawComplData(urlJson,popup,pieside,total){
     }
 
     //g element parent of path and text components of the pie chart
-    popup.pieChart.g = popup.pieChart.append("g")
+    svg.popup.pieChart.g = svg.popup.pieChart.append("g")
       .attr("transform","translate(" + (pieside/2) + "," + (pieside/2) + ")")
       .classed("part",true).classed("elemtext",true);
 
     //path elements, the arcs themselves
-    var pathSelec = popup.pieChart.g.selectAll("path").data(values).enter().append("path")
+    var pathSelec = svg.popup.pieChart.g.selectAll("path").data(values).enter().append("path")
       .attr("d","")
       .style("fill",function(d,i){ return listColors[i]; });
     pathSelec.append("svg:title").text(function(d){
       return  d.hostname + "\n" + d.amount});
 
     //text elements, the arcs' legends
-    var textSelec = popup.pieChart.g.selectAll("text").data(values).enter().append("text")
+    var textSelec = svg.popup.pieChart.g.selectAll("text").data(values).enter().append("text")
       .attr("transform",function(d){
         var midAngle = (d.endAngle + d.startAngle)/2;
-        return "translate(" + (Math.sin(midAngle)*popup.dist) + "," +(-Math.cos(midAngle)*popup.dist) +")";})
+        return "translate(" + (Math.sin(midAngle)*svg.popup.dist) + "," +(-Math.cos(midAngle)*svg.popup.dist) +")";})
       .text(function(d){ return d.amount;});
 
 
     //transition on paths for fanciness
     pathSelec.transition("creation").ease(easeFct(3)).duration(800).attrTween("d",interpolateArc);
 
+
+    //Table
+    svg.popup.pieChart.divTable = svg.popup.append("div").classed("popupTableDiv", true);
+    svg.popup.pieChart.table = svg.popup.pieChart.divTable.append("table").classed("popupTableLegend",true)
+      .style("max-height",svg.pieside + "px");
+
+    var trSelec = svg.popup.pieChart.table.selectAll("tr").data(values)
+      .enter().append("tr").attr("title",function(d){
+        return d.hostname + "\nVolume: " + d.amount;
+      });
+
+    trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d,i) {
+      return listColors[i];
+    });
+    trSelec.append("td").text(function(d){return d.hostname;});
+
+
+
+
     //name of the current element being hovered, at first none then null.
     var activeHostname = null;
 
     //Hover listener on the pie chart svg.
-    popup.pieChart
+    svg.popup
       .on("mouseover", mouseoverFunction);
+
+    //Hover listener on the table.
+    overlay
+      .on("mouseover",mouseoverFunction);
 
 
     function mouseoverFunction(){
@@ -309,10 +343,11 @@ function drawComplData(urlJson,popup,pieside,total){
       var path;
       var text;
       var d;
+      var onTable = false;
 
       //hostname of the element being hovered currently
       var hostname;
-
+      console.log(target.tagName);
       //detection of the element being hovered
       switch (target.tagName){
         //if path or text, variables are being instantiated accordingly.
@@ -330,8 +365,20 @@ function drawComplData(urlJson,popup,pieside,total){
           path = pathSelec.filter(function(data){return data.hostname === hostname;});
           break;
 
-        //if svg, no pie element is hovered.
-        case "svg":
+        case "TD":
+        case "DIV":
+          d = d3.select(target).datum();
+          if(!d){
+            hostname = null;
+            break;
+          }
+          onTable = true;
+          hostname = d.hostname;
+          text = textSelec.filter(function(data){return data.hostname === hostname;});
+          path = pathSelec.filter(function(data){return data.hostname === hostname;});
+          break;
+
+        //if anything else, no pie element is hovered.
         default:
           hostname = null;
           break;
@@ -358,7 +405,9 @@ function drawComplData(urlJson,popup,pieside,total){
         var midAngleOut = (dOut.endAngle + dOut.startAngle)/2;
 
         var transitionOut = pathOut.transition().attr("transform", "translate(0,0)");
-        textOut.transition(transitionOut).attr("transform", "translate(" + (Math.sin(midAngleOut)*popup.dist) + "," +(-Math.cos(midAngleOut)*popup.dist) +")");
+        textOut.transition(transitionOut).attr("transform", "translate(" + (Math.sin(midAngleOut)*svg.popup.dist) + "," +(-Math.cos(midAngleOut)*svg.popup.dist) +")");
+
+        trSelec.filter(function(d){return d.hostname === activeHostname}).classed("outlined",false);
       }
 
       //the activeHostname variable has no further use here, it can be updated with the current hostname.
@@ -372,19 +421,60 @@ function drawComplData(urlJson,popup,pieside,total){
 
       //Finally, the current element hovered and associated path/text can be translated.
 
+
       var midAngle = (d.endAngle + d.startAngle)/2;
       var transition = path.transition()
-        .attr("transform","translate(" + (Math.sin(midAngle)*popup.distTranslTemp) + "," +(-Math.cos(midAngle)*popup.distTranslTemp) +")" )
+        .attr("transform","translate(" + (Math.sin(midAngle)*svg.popup.distTranslTemp) + "," +(-Math.cos(midAngle)*svg.popup.distTranslTemp) +")" )
         .transition()
-        .attr("transform","translate(" + (Math.sin(midAngle)*popup.distTransl) + "," +(-Math.cos(midAngle)*popup.distTransl) +")" );
+        .attr("transform","translate(" + (Math.sin(midAngle)*svg.popup.distTransl) + "," +(-Math.cos(midAngle)*svg.popup.distTransl) +")" );
 
       text.transition(transition)
-        .attr("transform","translate(" + (Math.sin(midAngle)*(popup.distTranslTemp + popup.dist)) + "," +(-Math.cos(midAngle)*(popup.distTranslTemp+popup.dist)) +")" )
+        .attr("transform","translate(" + (Math.sin(midAngle)*(svg.popup.distTranslTemp + svg.popup.dist)) + "," +(-Math.cos(midAngle)*(svg.popup.distTranslTemp+svg.popup.dist)) +")" )
         .transition()
-        .attr("transform","translate(" + (Math.sin(midAngle)*(popup.distTransl+popup.dist)) + "," +(-Math.cos(midAngle)*(popup.distTransl+popup.dist)) +")" );
+        .attr("transform","translate(" + (Math.sin(midAngle)*(svg.popup.distTransl+svg.popup.dist)) + "," +(-Math.cos(midAngle)*(svg.popup.distTransl+svg.popup.dist)) +")" );
+
+
+
+      //the corresponding row is outlined
+      var elem = trSelec.filter(function(d){return d.hostname === activeHostname;}).classed("outlined",true);
+
+      //no transition if the cursor is on the table
+      if(onTable){
+        return;
+      }
+
+      scrollToElementTableTransition(elem,svg.popup.pieChart.table)
 
     }
 
 
+    //display and positioning
+    svg.popup.style("display", null);
+
+    positionPopup(svg);
+
   }); //end json
 }
+
+
+/************************************************************************************************************/
+
+function scrollToElementTableTransition(elem, table){
+
+  var tableViewHeight = table.property("clientHeight");
+  //var tableScrollHeight = table.property("scrollHeight"); //not used anymore
+  var tableScrollTop = table.property("scrollTop");
+  var elemOffsetHeight = elem.property("offsetHeight");
+  var elemOffsetTop = elem.property("offsetTop");
+  var scrollEnd = (elemOffsetTop <= tableScrollTop) ? elemOffsetTop : Math.max(elemOffsetTop - tableViewHeight + elemOffsetHeight + 1, tableScrollTop);
+
+
+  table.transition().tween("scrolltoptween", function () {
+    var tab = this;
+    return function (t) {
+      tab.scrollTop = tableScrollTop * (1 - t) + t * scrollEnd;
+    };
+  });
+
+}
+

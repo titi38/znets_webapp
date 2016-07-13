@@ -85,17 +85,24 @@ var typeGraph = urlJson.split(/[\.\/]+/);
     typeGraph = typeGraph[typeGraph.length - 2];
     console.log(typeGraph);
     switch(typeGraph){
+
         case "netNbLocalHosts":
             return createCurve;
+
         case "netTop10appTraffic":
         case "netProtocolesPackets":
         case "netTop10CountryTraffic":
+        case "netTopHostsTraffic":
+        case "netTopHostsNbFlow":
             return createHisto2DStackDouble;
+
         case "netTop10NbExtHosts":
             return createHisto2DStackSimple;
+
         //for now
         case "worldmap":
             return createMap;
+
         default:
             return noData;
     }
@@ -201,7 +208,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var sumMap = new Map();
         var i;
 
-        if (typeof json[2].tab[0].item === "undefined") {
+        //TODO Premier if plus forcément utile
+        /*
+        if ((typeof json[2].tab[0].item === "undefined")) {
 
             //json[i].tab[j].item = json[i].name
             //Remainder = OTHERS
@@ -238,7 +247,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             }
 
         } else {
-
+*/
             for (i = 2; i < json.length; i++) {
 
                 for (var j = 0; j < xlength; j++) {
@@ -256,7 +265,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
                     json[i].tab[j].stroke = "#000000";
 
-                    if (i % 2 == 0) {
+                    if (json[i].type == "IN") {
                         //json[i].tab[j].stroke = "#fff";
                         svg.valuesIn.push(json[i].tab[j]);
 
@@ -268,7 +277,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
                 }
             }
-        }
+       // }
 
 
         var sumArray = [];
@@ -2306,19 +2315,29 @@ function colorEval(firstValue){
 
     var color;
 
-    //non homogeneous repartition circle hsl. (usefulness to be tested)
+
+    //non homogeneous repartition circle hsl. (optional: to test usefulness maybe sometimes)
+
+    //specify the repartition. should be comprised between 0 & 60/Math.PI (env. 19.09), function not injective if greater.
+    var coef = 15;
+
+    //specify the period, do not tweak
+    var theta = Math.PI/60;
+
     function display(x){
-        return x + 15*Math.sin(Math.PI/60*x);
+        return x + coef*Math.sin(theta*x);
         //return x;
     }
 
+    //y: saturation
+    //z: lightness
     var y = 5;
     var z = 5;
 
-    var starty = 0.5;
-    var startz = 0.5;
+    var starty = 0.45;
+    var startz = 0.45;
     var segmy = (1 - starty)/6;
-    var segmz = (0.8 - startz)/10;
+    var segmz = (0.80 - startz)/10;
 
     var s = starty + segmy*y;
     var l = startz + segmz*z;
@@ -2342,8 +2361,8 @@ function colorEval(firstValue){
         //console.log("val " + val);
 
 
-        y = (y+4)%7;
-        z = (z+7)%11;
+        y = (y+3)%7;
+        z = (z+4)%11;
         s = y*segmy +starty;
         l= z*segmz +startz;
 
@@ -3373,6 +3392,6 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");
-//drawChart("./netTop10NbExtHosts.json", "Graph");
+drawChart("./netTop10NbExtHosts.json", "Graph");
 //drawChart("./netNbLocalHosts.json", "Graph");
-drawChart("worldmap.json","Graph");
+//drawChart("worldmap.json","Graph");

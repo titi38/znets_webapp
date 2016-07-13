@@ -1,8 +1,9 @@
-.nav-tabs {
+
+.nav-tabs.nav-stacked {
     margin-bottom: 10px;
     border-bottom: 0px;
 }
-.nav-tabs > li {
+.nav-tabs.nav-stacked > li {
     margin: 0 0 1px 0;
 }
 .nav-tabs > li > a {

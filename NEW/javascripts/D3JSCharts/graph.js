@@ -87,7 +87,8 @@ var typeGraph = urlJson.split(/[\.\/]+/);
     switch(typeGraph){
         case "netNbLocalHosts":
         case "netNbExternalHosts":
-            return createCurve;
+            //return createCurveMinute;
+            return createCurveHour;
         case "netNbFlow":
         case "netProtocoleTraffic":
         case "netTopHostsTraffic":
@@ -213,7 +214,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var i;
 
         //TODO Premier if plus forcément utile
-        /*
+
         if ((typeof json[2].tab[0].item === "undefined")) {
 
             //json[i].tab[j].item = json[i].name
@@ -237,7 +238,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
                     json[i].tab[j].stroke = "#000000";
 
-                    if (i % 2 == 0) {
+                    if (json[i].type == "IN") {
                         //json[i].tab[j].stroke = "#fff";
                         svg.valuesIn.push(json[i].tab[j]);
 
@@ -251,7 +252,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             }
 
         } else {
-*/
+
             for (i = 2; i < json.length; i++) {
 
                 for (var j = 0; j < xlength; j++) {
@@ -281,7 +282,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
                 }
             }
-       // }
+        }
 
 
         var sumArray = [];
@@ -2660,7 +2661,7 @@ function addZoomSimple(svg,updateFunction){
 
 /************************************************************************************************************/
 
-function createCurve(div,svg,mydiv,urlJson){
+function createCurveMinute(div, svg, mydiv, urlJson){
 
 
     d3.json(urlJson, function (error, json) {
@@ -2709,6 +2710,7 @@ function createCurve(div,svg,mydiv,urlJson){
         svg.area = d3.area();
         var tab = json[2].tab;
         var tabLength = tab.length;
+
 
         //value each couple minutes;
         var valuesPerHour = 30;
@@ -2837,6 +2839,193 @@ function createCurve(div,svg,mydiv,urlJson){
 
 
 }
+
+
+/************************************************************************************************************/
+
+function createCurveHour(div, svg, mydiv, urlJson){
+
+
+    d3.json(urlJson, function (error, json) {
+
+
+        console.log(json);
+
+        //test json conformity
+        if (testJson(json) || error ) {
+            console.log("incorrect url/data");
+            noData(div, svg,mydiv);
+            return false;
+        }
+
+        //json ok, graph creation
+
+        json = json.response.data;
+        svg.legendFirstItem = +json[1].legend[0].text.split("h")[0];
+        console.log(json);
+
+        var divWidth = Math.max(svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1, parseInt(div.style("height"),10));
+
+        svg.attr("width", divWidth).attr("height", divHeight);
+
+
+        svg.width = divWidth - svg.margin.left - svg.margin.right;
+        svg.height = divHeight - svg.margin.bottom - svg.margin.top;
+
+
+        svg.x = d3.scaleLinear()
+          .range([0, svg.width]);
+
+        svg.y = d3.scaleLinear()
+          .range([svg.height, 0]);
+
+
+        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width)
+          .attr("height", svg.height).classed("svgline", true);
+
+        svg.grid = svg.svg.append("g").classed("grid", true);
+
+        svg.chart = svg.svg.append("g");
+
+        svg.valueline = d3.line();
+        svg.area = d3.area();
+        svg.data = json[2].tab;
+
+/*
+        //TODO TEST A SUPPRIMER
+        svg.data.push({x:60,y:1});
+*/
+
+        //sort, for make sure
+        svg.data.sort(function(a,b){return a.x - b.x;});
+
+        var tabLength = svg.data.length;
+
+        var firstX = svg.data[0].x;
+
+
+
+
+        svg.x.domain([firstX, svg.data[tabLength-1].x]);
+        //*1.05 for margin
+        svg.y.domain([0, d3.max(svg.data,function(elem){return elem.y}) * 1.05]);
+
+
+
+        //Test for gap in data, give y=0 in that case.
+
+        for(var i = 0; i < svg.data.length;i++){
+
+            var pos = firstX + i;
+            if(svg.data[i].x > pos){
+                console.log("kikoo");
+                var newElem = {x:pos, y: 0};
+                svg.data.splice(i,0,newElem);
+            }
+
+        }
+
+
+        console.log(svg.data);
+
+
+        svg.chart.append("path").classed("line", true);
+        svg.chart.append("path").classed("area", true);
+
+        svg.area.x(function (d) {
+            return svg.x(d.x);
+        }).y1(function (d) {
+            return svg.y(d.y);
+        }).y0(svg.y.range()[0]);
+
+
+        svg.valueline
+          .x(function (d) {
+              return svg.x(d.x);
+          }).y(function (d) {
+            return svg.y(d.y);
+        });
+
+
+        svg.axisx = svg.append("g")
+          .classed("x axis", true)
+          .attr('transform', 'translate(' + [svg.margin.left, svg.height + svg.margin.top] + ")");
+
+        svg.axisx.call(d3.axisBottom(svg.x));
+
+        svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')').classed("y axis", true);
+        svg.axisy.call(d3.axisLeft(svg.y));
+
+        niceTicks(svg.axisy);
+
+        gridSimpleGraph(svg, true);
+
+        //      Label of the y axis
+        svg.ylabel = svg.axisy.append("text")
+          .attr("class", "label")
+          .attr("text-anchor", "middle")
+          .attr("dy", "1em")
+          .attr('y', -svg.margin.left)
+          .attr("x", -svg.height / 2)
+          .attr("transform", "rotate(-90)")
+          .text(json[0].unit);
+
+        //legendCurveAxisX(svg);
+
+        svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
+        svg.newY = d3.scaleLinear().range(svg.y.range()).domain(svg.y.domain());
+
+
+        svg.newValueline = d3.line();
+        svg.newArea = d3.area();
+
+
+        svg.newArea.x(function (d) {
+            return svg.newX(d.x);
+        }).y1(function (d) {
+            return svg.newY(d.y);
+        }).y0(svg.newY.range()[0]);
+
+
+        svg.newValueline
+          .x(function (d) {
+              return svg.newX(d.x);
+          }).y(function (d) {
+            return svg.newY(d.y);
+        });
+
+
+        svg.transition("start").duration(800).tween("", function () {
+
+            var data = JSON.parse(JSON.stringify(svg.data));
+            var line = svg.chart.select(".line");
+            var area = svg.chart.select(".area");
+
+            return function (t) {
+                t = Math.min(1, Math.max(0, t));
+                svg.data.forEach(function (elem, i) {
+                    elem.y = data[i].y * t;
+                });
+                line.attr("d", svg.newValueline(svg.data));
+                area.attr("d", svg.newArea(svg.data));
+            }
+        });
+
+
+        addZoomSimple(svg, updateCurve);
+
+        d3.select(window).on("resize." + mydiv, function () {
+            console.log("resize");
+            redrawCurve(div, svg);
+        });
+
+    });
+
+
+}
+
+
 /************************************************************************************************************/
 
 function redrawCurve(div,svg){
@@ -2913,7 +3102,7 @@ function updateCurve(svg){
 
     niceTicks(svg.axisy);
 
-    legendCurveAxisX(svg);
+    //legendCurveAxisX(svg);
 
     gridSimpleGraph(svg,true);
 
@@ -3390,9 +3579,10 @@ function addZoomMap(svg){
 
 
 
-//drawChart("/dynamic/netNbLocalHosts.json?accurate=true&dd=2016-06-20%2011%3A44&df=2016-06-27%2011%3A44&dh=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?minute&dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-drawChart("/dynamic/netProtocolePackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
+drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-17%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");

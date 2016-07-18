@@ -145,7 +145,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         console.log(json);
 
         //test json conformity
-        if (typeof json === "undefined" || json.result != "true" || error) {
+        if (testJson(json) || error) {
             noData(div, svg,mydiv);
             return false;
         }
@@ -646,7 +646,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         console.log(json);
 
         //test json conformity
-        if (typeof json === "undefined" || json.result != "true" || error) {
+        if (testJson(json) || error) {
             console.log("incorrect url/data");
             noData(div, svg,mydiv);
             return false;
@@ -2665,7 +2665,7 @@ function createCurve(div,svg,mydiv,urlJson){
         console.log(json);
 
         //test json conformity
-        if (typeof json === "undefined" || json.result != "true" || error) {
+        if (testJson(json) || error ) {
             console.log("incorrect url/data");
             noData(div, svg,mydiv);
             return false;
@@ -3388,10 +3388,10 @@ function addZoomMap(svg){
 
 //drawChart("/dynamic/netNbLocalHosts.json?accurate=true&dd=2016-06-20%2011%3A44&df=2016-06-27%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
+drawChart("/dynamic/netProtocolePackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");
-drawChart("./netTop10NbExtHosts.json", "Graph");
+//drawChart("./netTop10NbExtHosts.json", "Graph");
 //drawChart("./netNbLocalHosts.json", "Graph");
 //drawChart("worldmap.json","Graph");

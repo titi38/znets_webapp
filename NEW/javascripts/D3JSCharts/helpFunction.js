@@ -478,3 +478,10 @@ function scrollToElementTableTransition(elem, table){
 
 }
 
+
+/************************************************************************************************************/
+
+function testJson(json){
+  return typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined";
+}
+

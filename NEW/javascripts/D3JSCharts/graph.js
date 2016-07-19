@@ -142,6 +142,8 @@ function noData(div,svg,mydiv){
 }
 /***********************************************************************************************************/
 
+
+//TODO Let's say hourly for now
 function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     d3.json(urlJson, function (error, json) {
@@ -156,10 +158,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         }
 
         //json ok, graph creation
-
-        json = json.response.data;
-        svg.legend = json[1].legend;
-        console.log(json);
+        
 
         //table for legend
         svg.tableWidth = 200;
@@ -205,13 +204,88 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         svg.selec = svg.frame.append("rect").attr("class", "rectSelec");
 
 
+
+
+        
+        
+        json = json.response;
+        var jsonData = json.data;
+        var jsonContent = json.content;
+
+
+        var contentItemValue = searchItemValue(jsonContent);
+        var contentDateValue = searchDateValue(jsonContent);
+        var contentAmountValue = searchAmountValue(jsonContent);
+        var contentDirectionValue = searchDirectionValue(jsonContent);
+
+        //if no item/date/amount/direction value found, the graph can't be done.
+        if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
+            return;
+        }
+
+        svg.contentItemString = jsonContent[contentItemValue];
+
+        svg.units = json.units;
+
+        console.log(json);
+        
+        
+
         svg.valuesIn = [];
         svg.valuesOut = [];
-        var xlength = json[2].tab.length;
+
+        var dataLength = jsonData.length;
 
         var colorMap = new Map();
         var sumMap = new Map();
-        var i;
+        var i, elemJson, elemToPush;
+        svg.timeMin = Infinity;
+        var timeMax = 0;
+
+
+        // Data are processed and sorted according to their direction.
+        for(i = 0; i < dataLength; i++){
+            elemJson = jsonData[i];
+
+            if(elemJson[contentAmountValue] === 0){
+                continue;
+            }
+
+            elemToPush = {
+                time: (new Date(elemJson[contentDateValue])).getTime(),
+                height: +elemJson[contentAmountValue],
+                item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
+                stroke: "#000000"
+            };
+
+            if (!sumMap.has(elemToPush.item)) {
+                sumMap.set(elemToPush.item, elemToPush.height);
+            } else {
+                sumMap.set(elemToPush.item, sumMap.get(elemToPush.item) + elemToPush.height);
+            }
+
+            svg.timeMin = Math.min(svg.timeMin,elemToPush.time);
+            timeMax = Math.max(timeMax,elemToPush.time);
+
+            if(elemJson[contentDirectionValue] === "IN"){
+
+                svg.valuesIn.push(elemToPush);
+
+            }else{
+
+                svg.valuesOut.push(elemToPush)
+
+            }
+
+
+        }
+        
+
+
+
+
+
+/*
 
         //TODO Premier if plus forcément utile
 
@@ -283,6 +357,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
                 }
             }
         }
+        */
+
 
 
         var sumArray = [];
@@ -305,6 +381,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             return b.sum - a.sum;
         });
 
+
         console.log(sumArray);
         //The most importants elements should have distinct colors.
         i = 0;
@@ -320,6 +397,17 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
         console.log(colorMap);
+
+        //step = 1 hour by default
+        svg.step = 3600000;
+
+        svg.valuesIn.forEach(function(elem){
+            elem.x = (elem.time - svg.timeMin)/svg.step
+        });
+
+        svg.valuesOut.forEach(function(elem){
+            elem.x = (elem.time - svg.timeMin)/svg.step
+        });
 
 
         function sortValues(a, b) {
@@ -339,9 +427,11 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         svg.valuesIn.sort(sortValues);
         svg.valuesOut.sort(sortValues);
 
+        var xMax = (timeMax - svg.timeMin)/svg.step + 1;
+
 
         //Evaluation of the abscissa domain
-        svg.x.domain([-0.625, xlength - 0.375]);
+        svg.x.domain([-0.625, xMax - 0.375]);
 
         var totalSumIn = [];
         var totalSumOut = [];
@@ -350,7 +440,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var sum = 0;
         i = 0;
 
-        while (x < xlength) {
+        while (x < xMax) {
 
             while (i < svg.valuesIn.length && svg.valuesIn[i].x == x) {
                 svg.valuesIn[i].y = sum;
@@ -365,7 +455,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         x = svg.valuesOut[0].x;
         i = 0;
 
-        while (x < xlength) {
+        while (x < xMax) {
 
             while (i < svg.valuesOut.length && svg.valuesOut[i].x == x) {
                 sum += svg.valuesOut[i].height;
@@ -454,7 +544,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         selection.append("svg:title")
           .text(function (d) {
-              return d.item + "\n" + svg.legend[d.x % svg.legend.length].text + ", " + d.height + " " + json[0].unit;
+              return d.item + "\n" + (new Date(d.time)).toString() + ", " + d.height + " " + svg.units;
           });
 
 
@@ -596,7 +686,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           .attr('y', -svg.margin.left)
           .attr("x", -svg.height / 2)
           .attr("transform", "rotate(-90)")
-          .text(json[0].unit);
+          .text(svg.units);
         
         
         
@@ -610,7 +700,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var trSelec;
 
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
-            return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + json[0].unit;
+            return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
         });
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
@@ -631,7 +721,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             redrawHisto2DStackDouble(div, svg);
         });
 
-        hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xlength)
+        hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xMax);
 
     });
 
@@ -2678,6 +2768,9 @@ function createCurveMinute(div, svg, mydiv, urlJson){
 
         //json ok, graph creation
 
+        //update by minute
+        svg.type = "MINUTE";
+
         json = json.response.data;
         svg.legendFirstItem = +json[1].legend[0].text.split("h")[0];
         console.log(json);
@@ -2860,6 +2953,9 @@ function createCurveHour(div, svg, mydiv, urlJson){
 
         //json ok, graph creation
 
+        //hourly update
+        svg.type = "HOUR";
+
         json = json.response.data;
         svg.legendFirstItem = +json[1].legend[0].text.split("h")[0];
         console.log(json);
@@ -2971,7 +3067,7 @@ function createCurveHour(div, svg, mydiv, urlJson){
           .attr("transform", "rotate(-90)")
           .text(json[0].unit);
 
-        //legendCurveAxisX(svg);
+        legendCurveAxisX(svg);
 
         svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
         svg.newY = d3.scaleLinear().range(svg.y.range()).domain(svg.y.domain());
@@ -3102,7 +3198,7 @@ function updateCurve(svg){
 
     niceTicks(svg.axisy);
 
-    //legendCurveAxisX(svg);
+    legendCurveAxisX(svg);
 
     gridSimpleGraph(svg,true);
 
@@ -3114,27 +3210,51 @@ function updateCurve(svg){
  ************************************************************************************************************/
 
 function legendCurveAxisX(svg){
-    var mn, roundedMn;
-    svg.axisx.selectAll(".tick").select("text").text(function(d){
-        mn = ((d%30)*2);
-        roundedMn = Math.round(mn);
 
-        //Javascript isn't a precise calculator, this avoid some weirdness.
-        if(mn.toFixed(3) !== roundedMn.toFixed(3)){
-            this.parentNode.remove();
-            return;
-        }
+    if(svg.type === "HOUR"){
 
-        if(roundedMn !=0){
-            if(roundedMn <10){
-                roundedMn = "0"+roundedMn;
+        var roundedHour;
+        svg.axisx.selectAll(".tick").select("text").text(function (d) {
+
+            roundedHour = Math.round(d);
+
+            //if the ticks isn't at "x" o'clock
+            if(roundedHour !== d){
+                this.parentNode.remove();
+                return;
             }
-            return (Math.floor(d/30) + svg.legendFirstItem)%24 + "h" + roundedMn;
 
-        }
+            // -1 because first x value equals 1
+            return (svg.legendFirstItem  + d - 1) % 24 + "h";
 
-        return (Math.floor(d/30) + svg.legendFirstItem)%24 + "h";
-    });
+
+        });
+
+    }else {
+
+
+        var mn, roundedMn;
+        svg.axisx.selectAll(".tick").select("text").text(function (d) {
+            mn = ((d % 30) * 2);
+            roundedMn = Math.round(mn);
+
+            //Javascript isn't a precise calculator, this avoid some weirdness.
+            if (mn.toFixed(3) !== roundedMn.toFixed(3)) {
+                this.parentNode.remove();
+                return;
+            }
+
+            if (roundedMn != 0) {
+                if (roundedMn < 10) {
+                    roundedMn = "0" + roundedMn;
+                }
+                return (Math.floor(d / 30) + svg.legendFirstItem) % 24 + "h" + roundedMn;
+
+            }
+
+            return (Math.floor(d / 30) + svg.legendFirstItem) % 24 + "h";
+        });
+    }
 }
 
 

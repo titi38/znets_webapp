@@ -252,7 +252,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             }
 
             elemToPush = {
-                time: (new Date(elemJson[contentDateValue])).getTime(),
+                x: (new Date(elemJson[contentDateValue])).getTime(),
                 height: +elemJson[contentAmountValue],
                 item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
                 stroke: "#000000"
@@ -264,8 +264,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
                 sumMap.set(elemToPush.item, sumMap.get(elemToPush.item) + elemToPush.height);
             }
 
-            svg.timeMin = Math.min(svg.timeMin,elemToPush.time);
-            timeMax = Math.max(timeMax,elemToPush.time);
+            svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
+            timeMax = Math.max(timeMax,elemToPush.x);
 
             if(elemJson[contentDirectionValue] === "IN"){
 
@@ -402,11 +402,11 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         svg.step = 3600000;
 
         svg.valuesIn.forEach(function(elem){
-            elem.x = (elem.time - svg.timeMin)/svg.step
+            elem.x = (elem.x - svg.timeMin)/svg.step
         });
 
         svg.valuesOut.forEach(function(elem){
-            elem.x = (elem.time - svg.timeMin)/svg.step
+            elem.x = (elem.x - svg.timeMin)/svg.step
         });
 
 
@@ -544,7 +544,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         selection.append("svg:title")
           .text(function (d) {
-              return d.item + "\n" + (new Date(d.time)).toString() + ", " + d.height + " " + svg.units;
+              return d.item + "\n" + getDateFromAbscissa(svg,d.x).toString() + ", " + d.height + " " + svg.units;
           });
 
 

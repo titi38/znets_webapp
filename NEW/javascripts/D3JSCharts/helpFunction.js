@@ -70,7 +70,7 @@ function axisXLegendDouble(svg){
     if (Math.abs(dround - d) >= 1e-7){
       this.parentNode.remove();
     }else{
-      date = new Date(dround*svg.step + svg.timeMin);
+      date = getDateFromAbscissa(svg,dround);
       return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
     }
   });
@@ -622,3 +622,15 @@ function searchDirectionValue(jsonContent){
 }
 
 
+
+/************************************************************************************************************
+ *
+ *  return a date javascript object from "x" abscissa value
+ *
+ ***********************************************************************************************************/
+
+function getDateFromAbscissa(svg,x){
+
+  return new Date(x*svg.step + svg.timeMin);
+
+}

@@ -685,8 +685,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           .attr("dy", "1em")
           .attr('y', -svg.margin.left)
           .attr("x", -svg.height / 2)
-          .attr("transform", "rotate(-90)")
-          .text(svg.units);
+          .attr("transform", "rotate(-90)");
+        
+        axisYLegendDouble(svg);
         
         
         
@@ -1823,6 +1824,7 @@ function updateHisto1DStackDouble(svg){
 
     niceTicks(svg.axisyInput);
 
+    axisYLegendDouble(svg);
 
     gridDoubleGraph(svg);
 
@@ -3702,10 +3704,11 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netNbLocalHosts.json?minute&dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
-drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-17%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");
 //drawChart("./netTop10NbExtHosts.json", "Graph");
 //drawChart("./netNbLocalHosts.json", "Graph");
+//drawChart("./netTopHostsTraffic.json","Graph");
 //drawChart("worldmap.json","Graph");

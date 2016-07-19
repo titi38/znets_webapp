@@ -63,14 +63,15 @@ function niceTicks(axis) {
 /***********************************************************************************************************/
 
 function axisXLegendDouble(svg){
-  var dround;
+  var dround,date;
 
   svg.axisx.selectAll(".tick").select("text").text(function(d){
     dround = Math.round(d);
     if (Math.abs(dround - d) >= 1e-7){
       this.parentNode.remove();
     }else{
-      return svg.legend[dround%svg.legend.length].text;
+      date = new Date(dround*svg.step + svg.timeMin);
+      return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
     }
   });
 
@@ -519,4 +520,105 @@ function scrollToElementTableTransition(elem, table){
   });
 
 }
+
+
+/************************************************************************************************************/
+
+function testJson(json){
+  return typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined";
+}
+
+/************************************************************************************************************
+ *
+ *  Search inside a content array for the "item" value, used as id.
+ *
+ ***********************************************************************************************************/
+
+function searchItemValue(jsonContent){
+  
+    var length = jsonContent.length;
+    for(var i = 0;i < length; i++ ){
+
+        if(jsonContent[i] === "name" || jsonContent[i] === "hostname"){
+
+                  return i;
+
+        }
+     }
+
+    console.error("no item value found");
+    return false;
+  
+}
+
+/************************************************************************************************************
+ *
+ *  Search inside a content array for the date value, used for abscissas
+ *
+ ***********************************************************************************************************/
+
+function searchDateValue(jsonContent){
+
+  var length = jsonContent.length;
+  for(var i = 0;i < length; i++ ){
+
+    if(jsonContent[i] === "date"){
+
+      return i;
+
+    }
+  }
+
+  console.error("no date value found");
+  return false;
+
+}
+
+
+/************************************************************************************************************
+ *
+ *  Search inside a content array for the amount value, used for ordinates
+ *
+ ***********************************************************************************************************/
+
+function searchAmountValue(jsonContent){
+
+  var length = jsonContent.length;
+  for(var i = 0;i < length; i++ ){
+
+    if(jsonContent[i] === "amount"){
+
+      return i;
+
+    }
+  }
+
+  console.error("no amount value found");
+  return false;
+
+}
+
+/************************************************************************************************************
+ *
+ *  Search inside a content array for the direction value
+ *
+ ***********************************************************************************************************/
+
+function searchDirectionValue(jsonContent){
+
+  var length = jsonContent.length;
+  for(var i = 0;i < length; i++ ){
+
+    if(jsonContent[i] === "direction"){
+
+      return i;
+
+    }
+  }
+
+  console.error("no direction value found");
+  return false;
+
+}
+
 

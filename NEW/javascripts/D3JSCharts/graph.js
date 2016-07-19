@@ -87,7 +87,8 @@ var typeGraph = urlJson.split(/[\.\/]+/);
     switch(typeGraph){
         case "netNbLocalHosts":
         case "netNbExternalHosts":
-            return createCurve;
+            //return createCurveMinute;
+            return createCurveHour;
         case "netNbFlow":
         case "netProtocoleTraffic":
         case "netTopHostsTraffic":
@@ -141,6 +142,8 @@ function noData(div,svg,mydiv){
 }
 /***********************************************************************************************************/
 
+
+//TODO Let's say hourly for now
 function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     d3.json(urlJson, function (error, json) {
@@ -149,16 +152,13 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         console.log(json);
 
         //test json conformity
-        if (typeof json === "undefined" || json.result != "true" || error) {
+        if (testJson(json) || error) {
             noData(div, svg,mydiv);
             return false;
         }
 
         //json ok, graph creation
-
-        json = json.response.data;
-        svg.legend = json[1].legend;
-        console.log(json);
+        
 
         //table for legend
         svg.tableWidth = 200;
@@ -204,16 +204,91 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         svg.selec = svg.frame.append("rect").attr("class", "rectSelec");
 
 
+
+
+        
+        
+        json = json.response;
+        var jsonData = json.data;
+        var jsonContent = json.content;
+
+
+        var contentItemValue = searchItemValue(jsonContent);
+        var contentDateValue = searchDateValue(jsonContent);
+        var contentAmountValue = searchAmountValue(jsonContent);
+        var contentDirectionValue = searchDirectionValue(jsonContent);
+
+        //if no item/date/amount/direction value found, the graph can't be done.
+        if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
+            return;
+        }
+
+        svg.contentItemString = jsonContent[contentItemValue];
+
+        svg.units = json.units;
+
+        console.log(json);
+        
+        
+
         svg.valuesIn = [];
         svg.valuesOut = [];
-        var xlength = json[2].tab.length;
+
+        var dataLength = jsonData.length;
 
         var colorMap = new Map();
         var sumMap = new Map();
-        var i;
+        var i, elemJson, elemToPush;
+        svg.timeMin = Infinity;
+        var timeMax = 0;
+
+
+        // Data are processed and sorted according to their direction.
+        for(i = 0; i < dataLength; i++){
+            elemJson = jsonData[i];
+
+            if(elemJson[contentAmountValue] === 0){
+                continue;
+            }
+
+            elemToPush = {
+                time: (new Date(elemJson[contentDateValue])).getTime(),
+                height: +elemJson[contentAmountValue],
+                item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
+                stroke: "#000000"
+            };
+
+            if (!sumMap.has(elemToPush.item)) {
+                sumMap.set(elemToPush.item, elemToPush.height);
+            } else {
+                sumMap.set(elemToPush.item, sumMap.get(elemToPush.item) + elemToPush.height);
+            }
+
+            svg.timeMin = Math.min(svg.timeMin,elemToPush.time);
+            timeMax = Math.max(timeMax,elemToPush.time);
+
+            if(elemJson[contentDirectionValue] === "IN"){
+
+                svg.valuesIn.push(elemToPush);
+
+            }else{
+
+                svg.valuesOut.push(elemToPush)
+
+            }
+
+
+        }
+        
+
+
+
+
+
+/*
 
         //TODO Premier if plus forcément utile
-        /*
+
         if ((typeof json[2].tab[0].item === "undefined")) {
 
             //json[i].tab[j].item = json[i].name
@@ -237,7 +312,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
                     json[i].tab[j].stroke = "#000000";
 
-                    if (i % 2 == 0) {
+                    if (json[i].type == "IN") {
                         //json[i].tab[j].stroke = "#fff";
                         svg.valuesIn.push(json[i].tab[j]);
 
@@ -251,7 +326,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             }
 
         } else {
-*/
+
             for (i = 2; i < json.length; i++) {
 
                 for (var j = 0; j < xlength; j++) {
@@ -281,7 +356,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
                 }
             }
-       // }
+        }
+        */
+
 
 
         var sumArray = [];
@@ -304,6 +381,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             return b.sum - a.sum;
         });
 
+
         console.log(sumArray);
         //The most importants elements should have distinct colors.
         i = 0;
@@ -319,6 +397,17 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
         console.log(colorMap);
+
+        //step = 1 hour by default
+        svg.step = 3600000;
+
+        svg.valuesIn.forEach(function(elem){
+            elem.x = (elem.time - svg.timeMin)/svg.step
+        });
+
+        svg.valuesOut.forEach(function(elem){
+            elem.x = (elem.time - svg.timeMin)/svg.step
+        });
 
 
         function sortValues(a, b) {
@@ -338,9 +427,11 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         svg.valuesIn.sort(sortValues);
         svg.valuesOut.sort(sortValues);
 
+        var xMax = (timeMax - svg.timeMin)/svg.step + 1;
+
 
         //Evaluation of the abscissa domain
-        svg.x.domain([-0.625, xlength - 0.375]);
+        svg.x.domain([-0.625, xMax - 0.375]);
 
         var totalSumIn = [];
         var totalSumOut = [];
@@ -349,7 +440,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var sum = 0;
         i = 0;
 
-        while (x < xlength) {
+        while (x < xMax) {
 
             while (i < svg.valuesIn.length && svg.valuesIn[i].x == x) {
                 svg.valuesIn[i].y = sum;
@@ -364,7 +455,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         x = svg.valuesOut[0].x;
         i = 0;
 
-        while (x < xlength) {
+        while (x < xMax) {
 
             while (i < svg.valuesOut.length && svg.valuesOut[i].x == x) {
                 sum += svg.valuesOut[i].height;
@@ -453,7 +544,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         selection.append("svg:title")
           .text(function (d) {
-              return d.item + "\n" + svg.legend[d.x % svg.legend.length].text + ", " + d.height + " " + json[0].unit;
+              return d.item + "\n" + (new Date(d.time)).toString() + ", " + d.height + " " + svg.units;
           });
 
 
@@ -595,7 +686,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           .attr('y', -svg.margin.left)
           .attr("x", -svg.height / 2)
           .attr("transform", "rotate(-90)")
-          .text(json[0].unit);
+          .text(svg.units);
         
         
         
@@ -609,7 +700,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var trSelec;
 
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
-            return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + json[0].unit;
+            return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
         });
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
@@ -630,7 +721,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             redrawHisto2DStackDouble(div, svg);
         });
 
-        hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xlength)
+        hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xMax);
 
     });
 
@@ -650,7 +741,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         console.log(json);
 
         //test json conformity
-        if (typeof json === "undefined" || json.result != "true" || error) {
+        if (testJson(json) || error) {
             console.log("incorrect url/data");
             noData(div, svg,mydiv);
             return false;
@@ -2660,7 +2751,7 @@ function addZoomSimple(svg,updateFunction){
 
 /************************************************************************************************************/
 
-function createCurve(div,svg,mydiv,urlJson){
+function createCurveMinute(div, svg, mydiv, urlJson){
 
 
     d3.json(urlJson, function (error, json) {
@@ -2669,13 +2760,16 @@ function createCurve(div,svg,mydiv,urlJson){
         console.log(json);
 
         //test json conformity
-        if (typeof json === "undefined" || json.result != "true" || error) {
+        if (testJson(json) || error ) {
             console.log("incorrect url/data");
             noData(div, svg,mydiv);
             return false;
         }
 
         //json ok, graph creation
+
+        //update by minute
+        svg.type = "MINUTE";
 
         json = json.response.data;
         svg.legendFirstItem = +json[1].legend[0].text.split("h")[0];
@@ -2709,6 +2803,7 @@ function createCurve(div,svg,mydiv,urlJson){
         svg.area = d3.area();
         var tab = json[2].tab;
         var tabLength = tab.length;
+
 
         //value each couple minutes;
         var valuesPerHour = 30;
@@ -2837,6 +2932,196 @@ function createCurve(div,svg,mydiv,urlJson){
 
 
 }
+
+
+/************************************************************************************************************/
+
+function createCurveHour(div, svg, mydiv, urlJson){
+
+
+    d3.json(urlJson, function (error, json) {
+
+
+        console.log(json);
+
+        //test json conformity
+        if (testJson(json) || error ) {
+            console.log("incorrect url/data");
+            noData(div, svg,mydiv);
+            return false;
+        }
+
+        //json ok, graph creation
+
+        //hourly update
+        svg.type = "HOUR";
+
+        json = json.response.data;
+        svg.legendFirstItem = +json[1].legend[0].text.split("h")[0];
+        console.log(json);
+
+        var divWidth = Math.max(svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1, parseInt(div.style("height"),10));
+
+        svg.attr("width", divWidth).attr("height", divHeight);
+
+
+        svg.width = divWidth - svg.margin.left - svg.margin.right;
+        svg.height = divHeight - svg.margin.bottom - svg.margin.top;
+
+
+        svg.x = d3.scaleLinear()
+          .range([0, svg.width]);
+
+        svg.y = d3.scaleLinear()
+          .range([svg.height, 0]);
+
+
+        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width)
+          .attr("height", svg.height).classed("svgline", true);
+
+        svg.grid = svg.svg.append("g").classed("grid", true);
+
+        svg.chart = svg.svg.append("g");
+
+        svg.valueline = d3.line();
+        svg.area = d3.area();
+        svg.data = json[2].tab;
+
+/*
+        //TODO TEST A SUPPRIMER
+        svg.data.push({x:60,y:1});
+*/
+
+        //sort, for make sure
+        svg.data.sort(function(a,b){return a.x - b.x;});
+
+        var tabLength = svg.data.length;
+
+        var firstX = svg.data[0].x;
+
+
+
+
+        svg.x.domain([firstX, svg.data[tabLength-1].x]);
+        //*1.05 for margin
+        svg.y.domain([0, d3.max(svg.data,function(elem){return elem.y}) * 1.05]);
+
+
+
+        //Test for gap in data, give y=0 in that case.
+
+        for(var i = 0; i < svg.data.length;i++){
+
+            var pos = firstX + i;
+            if(svg.data[i].x > pos){
+                console.log("kikoo");
+                var newElem = {x:pos, y: 0};
+                svg.data.splice(i,0,newElem);
+            }
+
+        }
+
+
+        console.log(svg.data);
+
+
+        svg.chart.append("path").classed("line", true);
+        svg.chart.append("path").classed("area", true);
+
+        svg.area.x(function (d) {
+            return svg.x(d.x);
+        }).y1(function (d) {
+            return svg.y(d.y);
+        }).y0(svg.y.range()[0]);
+
+
+        svg.valueline
+          .x(function (d) {
+              return svg.x(d.x);
+          }).y(function (d) {
+            return svg.y(d.y);
+        });
+
+
+        svg.axisx = svg.append("g")
+          .classed("x axis", true)
+          .attr('transform', 'translate(' + [svg.margin.left, svg.height + svg.margin.top] + ")");
+
+        svg.axisx.call(d3.axisBottom(svg.x));
+
+        svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')').classed("y axis", true);
+        svg.axisy.call(d3.axisLeft(svg.y));
+
+        niceTicks(svg.axisy);
+
+        gridSimpleGraph(svg, true);
+
+        //      Label of the y axis
+        svg.ylabel = svg.axisy.append("text")
+          .attr("class", "label")
+          .attr("text-anchor", "middle")
+          .attr("dy", "1em")
+          .attr('y', -svg.margin.left)
+          .attr("x", -svg.height / 2)
+          .attr("transform", "rotate(-90)")
+          .text(json[0].unit);
+
+        legendCurveAxisX(svg);
+
+        svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
+        svg.newY = d3.scaleLinear().range(svg.y.range()).domain(svg.y.domain());
+
+
+        svg.newValueline = d3.line();
+        svg.newArea = d3.area();
+
+
+        svg.newArea.x(function (d) {
+            return svg.newX(d.x);
+        }).y1(function (d) {
+            return svg.newY(d.y);
+        }).y0(svg.newY.range()[0]);
+
+
+        svg.newValueline
+          .x(function (d) {
+              return svg.newX(d.x);
+          }).y(function (d) {
+            return svg.newY(d.y);
+        });
+
+
+        svg.transition("start").duration(800).tween("", function () {
+
+            var data = JSON.parse(JSON.stringify(svg.data));
+            var line = svg.chart.select(".line");
+            var area = svg.chart.select(".area");
+
+            return function (t) {
+                t = Math.min(1, Math.max(0, t));
+                svg.data.forEach(function (elem, i) {
+                    elem.y = data[i].y * t;
+                });
+                line.attr("d", svg.newValueline(svg.data));
+                area.attr("d", svg.newArea(svg.data));
+            }
+        });
+
+
+        addZoomSimple(svg, updateCurve);
+
+        d3.select(window).on("resize." + mydiv, function () {
+            console.log("resize");
+            redrawCurve(div, svg);
+        });
+
+    });
+
+
+}
+
+
 /************************************************************************************************************/
 
 function redrawCurve(div,svg){
@@ -2925,27 +3210,51 @@ function updateCurve(svg){
  ************************************************************************************************************/
 
 function legendCurveAxisX(svg){
-    var mn, roundedMn;
-    svg.axisx.selectAll(".tick").select("text").text(function(d){
-        mn = ((d%30)*2);
-        roundedMn = Math.round(mn);
 
-        //Javascript isn't a precise calculator, this avoid some weirdness.
-        if(mn.toFixed(3) !== roundedMn.toFixed(3)){
-            this.parentNode.remove();
-            return;
-        }
+    if(svg.type === "HOUR"){
 
-        if(roundedMn !=0){
-            if(roundedMn <10){
-                roundedMn = "0"+roundedMn;
+        var roundedHour;
+        svg.axisx.selectAll(".tick").select("text").text(function (d) {
+
+            roundedHour = Math.round(d);
+
+            //if the ticks isn't at "x" o'clock
+            if(roundedHour !== d){
+                this.parentNode.remove();
+                return;
             }
-            return (Math.floor(d/30) + svg.legendFirstItem)%24 + "h" + roundedMn;
 
-        }
+            // -1 because first x value equals 1
+            return (svg.legendFirstItem  + d - 1) % 24 + "h";
 
-        return (Math.floor(d/30) + svg.legendFirstItem)%24 + "h";
-    });
+
+        });
+
+    }else {
+
+
+        var mn, roundedMn;
+        svg.axisx.selectAll(".tick").select("text").text(function (d) {
+            mn = ((d % 30) * 2);
+            roundedMn = Math.round(mn);
+
+            //Javascript isn't a precise calculator, this avoid some weirdness.
+            if (mn.toFixed(3) !== roundedMn.toFixed(3)) {
+                this.parentNode.remove();
+                return;
+            }
+
+            if (roundedMn != 0) {
+                if (roundedMn < 10) {
+                    roundedMn = "0" + roundedMn;
+                }
+                return (Math.floor(d / 30) + svg.legendFirstItem) % 24 + "h" + roundedMn;
+
+            }
+
+            return (Math.floor(d / 30) + svg.legendFirstItem) % 24 + "h";
+        });
+    }
 }
 
 
@@ -3390,9 +3699,10 @@ function addZoomMap(svg){
 
 
 
-//drawChart("/dynamic/netNbLocalHosts.json?accurate=true&dd=2016-06-20%2011%3A44&df=2016-06-27%2011%3A44&dh=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?minute&dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netProtocolesPackets.json?dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&pset=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
+drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-17%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");

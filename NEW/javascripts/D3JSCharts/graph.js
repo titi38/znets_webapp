@@ -34,7 +34,7 @@ function drawChartFromInterface(urlJson, mydiv) {
         svg = div.append("svg");
     }
     svg.classed("crisp",true);
-    svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
+    svg.margin = {top: 0, right: 50, bottom: 0, left: 60, zero:28};
 
 
     whichCreationFunction(urlJson)(div,svg,mydiv,urlJson)

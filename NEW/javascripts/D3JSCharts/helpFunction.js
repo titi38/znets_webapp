@@ -91,6 +91,46 @@ function ticksSecondAxisXDouble(svg){
 
 /***********************************************************************************************************/
 
+
+function calculateParameters(svg, clickData) {
+
+  console.error(parseInt(svg.legend[clickData.x % svg.legend.length].text));
+
+  var timeShiftUnit = null;
+  var queryDate = null;
+  var queryDateFormat = null;
+
+  switch($("#preset_ChartsForm").val()) {
+    case "MINUTE":
+      console.warn("TODO : in 'helpFunction.js' (901);");
+      timeShiftUnit = "minutes";
+      queryDate = "YYYY-MM-DD HH:mm";
+      queryDateFormat = "YYYY-MM-DD HH:mm";
+      break;
+    case "HOURLY":
+      timeShiftUnit = "hours";
+      queryDate = "YYYY-MM-DD "+parseInt(svg.legend[clickData.x % svg.legend.length].text)+":00";
+      queryDateFormat = "YYYY-MM-DD HH:00";
+      break;
+    case "DAILY":
+      timeShiftUnit = "days";
+      queryDate = "YYYY-MM-DD 00:00";
+      queryDateFormat = "YYYY-MM-"+parseInt(svg.legend[clickData.x % svg.legend.length].text)+" 00:00";
+      break;
+    default:
+      console.error("UNEXPECTED PRESET VALUE in 'helpFunction.js' : %s (105)", $("#preset_ChartsForm").val());
+        exit;
+      break;
+  }
+
+  console.error(moment(queryDate).format(queryDateFormat));
+  //console.error(moment($("#dateDebCharts").val()).add(clickData.x, timeShiftUnit).format(queryDateFormat));
+
+}
+
+
+/***********************************************************************************************************/
+
 function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
 
@@ -107,6 +147,8 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
   selection
     .on("click", function (d) {
+
+      calculateParameters(svg, d);
 
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {

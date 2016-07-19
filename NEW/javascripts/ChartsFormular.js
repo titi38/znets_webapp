@@ -58,11 +58,11 @@ function applyChartsTimeslice(){
     switch (timesliceValue) {
         case "lastDay" :
         case "hourly" :
-            $("#preset_ChartsForm").val("hourly");
+            $("#preset_ChartsForm").val("HOURLY");
             break;
         case "lastMonth" :
         case "daily" :
-            $("#preset_ChartsForm").val("daily");
+            $("#preset_ChartsForm").val("DAILY");
             break;
         default :
             console.error("UNEXPECTED ChartsTimeslice select value (ChartsFormular.js), %i ", 102);

@@ -262,6 +262,9 @@ iframe {
     .toBottomTabsContainer {
         height:85vh;
     }
+    .toBottomChartsContainer {
+        height:77vh;
+    }
     .dataTables_scrollBody{
         max-height:72vh !important;
     }
@@ -276,6 +279,9 @@ iframe {
         }
         .toBottomTabsContainer {
             height:85vh;
+        }
+        .toBottomChartsContainer {
+            height:77vh;
         }
         .dataTables_scrollBody{
             max-height:70vh !important;
@@ -293,6 +299,9 @@ iframe {
         .toBottomTabsContainer {
             height:85vh;
         }
+        .toBottomChartsContainer {
+            height:77vh;
+        }
         .dataTables_scrollBody{
             max-height:72vh !important;
         }
@@ -308,6 +317,9 @@ iframe {
         }
         .toBottomTabsContainer {
             height:85vh;
+        }
+        .toBottomChartsContainer {
+            height:77vh;
         }
         .dataTables_scrollBody{
             max-height:72vh !important;

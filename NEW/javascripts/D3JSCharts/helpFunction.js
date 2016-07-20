@@ -110,7 +110,7 @@ function ticksSecondAxisXDouble(svg){
 /***********************************************************************************************************/
 
 
-function calculateParameters(svg, clickData) {
+function getPieJsonQuery(svg, clickData) {
 
   /*
   console.error(moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD HH:mm"));// &dd=
@@ -121,7 +121,7 @@ function calculateParameters(svg, clickData) {
   console.error(clickData.direction.toLowerCase());//&type=
    */
 
-  return ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
+  return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
       +( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
       + ( ( moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") : "" )
       + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -150,14 +150,15 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   selection
     .on("click", function (d) {
 
-      console.log(calculateParameters(svg, d));
+      console.log(getPieJsonQuery(svg, d));
 
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {
         div.overlay.style("display", null);
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        drawComplData("/dynamic/netExtHostsTopHostsTraffic.json?dd=2016-07-18%2020:00&df=2016-07-18%2021:00&pset=HOURLY&type=out&ip=193.48.83.251", svg, svg.pieside, d,div.overlay);
+        //drawComplData("/dynamic/netExtHostsTopHostsTraffic.json?dd=2016-07-18%2020:00&df=2016-07-18%2021:00&pset=HOURLY&type=out&ip=193.48.83.251", svg, svg.pieside, d,div.overlay);
+        drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
       }, 500);
 
     });

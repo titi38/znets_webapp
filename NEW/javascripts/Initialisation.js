@@ -116,7 +116,7 @@ function initialisation(){
         /*********************************************************************************************************
          Initialize Chart Formular
          ********************************************************************************************************/
-        applyChartsTimeslice();
+        applyChartsTimestep();
 
     });
 
@@ -246,7 +246,7 @@ function initializeRawDataForm() {
 
 
 
-function initializeChartsTimesliceForm() {
+function initializeChartsTimestepForm() {
 
     $('#fromDate_ChartsForm').datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
@@ -284,7 +284,7 @@ function initializeChartsTimesliceForm() {
 
             $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(e.date);
 
-            switch ($("#timesliceCharts").val()) {
+            switch ($("#timestepCharts").val()) {
                 case "lastDay" :
                     $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
                     break;
@@ -296,7 +296,7 @@ function initializeChartsTimesliceForm() {
                     // DO NOTHING
                     break;
                 default :
-                    console.error("UNEXPECTED ChartsTimeslice select value (Initialisation.js), %i ", 103);
+                    console.error("UNEXPECTED ChartsTimestep select value (Initialisation.js), %i ", 103);
                     break;
             }
 
@@ -358,7 +358,7 @@ function loadChartJsonToDiv(selectedNavChart) {
 
 function initializeNetworkCallback() {
 
-    initializeChartsTimesliceForm();
+    initializeChartsTimestepForm();
 
     callAJAX("getNetworkList.json", "", "json", addNetworksTabs, null);
 

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+
+
+    <!-- D3JS & CHARTS STYLES -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="NEW/javascripts/D3JSCharts/graph.css">
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+
+
+
+
+    <!-- DATATABLES -->
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+
+
+
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <!--script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script-->
+
+
+
+    <!-- Sidebar's styles -->
+    <link rel="stylesheet" type="text/css" href="NEW/styles/sideBar.css">
+
+
+
+    <!-- MOMENT -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <!--script type="text/javascript" src="NEW/bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script-->
+
+
+
+    <!-- DATETIMEPICKER -->
+    <script src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="NEW/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+
+
+
+    <!-- BOOTSTRAP -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"-->
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+
+    <!-- NOUISLIDER -->
+    <script src="NEW/bower_components/nouislider/distribute/nouislider.min.js"></script>
+    <link rel="stylesheet" href="NEW/bower_components/nouislider/distribute/nouislider.min.css">
+
+
+
+    <!-- FONT-AWESOME -->
+    <link rel="stylesheet" href="NEW/bower_components/font-awesome/css/font-awesome.min.css">
+
+    <!-- FONT-AWESOME-ANIMATION -->
+    <link rel="stylesheet" href="NEW/bower_components/font-awesome-animation/dist/font-awesome-animation.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+
+    <!-- RIVETS -->
+    <script src="NEW/bower_components/sightglass/index.js"></script>
+    <script type="text/javascript" src="NEW/bower_components/rivets/dist/rivets.min.js"></script>
+
+    <!-- DoT -->
+    <script src="NEW/bower_components/doT/doT.min.js"></script>
+
+    <!-- JSON-FORMATTER-JS -->
+    <script src="NEW/node_modules/json-formatter-js/dist/bundle.js"></script>
+
+
+    <!--JAVASCRIPT IMPORT -->
+    <script type="text/javascript" src="NEW/javascripts/GlobalVariables.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/SessionVariables.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/JsonTools.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/CallAjax.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/WebSocket.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Logs.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Alerts.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Auth.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Initialisation.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/JQueryHack.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Notifications.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Rawdata/RawDataTabs.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Rawdata/RawDataForm.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Rawdata/RawDataApplications.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/ChartsFormular.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Networks.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/Localhosts.js"></script>
+
+
+
+    <script type="text/javascript" src="NEW/javascripts/D3JSCharts/graph.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/D3JSCharts/helpFunction.js"></script>
+
+
+    <script type="text/javascript" src="NEW/javascripts/D3JSCharts/MonitoringCharts.js"></script>
+
+
+
+
+    <!-- MY STYLES -->
+    <link rel="stylesheet" type="text/css" href="NEW/styles/style.css">
+    <link rel="stylesheet" type="text/css" href="NEW/styles/tabs.css">
+
+
+
+    <!-- D3 Lines Chart Style -->
+    <link rel="stylesheet" href="NEW/styles/monitoringCharts.css">
+
+
+
+    <link rel="stylesheet" href="NEW/styles/chartNavigation.css">
+
+
+
+
+</head>
+<body>
+
+<form class="form-horizontal row" id="charts_form"> <!--onsubmit="getRawData(serializeRawDataForm()); return false" -->
+
+    <div class="panel panel-default">
+        <div class="panel-heading padding2px">
+            <fieldset class="container">
+                <!--legend>Timestamp Filter</legend-->
+                <div class="form-group col-md-4">
+                    <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
+                    <div class="col-xs-10 col-md-8">
+                        <select class="form-control" id="timesliceCharts" onchange="onChangeChartsTimestep(); updateChartsTimestep(this)">
+                            <option value="lastDay" selected="selected">Last 24h</option>
+                            <option value="lastMonth" >Last Month</option>
+                            <option value="hourly">Custom (Hourly)</option>
+                            <option value="daily" >Custom (Daily)</option>
+                        </select>
+                        <input type="hidden" name="pset" id="preset_ChartsForm"/>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
+                    <div class="col-xs-10">
+                        <div class='input-group date' id='fromDate_ChartsForm'>
+                            <input type='text' class="form-control" onchange="onChangeChartsTimestep();" required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                        </div>
+                        <input type="hidden" name="dd" id="dateDebCharts" value=""/>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
+                    <div class="col-xs-10">
+                        <div class='input-group date' id='toDate_ChartsForm'>
+                            <input type='text' class="form-control" onchange="onChangeChartsTimestep();" required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                        </div>
+                        <input type="hidden" name="df" id="dateFinCharts" value=""/>
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-12 col-md-1 text-center">
+                    <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsTimestep()" disabled>Apply</button>
+                </div>
+
+                <div class="form-group col-xs-12 col-md-1 text-center">
+                    <button type="button" class="btn btn-default" id="resetBtn_charts_form" onclick="resetChartsTimeslice()" disabled>Reset</button>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+
+</form>
+
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+
+        /*********************************************************************************************************
+        Initialize NetworkTab
+        ********************************************************************************************************/
+        initializeNetwork();
+
+        /*********************************************************************************************************
+        Initialize Chart Formular
+        ********************************************************************************************************/
+        applyChartsTimestep();
+
+    });
+</script>
+
+</body>
+</html>

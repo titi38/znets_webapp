@@ -97,16 +97,16 @@ function setChartJsonFUllURL (jsonData, ajaxParams, subNetwork){
     var disabled = myform.find(':input:disabled').prop('disabled', false);
 
     // serialize the form
-    var serializedTimesliceForm = myform.serialize();
+    var serializedTimestepForm = myform.serialize();
 
     // re-disabled the set of inputs that you previously enabled
     disabled.prop('disabled',true);
 
     var serializedSubNet = (subNetwork === "") ? "" : "&net="+subNetwork;
 
-    console.warn(proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimesliceForm+"&dh="+parseInt(moment().format("Z")));
+    console.warn(proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z")));
 
 
-    return proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimesliceForm+"&dh="+parseInt(moment().format("Z"));
+    return proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z"));
 
 }

@@ -72,22 +72,22 @@
 
                 <!--"Traffic by"-->
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByProtocoles'">
-                    <svg class = "diagram" rv-data-network="network" ></svg>
+                    <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsProtoTraffic.json" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByLocalhosts'">
-                    <svg class = "diagram " rv-data-network="network" ></svg>
+                    <svg class = "diagram " rv-data-network="network" data-pie-json="netExtHostsTopHostsTraffic.json" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByServices'">
-                    <svg class = "diagram " rv-data-network="network" ></svg>
-                </div>
-                <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByAutonomousSystems'">
-                    <svg class = "diagram " rv-data-network="network" ></svg>
-                </div>
-                <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByApplications'">
-                    <svg class = "diagram " rv-data-network="network" ></svg>
+                    <svg class = "diagram " rv-data-network="network" data-pie-json="netLocHostsServiceTraffic.json" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByCountries'">
-                    <svg class = "diagram " rv-data-network="network" ></svg>
+                    <svg class = "diagram " rv-data-network="network" data-pie-json="netLocHostsTopCountryTraffic.json" ></svg>
+                </div>
+                <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByAutonomousSystems'">
+                    <svg class = "diagram " rv-data-network="network" data-pie-json="netLocHostsTopAsTraffic.json" ></svg>
+                </div>
+                <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByApplications'">
+                    <svg class = "diagram " rv-data-network="network" data-pie-json="netLocHostsTopAppTraffic.json" ></svg>
                 </div>
 
 
@@ -96,19 +96,19 @@
                     <svg class = "diagram" rv-data-network="network" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsByLocalhosts'">
-                    <svg class = "diagram" rv-data-network="network" ></svg>
+                    <svg class = "diagram" rv-data-network="network" data-pie-json="netExtHostsTopHostsNbFlow.json" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsByServices'">
-                    <svg class = "diagram" rv-data-network="network" ></svg>
+                    <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsServiceNbFlow.json" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsByCountries'">
-                    <svg class = "diagram" rv-data-network="network" ></svg>
+                    <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsTopCountryNbFlow.json" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsByAutonomousSystems'">
-                    <svg class = "diagram" rv-data-network="network" ></svg>
+                    <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsTopAsNbFlow.json" ></svg>
                 </div>
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsByApplications'">
-                    <svg class = "diagram" rv-data-network="network" ></svg>
+                    <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsTopAppNbFlow.json" ></svg>
                 </div>
 
 
@@ -166,7 +166,7 @@
                     <svg class = "diagram" ></svg>
                 </div-->
                 <div class="tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'packetsByProtocoles'">
-                    <svg class = "diagram" rv-data-network="network" ></svg>
+                    <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsProtoPackets.json" ></svg>
                 </div>
                 <!--div class="tab-pane fade " rv-id="network | prepend 'packetsByApplications'">
                     <svg class = "diagram" ></svg>

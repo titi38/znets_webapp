@@ -95,61 +95,22 @@ function ticksSecondAxisXDouble(svg){
 
 function calculateParameters(svg, clickData) {
 
-  //console.error(parseInt(svg.legend[clickData.x % svg.legend.length].text));
-  //console.error(svg);
-
-  //selectedNavChart.dataset.chartJson
-  //selectedNavChart.dataset.chartJson
-
-
+  /*
+  console.error(moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD HH:mm"));// &dd=
+  console.error(moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD HH:mm"));// &df=
   console.error($("#preset_ChartsForm").val());// &pset=
-
   console.error(svg.attr("data-network")); // &net=
-
-
-
-  console.error(clickData);
-  console.error(clickData.time);
-  console.error(moment(clickData.time));
-  console.error(moment(clickData.time).format("YYYY-MM-DD HH:mm"));// &dd=
-
   console.error(clickData.item);//&ip=
   console.error(clickData.direction.toLowerCase());//&type=
-  //&df=
+   */
 
-
-
-/*
-  var timeShiftUnit = null;
-  var queryDate = null;
-  var queryDateFormat = null;
-
-  switch($("#preset_ChartsForm").val()) {
-    case "MINUTE":
-      console.warn("TODO : in 'helpFunction.js' (901);");
-      timeShiftUnit = "minutes";
-      queryDate = "YYYY-MM-DD HH:mm";
-      queryDateFormat = "YYYY-MM-DD HH:mm";
-      break;
-    case "HOURLY":
-      timeShiftUnit = "hours";
-      queryDate = "YYYY-MM-DD "+parseInt(svg.legend[clickData.x % svg.legend.length].text)+":00";
-      queryDateFormat = "YYYY-MM-DD HH:00";
-      break;
-    case "DAILY":
-      timeShiftUnit = "days";
-      queryDate = "YYYY-MM-DD 00:00";
-      queryDateFormat = "YYYY-MM-"+parseInt(svg.legend[clickData.x % svg.legend.length].text)+" 00:00";
-      break;
-    default:
-      console.error("UNEXPECTED PRESET VALUE in 'helpFunction.js' : %s (105)", $("#preset_ChartsForm").val());
-        exit;
-      break;
-  }
-
-  console.error(moment(queryDate).format(queryDateFormat));
-  //console.error(moment($("#dateDebCharts").val()).add(clickData.x, timeShiftUnit).format(queryDateFormat));
-*/
+  return ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
+      +( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
+      + ( ( moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") : "" )
+      + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
+      + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
+      + ( ( clickData.item ) ? "&ip="+clickData.item : "" )
+      + ( ( clickData.direction.toLowerCase() ) ? "&type="+clickData.direction.toLowerCase() : "" ) ;
 }
 
 
@@ -172,7 +133,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   selection
     .on("click", function (d) {
 
-      calculateParameters(svg, d);
+      console.log(calculateParameters(svg, d));
 
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {

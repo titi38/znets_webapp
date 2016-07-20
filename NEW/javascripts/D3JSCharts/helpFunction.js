@@ -240,9 +240,8 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
   var chartside = 0.75*pieside;
 
 
-  //TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
-  console.log(dataInit.item);
-  console.log(dataInit.height);
+  //TODO TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
+  console.log(dataInit);
   total=6000000000;
   //TEMPORAIRE
 
@@ -539,7 +538,7 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
     for(var i = 0;i < length; i++ ){
 
-        if(jsonContent[i] === "name" || jsonContent[i] === "hostname"){
+        if(jsonContent[i] === "name" || jsonContent[i] === "host"){
 
                   return i;
 

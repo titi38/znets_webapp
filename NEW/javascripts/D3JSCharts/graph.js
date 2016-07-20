@@ -87,8 +87,7 @@ var typeGraph = urlJson.split(/[\.\/]+/);
     switch(typeGraph){
         case "netNbLocalHosts":
         case "netNbExternalHosts":
-            //return createCurveMinute;
-            return createCurveHour;
+            return createCurve;
         case "netNbFlow":
         case "netProtocoleTraffic":
         case "netTopHostsTraffic":
@@ -143,7 +142,6 @@ function noData(div,svg,mydiv){
 /***********************************************************************************************************/
 
 
-//TODO Let's say hourly for now
 function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     d3.json(urlJson, function (error, json) {
@@ -222,8 +220,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
             return;
         }
-
-        svg.contentItemString = jsonContent[contentItemValue];
 
         svg.units = json.units;
 
@@ -400,7 +396,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         console.log(colorMap);
 
         //step = 1 hour by default
-        svg.step = (urlJson.indexOf("DAILY") === -1)?3600000:86400000;
+        svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
 
         svg.valuesIn.forEach(function(elem){
             elem.x = (elem.x - svg.timeMin)/svg.step
@@ -2599,7 +2595,7 @@ function addZoomSimple(svg,updateFunction){
                   calcCoord[1] = -svg.margin.top-(event.y -lastEvent.y*coefScale)/(coefScale -1);
 
                   var mouse = d3.mouse(svg.svg.node());
-                  console.log("x: " + (calcCoord[0] - mouse[0]).toFixed(5) + " y: " + (calcCoord[1] - mouse[1]).toFixed(5));
+                  //console.log("x: " + (calcCoord[0] - mouse[0]).toFixed(5) + " y: " + (calcCoord[1] - mouse[1]).toFixed(5));
 
                   var lastScalex = svg.scalex;
                   var lastScaley = svg.scaley;
@@ -2752,9 +2748,10 @@ function addZoomSimple(svg,updateFunction){
     svg.call(svg.zoom);
 }
 
+
 /************************************************************************************************************/
 
-function createCurveMinute(div, svg, mydiv, urlJson){
+function createCurve(div, svg, mydiv, urlJson){
 
 
     d3.json(urlJson, function (error, json) {
@@ -2771,11 +2768,7 @@ function createCurveMinute(div, svg, mydiv, urlJson){
 
         //json ok, graph creation
 
-        //update by minute
-        svg.type = "MINUTE";
-
-        json = json.response.data;
-        svg.legendFirstItem = +json[1].legend[0].text.split("h")[0];
+        json = json.response;
         console.log(json);
 
         var divWidth = Math.max(svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
@@ -2804,38 +2797,63 @@ function createCurveMinute(div, svg, mydiv, urlJson){
 
         svg.valueline = d3.line();
         svg.area = d3.area();
-        var tab = json[2].tab;
-        var tabLength = tab.length;
+        
+        var jsonData = json.data;
+        var jsonContent = json.content;
+        svg.units = json.units;
+
+        var contentAmountValue = searchAmountValue(jsonContent);
+        var contentDateValue = searchDateValue(jsonContent);
+
+        //if no date/amount value found, the graph can't be done.
+        if(contentAmountValue === false || contentDateValue === false){
+            return;
+        }
+
+        //Conversion date to elapsed time since 1st January 1970.
+        jsonData.forEach(function(elem){
+            elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime();
+        });
+
+        //sort, to make sure
+        jsonData.sort(function(a,b){return a[contentDateValue] - b[contentDateValue];});
 
 
-        //value each couple minutes;
-        var valuesPerHour = 30;
-        var i;
+        var jsonDataLength = jsonData.length;
+
+        svg.timeMin = jsonData[0][contentDateValue];
+
+        svg.step = (urlJson.indexOf("pset=MINUTE") === -1)?((urlJson.indexOf("pset=DAILY") === - 1)?3600000:86400000):60000;
+
+        var index,elemJson;
 
         svg.data = [];
 
-        for (var x = 0; x < tabLength; x++) {
 
-            if (tab[x].y.length === 0) {
+        //Final data array construction.
+        for(var i = 0; i < jsonDataLength; i++){
 
-                for (i = 0; i < valuesPerHour; i++) {
-                    svg.data.push(0);
-                }
+            elemJson = jsonData[i];
+            index = (elemJson[contentDateValue] - svg.timeMin)/svg.step;
 
-            } else {
-
-                for (i = 0; i < valuesPerHour; i++) {
-                    svg.data.push(tab[x].y[i]);
-                }
-
+            //Fill the gaps in the dates with 0s;
+            while(svg.data.length < index){
+                svg.data.push(0);
             }
+
+            svg.data.push(elemJson[contentAmountValue]);
 
         }
 
+        var dataLength = svg.data.length;
 
-        svg.x.domain([0, svg.data.length]);
+
+        svg.x.domain([0, dataLength - 1]);
+
         //*1.05 for margin
         svg.y.domain([0, d3.max(svg.data) * 1.05]);
+
+
 
 
         console.log(svg.data);
@@ -2844,7 +2862,7 @@ function createCurveMinute(div, svg, mydiv, urlJson){
         svg.chart.append("path").classed("line", true);
         svg.chart.append("path").classed("area", true);
 
-        svg.area.x(function (d, i) {
+        svg.area.x(function (d,i) {
             return svg.x(i);
         }).y1(function (d) {
             return svg.y(d);
@@ -2852,7 +2870,7 @@ function createCurveMinute(div, svg, mydiv, urlJson){
 
 
         svg.valueline
-          .x(function (d, i) {
+          .x(function (d,i) {
               return svg.x(i);
           }).y(function (d) {
             return svg.y(d);
@@ -2880,7 +2898,7 @@ function createCurveMinute(div, svg, mydiv, urlJson){
           .attr('y', -svg.margin.left)
           .attr("x", -svg.height / 2)
           .attr("transform", "rotate(-90)")
-          .text(json[0].unit);
+          .text(svg.units);
 
         legendCurveAxisX(svg);
 
@@ -2892,7 +2910,7 @@ function createCurveMinute(div, svg, mydiv, urlJson){
         svg.newArea = d3.area();
 
 
-        svg.newArea.x(function (d, i) {
+        svg.newArea.x(function (d,i) {
             return svg.newX(i);
         }).y1(function (d) {
             return svg.newY(d);
@@ -2900,7 +2918,7 @@ function createCurveMinute(div, svg, mydiv, urlJson){
 
 
         svg.newValueline
-          .x(function (d, i) {
+          .x(function (d,i) {
               return svg.newX(i);
           }).y(function (d) {
             return svg.newY(d);
@@ -2915,196 +2933,8 @@ function createCurveMinute(div, svg, mydiv, urlJson){
 
             return function (t) {
                 t = Math.min(1, Math.max(0, t));
-                svg.data = data.map(function (elem, i) {
-                    return data[i] * t;
-                });
-                line.attr("d", svg.newValueline(svg.data));
-                area.attr("d", svg.newArea(svg.data));
-            }
-        });
-
-
-        addZoomSimple(svg, updateCurve);
-
-        d3.select(window).on("resize." + mydiv, function () {
-            console.log("resize");
-           redrawCurve(div, svg);
-        });
-
-    });
-
-
-}
-
-
-/************************************************************************************************************/
-
-function createCurveHour(div, svg, mydiv, urlJson){
-
-
-    d3.json(urlJson, function (error, json) {
-
-
-        console.log(json);
-
-        //test json conformity
-        if (testJson(json) || error ) {
-            console.log("incorrect url/data");
-            noData(div, svg,mydiv);
-            return false;
-        }
-
-        //json ok, graph creation
-
-        //hourly update
-        svg.type = "HOUR";
-
-        json = json.response.data;
-        svg.legendFirstItem = +json[1].legend[0].text.split("h")[0];
-        console.log(json);
-
-        var divWidth = Math.max(svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1, parseInt(div.style("height"),10));
-
-        svg.attr("width", divWidth).attr("height", divHeight);
-
-
-        svg.width = divWidth - svg.margin.left - svg.margin.right;
-        svg.height = divHeight - svg.margin.bottom - svg.margin.top;
-
-
-        svg.x = d3.scaleLinear()
-          .range([0, svg.width]);
-
-        svg.y = d3.scaleLinear()
-          .range([svg.height, 0]);
-
-
-        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width)
-          .attr("height", svg.height).classed("svgline", true);
-
-        svg.grid = svg.svg.append("g").classed("grid", true);
-
-        svg.chart = svg.svg.append("g");
-
-        svg.valueline = d3.line();
-        svg.area = d3.area();
-        svg.data = json[2].tab;
-
-/*
-        //TODO TEST A SUPPRIMER
-        svg.data.push({x:60,y:1});
-*/
-
-        //sort, for make sure
-        svg.data.sort(function(a,b){return a.x - b.x;});
-
-        var tabLength = svg.data.length;
-
-        var firstX = svg.data[0].x;
-
-
-
-
-        svg.x.domain([firstX, svg.data[tabLength-1].x]);
-        //*1.05 for margin
-        svg.y.domain([0, d3.max(svg.data,function(elem){return elem.y}) * 1.05]);
-
-
-
-        //Test for gap in data, give y=0 in that case.
-
-        for(var i = 0; i < svg.data.length;i++){
-
-            var pos = firstX + i;
-            if(svg.data[i].x > pos){
-                console.log("kikoo");
-                var newElem = {x:pos, y: 0};
-                svg.data.splice(i,0,newElem);
-            }
-
-        }
-
-
-        console.log(svg.data);
-
-
-        svg.chart.append("path").classed("line", true);
-        svg.chart.append("path").classed("area", true);
-
-        svg.area.x(function (d) {
-            return svg.x(d.x);
-        }).y1(function (d) {
-            return svg.y(d.y);
-        }).y0(svg.y.range()[0]);
-
-
-        svg.valueline
-          .x(function (d) {
-              return svg.x(d.x);
-          }).y(function (d) {
-            return svg.y(d.y);
-        });
-
-
-        svg.axisx = svg.append("g")
-          .classed("x axis", true)
-          .attr('transform', 'translate(' + [svg.margin.left, svg.height + svg.margin.top] + ")");
-
-        svg.axisx.call(d3.axisBottom(svg.x));
-
-        svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')').classed("y axis", true);
-        svg.axisy.call(d3.axisLeft(svg.y));
-
-        niceTicks(svg.axisy);
-
-        gridSimpleGraph(svg, true);
-
-        //      Label of the y axis
-        svg.ylabel = svg.axisy.append("text")
-          .attr("class", "label")
-          .attr("text-anchor", "middle")
-          .attr("dy", "1em")
-          .attr('y', -svg.margin.left)
-          .attr("x", -svg.height / 2)
-          .attr("transform", "rotate(-90)")
-          .text(json[0].unit);
-
-        legendCurveAxisX(svg);
-
-        svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
-        svg.newY = d3.scaleLinear().range(svg.y.range()).domain(svg.y.domain());
-
-
-        svg.newValueline = d3.line();
-        svg.newArea = d3.area();
-
-
-        svg.newArea.x(function (d) {
-            return svg.newX(d.x);
-        }).y1(function (d) {
-            return svg.newY(d.y);
-        }).y0(svg.newY.range()[0]);
-
-
-        svg.newValueline
-          .x(function (d) {
-              return svg.newX(d.x);
-          }).y(function (d) {
-            return svg.newY(d.y);
-        });
-
-
-        svg.transition("start").duration(800).tween("", function () {
-
-            var data = JSON.parse(JSON.stringify(svg.data));
-            var line = svg.chart.select(".line");
-            var area = svg.chart.select(".area");
-
-            return function (t) {
-                t = Math.min(1, Math.max(0, t));
-                svg.data.forEach(function (elem, i) {
-                    elem.y = data[i].y * t;
+                data.forEach(function (value, i) {
+                    svg.data[i] = value * t;
                 });
                 line.attr("d", svg.newValueline(svg.data));
                 area.attr("d", svg.newArea(svg.data));
@@ -3214,49 +3044,64 @@ function updateCurve(svg){
 
 function legendCurveAxisX(svg){
 
-    if(svg.type === "HOUR"){
+    var date,dround;
+    //if graph hourly
+    if(svg.step === 3600000){
 
-        var roundedHour;
         svg.axisx.selectAll(".tick").select("text").text(function (d) {
 
-            roundedHour = Math.round(d);
+            dround = Math.round(d);
 
             //if the ticks isn't at "x" o'clock
-            if(roundedHour !== d){
+            if(Math.abs(dround - d) >= 1e-7){
                 this.parentNode.remove();
                 return;
             }
 
-            // -1 because first x value equals 1
-            return (svg.legendFirstItem  + d - 1) % 24 + "h";
+            date = getDateFromAbscissa(svg, dround);
 
+            return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
 
         });
 
-    }else {
-
-
-        var mn, roundedMn;
+    }else if(svg.step === 60000){
+        //graph minute
         svg.axisx.selectAll(".tick").select("text").text(function (d) {
-            mn = ((d % 30) * 2);
-            roundedMn = Math.round(mn);
 
-            //Javascript isn't a precise calculator, this avoid some weirdness.
-            if (mn.toFixed(3) !== roundedMn.toFixed(3)) {
+            dround = Math.round(d);
+
+            //if the ticks isn't at "x" o'clock
+            if(Math.abs(dround - d) >= 1e-7){
                 this.parentNode.remove();
                 return;
             }
 
-            if (roundedMn != 0) {
-                if (roundedMn < 10) {
-                    roundedMn = "0" + roundedMn;
-                }
-                return (Math.floor(d / 30) + svg.legendFirstItem) % 24 + "h" + roundedMn;
+            date = getDateFromAbscissa(svg, dround);
 
+            return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h" + date.getMinutes();
+
+        });
+
+    } else {
+        //graph daily
+        svg.axisx.selectAll(".tick").select("text").text(function (d) {
+
+            dround = Math.round(d);
+
+            //if the ticks isn't at "x" o'clock (some javascript weirdness here...)
+            if(Math.abs(dround - d) >= 1e-7){
+                this.parentNode.remove();
+                return;
             }
 
-            return (Math.floor(d / 30) + svg.legendFirstItem) % 24 + "h";
+            date = getDateFromAbscissa(svg, dround);
+
+            return (date.getMonth() + 1) + "/" + date.getDate();
+
         });
+
+
+
     }
 }
 
@@ -3705,8 +3550,8 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netNbLocalHosts.json?minute&dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
-//drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&pset=DAILY&dh=2", "Graph");
+drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");

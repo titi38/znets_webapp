@@ -256,7 +256,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
                 height: +elemJson[contentAmountValue],
                 item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
                 stroke: "#000000",
-                direction: elemJson[contentDirectionValue]
+                direction: elemJson[contentDirectionValue].toLowerCase()
             };
 
             if (!sumMap.has(elemToPush.item)) {

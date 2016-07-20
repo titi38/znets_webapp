@@ -130,8 +130,8 @@ function calculateParameters(svg, clickData) {
   console.error(moment(clickData.time));
   console.error(moment(clickData.time).format("YYYY-MM-DD HH:mm"));// &dd=
 
-  //&ip=
-  //&type=
+  console.error(clickData.item);//&ip=
+  console.error(clickData.direction.toLowerCase());//&type=
   //&df=
 
 

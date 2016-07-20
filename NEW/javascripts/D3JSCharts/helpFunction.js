@@ -587,7 +587,7 @@ function searchAmountValue(jsonContent){
   var length = jsonContent.length;
   for(var i = 0;i < length; i++ ){
 
-    if(jsonContent[i] === "amount"){
+    if(jsonContent[i] === "amount" || jsonContent[i] === "nbhosts"){
 
       return i;
 
@@ -714,7 +714,9 @@ function axisYLegendDouble(svg){
   svg.ylabel.text(convert[0] + svg.units);
 
   function textValue(d){
-    value = Math.round(d/convert[1]*1000)/1000;
+
+    value = d/convert[1];
+    //value = Math.round(d/convert[1]*1000)/1000;
     /*text =*/ d3.select(this).select("text").text(value);
     //console.log(text.style("width"));
 

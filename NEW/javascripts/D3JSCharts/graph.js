@@ -216,6 +216,14 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var contentAmountValue = searchAmountValue(jsonContent);
         var contentDirectionValue = searchDirectionValue(jsonContent);
 
+        //optional display value for legend, no guaranty on uniqueness/existence.
+        var contentDisplayValue = searchDisplayValue(jsonContent);
+
+        //if no display value, then the display value is the item value.
+        if (contentDisplayValue === false){
+            contentDisplayValue = contentItemValue;
+        }
+
         //if no item/date/amount/direction value found, the graph can't be done.
         if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
             return;
@@ -234,7 +242,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         var colorMap = new Map();
         var sumMap = new Map();
-        var i, elemJson, elemToPush;
+        var i, elemJson, elemToPush, elemSumMap;
         svg.timeMin = Infinity;
         var timeMax = 0;
 
@@ -256,9 +264,10 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             };
 
             if (!sumMap.has(elemToPush.item)) {
-                sumMap.set(elemToPush.item, elemToPush.height);
+                sumMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
             } else {
-                sumMap.set(elemToPush.item, sumMap.get(elemToPush.item) + elemToPush.height);
+                elemSumMap = sumMap.get(elemToPush.item);
+                elemSumMap.sum += elemToPush.height;
             }
 
             svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
@@ -364,7 +373,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
         sumMap.forEach(function (value, key) {
-            sumArray.push({item: key, sum: value});
+            sumArray.push({item: key, sum: value.sum, display: value.display});
         });
 
         sumArray.sort(function (a, b) {
@@ -696,15 +705,14 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         //Legend creation
 
         var trSelec;
-
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
-            return d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
+            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
         });
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
         trSelec.append("td").text(function (d) {
-            return d.item;
+            return d.display;
         });
         trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
 
@@ -3550,7 +3558,9 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netNbLocalHosts.json?minute&dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
+//drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");

@@ -540,7 +540,7 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
     for(var i = 0;i < length; i++ ){
 
-        if(jsonContent[i] === "name" || jsonContent[i] === "host"){
+        if(jsonContent[i] === "code" || jsonContent[i] === "host"){
 
                   return i;
 
@@ -621,6 +621,32 @@ function searchDirectionValue(jsonContent){
   return false;
 
 }
+
+/************************************************************************************************************
+ *
+ *  Search inside a content array for a
+ *  possible, non mandatory display value (replaced by item value later if no display value found)
+ *
+ ***********************************************************************************************************/
+
+function searchDisplayValue(jsonContent){
+
+  var length = jsonContent.length;
+  for(var i = 0;i < length; i++ ){
+
+    if(jsonContent[i] === "hostname" || jsonContent[i] === "name"){
+
+      return i;
+
+    }
+  }
+
+  console.log("no display value found");
+  return false;
+
+}
+
+
 
 
 

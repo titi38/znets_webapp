@@ -400,7 +400,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         console.log(colorMap);
 
         //step = 1 hour by default
-        svg.step = 3600000;
+        svg.step = (urlJson.indexOf("DAILY") === -1)?3600000:86400000;
 
         svg.valuesIn.forEach(function(elem){
             elem.x = (elem.x - svg.timeMin)/svg.step
@@ -3706,7 +3706,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&pset=DAILY&dh=2", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
 //drawChart("./netTop10appTraffic.json", "Graph");

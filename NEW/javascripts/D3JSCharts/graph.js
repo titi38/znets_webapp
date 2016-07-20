@@ -1922,7 +1922,7 @@ function addZoomDouble(svg,updateFunction){
 
 
                     var mouse = d3.mouse(svg.svg.node());
-                    console.log("x: " + (calcCoord[0] - mouse[0]).toFixed(5) + " y: " + (calcCoord[1] - mouse[1]).toFixed(5));
+                    //console.log("x: " + (calcCoord[0] - mouse[0]).toFixed(5) + " y: " + (calcCoord[1] - mouse[1]).toFixed(5));
 
                     var lastScalex = svg.scalex;
                     var lastScaley = svg.scaley;

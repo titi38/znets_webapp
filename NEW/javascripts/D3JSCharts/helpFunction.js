@@ -729,7 +729,7 @@ function quantityConvertUnit(qty){
 //after niceticks is better
 function axisYLegendDouble(svg){
 
-  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1],svg.newYOutput.domain()[1])/10);
+  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1],svg.newYOutput.domain()[1]));
   var value,legend,posDot,afterDot;
 
   svg.ylabel.text(convert[0] + svg.units);

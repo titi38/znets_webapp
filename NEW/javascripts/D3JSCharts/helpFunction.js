@@ -70,7 +70,7 @@ function axisXLegendDouble(svg){
     if (Math.abs(dround - d) >= 1e-7){
       this.parentNode.remove();
     }else{
-      date = new Date(dround*svg.step + svg.timeMin);
+      date = getDateFromAbscissa(svg,dround);
       return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
     }
   });
@@ -263,9 +263,8 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
   var chartside = 0.75*pieside;
 
 
-  //TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
-  console.log(dataInit.item);
-  console.log(dataInit.height);
+  //TODO TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
+  console.log(dataInit);
   total=6000000000;
   //TEMPORAIRE
 
@@ -548,7 +547,7 @@ function scrollToElementTableTransition(elem, table){
 /************************************************************************************************************/
 
 function testJson(json){
-  return typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined";
+  return typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined" || json.response.data.length === 0;
 }
 
 /************************************************************************************************************
@@ -562,7 +561,7 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
     for(var i = 0;i < length; i++ ){
 
-        if(jsonContent[i] === "name" || jsonContent[i] === "hostname"){
+        if(jsonContent[i] === "name" || jsonContent[i] === "host"){
 
                   return i;
 
@@ -645,3 +644,105 @@ function searchDirectionValue(jsonContent){
 }
 
 
+
+/************************************************************************************************************
+ *
+ *  return a date javascript object from "x" abscissa value
+ *
+ ***********************************************************************************************************/
+
+function getDateFromAbscissa(svg,x){
+
+  return new Date(x*svg.step + svg.timeMin);
+
+}
+
+
+/************************************************************************************************************
+
+ convert quantity unit to nicer quantity unit for a specific quantity.
+
+ return the computed metric prefix and according factor in a array.
+
+ ************************************************************************************************************/
+
+function quantityConvertUnit(qty){
+
+  var rawExp = Math.log(qty)/Math.log(1000);
+  var absRawExp = Math.abs(rawExp);
+  var exp = Math.min(8,Math.max(0,Math.floor(absRawExp)));
+
+  if(rawExp < 0){
+    exp = -exp;
+  }
+
+  var pow = Math.pow(1000,exp);
+
+  switch (exp){
+
+    case -8:
+      return ["y",pow];
+    case -7:
+      return ["z",pow];
+    case -6:
+      return ["a",pow];
+    case -5:
+      return ["f",pow];
+    case -4:
+      return ["p",pow];
+    case -3:
+      return ["n",pow];
+    case -2:
+      return ["µ",pow];
+    case -1:
+      return ["m",pow];
+    default:
+    case 0:
+      return ["",pow];
+    case 1 :
+      return ["K",pow];
+    case 2 :
+      return ["M",pow];
+    case 3 :
+      return ["G",pow];
+    case 4 :
+      return ["T",pow];
+    case 5 :
+      return ["P",pow];
+    case 6 :
+      return ["E",pow];
+    case 7 :
+      return ["Z",pow];
+    case 8 :
+      return ["Y",pow];
+  }
+
+}
+
+
+/************************************************************************************************************
+
+
+
+ ************************************************************************************************************/
+
+//after niceticks is better
+function axisYLegendDouble(svg){
+
+  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1],svg.newYOutput.domain()[1])/10);
+  var value,legend,posDot,afterDot;
+
+  svg.ylabel.text(convert[0] + svg.units);
+
+  function textValue(d){
+    value = Math.round(d/convert[1]*1000)/1000;
+
+
+    d3.select(this).select("text").text(value);
+  }
+
+  svg.axisyInput.selectAll(".tick").each(textValue);
+
+  svg.axisyOutput.selectAll(".tick").each(textValue);
+
+}

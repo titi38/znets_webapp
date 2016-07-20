@@ -95,8 +95,31 @@ function ticksSecondAxisXDouble(svg){
 
 function calculateParameters(svg, clickData) {
 
-  console.error(parseInt(svg.legend[clickData.x % svg.legend.length].text));
+  //console.error(parseInt(svg.legend[clickData.x % svg.legend.length].text));
+  //console.error(svg);
 
+  //selectedNavChart.dataset.chartJson
+  //selectedNavChart.dataset.chartJson
+
+
+  console.error($("#preset_ChartsForm").val());// &pset=
+
+  console.error(svg.attr("data-network")); // &net=
+
+
+
+  console.error(clickData);
+  console.error(clickData.time);
+  console.error(moment(clickData.time));
+  console.error(moment(clickData.time).format("YYYY-MM-DD HH:mm"));// &dd=
+
+  //&ip=
+  //&type=
+  //&df=
+
+
+
+/*
   var timeShiftUnit = null;
   var queryDate = null;
   var queryDateFormat = null;
@@ -126,7 +149,7 @@ function calculateParameters(svg, clickData) {
 
   console.error(moment(queryDate).format(queryDateFormat));
   //console.error(moment($("#dateDebCharts").val()).add(clickData.x, timeShiftUnit).format(queryDateFormat));
-
+*/
 }
 
 
@@ -156,7 +179,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         div.overlay.style("display", null);
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        drawComplData("./datacompl.json", svg, svg.pieside, d,div.overlay);
+        drawComplData("/dynamic/netExtHostsTopHostsTraffic.json?dd=2016-07-18%2020:00&df=2016-07-18%2021:00&pset=HOURLY&type=out&ip=193.48.83.251", svg, svg.pieside, d,div.overlay);
       }, 500);
 
     });

@@ -736,6 +736,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         var jsonContent = json.content;
 
 
+        //step = 1 hour by default
+        svg.step = (urlJson.indexOf("pset=MINUTE") === -1)?((urlJson.indexOf("pset=DAILY") === - 1)?3600000:86400000):60000;
+
         var contentDateValue = searchDateValue(jsonContent);
 
         //if no date value found, the graph can't be done.
@@ -776,47 +779,58 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
         // Data are processed and sorted according to their direction.
-        for(i = 0; i < dataLength; i++){
-            elemJson = jsonData[i];
 
-            for(var j = 0; j < contentLength; j++){
+        if(svg.step === 60000){
 
-                if(j === contentDateValue || +elemJson[j] === 0){
-                    continue;
-                }
+            //TODO faire pset=MINUTE. copier/coller else et adapter (cf createcurve).
 
-                elemToPush = {
-                    x: (new Date(elemJson[contentDateValue])).getTime(),
-                    height: +elemJson[j],
-                    item: jsonContent[j][0],
-                    stroke: "#000000",
-                    direction: jsonContent[j][1]
-                };
 
-                // .display kept, can have an use someday
-                if (!sumMap.has(elemToPush.item)) {
-                    sumMap.set(elemToPush.item, {sum: elemToPush.height,display: elemToPush.item});
-                } else {
-                    elemSumMap = sumMap.get(elemToPush.item);
-                    elemSumMap.sum += elemToPush.height;
-                }
+        }else{
 
-                svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
-                timeMax = Math.max(timeMax,elemToPush.x);
 
-                if(elemToPush.direction === "in"){
+            for(i = 0; i < dataLength; i++){
+                elemJson = jsonData[i];
 
-                    svg.valuesIn.push(elemToPush);
+                for(var j = 0; j < contentLength; j++){
 
-                }else{
+                    if(j === contentDateValue || +elemJson[j] === 0){
+                        continue;
+                    }
 
-                    svg.valuesOut.push(elemToPush)
+                    elemToPush = {
+                        x: (new Date(elemJson[contentDateValue])).getTime(),
+                        height: +elemJson[j],
+                        item: jsonContent[j][0],
+                        stroke: "#000000",
+                        direction: jsonContent[j][1]
+                    };
+
+                    // .display kept, can have an use someday
+                    if (!sumMap.has(elemToPush.item)) {
+                        sumMap.set(elemToPush.item, {sum: elemToPush.height,display: elemToPush.item});
+                    } else {
+                        elemSumMap = sumMap.get(elemToPush.item);
+                        elemSumMap.sum += elemToPush.height;
+                    }
+
+                    svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
+                    timeMax = Math.max(timeMax,elemToPush.x);
+
+                    if(elemToPush.direction === "in"){
+
+                        svg.valuesIn.push(elemToPush);
+
+                    }else{
+
+                        svg.valuesOut.push(elemToPush)
+
+                    }
+
 
                 }
 
 
             }
-
 
         }
 
@@ -861,8 +875,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         console.log(colorMap);
 
-        //step = 1 hour by default
-        svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
 
         svg.valuesIn.forEach(function(elem){
             elem.x = (elem.x - svg.timeMin)/svg.step
@@ -4047,7 +4059,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
-drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=HOURLY&dh=2", "Graph");
+drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=DAILY&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");

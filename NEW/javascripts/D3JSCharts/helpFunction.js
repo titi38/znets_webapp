@@ -671,9 +671,22 @@ function getDateFromAbscissa(svg,x){
 
  ************************************************************************************************************/
 
-function quantityConvertUnit(qty){
+function quantityConvertUnit(qty, unitIsByte){
+  var base;
+  var infMetric;
+  if(unitIsByte === true) {
 
-  var rawExp = Math.log(qty)/Math.log(1000);
+    base = 1024;
+    infMetric = "i";
+
+  }else {
+
+    base = 1000;
+    infMetric = "";
+
+  }
+
+  var rawExp = Math.log(qty)/Math.log(base);
   var absRawExp = Math.abs(rawExp);
   var exp = Math.min(8,Math.max(0,Math.floor(absRawExp)));
 
@@ -681,45 +694,45 @@ function quantityConvertUnit(qty){
     exp = -exp;
   }
 
-  var pow = Math.pow(1000,exp);
+  var pow = Math.pow(base,-exp);
 
   switch (exp){
 
     case -8:
-      return ["y",pow];
+      return ["y" + infMetric,pow];
     case -7:
-      return ["z",pow];
+      return ["z" + infMetric,pow];
     case -6:
-      return ["a",pow];
+      return ["a" + infMetric,pow];
     case -5:
-      return ["f",pow];
+      return ["f" + infMetric,pow];
     case -4:
-      return ["p",pow];
+      return ["p" + infMetric,pow];
     case -3:
-      return ["n",pow];
+      return ["n" + infMetric,pow];
     case -2:
-      return ["µ",pow];
+      return ["µ" + infMetric,pow];
     case -1:
-      return ["m",pow];
+      return ["m" + infMetric,pow];
     default:
     case 0:
       return ["",pow];
     case 1 :
-      return ["K",pow];
+      return ["K" + infMetric,pow];
     case 2 :
-      return ["M",pow];
+      return ["M" + infMetric,pow];
     case 3 :
-      return ["G",pow];
+      return ["G" + infMetric,pow];
     case 4 :
-      return ["T",pow];
+      return ["T" + infMetric,pow];
     case 5 :
-      return ["P",pow];
+      return ["P" + infMetric,pow];
     case 6 :
-      return ["E",pow];
+      return ["E" + infMetric,pow];
     case 7 :
-      return ["Z",pow];
+      return ["Z" + infMetric,pow];
     case 8 :
-      return ["Y",pow];
+      return ["Y" + infMetric,pow];
   }
 
 }
@@ -734,15 +747,16 @@ function quantityConvertUnit(qty){
 //after niceticks is better
 function axisYLegendDouble(svg){
 
-  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1] - svg.newYInput.domain()[0],svg.newYOutput.domain()[1] - svg.newYOutput.domain()[0]));
+  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1] - svg.newYInput.domain()[0],
+    svg.newYOutput.domain()[1] - svg.newYOutput.domain()[0]));
   var value,text, maxWidth = 0;
 
   svg.ylabel.text(convert[0] + svg.units);
 
   function textValue(d){
 
-    value = d/convert[1];
-    //value = Math.round(d/convert[1]*1000)/1000;
+    value = d*convert[1];
+    value = Math.round(value*1000)/1000;
     /*text =*/ d3.select(this).select("text").text(value);
     //console.log(text.style("width"));
 
@@ -754,4 +768,12 @@ function axisYLegendDouble(svg){
   svg.axisyOutput.selectAll(".tick").each(textValue);
 
   //console.log(maxWidth);
+}
+
+/************************************************************************************************************/
+
+function unitsStringProcessing(unitsString){
+  
+  return unitsString.indexOf("nb") === 0 ? unitsString.slice(2) : unitsString;
+  
 }

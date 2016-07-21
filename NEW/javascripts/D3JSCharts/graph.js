@@ -229,7 +229,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             return;
         }
 
-        svg.units = json.units;
+        svg.units = unitsStringProcessing(json.units);
 
         console.log(json);
         
@@ -547,10 +547,17 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         var selection = svg.selectAll(".data");
 
-
+        //Tooltip creation
+        var convertArray,valDisplay;
         selection.append("svg:title")
           .text(function (d) {
-              return d.item + "\n" + getDateFromAbscissa(svg,d.x).toString() + ", " + d.height + " " + svg.units;
+              convertArray = quantityConvertUnit(d.height);
+              valDisplay = sumMap.get(d.item).display;
+              return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+                + d.item + "\n"
+                + getDateFromAbscissa(svg,d.x).toString() + "\n"
+                + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+                + "(" +  d.height + " " + svg.units + ")";
           });
 
 
@@ -2288,11 +2295,8 @@ function bytesConvert(nbBytes){
 
     var exp = Math.min(8,Math.max(0,Math.floor(Math.log(nbBytes)/Math.log(1024))));
 
-    var value = (nbBytes/Math.pow(1024,exp)).toFixed(1);
+    var value = Math.round(nbBytes*Math.pow(1024,-exp) * 100)/100;
 
-    if(value == Math.floor(value)){
-        value = Math.floor(value);
-    }
 
     switch (exp){
 
@@ -2300,21 +2304,21 @@ function bytesConvert(nbBytes){
         case 0:
             return value + " B";
         case 1 :
-            return value + " KB";
+            return value + " KiB";
         case 2 :
-            return value + " MB";
+            return value + " MiB";
         case 3 :
-            return value + " GB";
+            return value + " GiB";
         case 4 :
-            return value + " TB";
+            return value + " TiB";
         case 5 :
-            return value + " PB";
+            return value + " PiB";
         case 6 :
-            return value + " EB";
+            return value + " EiB";
         case 7 :
-            return value + " ZB";
+            return value + " ZiB";
         case 8 :
-            return value + " YB";
+            return value + " YiB";
     }
 
 }
@@ -2808,7 +2812,7 @@ function createCurve(div, svg, mydiv, urlJson){
         
         var jsonData = json.data;
         var jsonContent = json.content;
-        svg.units = json.units;
+        svg.units = unitsStringProcessing(json.units);
 
         var contentAmountValue = searchAmountValue(jsonContent);
         var contentDateValue = searchDateValue(jsonContent);
@@ -3559,7 +3563,8 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+//drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
@@ -3567,5 +3572,5 @@ drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-
 //drawChart("./netTop10appTraffic.json", "Graph");
 //drawChart("./netTop10NbExtHosts.json", "Graph");
 //drawChart("./netNbLocalHosts.json", "Graph");
-//drawChart("./netTopHostsTraffic.json","Graph");
+//drawChart("./netTopHostsTraffic.json?pset=HOURLY","Graph");
 //drawChart("worldmap.json","Graph");

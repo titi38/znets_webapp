@@ -587,7 +587,7 @@ function searchAmountValue(jsonContent){
   var length = jsonContent.length;
   for(var i = 0;i < length; i++ ){
 
-    if(jsonContent[i] === "amount" || jsonContent[i] === "nbhosts"){
+    if(jsonContent[i] === "amount" || jsonContent[i] === "nbhosts" || jsonContent[i] === "nblocalhosts"){
 
       return i;
 

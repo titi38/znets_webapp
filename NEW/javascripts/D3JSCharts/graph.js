@@ -290,83 +290,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
 
-
-/*
-
-        //TODO Premier if plus forcément utile
-
-        if ((typeof json[2].tab[0].item === "undefined")) {
-
-            //json[i].tab[j].item = json[i].name
-            //Remainder = OTHERS
-
-            for (i = 2; i < json.length; i++) {
-
-                for (var j = 0; j < xlength; j++) {
-                    if (json[i].tab[j].y == 0) {
-                        continue;
-                    }
-                    json[i].tab[j].x = j;
-                    json[i].tab[j].height = json[i].tab[j].y;
-                    json[i].tab[j].item = json[i].name;
-
-                    if (!sumMap.has(json[i].tab[j].item)) {
-                        sumMap.set(json[i].tab[j].item, json[i].tab[j].height);
-                    } else {
-                        sumMap.set(json[i].tab[j].item, sumMap.get(json[i].tab[j].item) + json[i].tab[j].height)
-                    }
-
-                    json[i].tab[j].stroke = "#000000";
-
-                    if (json[i].type == "IN") {
-                        //json[i].tab[j].stroke = "#fff";
-                        svg.valuesIn.push(json[i].tab[j]);
-
-                    } else {
-                        //json[i].tab[j].stroke="#cccccc";
-                        svg.valuesOut.push(json[i].tab[j]);
-
-                    }
-
-                }
-            }
-
-        } else {
-
-            for (i = 2; i < json.length; i++) {
-
-                for (var j = 0; j < xlength; j++) {
-                    if (json[i].tab[j].y == 0) {
-                        continue;
-                    }
-                    json[i].tab[j].x = j;
-                    json[i].tab[j].height = json[i].tab[j].y;
-
-                    if (!sumMap.has(json[i].tab[j].item)) {
-                        sumMap.set(json[i].tab[j].item, json[i].tab[j].height);
-                    } else {
-                        sumMap.set(json[i].tab[j].item, sumMap.get(json[i].tab[j].item) + json[i].tab[j].height)
-                    }
-
-                    json[i].tab[j].stroke = "#000000";
-
-                    if (json[i].type == "IN") {
-                        //json[i].tab[j].stroke = "#fff";
-                        svg.valuesIn.push(json[i].tab[j]);
-
-                    } else {
-                        //json[i].tab[j].stroke="#cccccc";
-                        svg.valuesOut.push(json[i].tab[j]);
-
-                    }
-
-                }
-            }
-        }
-        */
-
-
-
         var sumArray = [];
 
         var f = colorEval();
@@ -2833,9 +2756,9 @@ function createCurve(div, svg, mydiv, urlJson){
 
         var jsonDataLength = jsonData.length;
 
-        svg.timeMin = jsonData[0][contentDateValue];
 
         svg.step = (urlJson.indexOf("pset=MINUTE") === -1)?((urlJson.indexOf("pset=DAILY") === - 1)?3600000:86400000):60000;
+        svg.timeMin = jsonData[0][contentDateValue];
 
         var index,elemJson;
 
@@ -2853,8 +2776,27 @@ function createCurve(div, svg, mydiv, urlJson){
                 svg.data.push(0);
             }
 
-            svg.data.push(elemJson[contentAmountValue]);
+            if(svg.step === 60000){
 
+                var amountArray = elemJson[contentAmountValue];
+
+                //TODO pour l'instant, avant changement en base de données normalement, à supprimer ensuite
+                if(typeof amountArray === "string") {
+                    amountArray = amountArray.slice(1).split(/[,} ]+/);
+                    console.log(amountArray);
+                }
+
+                for(var j = 0; j < 60; j++){
+
+                    svg.data.push(+amountArray[j]);
+
+                }
+
+            }else {
+
+                svg.data.push(+elemJson[contentAmountValue]);
+
+            }
         }
 
         var dataLength = svg.data.length;
@@ -3078,6 +3020,7 @@ function legendCurveAxisX(svg){
 
     }else if(svg.step === 60000){
         //graph minute
+        var mn;
         svg.axisx.selectAll(".tick").select("text").text(function (d) {
 
             dround = Math.round(d);
@@ -3089,8 +3032,10 @@ function legendCurveAxisX(svg){
             }
 
             date = getDateFromAbscissa(svg, dround);
+            mn = date.getMinutes();
+            mn = (mn < 10)?("0" + mn):mn;
 
-            return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h" + date.getMinutes();
+            return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h" + mn;
 
         });
 
@@ -3563,9 +3508,9 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+//drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-
+drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");

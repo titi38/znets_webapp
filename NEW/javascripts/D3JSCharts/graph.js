@@ -88,8 +88,6 @@ var typeGraph = urlJson.split(/[\.\/]+/);
         case "netNbLocalHosts":
         case "netNbExternalHosts":
             return createCurve;
-        case "netNbFlow":
-        case "netProtocoleTraffic":
         case "netTopHostsTraffic":
         case "netTopServicesTraffic":
         case "netTopAsTraffic":
@@ -99,8 +97,11 @@ var typeGraph = urlJson.split(/[\.\/]+/);
         case "netTopCountryNbFlow":
         case "netTopAsNbFlow":
         case "netTopAppNbFlow":
-        case "netProtocolePackets":
             return createHisto2DStackDouble;
+        case "netNbFlow":
+        case "netProtocolePackets":
+        case "netProtocoleTraffic":
+            return createHisto2DStackDoubleFormatVariation;
         case "netTopServicesNbFlow":
         case "netTopNbExtHosts":
             return createHisto2DStackSimple;
@@ -226,6 +227,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         //if no item/date/amount/direction value found, the graph can't be done.
         if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
+            noData(div,svg,mydiv);
             return;
         }
 
@@ -665,6 +667,536 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 }
 
 
+/***********************************************************************************************************/
+
+
+function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
+
+    d3.json(urlJson, function (error, json) {
+
+
+        console.log(json);
+
+        //test json conformity
+        if (testJson(json) || error) {
+            noData(div, svg,mydiv);
+            return false;
+        }
+
+        //json ok, graph creation
+
+
+        //table for legend
+        svg.tableWidth = 200;
+
+
+        var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
+
+        var divtable = div.append("div").classed("diagram divtable", true);
+        divtable.append("h4").classed("tableTitle", true).text("Legend");
+        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
+          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
+
+
+        svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
+
+
+        svg.width = divWidth - 1.15 * svg.tableWidth - svg.margin.left - svg.margin.right;
+        svg.height = divHeight - svg.margin.bottom - svg.margin.top;
+
+
+        svg.x = d3.scaleLinear()
+          .range([0, svg.width]);
+
+        svg.yInput = d3.scaleLinear().clamp(true);
+
+        svg.yOutput = d3.scaleLinear().clamp(true);
+
+        svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.height).classed("crisp",true);
+
+
+        //Will contain the chart itself, without the axis
+        svg.chartBackground = svg.svg.append("g");
+
+
+        svg.chartInput = svg.svg.append('g');
+        svg.chartOutput = svg.svg.append('g');
+
+
+        //Will contain the axis and the rectselec, for a better display of scaling
+        svg.frame = svg.svg.append("g");
+
+        svg.selec = svg.frame.append("rect").attr("class", "rectSelec");
+
+
+
+        json = json.response;
+        var jsonData = json.data;
+        var jsonContent = json.content;
+
+
+        var contentDateValue = searchDateValue(jsonContent);
+
+        //if no date value found, the graph can't be done.
+        if(contentDateValue === false){
+            noData(div,svg,mydiv);
+            return;
+        }
+
+        svg.units = unitsStringProcessing(json.units);
+
+        console.log(json);
+
+
+
+        svg.valuesIn = [];
+        svg.valuesOut = [];
+
+        var dataLength = jsonData.length;
+        var contentLength = jsonContent.length;
+
+        //More useful jsonContent. 0: item / 1: direction
+        for(i = 0; i < contentLength; i++){
+
+            if(i === contentDateValue){
+                continue;
+            }
+
+            jsonContent[i] = jsonContent[i].split("_");
+            jsonContent[i][0] = jsonContent[i][0].toUpperCase();
+
+        }
+
+        var colorMap = new Map();
+        var sumMap = new Map();
+        var i, elemJson, elemToPush, elemSumMap;
+        svg.timeMin = Infinity;
+        var timeMax = 0;
+
+
+        // Data are processed and sorted according to their direction.
+        for(i = 0; i < dataLength; i++){
+            elemJson = jsonData[i];
+
+            for(var j = 0; j < contentLength; j++){
+
+                if(j === contentDateValue || +elemJson[j] === 0){
+                    continue;
+                }
+
+                elemToPush = {
+                    x: (new Date(elemJson[contentDateValue])).getTime(),
+                    height: +elemJson[j],
+                    item: jsonContent[j][0],
+                    stroke: "#000000",
+                    direction: jsonContent[j][1]
+                };
+
+                // .display kept, can have an use someday
+                if (!sumMap.has(elemToPush.item)) {
+                    sumMap.set(elemToPush.item, {sum: elemToPush.height,display: elemToPush.item});
+                } else {
+                    elemSumMap = sumMap.get(elemToPush.item);
+                    elemSumMap.sum += elemToPush.height;
+                }
+
+                svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
+                timeMax = Math.max(timeMax,elemToPush.x);
+
+                if(elemToPush.direction === "in"){
+
+                    svg.valuesIn.push(elemToPush);
+
+                }else{
+
+                    svg.valuesOut.push(elemToPush)
+
+                }
+
+
+            }
+
+
+        }
+
+
+
+
+
+        var sumArray = [];
+
+        var f = colorEval();
+
+
+        sumMap.forEach(function (value, key) {
+            sumArray.push({item: key, sum: value.sum, display: value.display});
+        });
+
+        sumArray.sort(function (a, b) {
+
+            if (a.item == "OTHERS") {
+                return -1;
+            }
+            if (b.item == "OTHERS") {
+                return 1;
+            }
+            return b.sum - a.sum;
+        });
+
+
+        console.log(sumArray);
+        //The most importants elements should have distinct colors.
+        i = 0;
+        if (sumArray[0].item == "OTHERS") {
+            colorMap.set(sumArray[0].item, "#f2f2f2");
+            i = 1;
+        }
+
+        while (i < sumArray.length) {
+            colorMap.set(sumArray[i].item, f());
+            i++;
+        }
+
+
+        console.log(colorMap);
+
+        //step = 1 hour by default
+        svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
+
+        svg.valuesIn.forEach(function(elem){
+            elem.x = (elem.x - svg.timeMin)/svg.step
+        });
+
+        svg.valuesOut.forEach(function(elem){
+            elem.x = (elem.x - svg.timeMin)/svg.step
+        });
+
+
+        function sortValues(a, b) {
+
+            if (a.x - b.x != 0) {
+                return a.x - b.x;
+            }
+            if (a.item == "OTHERS") {
+                return -1;
+            }
+            if (b.item == "OTHERS") {
+                return 1;
+            }
+            return b.height - a.height;
+        }
+
+        svg.valuesIn.sort(sortValues);
+        svg.valuesOut.sort(sortValues);
+
+        var xMax = (timeMax - svg.timeMin)/svg.step + 1;
+
+
+        //Evaluation of the abscissa domain
+        svg.x.domain([-0.625, xMax - 0.375]);
+
+        var totalSumIn = [];
+        var totalSumOut = [];
+
+        var x = svg.valuesIn[0].x;
+        var sum = 0;
+        i = 0;
+
+        while (x < xMax) {
+
+            while (i < svg.valuesIn.length && svg.valuesIn[i].x == x) {
+                svg.valuesIn[i].y = sum;
+                sum += svg.valuesIn[i].height;
+                i++;
+            }
+            totalSumIn.push(sum);
+            sum = 0;
+            x++;
+        }
+
+        x = svg.valuesOut[0].x;
+        i = 0;
+
+        while (x < xMax) {
+
+            while (i < svg.valuesOut.length && svg.valuesOut[i].x == x) {
+                sum += svg.valuesOut[i].height;
+                svg.valuesOut[i].y = sum;
+                i++;
+            }
+            totalSumOut.push(sum);
+            sum = 0;
+            x++;
+        }
+
+
+        var totalIn = d3.max(totalSumIn);
+        var totalOut = d3.max(totalSumOut);
+
+        svg.heightOutput = (svg.height - svg.margin.zero) * totalOut / (totalIn + totalOut);
+
+        svg.yInput.range([svg.heightOutput + svg.margin.zero, svg.height]);
+        svg.yOutput.range([svg.heightOutput, 0]);
+
+
+        //the *1.1 operation allow a little margin
+        svg.yInput.domain([0, totalIn * 1.1]);
+        svg.yOutput.domain([0, totalOut * 1.1]);
+
+        //Text background
+
+
+        svg.rectInput = svg.chartBackground.append("rect").attr("x", 0).attr("y", svg.heightOutput + svg.margin.zero)
+          .attr("width", svg.width)
+          .attr("height", svg.height - svg.heightOutput - svg.margin.zero)
+          .style("fill", "#e6e6e6");
+
+
+        svg.textOutput = svg.chartBackground.append("text").classed("bckgr-txt", true)
+          .style("fill", "#e6e6e6")
+          .text("Outgoing");
+
+        svg.textOutput.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightOutput / 8 +
+          parseFloat(getComputedStyle(svg.textOutput.node()).fontSize)) + ")");
+
+
+        svg.textInput = svg.chartBackground.append("text").attr("transform", "translate(" + (svg.width / 2) + "," +
+            ((svg.height + (svg.heightOutput + svg.margin.zero) / 3) * 0.75) + ")")
+          .classed("bckgr-txt", true)
+          .text("Ingoing")
+          .style("fill", "#fff");
+
+
+        //Here, the grid, after the rectInput & the text
+        svg.grid = svg.chartBackground.append("g").classed("grid", true);
+
+
+
+        svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
+        svg.newYOutput = d3.scaleLinear().range(svg.yOutput.range()).domain(svg.yOutput.domain());
+        svg.newYInput = d3.scaleLinear().range(svg.yInput.range()).domain(svg.yInput.domain());
+
+        var selectionIn = svg.chartInput.selectAll(".data")
+          .data(svg.valuesIn)
+          .enter().append("rect")
+          .classed("data", true)
+          .attr("fill", function (d) {
+              return colorMap.get(d.item);
+          })
+          .attr("stroke", function (d) {
+              return d.stroke;
+          });
+
+        var selectionOut = svg.chartOutput.selectAll(".data")
+          .data(svg.valuesOut)
+          .enter().append("rect")
+          .classed("data", true)
+          .attr("fill", function (d) {
+              return colorMap.get(d.item);
+          })
+          .attr("stroke", function (d) {
+              return d.stroke;
+          });
+
+
+        drawChartDouble(svg,svg.yOutput.range()[0],svg.yInput.range()[0]);
+
+        var selection = svg.selectAll(".data");
+
+        //Tooltip creation
+        var convertArray,valDisplay;
+        selection.append("svg:title")
+          .text(function (d) {
+              convertArray = quantityConvertUnit(d.height);
+              valDisplay = sumMap.get(d.item).display;
+              return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+                + d.item + "\n"
+                + getDateFromAbscissa(svg,d.x).toString() + "\n"
+                + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+                + "(" +  d.height + " " + svg.units + ")";
+          });
+
+
+        function blink() {
+
+            this.parentNode.appendChild(this);
+            var rect = d3.select(this);
+
+            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = rect.datum().stroke;
+            rect.attr("stroke", col3).attr("fill", col2);
+            (function doitagain() {
+                rect.transition().duration(1000)
+                  .attr("stroke", col4).attr("fill", col1)
+                  .transition().duration(1000)
+                  .attr("stroke", col3).attr("fill", col2)
+                  .on("end", doitagain);
+            })()
+        }
+
+        svg.activeItem = null;
+
+        function activationElems(d) {
+
+            if (svg.popup.pieChart !== null) {
+                return;
+            }
+
+            svg.activeItem = d.item;
+
+            function testitem(data) {
+                return d.item == data.item;
+
+            }
+
+            trSelec.filter(testitem).classed("outlined", true);
+
+            selection.filter(testitem).each(blink);
+
+        }
+
+        function activationElemsAutoScroll(d) {
+
+
+            if (svg.popup.pieChart !== null) {
+                return;
+            }
+            svg.activeItem = d.item;
+
+
+            function testitem(data) {
+                return d.item == data.item;
+
+            }
+
+            var elem = trSelec.filter(testitem).classed("outlined", true);
+
+            scrollToElementTableTransition(elem,table);
+
+            selection.filter(testitem).each(blink);
+
+        }
+
+        function activationElemsAutoScrollPopup(d) {
+
+            desactivationElems();
+            svg.activeItem = d.item;
+
+
+            function testitem(data) {
+                return d.item == data.item;
+
+            }
+
+            var elem = trSelec.filter(testitem).classed("outlined", true);
+            scrollToElementTableTransition(elem,table);
+
+
+        }
+
+        function desactivationElems() {
+
+            if (svg.activeItem == null || svg.popup.pieChart !== null) {
+                return;
+            }
+
+
+            function testitem(data) {
+                return data.item == svg.activeItem;
+            }
+
+            trSelec.filter(testitem).classed("outlined", false);
+
+            selection.filter(testitem).transition().duration(0).attr("stroke", function (d) {
+                return d.stroke;
+            }).attr("fill", colorMap.get(svg.activeItem));
+
+            svg.activeItem = null;
+
+        }
+
+        selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
+
+
+        svg.axisx = svg.append("g")
+          .attr("class", "axis")
+          .attr('transform', 'translate(' + [svg.margin.left, svg.heightOutput + svg.margin.top] + ")");
+
+        svg.axisx.rect = svg.axisx.append("rect").classed("rectAxis", true).attr("height", svg.margin.zero - 1 ).attr("y",0.5);
+        svg.axisx.path = svg.axisx.append("path");
+        svg.axisx.call(d3.axisBottom(svg.x));
+        svg.heightTick = svg.axisx.select(".tick").select("line").attr("y2");
+
+        axisXDoubleDraw(svg);
+
+        ticksSecondAxisXDouble(svg);
+
+        axisXLegendDouble(svg);
+
+
+        svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
+          .attr("class", "axis");
+        svg.axisyInput.call(d3.axisLeft(svg.yInput));
+
+        niceTicks(svg.axisyInput);
+
+        svg.axisyOutput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
+          .attr("class", "axis");
+        svg.axisyOutput.call(d3.axisLeft(svg.yOutput));
+
+        niceTicks(svg.axisyOutput);
+
+        gridDoubleGraph(svg);
+
+        //Label of the y axis
+        svg.ylabel = svg.axisyInput.append("text")
+          .attr("class", "label")
+          .attr("text-anchor", "middle")
+          .attr("dy", "1em")
+          .attr('y', -svg.margin.left)
+          .attr("x", -svg.height / 2)
+          .attr("transform", "rotate(-90)");
+
+        axisYLegendDouble(svg);
+
+
+
+        addPopup(selection,div,svg,function(data){
+              desactivationElems();
+              activationElemsAutoScrollPopup(data);},
+          desactivationElems);
+
+        //Legend creation
+
+        var trSelec;
+        trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
+            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
+        });
+        trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
+            return colorMap.get(d.item);
+        });
+        trSelec.append("td").text(function (d) {
+            return d.display;
+        });
+        trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
+
+
+        //zoom
+
+
+
+        addZoomDouble(svg, updateHisto1DStackDouble);
+        d3.select(window).on("resize." + mydiv, function () {
+            console.log("resize");
+            redrawHisto2DStackDouble(div, svg);
+        });
+
+        hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xMax);
+
+    });
+
+
+}
 
 
 /***********************************************************************************************************/
@@ -2742,6 +3274,7 @@ function createCurve(div, svg, mydiv, urlJson){
 
         //if no date/amount value found, the graph can't be done.
         if(contentAmountValue === false || contentDateValue === false){
+            noData(div,svg,mydiv);
             return;
         }
 
@@ -2851,14 +3384,15 @@ function createCurve(div, svg, mydiv, urlJson){
           .attr("dy", "1em")
           .attr('y', -svg.margin.left)
           .attr("x", -svg.height / 2)
-          .attr("transform", "rotate(-90)")
-          .text(svg.units);
+          .attr("transform", "rotate(-90)");
 
-        legendCurveAxisX(svg);
 
         svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
         svg.newY = d3.scaleLinear().range(svg.y.range()).domain(svg.y.domain());
 
+        axisYLegendSimple(svg);
+
+        legendCurveAxisX(svg);
 
         svg.newValueline = d3.line();
         svg.newArea = d3.area();
@@ -2984,6 +3518,8 @@ function updateCurve(svg){
     svg.axisy.call(d3.axisLeft(svg.newY));
 
     niceTicks(svg.axisy);
+
+    axisYLegendSimple(svg);
 
     legendCurveAxisX(svg);
 
@@ -3510,7 +4046,8 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
+drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=HOURLY&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");

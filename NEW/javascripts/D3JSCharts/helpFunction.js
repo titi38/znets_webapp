@@ -770,10 +770,49 @@ function axisYLegendDouble(svg){
   //console.log(maxWidth);
 }
 
+/************************************************************************************************************
+
+
+
+ ************************************************************************************************************/
+
+//after niceticks is better
+function axisYLegendSimple(svg){
+
+  var convert = quantityConvertUnit(svg.newY.domain()[1] - svg.newY.domain()[0]);
+  var value,text, maxWidth = 0;
+
+  svg.ylabel.text(convert[0] + svg.units);
+
+  function textValue(d){
+
+    value = d*convert[1];
+    value = Math.round(value*1000)/1000;
+    /*text =*/ d3.select(this).select("text").text(value);
+    //console.log(text.style("width"));
+
+    //maxWidth = Math.max(maxWidth,parseInt(text.style("width"),10));
+  }
+
+  svg.axisy.selectAll(".tick").each(textValue);
+
+  //console.log(maxWidth);
+}
+
+
 /************************************************************************************************************/
 
 function unitsStringProcessing(unitsString){
   
   return unitsString.indexOf("nb") === 0 ? unitsString.slice(2) : unitsString;
   
+}
+
+
+/************************************************************************************************************/
+
+function firstLetterUppercase(string){
+
+  return string.charAt(0).toUpperCase() + string.slice(1);
+
 }

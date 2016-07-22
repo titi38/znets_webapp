@@ -262,7 +262,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
                 x: (new Date(elemJson[contentDateValue])).getTime(),
                 height: +elemJson[contentAmountValue],
                 item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
-                stroke: "#000000",
                 direction: elemJson[contentDirectionValue].toLowerCase()
             };
 
@@ -453,9 +452,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           .attr("fill", function (d) {
               return colorMap.get(d.item);
           })
-          .attr("stroke", function (d) {
-              return d.stroke;
-          });
+          .attr("stroke", "#000000");
 
         var selectionOut = svg.chartOutput.selectAll(".data")
           .data(svg.valuesOut)
@@ -464,9 +461,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           .attr("fill", function (d) {
               return colorMap.get(d.item);
           })
-          .attr("stroke", function (d) {
-              return d.stroke;
-          });
+          .attr("stroke", "#000000");
 
 
         drawChartDouble(svg,svg.yOutput.range()[0],svg.yInput.range()[0]);
@@ -492,7 +487,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             this.parentNode.appendChild(this);
             var rect = d3.select(this);
 
-            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = rect.datum().stroke;
+            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = "#000000";
             rect.attr("stroke", col3).attr("fill", col2);
             (function doitagain() {
                 rect.transition().duration(1000)
@@ -576,9 +571,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
             trSelec.filter(testitem).classed("outlined", false);
 
-            selection.filter(testitem).transition().duration(0).attr("stroke", function (d) {
-                return d.stroke;
-            }).attr("fill", colorMap.get(svg.activeItem));
+            selection.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
 
             svg.activeItem = null;
 
@@ -811,7 +804,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
                             x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step,
                             height: +elemAmountMinuteArray[k],
                             item: jsonContent[j][0],
-                            stroke: "#000000",
                             direction: jsonContent[j][1]
                         };
 
@@ -863,7 +855,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
                         x: (new Date(elemJson[contentDateValue])).getTime(),
                         height: +elemJson[j],
                         item: jsonContent[j][0],
-                        stroke: "#000000",
                         direction: jsonContent[j][1]
                     };
 
@@ -1058,9 +1049,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           .attr("fill", function (d) {
               return colorMap.get(d.item);
           })
-          .attr("stroke", function (d) {
-              return d.stroke;
-          });
+          .attr("stroke", "#000000");
 
         var selectionOut = svg.chartOutput.selectAll(".data")
           .data(svg.valuesOut)
@@ -1069,9 +1058,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           .attr("fill", function (d) {
               return colorMap.get(d.item);
           })
-          .attr("stroke", function (d) {
-              return d.stroke;
-          });
+          .attr("stroke", "#000000");
 
 
         drawChartDouble(svg,svg.yOutput.range()[0],svg.yInput.range()[0]);
@@ -1097,7 +1084,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
             this.parentNode.appendChild(this);
             var rect = d3.select(this);
 
-            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = rect.datum().stroke;
+            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = "#000000";
             rect.attr("stroke", col3).attr("fill", col2);
             (function doitagain() {
                 rect.transition().duration(1000)
@@ -1181,9 +1168,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
             trSelec.filter(testitem).classed("outlined", false);
 
-            selection.filter(testitem).transition().duration(0).attr("stroke", function (d) {
-                return d.stroke;
-            }).attr("fill", colorMap.get(svg.activeItem));
+            selection.filter(testitem).transition().duration(0).attr("stroke", "#000000")
+              .attr("fill", colorMap.get(svg.activeItem));
 
             svg.activeItem = null;
 
@@ -1387,7 +1373,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
                 x: (new Date(elemJson[contentDateValue])).getTime(),
                 height: +elemJson[contentAmountValue],
                 item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
-                stroke: "#000000"
             };
 
             elemToPush.display = (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue];
@@ -1468,7 +1453,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
                 elemSumMap.sum += elem.height;
             }
 
-            svg.values[i] = {x:elem.x,height:elem.height,item:elem.item,stroke:elem.stroke};
+            svg.values[i] = {x:elem.x,height:elem.height,item:elem.item};
 
         });
 
@@ -1567,9 +1552,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
           .attr("fill", function (d) {
               return colorMap.get(d.item);
           })
-          .attr("stroke", function (d) {
-              return d.stroke
-          });
+          .attr("stroke", "#000000");
 
 
         //Tooltip creation
@@ -1591,7 +1574,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
             this.parentNode.appendChild(this);
             var rect = d3.select(this);
 
-            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = rect.datum().stroke;
+            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = "#000000";
             rect.attr("stroke", col3).attr("fill", col2);
             (function doitagain() {
                 rect.transition().duration(1000)
@@ -1674,9 +1657,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
             trSelec.filter(testitem).classed("outlined", false);
 
-            selection.filter(testitem).transition().duration(0).attr("stroke", function (d) {
-                return d.stroke;
-            }).attr("fill", colorMap.get(svg.activeItem));
+            selection.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
 
             svg.activeItem = null;
 
@@ -4183,7 +4164,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-22+00:00&df=2016-07-22+23:00&pset=HOURLY&dh=2", "Graph");
+drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-20+00:00&df=2016-07-22+23:00&pset=HOURLY&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");

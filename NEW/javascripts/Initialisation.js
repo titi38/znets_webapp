@@ -116,7 +116,7 @@ function initialisation(){
         /*********************************************************************************************************
          Initialize Chart Formular
          ********************************************************************************************************/
-        applyChartsTimestep();
+        applyChartsForm();
 
     });
 
@@ -241,78 +241,6 @@ function initializeRawDataForm() {
 }
 
 
-
-
-
-
-
-function initializeChartsTimestepForm() {
-
-    $('#fromDate_ChartsForm').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        defaultDate: moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm'),
-
-
-    });
-    $('#toDate_ChartsForm').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        defaultDate: moment(),
-
-
-    });
-
-
-    $("#fromDate_ChartsForm").on("dp.show", function (e) {
-        if($('#toDate_ChartsForm').data("DateTimePicker").maxDate())
-            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate($('#toDate_ChartsForm').data("DateTimePicker").maxDate());
-        else
-            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment());
-
-    });
-
-    $("#fromDate_ChartsForm").on("dp.change", function (e) {
-        if(!e.date)
-            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
-
-    });
-
-    $("#toDate_ChartsForm").on("dp.change", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
-
-        if(e.date)
-        {
-
-            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(e.date);
-
-            switch ($("#timestepCharts").val()) {
-                case "lastDay" :
-                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
-                    break;
-                case "lastMonth" :
-                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'months').format('YYYY-MM-DD HH:mm'));
-                    break;
-                case "hourly" :
-                case "daily" :
-                    // DO NOTHING
-                    break;
-                default :
-                    console.error("UNEXPECTED ChartsTimestep select value (Initialisation.js), %i ", 103);
-                    break;
-            }
-
-        }
-        else
-        {
-            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment());
-            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
-        }
-    });
-
-    $("#toDate_ChartsForm").on("dp.show", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
-    });
-
-}
 
 function addNetworksTabs(networksNamesArrayObject) {
 

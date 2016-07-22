@@ -9,3 +9,9 @@ var proxyPass = 'dynamic/';//'';
 // javascript templates variable
 var JST = {};
 
+var chartsPreset = {
+    timeSlice : "lastDay",
+    timeStep : "HOURLY",
+    startDate : "HOURLY",
+    endDate : "HOURLY"
+}

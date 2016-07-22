@@ -148,7 +148,7 @@
                 <div class="form-group col-md-4">
                     <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
                     <div class="col-xs-10 col-md-8">
-                        <select class="form-control" id="timesliceCharts" onchange="onChangeChartsTimestep(); updateChartsTimestep(this)">
+                        <select class="form-control" id="timesliceCharts" onchange="onChangeChartsForm(); updateChartsTimestep(this)">
                             <option value="lastDay" selected="selected">Last 24h</option>
                             <option value="lastMonth" >Last Month</option>
                             <option value="hourly">Custom (Hourly)</option>
@@ -162,7 +162,7 @@
                     <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
                     <div class="col-xs-10">
                         <div class='input-group date' id='fromDate_ChartsForm'>
-                            <input type='text' class="form-control" onchange="onChangeChartsTimestep();" required disabled/>
+                            <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -175,7 +175,7 @@
                     <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
                     <div class="col-xs-10">
                         <div class='input-group date' id='toDate_ChartsForm'>
-                            <input type='text' class="form-control" onchange="onChangeChartsTimestep();" required disabled/>
+                            <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -185,7 +185,7 @@
                 </div>
 
                 <div class="form-group col-xs-12 col-md-1 text-center">
-                    <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsTimestep()" disabled>Apply</button>
+                    <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
                 </div>
 
                 <div class="form-group col-xs-12 col-md-1 text-center">
@@ -210,7 +210,7 @@
         /*********************************************************************************************************
         Initialize Chart Formular
         ********************************************************************************************************/
-        applyChartsTimestep();
+        applyChartsForm();
 
     });
 </script>

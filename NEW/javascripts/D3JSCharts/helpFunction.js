@@ -76,6 +76,8 @@ function ticksSecondAxisXDouble(svg){
 /***********************************************************************************************************/
 
 
+/***************/
+
 function getPieJsonQuery(svg, clickData) {
 
   /*

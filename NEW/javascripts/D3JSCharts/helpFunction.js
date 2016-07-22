@@ -76,9 +76,14 @@ function ticksSecondAxisXDouble(svg){
 /***********************************************************************************************************/
 
 
-/***************/
 
 function getPieJsonQuery(svg, clickData) {
+
+  /***** Temporaire *****/
+
+  if(typeof proxyPass === "undefined"){
+    proxyPass = "dynamic/"
+  }
 
   /*
   console.error(moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD HH:mm"));// &dd=
@@ -89,9 +94,13 @@ function getPieJsonQuery(svg, clickData) {
   console.error(clickData.direction.toLowerCase());//&type=
    */
 
-  return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
-      +( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
-      + ( ( moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") : "" )
+  //?
+  var pieUrl = "netExtHostsTopHostsTraffic.json?pset=HOURLY&net=network";
+
+  //return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
+    return proxyPass + pieUrl
+      +( ( moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") : "" )
+      + ( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
       + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
       + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
       + ( ( clickData.item ) ? "&ip="+clickData.item : "" )
@@ -134,9 +143,12 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   div.overlay.on("click", function () {
     div.overlay.style("display", "none");
     svg.popup.style("display", "none");
+    if(svg.popup.pieChart.divTable) {
+      svg.popup.pieChart.divTable.remove();
+    }
     svg.popup.pieChart.remove();
-    svg.popup.pieChart.divTable.remove();
     svg.popup.pieChart = null;
+
     onSupprFunct();
   });
 

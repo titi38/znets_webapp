@@ -277,7 +277,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             timeMax = Math.max(timeMax,elemToPush.x);
 
             if(elemJson[contentDirectionValue] === "IN"){
-
+                elemToPush.direction = "inc";
                 svg.valuesIn.push(elemToPush);
 
             }else{
@@ -827,7 +827,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
                         timeMax = Math.max(timeMax, elemToPush.x);
 
                         if (elemToPush.direction === "in") {
-
+                            elemToPush.direction = "inc";
                             svg.valuesIn.push(elemToPush);
 
                         } else {
@@ -879,7 +879,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
                     timeMax = Math.max(timeMax,elemToPush.x);
 
                     if(elemToPush.direction === "in"){
-
+                        elemToPush.direction = "inc";
                         svg.valuesIn.push(elemToPush);
 
                     }else{
@@ -1367,13 +1367,15 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
         var colorMap = new Map();
         var sumMap = new Map();
+        var sumMapByX = new Map();
+
         var i, elemJson, elemToPush, elemSumMap;
         svg.timeMin = Infinity;
         var timeMax = 0;
 
 
 
-        // Data are processed and sorted according to their direction.
+        // Data are processed and sorted.
         for(i = 0; i < dataLength; i++){
             elemJson = jsonData[i];
 
@@ -1388,12 +1390,15 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
                 stroke: "#000000"
             };
 
-            if (!sumMap.has(elemToPush.item)) {
-                sumMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
-            } else {
-                elemSumMap = sumMap.get(elemToPush.item);
-                elemSumMap.sum += elemToPush.height;
+            elemToPush.display = (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue];
+
+            if(!sumMapByX.has(elemToPush.x)){
+                sumMapByX.set(elemToPush.x,elemToPush.height);
+            }{
+                sumMapByX.set(elemToPush.x,sumMapByX.get(elemToPush.x) + elemToPush.height);
             }
+
+
 
             svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
             timeMax = Math.max(timeMax,elemToPush.x);
@@ -1408,10 +1413,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
         //step = 1 hour by default
         svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
-
-        svg.values.forEach(function(elem){
-            elem.x = (elem.x - svg.timeMin)/svg.step
-        });
 
 
 
@@ -1429,10 +1430,50 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
             return b.height - a.height;
         }
 
+        //values are sorted according primarily x (date) then height.
+
         svg.values.sort(sortValues);
 
-        var xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
+
+
+        //Compute 1% of total amount by date.
+        sumMapByX.forEach(function(value, key){
+           sumMapByX.set(key,value/100)
+        });
+
+        var elemValue;
+        i = 0;
+        while(i < svg.values.length){
+
+            elemValue = svg.values[i];
+
+            if(elemValue.height < sumMapByX.get(elemValue.x)){
+                svg.values.splice(i,1);
+            }else{
+                i++;
+            }
+
+        }
+
+        console.log(sumMapByX);
+
+        svg.values.forEach(function(elem,i){
+            elem.x = (elem.x - svg.timeMin)/svg.step;
+
+            if (!sumMap.has(elem.item)) {
+                sumMap.set(elem.item, {sum: elem.height,display: elem.display});
+            } else {
+                elemSumMap = sumMap.get(elem.item);
+                elemSumMap.sum += elem.height;
+            }
+
+            svg.values[i] = {x:elem.x,height:elem.height,item:elem.item,stroke:elem.stroke};
+
+        });
+
+
+        var xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
 
         var sumArray = [];
@@ -3413,7 +3454,7 @@ function createCurve(div, svg, mydiv, urlJson){
                 //pset=MINUTE
 
                 var amountArray = elemJson[contentAmountValue];
-                
+
 
                 for(var j = 0; j < 60; j++){
 
@@ -4140,10 +4181,10 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-//drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+//drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-//drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-22%2009%3A44&df=2016-07-22%2011%3A44&pset=HOURLY&dh=2", "Graph");
-drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
+drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-22+00:00&df=2016-07-22+23:00&pset=HOURLY&dh=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");

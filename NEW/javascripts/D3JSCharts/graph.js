@@ -3384,8 +3384,8 @@ function createCurve(div, svg, mydiv, urlJson){
 
         svg.chart = svg.svg.append("g");
 
-        svg.valueline = d3.line();
-        svg.area = d3.area();
+        svg.valueline = d3.line().curve(d3.curveMonotoneX);
+        svg.area = d3.area().curve(d3.curveMonotoneX);
         
         var jsonData = json.data;
         var jsonContent = json.content;
@@ -3512,8 +3512,8 @@ function createCurve(div, svg, mydiv, urlJson){
 
         legendAxisX(svg);
 
-        svg.newValueline = d3.line();
-        svg.newArea = d3.area();
+        svg.newValueline = d3.line().curve(d3.curveMonotoneX);
+        svg.newArea = d3.area().curve(d3.curveMonotoneX);
 
 
         svg.newArea.x(function (d,i) {
@@ -4158,14 +4158,13 @@ function addZoomMap(svg){
 
 
 
-//drawChart("/dynamic/netNbLocalHosts.json?minute&dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
 //drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-20+00:00&df=2016-07-22+23:00&pset=HOURLY&dh=2", "Graph");
-//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
+//drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-20+00:00&df=2016-07-22+23:00&pset=HOURLY&dh=2", "Graph");
+drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-21+00:00&df=2016-07-21+23:59&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");

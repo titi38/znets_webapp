@@ -62,40 +62,6 @@ function niceTicks(axis) {
 
 /***********************************************************************************************************/
 
-function axisXLegendDouble(svg){
-  var dround,date;
-
-  //if graph hourly
-  if(svg.step === 3600000) {
-
-    svg.axisx.selectAll(".tick").select("text").text(function (d) {
-      dround = Math.round(d);
-      if (Math.abs(dround - d) >= 1e-7) {
-        this.parentNode.remove();
-      } else {
-        date = getDateFromAbscissa(svg, dround);
-        return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
-      }
-    });
-
-  }else{
-    //graph daily
-    svg.axisx.selectAll(".tick").select("text").text(function (d) {
-      dround = Math.round(d);
-      if (Math.abs(dround - d) >= 1e-7) {
-        this.parentNode.remove();
-      } else {
-        date = getDateFromAbscissa(svg, dround);
-        return (date.getMonth() + 1) + "/" + date.getDate();
-      }
-    });
-
-  }
-
-}
-
-/***********************************************************************************************************/
-
 function ticksSecondAxisXDouble(svg){
 
   svg.axisx.selectAll(".tick").filter(function(){return !d3.select(this).classed("addedLine");}).classed("addedLine",true).append("line")
@@ -110,7 +76,14 @@ function ticksSecondAxisXDouble(svg){
 /***********************************************************************************************************/
 
 
+
 function getPieJsonQuery(svg, clickData) {
+
+  /***** Temporaire *****/
+
+  if(typeof proxyPass === "undefined"){
+    proxyPass = "dynamic/"
+  }
 
   /*
   console.error(moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD HH:mm"));// &dd=
@@ -121,9 +94,13 @@ function getPieJsonQuery(svg, clickData) {
   console.error(clickData.direction.toLowerCase());//&type=
    */
 
-  return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
-      +( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
-      + ( ( moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD+HH:mm") : "" )
+  //?
+  var pieUrl = "netExtHostsTopHostsTraffic.json?pset=HOURLY&net=network";
+
+  //return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
+    return proxyPass + pieUrl
+      +( ( moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") : "" )
+      + ( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
       + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
       + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
       + ( ( clickData.item ) ? "&ip="+clickData.item : "" )
@@ -166,9 +143,12 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   div.overlay.on("click", function () {
     div.overlay.style("display", "none");
     svg.popup.style("display", "none");
+    if(svg.popup.pieChart.divTable) {
+      svg.popup.pieChart.divTable.remove();
+    }
     svg.popup.pieChart.remove();
-    svg.popup.pieChart.divTable.remove();
     svg.popup.pieChart = null;
+
     onSupprFunct();
   });
 
@@ -540,7 +520,7 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
     for(var i = 0;i < length; i++ ){
 
-        if(jsonContent[i] === "name" || jsonContent[i] === "host"){
+        if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"){
 
                   return i;
 
@@ -587,7 +567,7 @@ function searchAmountValue(jsonContent){
   var length = jsonContent.length;
   for(var i = 0;i < length; i++ ){
 
-    if(jsonContent[i] === "amount" || jsonContent[i] === "nbhosts"){
+    if(jsonContent[i] === "amount" || jsonContent[i] === "nbhosts" || jsonContent[i] === "nblocalhosts"){
 
       return i;
 
@@ -622,6 +602,32 @@ function searchDirectionValue(jsonContent){
 
 }
 
+/************************************************************************************************************
+ *
+ *  Search inside a content array for a
+ *  possible, non mandatory display value (replaced by item value later if no display value found)
+ *
+ ***********************************************************************************************************/
+
+function searchDisplayValue(jsonContent){
+
+  var length = jsonContent.length;
+  for(var i = 0;i < length; i++ ){
+
+    if(jsonContent[i] === "hostname" || jsonContent[i] === "name"){
+
+      return i;
+
+    }
+  }
+
+  console.log("no display value found");
+  return false;
+
+}
+
+
+
 
 
 /************************************************************************************************************
@@ -645,9 +651,22 @@ function getDateFromAbscissa(svg,x){
 
  ************************************************************************************************************/
 
-function quantityConvertUnit(qty){
+function quantityConvertUnit(qty, unitIsByte){
+  var base;
+  var infMetric;
+  if(unitIsByte === true) {
 
-  var rawExp = Math.log(qty)/Math.log(1000);
+    base = 1024;
+    infMetric = "i";
+
+  }else {
+
+    base = 1000;
+    infMetric = "";
+
+  }
+
+  var rawExp = Math.log(qty)/Math.log(base);
   var absRawExp = Math.abs(rawExp);
   var exp = Math.min(8,Math.max(0,Math.floor(absRawExp)));
 
@@ -655,45 +674,45 @@ function quantityConvertUnit(qty){
     exp = -exp;
   }
 
-  var pow = Math.pow(1000,exp);
+  var pow = Math.pow(base,-exp);
 
   switch (exp){
 
     case -8:
-      return ["y",pow];
+      return ["y" + infMetric,pow];
     case -7:
-      return ["z",pow];
+      return ["z" + infMetric,pow];
     case -6:
-      return ["a",pow];
+      return ["a" + infMetric,pow];
     case -5:
-      return ["f",pow];
+      return ["f" + infMetric,pow];
     case -4:
-      return ["p",pow];
+      return ["p" + infMetric,pow];
     case -3:
-      return ["n",pow];
+      return ["n" + infMetric,pow];
     case -2:
-      return ["µ",pow];
+      return ["µ" + infMetric,pow];
     case -1:
-      return ["m",pow];
+      return ["m" + infMetric,pow];
     default:
     case 0:
       return ["",pow];
     case 1 :
-      return ["K",pow];
+      return ["K" + infMetric,pow];
     case 2 :
-      return ["M",pow];
+      return ["M" + infMetric,pow];
     case 3 :
-      return ["G",pow];
+      return ["G" + infMetric,pow];
     case 4 :
-      return ["T",pow];
+      return ["T" + infMetric,pow];
     case 5 :
-      return ["P",pow];
+      return ["P" + infMetric,pow];
     case 6 :
-      return ["E",pow];
+      return ["E" + infMetric,pow];
     case 7 :
-      return ["Z",pow];
+      return ["Z" + infMetric,pow];
     case 8 :
-      return ["Y",pow];
+      return ["Y" + infMetric,pow];
   }
 
 }
@@ -708,15 +727,16 @@ function quantityConvertUnit(qty){
 //after niceticks is better
 function axisYLegendDouble(svg){
 
-  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1] - svg.newYInput.domain()[0],svg.newYOutput.domain()[1] - svg.newYOutput.domain()[0]));
+  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1] - svg.newYInput.domain()[0],
+    svg.newYOutput.domain()[1] - svg.newYOutput.domain()[0]));
   var value,text, maxWidth = 0;
 
   svg.ylabel.text(convert[0] + svg.units);
 
   function textValue(d){
 
-    value = d/convert[1];
-    //value = Math.round(d/convert[1]*1000)/1000;
+    value = d*convert[1];
+    value = Math.round(value*10000)/10000;
     /*text =*/ d3.select(this).select("text").text(value);
     //console.log(text.style("width"));
 
@@ -728,4 +748,51 @@ function axisYLegendDouble(svg){
   svg.axisyOutput.selectAll(".tick").each(textValue);
 
   //console.log(maxWidth);
+}
+
+/************************************************************************************************************
+
+
+
+ ************************************************************************************************************/
+
+//after niceticks is better
+function axisYLegendSimple(svg){
+
+  var convert = quantityConvertUnit(svg.newY.domain()[1] - svg.newY.domain()[0]);
+  var value,text, maxWidth = 0;
+
+  svg.ylabel.text(convert[0] + svg.units);
+
+  function textValue(d){
+
+    value = d*convert[1];
+    value = Math.round(value*10000)/10000;
+    /*text =*/ d3.select(this).select("text").text(value);
+    //console.log(text.style("width"));
+
+    //maxWidth = Math.max(maxWidth,parseInt(text.style("width"),10));
+  }
+
+  svg.axisy.selectAll(".tick").each(textValue);
+
+  //console.log(maxWidth);
+}
+
+
+/************************************************************************************************************/
+
+function unitsStringProcessing(unitsString){
+  
+  return unitsString.indexOf("nb") === 0 ? unitsString.slice(2) : unitsString;
+  
+}
+
+
+/************************************************************************************************************/
+
+function firstLetterUppercase(string){
+
+  return string.charAt(0).toUpperCase() + string.slice(1);
+
 }

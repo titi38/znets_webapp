@@ -506,7 +506,7 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
     for(var i = 0;i < length; i++ ){
 
-        if(jsonContent[i] === "code" || jsonContent[i] === "host"){
+        if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"){
 
                   return i;
 
@@ -722,7 +722,7 @@ function axisYLegendDouble(svg){
   function textValue(d){
 
     value = d*convert[1];
-    value = Math.round(value*1000)/1000;
+    value = Math.round(value*10000)/10000;
     /*text =*/ d3.select(this).select("text").text(value);
     //console.log(text.style("width"));
 
@@ -753,7 +753,7 @@ function axisYLegendSimple(svg){
   function textValue(d){
 
     value = d*convert[1];
-    value = Math.round(value*1000)/1000;
+    value = Math.round(value*10000)/10000;
     /*text =*/ d3.select(this).select("text").text(value);
     //console.log(text.style("width"));
 

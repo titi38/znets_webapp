@@ -599,7 +599,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         ticksSecondAxisXDouble(svg);
 
-        axisXLegendDouble(svg);
+        legendAxisX(svg);
 
 
         svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
@@ -773,7 +773,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         var colorMap = new Map();
         var sumMap = new Map();
-        var i, elemJson, elemToPush, elemSumMap;
+        var i,j,k, elemJson, elemToPush, elemSumMap;
         svg.timeMin = Infinity;
         var timeMax = 0;
 
@@ -784,6 +784,71 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
             //TODO faire pset=MINUTE. copier/coller else et adapter (cf createcurve).
 
+            var elemAmountMinuteArray;
+
+            for(i = 0; i < dataLength; i++){
+                elemJson = jsonData[i];
+
+                for(j = 0; j < contentLength; j++){
+
+                    if(j === contentDateValue){
+                        continue;
+                    }
+
+                    elemAmountMinuteArray = elemJson[j];
+
+                    //TODO pour l'instant, avant changement en base de données normalement, à supprimer ensuite
+                    elemAmountMinuteArray = elemAmountMinuteArray.slice(1).split(/[,} ]+/);
+                    console.log(elemAmountMinuteArray);
+
+                    for(k = 0; k < 60; k++) {
+
+
+                        if(+elemAmountMinuteArray[k] === 0){
+                            continue;
+                        }
+
+                        elemToPush = {
+                            //The given time is the corresping, we add the correct minutes according to the position k
+                            //of the element in the array
+                            x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step,
+                            height: +elemAmountMinuteArray[k],
+                            item: jsonContent[j][0],
+                            stroke: "#000000",
+                            direction: jsonContent[j][1]
+                        };
+
+                        // .display kept, can have an use someday
+                        if (!sumMap.has(elemToPush.item)) {
+                            sumMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+                        } else {
+                            elemSumMap = sumMap.get(elemToPush.item);
+                            elemSumMap.sum += elemToPush.height;
+                        }
+
+                        svg.timeMin = Math.min(svg.timeMin, elemToPush.x);
+                        timeMax = Math.max(timeMax, elemToPush.x);
+
+                        if (elemToPush.direction === "in") {
+
+                            svg.valuesIn.push(elemToPush);
+
+                        } else {
+
+                            svg.valuesOut.push(elemToPush)
+
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+
+
+
 
         }else{
 
@@ -791,7 +856,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
             for(i = 0; i < dataLength; i++){
                 elemJson = jsonData[i];
 
-                for(var j = 0; j < contentLength; j++){
+                for(j = 0; j < contentLength; j++){
 
                     if(j === contentDateValue || +elemJson[j] === 0){
                         continue;
@@ -1143,7 +1208,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         ticksSecondAxisXDouble(svg);
 
-        axisXLegendDouble(svg);
+        legendAxisX(svg);
 
 
         svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
@@ -2290,7 +2355,7 @@ function updateHisto1DStackDouble(svg){
 
     ticksSecondAxisXDouble(svg);
 
-    axisXLegendDouble(svg);
+    legendAxisX(svg);
 
     svg.axisx.attr("transform","matrix(1, 0, 0, 1," + svg.margin.left+ "," + Math.min(svg.margin.top + svg.height,Math.max(svg.margin.top - svg.margin.zero,(svg.heightOutput)*svg.transform.k*svg.scaley +svg.margin.top + svg.transform.y)) + ")" );
 
@@ -2471,7 +2536,7 @@ function addZoomDouble(svg,updateFunction){
                 mouseCoord = d3.mouse(svg.frame.node());
 
                 //Drawing of the selection rect
-                console.log("carré mousecoord " + mouseCoord + " start " + startCoord );
+                //console.log("carré mousecoord " + mouseCoord + " start " + startCoord );
 
                 mouseCoord[0] = Math.min(Math.max(mouseCoord[0],svg.x.range()[0]),svg.x.range()[1]);
                 mouseCoord[1] = Math.min(Math.max(mouseCoord[1],0),svg.height);
@@ -3322,6 +3387,7 @@ function createCurve(div, svg, mydiv, urlJson){
             }
 
             if(svg.step === 60000){
+                //pset=MINUTE
 
                 var amountArray = elemJson[contentAmountValue];
 
@@ -3404,7 +3470,7 @@ function createCurve(div, svg, mydiv, urlJson){
 
         axisYLegendSimple(svg);
 
-        legendCurveAxisX(svg);
+        legendAxisX(svg);
 
         svg.newValueline = d3.line();
         svg.newArea = d3.area();
@@ -3533,7 +3599,7 @@ function updateCurve(svg){
 
     axisYLegendSimple(svg);
 
-    legendCurveAxisX(svg);
+    legendAxisX(svg);
 
     gridSimpleGraph(svg,true);
 
@@ -3544,7 +3610,7 @@ function updateCurve(svg){
  *
  ************************************************************************************************************/
 
-function legendCurveAxisX(svg){
+function legendAxisX(svg){
 
     var date,dround;
     //if graph hourly
@@ -4059,7 +4125,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
-drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-21%2011%3A44&pset=DAILY&dh=2", "Graph");
+drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");

@@ -62,40 +62,6 @@ function niceTicks(axis) {
 
 /***********************************************************************************************************/
 
-function axisXLegendDouble(svg){
-  var dround,date;
-
-  //if graph hourly
-  if(svg.step === 3600000) {
-
-    svg.axisx.selectAll(".tick").select("text").text(function (d) {
-      dround = Math.round(d);
-      if (Math.abs(dround - d) >= 1e-7) {
-        this.parentNode.remove();
-      } else {
-        date = getDateFromAbscissa(svg, dround);
-        return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
-      }
-    });
-
-  }else{
-    //graph daily
-    svg.axisx.selectAll(".tick").select("text").text(function (d) {
-      dround = Math.round(d);
-      if (Math.abs(dround - d) >= 1e-7) {
-        this.parentNode.remove();
-      } else {
-        date = getDateFromAbscissa(svg, dround);
-        return (date.getMonth() + 1) + "/" + date.getDate();
-      }
-    });
-
-  }
-
-}
-
-/***********************************************************************************************************/
-
 function ticksSecondAxisXDouble(svg){
 
   svg.axisx.selectAll(".tick").filter(function(){return !d3.select(this).classed("addedLine");}).classed("addedLine",true).append("line")

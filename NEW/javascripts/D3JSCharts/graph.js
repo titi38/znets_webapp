@@ -3550,7 +3550,7 @@ function createCurve(div, svg, mydiv, urlJson){
                 data.forEach(function (value, i) {
                     svg.data[i] = value * t;
                 });
-                
+
                 updateCirclePosition(svg,mouseCoordX);
                 line.attr("d", svg.newValueline(svg.data));
                 area.attr("d", svg.newArea(svg.data));
@@ -3577,6 +3577,7 @@ function createCurve(div, svg, mydiv, urlJson){
 
         d3.select(window).on("resize." + mydiv, function () {
             console.log("resize");
+            console.log(d3.event);
             redrawCurve(div, svg);
         });
         

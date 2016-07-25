@@ -3511,7 +3511,7 @@ function createCurve(div, svg, mydiv, urlJson){
         console.log(svg.data);
 
 
-        svg.chart.append("path").classed("line", true);
+        svg.chart.append("path").classed("lineGraph", true);
         svg.chart.append("path").classed("area", true);
 
         svg.area.x(function (d,i) {
@@ -3585,7 +3585,7 @@ function createCurve(div, svg, mydiv, urlJson){
         svg.transition("start").duration(800).tween("", function () {
 
             var data = JSON.parse(JSON.stringify(svg.data));
-            var line = svg.chart.select(".line");
+            var line = svg.chart.select(".lineGraph");
             var area = svg.chart.select(".area");
 
             return function (t) {
@@ -3699,7 +3699,7 @@ function redrawCurve(div,svg){
 function updateCurve(svg){
 
 
-    svg.chart.select(".line").attr("d",svg.newValueline(svg.data));
+    svg.chart.select(".lineGraph").attr("d",svg.newValueline(svg.data));
     svg.chart.select(".area").attr("d",svg.newArea(svg.data));
 
     svg.axisx.call(d3.axisBottom(svg.newX));

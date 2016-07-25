@@ -522,7 +522,7 @@ function searchItemValue(jsonContent){
 
       //TODO demander changer nom ?column? en truc correct, ça va causer des soucis si c'est pas déjà le cas.
         if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"
-          || jsonContent[i] === "?column?"){
+          || jsonContent[i] === "appid" || jsonContent[i] === "?column?"){
 
                   return i;
 

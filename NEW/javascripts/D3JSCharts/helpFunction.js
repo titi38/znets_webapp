@@ -518,20 +518,22 @@ function testJson(json){
 function searchItemValue(jsonContent){
   
     var length = jsonContent.length;
+
+    //TODO demander changer nom ?column? en truc correct, ça va causer des soucis si c'est pas déjà le cas.
+    var itemArray = ["code","host","localhostip","appid","?column?"];
+
     for(var i = 0;i < length; i++ ){
 
-      //TODO demander changer nom ?column? en truc correct, ça va causer des soucis si c'est pas déjà le cas.
-        if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"
-          || jsonContent[i] === "appid" || jsonContent[i] === "?column?"){
+        if(itemArray.indexOf(jsonContent[i]) !== -1){
 
                   return i;
 
         }
-     }
+    }
 
     console.error("no item value found");
     return false;
-  
+
 }
 
 /************************************************************************************************************
@@ -543,9 +545,12 @@ function searchItemValue(jsonContent){
 function searchDateValue(jsonContent){
 
   var length = jsonContent.length;
+
+  var dateArray = ["date"];
+
   for(var i = 0;i < length; i++ ){
 
-    if(jsonContent[i] === "date"){
+    if(dateArray.indexOf(jsonContent[i]) !== -1){
 
       return i;
 
@@ -567,9 +572,11 @@ function searchDateValue(jsonContent){
 function searchAmountValue(jsonContent){
 
   var length = jsonContent.length;
+
+  var amountArray = ["amount","nbhosts", "nblocalhosts","nbexternhosts"];
   for(var i = 0;i < length; i++ ){
 
-    if(jsonContent[i] === "amount" || jsonContent[i] === "nbhosts" || jsonContent[i] === "nblocalhosts"){
+    if(amountArray.indexOf(jsonContent[i]) !== -1){
 
       return i;
 
@@ -590,9 +597,12 @@ function searchAmountValue(jsonContent){
 function searchDirectionValue(jsonContent){
 
   var length = jsonContent.length;
+
+  var directionArray = ["direction"];
+
   for(var i = 0;i < length; i++ ){
 
-    if(jsonContent[i] === "direction"){
+    if(directionArray.indexOf(jsonContent[i]) !== -1){
 
       return i;
 
@@ -614,9 +624,12 @@ function searchDirectionValue(jsonContent){
 function searchDisplayValue(jsonContent){
 
   var length = jsonContent.length;
+
+  var displayArray = ["hostname", "name"];
+
   for(var i = 0;i < length; i++ ){
 
-    if(jsonContent[i] === "hostname" || jsonContent[i] === "name"){
+    if(displayArray.indexOf(jsonContent[i]) !== -1){
 
       return i;
 

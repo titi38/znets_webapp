@@ -166,10 +166,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
           divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
 
-        var divtable = div.append("div").classed("diagram divtable", true);
-        divtable.append("h4").classed("tableTitle", true).text("Legend");
-        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
+
+
 
 
         svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
@@ -230,6 +228,12 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             noData(div,svg,mydiv);
             return;
         }
+
+        //Now, no more nodata can happen,so we create the table
+        var divtable = div.append("div").classed("diagram divtable", true);
+        divtable.append("h4").classed("tableTitle", true).text("Legend");
+        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
+          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
 
         svg.units = unitsStringProcessing(json.units);
 
@@ -686,10 +690,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
           divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
 
-        var divtable = div.append("div").classed("diagram divtable", true);
-        divtable.append("h4").classed("tableTitle", true).text("Legend");
-        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
+
 
 
         svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
@@ -739,6 +740,12 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
             noData(div,svg,mydiv);
             return;
         }
+
+        //Now, no more nodata can happen,so we create the table
+        var divtable = div.append("div").classed("diagram divtable", true);
+        divtable.append("h4").classed("tableTitle", true).text("Legend");
+        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
+          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
 
         svg.units = unitsStringProcessing(json.units);
 
@@ -1282,10 +1289,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
           divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
 
-        var divtable = div.append("div").classed("diagram divtable", true);
-        divtable.append("h4").classed("tableTitle", true).text("Legend");
-        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
+
 
         svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
 
@@ -1341,6 +1345,13 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
             noData(div,svg,mydiv);
             return;
         }
+
+
+        //Now, no more nodata can happen,so we create the table
+        var divtable = div.append("div").classed("diagram divtable", true);
+        divtable.append("h4").classed("tableTitle", true).text("Legend");
+        var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
+          (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
 
         svg.units = unitsStringProcessing(json.units);
 
@@ -3053,7 +3064,7 @@ function colorEval(firstValue){
         s = y*segmy +starty;
         l= z*segmz +startz;
 
-        console.log(color.h);
+        //console.log(color.h);
 
         return color;
     }
@@ -4189,10 +4200,10 @@ function addZoomMap(svg){
 
 
 
-//drawChart("/dynamic/netTopHostsNbFlow.json?&pset=DAILY&dd=2016-06-20+12%3A34&df=2016-07-25+12%3A34&dh=2","Graph");
+//drawChart("/dynamic/netTopServicesTraffic.json?service=loc&pset=DAILY&dd=2016-06-25+12%3A34&df=2016-07-25+12%3A34&dh=2","Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
-//drawChart("/dynamic/netTopAppNbFlow.json?&pset=DAILY&dd=2016-06-25+12%3A34&df=2016-07-25+12%3A34&dh=2", "Graph");
+//drawChart("/dynamic/netNbExternalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-25%2011%3A44&pset=MINUTE", "Graph");
+drawChart("/dynamic/netTopAppNbFlow.json?&pset=HOURLY&dd=2016-06-25+12%3A34&df=2016-07-25+12%3A34&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-17+00:00&df=2016-07-22+23:59&pset=DAILY&dh=2", "Graph");

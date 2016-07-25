@@ -54,6 +54,9 @@ function applyChartsForm(){
     $("#applyBtn_charts_form").prop("disabled", true);
     $("#resetBtn_charts_form").prop("disabled", true);
 
+    // Redraw all active charts
+    $("li.active > a.subnavtab").click();
+
 }
 
 

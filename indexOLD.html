@@ -1,0 +1,1792 @@
+<html>
+<head>
+<title>ZNeTS: The Network Traffic Supervizorrr</title>
+
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+<meta http-equiv="Expires" content="0" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script type="text/javascript" src="/dojo/dojo/dojo.js" data-dojo-config="isDebug: true, parseOnLoad: true"></script>
+<script>dojoConfig = { has: {"dojo-firebug": true, "dojo-debug-messages": true}, parseOnLoad: true }</script>
+
+<script type="text/javascript">
+	require(["dojo/dom", "dojo/ready", "dojox/charting/Chart", "dojox/charting/axis2d/Default", "dojox/charting/plot2d/Lines",
+		"dojox/charting/plot2d/StackedAreas", "dojox/charting/plot2d/Grid",
+		"dojox/charting/themes/PlotKit/orange", "dojox/charting/action2d/Tooltip",
+		"dojox/charting/action2d/Magnify", "dojo/parser", "dijit/form/VerticalSlider", "dijit/form/VerticalRule", "dojox/form/RangeSlider"], function(dom, ready, Chart, Default, Lines, StackedAreas,
+			Grid, orange, Tooltip, Magnify, VerticalSlider, VerticalRule ){
+		ready(function(){
+		});
+	});
+</script>
+
+
+
+<!--script type="text/javascript" src="dojo/*/*"></script>
+<script type="text/javascript" src="dojo/*/*/*"></script>
+<script type="text/javascript" src="dojo/*/*/*/*"></script>
+<script src="dojo/dojo/data/ItemFileReadStore.js"></script-->
+
+<!--script type="text/javascript">require("dijit/Dialog")</script>
+<script type="text/javascript">require("dijit/form/TextBox")</script>
+<script type="text/javascript">require("dijit/form/Button")</script>
+<script type="text/javascript">require("dojox/form/VerticalRangeSlide")</script>
+<script type="text/javascript">require("dojox/lang")</script>
+<script type="text/javascript">require("dojox/charting/Chart")</script>
+<script type="text/javascript">require("dojox/charting/Chart2D")</script>
+<script type="text/javascript">require("dojox/widget/Calendar")</script>
+<script type="text/javascript">require("dijit/form/ComboBox")</script>
+<script type="text/javascript">require("dojox/widget/Dialog")</script>
+<script type="text/javascript">require("dojo/data/ItemFileReadStore")</script-->
+
+<link rel="stylesheet" href="/dojo/dijit/themes/claro/claro.css"/>
+<link rel="stylesheet" href="/dojo/dojox/widget/Calendar/Calendar.css"/>
+
+<link rel="stylesheet" href="/dojo/dojox/form/resources/RangeSlider.css"/>
+
+<link rel="stylesheet" href="/dojo/dojox/widget/Dialog/Dialog.css"/>
+
+
+<link rel="stylesheet" href="/dojo/dojo/resources/dojo.css"/>
+<link rel="stylesheet" href="/dojo/dijit/themes/tundra/tundra.css"/>
+<link rel="stylesheet" href="/dojo/dojox/form/resources/RangeSlider.css"/>
+
+
+<!--script type="text/javascript" src="function-min.js"></script-->
+<!--link rel="stylesheet" href="styles-min.css"-->
+
+<!--script type="text/javascript" src="dojo/dojo/dojo.js" djConfig=" locale: 'en-us', parseOnLoad: true, isDebug:false "></script>
+<script type="text/javascript" src="dojo/dojo/ZNeTS.js"></script-->
+
+
+
+<link rel="stylesheet" href="styles/onglets.css">
+<link rel="stylesheet" href="styles/dojoFilterBox.css"/>
+<link rel="stylesheet" href="styles/logs.css"/>
+<link rel="stylesheet" href="styles/tables.css"/>
+<link rel="stylesheet" href="styles/config.css"/>
+<link rel="stylesheet" href="styles/formulaire.css"/>
+<link rel="stylesheet" href="styles/calendar.css"/>
+<link rel="stylesheet" href="styles/graphes.css"/>
+<link rel="stylesheet" href="styles/grid.css"/>
+<link rel="stylesheet" href="styles/toolbar.css"/>
+<link rel="stylesheet" href="styles/NEWstyle.css"/>
+<link rel="stylesheet" href="styles/mirror.css"/>
+<link rel="stylesheet" href="styles/dijitProgressBar.css"/>
+
+<!--link rel="stylesheet" href="dojo/dojo/resources/dojo.css"/-->
+<link rel="stylesheet" href="/dojo/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"/>
+<link rel="stylesheet" href="/dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css"/>
+
+<link rel="stylesheet" href="/dojo/dojox/layout/resources/ExpandoPane.css"/>
+
+
+<link rel="shortcut icon" type="image/ico" href="images/favicon.ico" />
+
+
+<script type="text/javascript" src="functions/charting.js"></script>
+<script type="text/javascript" src="functions/index.js"></script>
+
+
+<script type="text/javascript" src="functions/tools.js"></script>
+
+<script type="text/javascript" src="functions/actions_alerts.js"></script>
+<script type="text/javascript" src="functions/actions_logs.js"></script>
+<script type="text/javascript" src="functions/animations.js"></script>
+<script type="text/javascript" src="functions/auto_completion.js"></script>
+<script type="text/javascript" src="functions/calendar_actions.js"></script>
+<script type="text/javascript" src="functions/calendar_drawing.js"></script>
+<script type="text/javascript" src="functions/date.js"></script>
+<script type="text/javascript" src="functions/events_actions.js"></script>
+<script type="text/javascript" src="functions/functions.js"></script>
+<script type="text/javascript" src="functions/graphs_actions.js"></script>
+<script type="text/javascript" src="functions/graphs_drawing.js"></script>
+<script type="text/javascript" src="functions/legends.js"></script>
+<script type="text/javascript" src="functions/onglets_actions.js"></script>
+<script type="text/javascript" src="functions/onglets_creation.js"></script>
+<script type="text/javascript" src="functions/prototype.js"></script>
+<script type="text/javascript" src="functions/zooms.js"></script>
+<script type="text/javascript" src="functions/init.js"></script>
+<!--script type="text/javascript" src="functions/ongletCrea2.js"></script-->
+
+
+
+
+
+
+
+
+</head>
+
+
+
+<body id="body" class="claro">
+<div id="disablingDiv" ></div>
+<style>
+#disablingDiv
+{
+    /* Do not display it on entry */
+    display: none;
+ 
+    /* Display it on the layer with index 1001.
+       Make sure this is the highest z-index value
+       used by layers on that page */
+    z-index:1001;
+     
+    /* make it cover the whole screen */
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+ 
+    /* make it white but fully transparent */
+    background-color: white;
+    opacity:.50;
+    filter: alpha(opacity=00);
+}
+</style>
+	
+	<div data-dojo-id="graphNetworksStore" data-dojo-type="dojo/data/ItemFileWriteStore" data-dojo-props='url:"data/graphsZNeTSNetworks.json"'></div>
+	<div data-dojo-id="graphNetworksModel" data-dojo-type="dijit/tree/ForestStoreModel" data-dojo-props='store:graphNetworksStore, query:{type:"graph_name"},
+		rootId:"graphsRoot", rootLabel:"Graphs", childrenAttrs:["children"]'></div>
+	
+	<div data-dojo-id="graphLocalhostsStore" data-dojo-type="dojo/data/ItemFileWriteStore" data-dojo-props='url:"data/graphsZNeTSLocalhosts.json"'></div>
+	<div data-dojo-id="graphLocalhostsModel" data-dojo-type="dijit/tree/ForestStoreModel" data-dojo-props='store:graphLocalhostsStore, query:{type:"graph_name"},
+		rootId:"graphsRoot", rootLabel:"Graphs", childrenAttrs:["children"]'></div>
+		
+		
+	<div data-dojo-type="dojox/widget/Dialog" data-dojo-id="dialogCalendar" style="background: #D6DCFF;">
+	<div id="calendarWindow" style="margin-top : 4px"> 
+	</div>
+	</div>
+
+
+	<div valign="middle" align="center" id="divLoading" style="width: 97%; height: 97%; display: none; position: absolute;">
+		<!--tr style="vertical-align:middle; width: 97%; height: 97%;"  height=""-->
+			<!--td style="vertical-align:middle; width: 97%; height: 97%;" width=""-->
+				<div valign="middle" align="center" >
+					<img  src="images/processBar.gif"/><!-- width="100" height="100"/-->
+					<!--div data-dojo-type="dijit/ProgressBar" style="width:300px; color: white !important; " data-dojo-id="myProgressBar" id="downloadProgress" data-dojo-props="maximum:10" indeterminate = true label="Loading..."></div-->
+				</div>
+			<!--/td-->
+		<!--/tr-->
+	</div>
+
+
+	<div data-dojo-id="dialogAlert" onShow="dialogAlert.domNode._onKey=function(evt){	if (evt.keyCode == dojo.keys.ESCAPE) {	dojo.stopEvent(evt);	}	}" 	data-dojo-type="dojox/widget/Dialog"  title="Connection lost" style="display: none;">
+	<div data-dojo-type="dijit.layout.TabContainer" style=" width: 300px; height: 300px;" >
+	<textarea id="alertTextArea" style="width: 100%; height: 100%; resize: none;" readOnly>
+	Connection to ZNeTS lost.
+	Please refresh page: press "F5" or click on the "Refresh icon" of your browser !
+	If the problem persists, please check the server's status.</textarea>
+	</div>
+	</div>
+
+	<div data-dojo-id="dialogDateError" onShow="dialogPopUp.domNode.closable = 'false'; dialogDateError.domNode._onKey=function(evt){	if (evt.keyCode == dojo.keys.ESCAPE) {	dojo.stopEvent(evt);	}	}"	data-dojo-type="dojox/widget/Dialog"  title="Date error" style="display: none;">
+	<div data-dojo-type="dijit/layout/TabContainer" style=" width: 300px; height: 300px;" >
+	<textarea  style="width: 99.5%; height: 99.5%; resize: none;" readOnly>
+	ZNeTS noticed that your local system's date and/or location settings are wrong !
+	Please refresh page once changes are done.
+	Server's date : </textarea>
+	</div>
+	</div>
+
+	<div data-dojo-id="dialogPopUp" onShow="dialogPopUp.domNode._onKey=function(evt){	if (evt.keyCode == dojo.keys.ESCAPE) {	dojo.stopEvent(evt);	}	}" 	data-dojo-type="dojox/widget/Dialog" style="display: none;" title="ZNeTS Trial Reminder">
+	<table>
+	<tr>
+	<td colspan=2>
+	<div data-dojo-type="dijit.layout.TabContainer" style=" width: 600px; height: 300px;" >
+	<textarea style="width: 100%; height: 100%; resize: none;" readOnly>You are using this application on a free trial basis.
+	You should register your ZNeTS collector instance !
+	 
+	This software is only for the purpose of legal use of duplication under the current copyright laws. Any duplication without permission by copyright owners is illegal under the current copyright laws. Users are liable for criminal and civil penalty under the current copyright law for illegal duplication.
+	The CNRS, the developers and publishers shall have no responsibility or obligation for any misuse of this software.
+	 
+	Thank you for trying our soft! Please, fell free to contact us for more informations and/or suggestions.
+	</textarea>
+	</div>
+	</td>
+	</tr>
+	<tr>
+	<td>
+	<center>
+	<button type="button" onclick="" disabled>Buy now !</button>
+	</center>
+	</td>
+	<td>
+	<center>
+	<button id="popupDialogContinueButton" type="button" onclick="clickOnContinue()" value = 0 ></button>
+	</center>
+	</td>
+	</tr>
+	</table>
+
+	</div>
+
+
+
+	<div data-dojo-id="conEchecDialog" onShow="conEchecDialog.domNode._onKey=function(evt){	if (evt.keyCode == dojo.keys.ESCAPE) {	dojo.stopEvent(evt);	}	}" 	data-dojo-type="dojox/widget/Dialog" style="display: none;" title="Connection to server failed">
+	<table>
+	<tr>
+	<td colspan=2>
+	<div data-dojo-type="dijit.layout.TabContainer" style=" width: 300px; height: 100px;" >
+	<textarea style="width: 100%; height: 100%; resize: none;" readOnly>Connection to your ZNeTS server failed ! 
+	30 try(s) remaining...
+	</textarea>
+	</div>
+	</td>
+	</tr>
+	</table>
+
+	</div>
+
+
+	<div data-dojo-id="dialogWhoIs" draggable="draggable" data-dojo-type="dojox/widget/Dialog" showTitle="true" dimensions="[600,500]" style="display: none;">
+	<textarea id="whoIsTextArea" style="width: 100%; height: 99%; resize: none;" readOnly></textarea>
+	</div>
+
+	<div data-dojo-id="dialogConf" draggable="draggable" data-dojo-type="dojox/widget/Dialog" showTitle="true" title="Configuration" dimensions="[800,500]" style="display: none;">
+	<div style="width: 100%">
+	<table id="dialogConfTable" CELLPADDING="0" CELLSPACING="0" align=center  style="white-space: pre-wrap; width: 750px">
+	</table>
+	</div>
+	</div>
+	
+
+	<!--div data-dojo-id="dialogHostName" draggable="draggable" source="" onhide="SelectName.domeNode.value = ' '; SelectName.setAttribute('value', ' ');" data-dojo-type="dojox/widget/Dialog" dimensions="[250,100]" style="display: none;" >
+	<div align=center> 
+	<br/>
+	<font>Local host name : </font>
+	<br/>
+	<input type='text' id='formNamePlus'  title='formName field' size='18' maxlength="39" value='' />
+	</div>
+	</div-->
+
+	<div data-dojo-id="dialogLogs" tr="" draggable="draggable"  data-dojo-type="dojox/widget/Dialog" showTitle="true"  dimensions="[510,510]" title="" style="display: none;"><!--onshow="setTimeout(function(){current_Alerts_TR.onmouseover();}, 100); " onhide="if(current_Alerts_TR){current_Alerts_TR.style.background= 'white'; current_Alerts_TR = ''; animatePlusTab();}" -->
+	<textarea id="TextArea" style="width: 100%; height: 90%; resize: none;" readOnly></textarea>
+	<!--table width=100%>
+		<tr>
+			<td>
+				<button id="prevAlertButt" title="Previous Alert" type="button" onclick="changeAlertPopupTo(current_Alerts_TR.nextSiblings()[0]);">Previous</button>
+			</td>
+			<td>
+				<button id="nextAlertButt" title="Next Alert" style="float:right" type="button" onclick="changeAlertPopupTo(current_Alerts_TR.previousSiblings()[0]);">Next</button>
+			</td>
+		</tr>
+	</table-->
+	</div>
+
+	<div data-dojo-id="dialogCamemberts" draggable="draggable" onshow="this.setAttribute('dimensions', [400, 430]); this.layout();" onHide="unLoading(); animatePlusTab(); " data-dojo-type="dojox/widget/Dialog" showTitle="true"  title="" style="display: none;" >
+	<table width="100%">
+	<tr>
+	<td>
+	<div id="TLC" style="float:left; margin-left: 50px;">
+	<div id="camembert1"  style="width: 300px; height: 300px;"> 
+	</div>
+	<center><font id="camembert1Sub" >Local</font>
+	</center>
+	</div>
+	</td>
+	<td>
+	<div id="divC2" style="float:right; margin-right: 50px;">
+	<div id="camembert2"  style="width: 300px; height: 300px;"> 
+	</div>
+	<center><font id="camembert2Sub" >External</font>
+	</center>
+	</div>
+	</td>
+	</tr>
+	<tr>
+	<td colspan=2>
+	<center>
+	<button id="buttonDialog" type="button" onclick="clickMore();">Display Ext. Chart</button>
+	</center>
+	</td>
+	</tr>
+	</table>
+	</div>
+
+
+
+
+
+	
+	
+	<noscript><meta http-equiv="refresh" content="0;nojs.html"> </noscript>
+
+	<table id="tabEntete" border="0" CELLPADDING="0" CELLSPACING="10" width="100%">
+		<tr style=" border:0px">
+			<td style="width:349px; border:0px">
+				<div style="filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1);">
+					<img src="images/ZNeTS_2.gif" width="187" height="49" border="0"/>
+				</div>
+			</td>
+			
+			<td style="vertical-align:bottom; text-align:right;">
+				<!--font style="font-family:sans-serif; font-size:70%;">by  
+					<a href="mailto:thierry.descombes@gmail.com">DESCOMBES Thierry</a><br/>and 
+					<a href="mailto:ismael.zakari.toure@gmail.com">ZAKARI TOURE Ismael</a><br/>
+				</font-->
+			</td>
+		</tr>
+	</table>
+	
+	
+	<div id="AllTabs">
+		<table  cellpadding=0 cellspacing=0 width="100%">
+			<tr class="wrapper">
+				<td>
+					<div id="TabOnglets" class="TabOnglets">
+							<li id = "Alerts" isClosable=false params="" class="inactive" niveauOnglet = "0" genre="Alerts" onclick="clickOnglet('Alerts'); //tablesResize();" lastIndex="">
+								<table cellpadding=0 cellspacing=0>
+									<tr>
+										<td>
+											<img id="newAlertsTabGif" style="display:none; margin-right: 7px; " type="image" src="images/alertIcon.gif" />
+										</td>
+										<td>
+											<font>
+												Alerts
+											</font>
+										</td>
+									</tr>
+								</table>
+							</li>
+							<li id = "Networks" isClosable=false params="" firstClick="false" class="inactive" niveauOnglet = "0" genre="Networks" onclick="clickOnglet('Networks'); //tablesResize();" lastIndex="">
+								<table cellpadding=0 cellspacing=0>
+									<tr>
+										<td>
+											<font>
+												Networks
+											</font>
+										</td>
+									</tr>
+								</table>
+							</li>
+							<li id = "Localhosts" isClosable=false params="" class="inactive" niveauOnglet = "0" genre="Localhosts" onclick="clickOnglet('Localhosts'); //tablesResize();" lastIndex="">
+								<table cellpadding=0 cellspacing=0>
+									<tr>
+										<td>
+											<font>
+												Localhosts
+											</font>
+										</td>
+									</tr>
+								</table>
+							</li>
+							<li id = "RawData" isClosable=false niveauOnglet = "0" class="inactive"onclick="clickOnglet('RawData');" >
+								<table cellpadding=0 cellspacing=0 >
+									<tr>
+										<td>
+											<font>
+												Raw Data
+											</font>
+										</td>
+									</tr>
+								</table>
+							</li>
+							<li id = "Logs" isClosable=false class="active" niveauOnglet = "0" genre="logs" value="" onclick="ChargerLogs(); restartLogsAutoRefresh(); clickOnglet('Logs'); ">
+								<table cellpadding=0 cellspacing=0>
+									<tr>
+										<td>
+											<font>
+												Logs 
+											</font>
+										</td>
+									</tr>
+								</table>
+							</li>
+					</div>
+					<div style="float: right; "  class="TabOnglets">
+						<button title="View Configuration" style="cursor: pointer; height: 100%;" onclick="makeConf();" >
+							<img  src="images/config.png" width="25" height="25" />
+						</button>
+					</div>
+					<!--style="float: right;"-->
+				</td>
+				
+			</tr>
+			<tr>	
+				<td>
+					<div id="TabSousOnglets">
+					
+						
+						<!--div id="TabOngletsNetworks" class="TabOnglets" style="display: none;" >
+							<li id = "Global" isClosable=false params="" class="active" niveauOnglet = "1" genre="global" onclick="clickOnglet('Global');">
+								<table cellpadding=0 cellspacing=0>
+									<tr>
+										<td>
+											<font>
+												Global
+											</font>
+										</td>
+									</tr>
+								</table>
+							</li>
+						</div>
+							
+						<div id="TabOngletsLocalhosts" class="TabOnglets" style="display: none;">
+						</div-->
+							
+						<div id="TabOngletsRawData" class="TabOnglets" style="display: none;">
+							<li id = "Plus" isClosable=false niveauOnglet = "1" class="active"onclick="clickOnglet('Plus');" >
+								<table cellpadding=0 cellspacing=0 >
+									<tr>
+										<td>
+											<font>
+												<img id="InputOngletPlus" style="margin-right: 7px; height: 11px; width: 14px;" type="image" src="images/zoom-in.png" />
+												New Data Search
+											</font>
+										</td>
+									</tr>
+								</table>
+							</li>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>	
+					<div id="TabGroupes">
+					</div>
+				</td>
+			</tr>	
+		</table>
+	</div>
+
+
+
+	<div id="BigDiv" class="active" >
+
+		<div id="DivLogs" class="active" style="margin: auto; margin-top: 10px; width: 100%; height : 80%;  ">
+		
+			<!--div style=" width: 99.8%; background-color: #efe;">
+				<div align=left style="border: 1px solid #6c6;">
+					<table style="font: bold 15px verdana, arial, sans-serif;">
+						<tr class="entete">
+							<td ><font size=3 align="left" style="padding-left: 120px">Date</font></td>
+							<td style=" width: 100%;"><div align=center ><font size=3>Messages</font></div></td>
+						</tr>
+					</table>
+				</div>
+			</div-->
+
+
+			<div id="TabLogsDiv"><!-- style=" height : 95%; overflow : auto; border-bottom: 1px solid #6c6; border-left: 1px solid #6c6; border-right: 1px solid #6c6;" -->
+				<!--table id="TabLogs" style="width: 100%;" CELLPADDING="0" CELLSPACING="0" >
+				</table-->
+			</div>
+		</div>
+
+
+
+
+
+		<div id="DivAlerts" class="inactive" style="display: none; margin-top: 10px; height: 80%;">
+			<div id="newAlertsMessage" style="display: none;">
+				<center>
+					<table>
+						<tr>
+							<td>
+								<img style="" type="image" src="images/alertIcon.gif" />
+							</td>
+							<td>
+								<font style="margin-left: 5px;">: New alert(s) raised !</font>
+							</td>
+							<td>
+								<button type="button" value="" onclick="afficherNouvellesAlertes(this.value);">Show All</button>
+							</td>
+						</tr>
+					</table>
+				</center>
+			</div>
+
+
+			<div style="position: relative; margin-top: 0px; background-color: #EEE;">
+				<form id="formulaireAlerts" onsubmit="return false;" style="margin-bottom: 0px;">
+					<table CELLPADDING="0" CELLSPACING="0" >
+						<tr>
+							<td>
+								<font>Filter : </font>
+								<select id='presetsAlerts' name='duree' onchange="document.getElementById('ApplyFilterAlerts').disabled=''; 
+								if(this.options[0].selected && SelectIpAlerts.value=='' )
+								document.getElementById('ResetFilterAlerts').disabled='true'; 
+								else
+								document.getElementById('ResetFilterAlerts').disabled=''; " 
+								style=' cursor: pointer;'>
+									<option value='0' selected>All</option>
+									<option value='1' >Last 24h</option>
+									<option value='2'>Last Week</option>
+									<option value='3'>Last Month</option>
+								</select>
+								<font style="margin-left: 25px;" >Ip: </font>
+							</td>
+							<td>
+								<input id="ipAlerts" style="font-style: italic;" size='20' maxlength="39" value="" />
+								<!--img style="vertical-align: text-bottom; cursor: pointer; " onclick="dialogHostName.domNode.source = 'SelectIpAlerts'; if(autoIptoName(SelectIpAlerts.value)==null){SelectName.setAttribute('value',''); }else{ SelectName.setAttribute('value', autoIptoName(SelectIpAlerts.value));} dialogHostName.show();" src="images/lhost.png" title="hostname"/-->
+								<input  style="margin-left: 25px;" type='button' id= 'ApplyFilterAlerts' value="Apply" disabled='true' title='Apply Filter' onclick="setToDefaultHiddenAlertsForm(); applyAlertsFormChanges();"/>
+								<input  style="margin-left: 25px;" type='button' id= 'ResetFilterAlerts' value="Reset" disabled='true' title='Apply Filter' onclick="setToDefaultHiddenAlertsForm(); resetFilterAlerts(); "/>
+								<input type='hidden' id='descAlerts' name='desc' value="true" /> 
+								<input type='hidden' id='sortAlerts' name='sort' value=0 /> 
+								<input type='hidden' id='dhAlerts' name='dh' value=0 /> 
+								<input type='hidden' id= 'ApplyAlerts' onclick=" setParameters(document.getElementById('Alerts') , $('formulaireAlerts').serialize()); chargerAlerts();" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								<!--i><font id="lhNameAlerts" size=1 style="left: 0px"></font></i-->
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			
+			
+			<!--div id="TabAlertsDivFIXEDHEADERS" style="overflow : hidden; margin-top: 10px; height : 90%; width : 100%" >
+				<div style="overflow : hidden; height: 100%; border: 1px solid #6c6;">
+					<table  id="TabAlerts" style="width: 100%;" class="BodyTable" CELLPADDING="0" CELLSPACING="0" >
+					</table>
+				</div>
+				<div>
+					<center>
+						<div id="DivResultsAlerts" style="height: 15px;">
+							<font size="1" style="position: absolute;"></font>
+						</div>
+					</center>
+				</div>
+				<div>
+					<center>
+						<div id="ButtonsAlerts" style="white-space: nowrap;"></div>
+					</center>
+				</div>
+			</div-->
+			<div id="TabAlertsDiv" style="margin-top: 10px; height : 90%;border: 1px solid #6c6;" >
+				<div style="overflow : auto; height: 100%;">
+					<table  id="TabAlerts" style="width: 100%;" class="BodyTable" CELLPADDING="0" CELLSPACING="0" >
+					</table>
+				</div>
+				<div>
+					<center>
+						<div id="DivResultsAlerts" style="height: 15px;">
+							<font size="1" style="position: absolute;"></font>
+						</div>
+					</center>
+				</div>
+				<div>
+					<center>
+						<div id="ButtonsAlerts" style="white-space: nowrap;"></div>
+					</center>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+		<div id="DivLocalhosts" class="inactive" style="display: none; margin-top: 10px;">
+		
+			<div id="LocalhostsTabContainer" data-dojo-type="dijit/layout/TabContainer" style="height:80%; " >
+				<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="selectChild">
+					var selectedW = this.selectedChildWidget;
+					//alert(selectedW.get("id"));
+					setActiveTabDojo(this.selectedChildWidget);
+					if(selectedW.get("id") != "DivPlus"){
+						try{
+								
+								require(["dojo/ready","dijit/registry"], function(ready, registry){
+									ready(function(){
+										checkForTreeLeafSelected(registry.byId("thinTree"+selectedW.get("id").split("Div")[1]));
+									});
+								});
+						}catch(e){
+							alert(e);
+						}
+					}
+				</script>
+				
+				<div data-dojo-type="dijit/layout/ContentPane" title="Inventory" data-dojo-props="selected:true" id="DivPlus">
+				
+					<!--div style="position: relative; margin-top: 10px; background-color: #FFF;">
+
+						<form id="formulairePlus" onsubmit="return false;" style="margin-bottom: 0px;">
+							<table width="100%" cellpadding=0 cellspacing=0 border=0 col=2 class="formulaire">
+								<tr>
+									<th colspan=2>Local Host Statistics</th>
+								</tr>
+								<tr>
+									<td colspan=2><br/></td>
+								</tr>
+								<tr valign="top">
+									<td align=center  valign="top">
+										<fieldset id="TabQueryForm" style="width:30em;">
+												<legend id="TabQueryForm">Presets :&nbsp;
+												<select id='presetsPlus'  onchange='mettreChampsAJour(this.value, this.id,"Plus");' style=' cursor: pointer;'>
+													<option id="defaultPresetPlus" value='2' selected>Last 24 Hours</option>
+													<option id="defaultMonthPresetPlus" value='1' >Last Month</option>
+													<option id="HourPresetPlus" value='2'>24 Hours</option>
+													<option id="MonthPresetPlus" value='1'>1 Month</option>
+												</select>
+											</legend>
+											<input type='hidden' name='pset' id='presetsAppliedPlus' value=' '/>
+											<table border=0 cellspacing=10>
+												<tr>
+													<td rowspan="2">
+														<img title="Previous Month" src="images/prevMonth.png" disabled
+														onmouseover="if(!this.disabled)this.src = 'images/prevMonthMO.png'; "
+														onmouseout="if(!this.disabled)this.src = 'images/prevMonth.png'; "
+														onclick="if(!this.disabled){ document.getElementById('dateDebPlus').value = decalerDate( document.getElementById('dateDebPlus').value,0,-1,0,0,0 ); document.getElementById('dateDebPlus').onchange();} "/>
+														<img title="Previous Day" src="images/prevDay.png" 
+														onmouseover="if(!this.disabled)this.src = 'images/prevDayMO.png'; "
+														onmouseout="if(!this.disabled)this.src = 'images/prevDay.png'; "
+														onclick=" if(!this.disabled){document.getElementById('dateDebPlus').value = decalerDate( document.getElementById('dateDebPlus').value,0,0,-1,0,0 ); document.getElementById('dateDebPlus').onchange();} "/>&nbsp;
+													</td>
+													<td>
+														<font style="margin-left: 5px;" >From :  </font>
+													</td>
+													<td>
+														<input  class="datePicker" id="dateDebPlus" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsPlus').value, this.id, 'Plus');" /> 
+														<input type='hidden' name='dd' id='dateDebAppliedPlus' value='' onchange="if(this.value == '') this.name=''; else this.name='dd';"/>
+													</td>
+														<td rowspan =2>&nbsp;
+														<img title="Next Day"  src="images/nextDay.png" 
+														onmouseover="if(!this.disabled)this.src = 'images/nextDayMO.png'; " 
+														onmouseout="if(!this.disabled)this.src = 'images/nextDay.png'; "
+														onclick=" if(!this.disabled){document.getElementById('dateDebPlus').value = decalerDate( document.getElementById('dateDebPlus').value,0,0,1,0,0 ); document.getElementById('dateDebPlus').onchange();} "/>
+														<img title="Next Month" src="images/nextMonth.png" 
+														onmouseover="if(!this.disabled)this.src = 'images/nextMonthMO.png'; "
+														onmouseout="if(!this.disabled)this.src = 'images/nextMonth.png'; "
+														onclick=" if(!this.disabled){document.getElementById('dateDebPlus').value = decalerDate( document.getElementById('dateDebPlus').value,0,1,0,0,0 ); document.getElementById('dateDebPlus').onchange();} "/>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<font>&nbsp;&nbsp;&nbsp;To :  </font>
+													</td>
+													<td>
+														<input  class="datePicker" id="dateFinPlus" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsPlus').value, this.id, 'Plus');" /> 
+														<input type='hidden' name='df' id='dateFinAppliedPlus' value=''  onchange="if(this.value == '') this.name=''; else this.name='df';"/>
+													</td>
+												</tr>
+											</table>
+										</fieldset>
+									</td>
+									<td align="center"  valign="top">
+										<table cellspacing=0 cellpadding=0>
+											<tr>
+												<td>
+													<fieldset id="TabQueryForm">
+														<legend id="TabQueryForm">Ip Local
+														</legend>
+														<center style="margin-top: 10px; margin-bottom: 10px">
+															<table>
+																<tr>
+																	<td>
+																		<input type='text' id='formIpPlus'  title='formIp field' size='18' maxlength="39" value='' />
+																		<img style="vertical-align: text-bottom; cursor: pointer; " title="hostname" src="images/lhost.png" onclick="dialogHostName.domNode.source = 'SelectIp';  if(autoIptoName(SelectIp.value)==null)SelectName.setAttribute('value',''); else SelectName.setAttribute('value', autoIptoName(SelectIp.value)); dialogHostName.show(); "/>
+																	</td>
+																</tr>
+																<tr>
+																		<td>
+																		<i><font>&nbsp;</font><font id="lhNamePlus" size=1 style="left: 0px"></font></i>
+																	</td>
+																</tr>
+															</table>
+														</center>
+													</fieldset>
+												</td>
+											</tr>
+											<tr>
+												<td align=center colspan=2>
+														<br/>
+													<input type='hidden' id='dh1' name='dh' value=0 />
+													<input disabled="true" style="padding:7px;" type='button' id='ApplyPlus' value="View local host" title='Apply to charts' onclick="setParameters(null ,$('formulairePlus').serialize()); clickApply('Plus'); "/>
+													<input type='hidden' id='dh' name='dh' value=0 />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td colspan=2><br/></td>
+								</tr>
+							</table>
+						</form>
+					</div-->
+					<!--table id="localhostsTable" height="80%">
+					</table-->
+					<div id="localhostsTableDiv">
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		
+		<div id="DivNetworks" class="inactive" style="position: relative; display: none; margin-top: 10px; height: 80%; ">
+			<div id="NetworksTabContainer" data-dojo-type="dijit/layout/TabContainer" style="height:100%; " >
+				<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="selectChild">
+					var selectedW = this.selectedChildWidget;
+					setActiveTabDojo(this.selectedChildWidget);
+					try{
+							
+							require(["dojo/ready","dijit/registry"], function(ready, registry){
+								ready(function(){
+									checkForTreeLeafSelected(registry.byId("thinTree"+selectedW.get("id").split("Div")[1]));
+								});
+							});
+					}catch(e){
+						alert(e);
+					}
+				</script>
+				<!--script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="startup">
+					/*
+					require(["dojo/ready","dojo/domReady!"], function(ready){
+						ready(function(){
+							console.log("=============================> startup");
+						});
+					});
+					*/
+					startupCount++;
+						if(startupCount == 4){
+						var selectedW = this.selectedChildWidget;
+						console.log("=============================> startup");
+						setActiveTabDojo(this.selectedChildWidget);
+						console.log("=============================> selected widget : "+ selectedW);
+						try{
+								
+								require(["dojo/ready","dijit/registry","dojo/domReady!"], function(ready, registry){
+									ready(function(){
+										console.log("=============================> checking : "+registry.byId("thinTree"+selectedW.get("id").split("Div")[1]));
+										checkForTreeLeafSelected(registry.byId("thinTree"+selectedW.get("id").split("Div")[1]));
+										console.log("=============================> check done");
+									});
+								});
+						}catch(e){
+							alert(e);
+						}
+					}
+				</script-->
+				
+				
+				<div data-dojo-type="dijit/layout/ContentPane" title="Global" data-dojo-props="selected:false" id="DivGlobal">
+					<!--script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="onShow">
+						/*require(["dojo/ready","dijit/registry"], function(ready, registry){
+							ready(function(){
+								thisTree = registry.byId("thinTreeGlobal");
+							});
+						});*/
+						try{
+							require(["dojo/ready","dijit/registry"], function(ready, registry){
+								ready(function(){
+									checkForTreeLeafSelected(registry.byId("thinTreeGlobal"));
+								});
+							});
+						}catch(e){
+						}
+					</script-->
+					<!--script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="onShow">
+						require(["dojo/ready","dijit/registry", "dojo/domReady!"], function(ready, registry){
+							ready(function(){
+								//thisTree = registry.byId("thinTreeGlobal");
+								//alert(registry.byId("thinTreeGlobal"));
+								//alert("hi");
+							});
+						});		
+					</script-->
+					<li style="display:none;" id="Global"></li>
+					
+					
+					
+		
+					
+					
+					<div id="triangle_des_bermudes" style="display:none;" dojoType="dijit.layout.BorderContainer">
+						Necessaire � l'affichage correct des "dojox/layout/ExpandoPane", et ce, uniquement pour l'onglet global ecrit en dur et non dynamiquement !?! O_�
+					</div>
+					
+
+					<div data-dojo-type="dijit/layout/BorderContainer" id="borderContainerGlobal" style="width: 100%;height:90%;  padding: 5px;">
+						<div id="expandoPaneGlobal" data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="left" title="Graphs" previewOnDblClick="true" >
+							<div style="width: 100%; height:100%">
+								<div id="thinTreeGlobal" style="width: auto; height:99.5%; border: solid 1px #759dc0; " attachParent="true" 
+										 data-dojo-type="dijit/Tree" aria-label="my thin treeGlobal"  data-dojo-props="model:graphNetworksModel, showRoot:false, openOnClick:true,">
+										<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="_adjustWidths">
+											//alert(this.id + ": adjusted widths of nodes");
+										</script>
+										<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="onClick" data-dojo-args="item">
+											if(!this.selectedNode.isExpandable){
+												try{
+													current_shown_graph_index["Global"] = graphIndexFromTreePath("Global");
+													clickTitreOpen(graphIndexFromTreePath("Global"),"Global");
+												}catch(e){alert(":::"+e)}
+											}
+										</script>
+										<script type="dojo/aspect" data-dojo-advice="before" data-dojo-method="onClick" data-dojo-args="item">
+											if(!this.selectedNode.isExpandable){
+												try{
+													if(current_shown_graph_index["Global"] != null){
+														clickTitreClose(current_shown_graph_index["Global"],"Global")
+													}else{
+														current_shown_graph_index["Global"] = null;
+													}
+												}catch(e){alert(":::"+e)}
+											}
+										</script>
+										<script type="dojo/aspect" data-dojo-advice="before" data-dojo-method="onLoad">
+											this.expandAll();
+										</script>
+										<!--script type="dojo/aspect" data-dojo-advice="before" data-dojo-method="startup">
+											try{
+												var pTFL = pathToFirstLeaf(this);
+												this.set("path", pTFL);
+												
+												alert("onLOAD done");
+											}catch(e){alert(">>>>:::"+e+"   ::: line : "+e.lineNumber)}
+										</script>
+										<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="startup">
+											try{
+											
+												require(["dojo/domReady!"], function(){
+													
+														alert("domReady");
+														current_shown_graph_index["Global"] = graphIndexFromTreePath("Global");
+														clickTitreOpen(graphIndexFromTreePath("Global"),"Global");
+														//alert("ok22222");
+												});
+												
+												/*alert(this.getNodesByItem(pTFL[pTFL.length-1]));
+												try{this.getNodesByItem(pTFL[pTFL.length-1]).focusFirstChild(); alert("1 ok");}catch(e){alert(">>>>1")}
+												alert(this.getNodesByItem(pTFL[pTFL.length-2]));
+												try{this.getNodesByItem(pTFL[pTFL.length-2]).focusFirstChild(); alert("2 ok");}catch(e){alert(">>>>2")}
+												alert(this.getNodesByItem(pTFL[pTFL.length-3]));
+												try{this.getNodesByItem(pTFL[pTFL.length-3]).focusFirstChild(); alert("3 ok");}catch(e){alert(">>>>3")}
+												//this.set("selectedItem", pTFL[pTFL.length-1]);
+												alert("ok");
+												current_shown_graph_index["Global"] = graphIndexFromTreePath("Global");
+												clickTitreOpen(graphIndexFromTreePath("Global"),"Global");*/
+											}catch(e){alert(">>>>:::"+e+"   ::: line : "+e.lineNumber)}
+										</script-->
+										<script type="dojo/method" data-dojo-event="getRowStyle" data-dojo-args="item">
+											if(item.type && item.type == "graph_name")
+												return {backgroundColor: "#E6E6E7"};
+										</script>
+										<script type="dojo/method" data-dojo-event="getIconClass" data-dojo-args="item, opened">
+											if(item) return null;
+										     /*  if(!item || continentStore.getValue(item, "type") != "continent")
+													return (!item || this.model.mayHaveChildren(item)) ? (opened ? "dijitFolderOpened" : "dijitFolderClosed") : "dijitLeaf"
+											else
+												return "";*/
+										</script>
+										<!--script type="dojo/method" data-dojo-event="getIconStyle" data-dojo-args="item,opened">
+											/*if(item && continentStore.getValue(item,"type") == "continent"){
+												return {
+													backgroundImage: "url('../images/flatScreen.gif')",
+													height: "32px",
+													width: "32px"
+												};
+											}else{
+												return null;
+											}*/
+										</script>
+										<script type="dojo/method" data-dojo-event="getLabelStyle" data-dojo-args="item,opened">
+											/*if(item.type && item.type == "graph_name"){
+												return {size: 2};
+											}else{
+												return {color: "green"};
+											}*/
+										</script-->
+										<!--script type="dojo/method" data-dojo-event="getTooltip" data-dojo-args="item,opened">
+											return item && ("Tooltip for " + this.model.getLabel(item));
+										</script>
+										<script type="dojo/method" data-dojo-event="onDblClick" data-dojo-args="item">
+											console.log("Execute of node " + this.model.getLabel(item)
+												+", population=" + continentStore.getValue(item, "population"));
+										</script-->
+								</div>
+							</div>	
+						</div>
+						<div id="contentPaneGlobal" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+								
+								
+					<div>
+						<table cellspacing=0 cellpadding=0>
+							<tr>
+								<td style="width: 50%">
+									<table>
+										<tr>
+											<td>
+												<img src="images/clock.png" title="Current selection"/>
+											</td>
+											<td>
+												<i>:<font id="timeSpaceGlobal" style="margin-left: 15px;"></font></i>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td id="timeSpaceChangeGlobal" style="width: 50%">
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div style="position: relative; background-color: #EEE;">
+						<form id="formulaireGlobal" onsubmit="return false;" style="margin-bottom: 0px;">
+							<font>Presets : </font>
+							<select id='presetsGlobal'  onchange='mettreChampsAJour(this.value, this.id,"Global"); ' style=' cursor: pointer;'>
+								<option id="defaultPresetGlobal" value='2' selected>Last 24 Hours</option>
+								<option id="defaultMonthPresetGlobal" value='1' >Last Month</option>
+								<option id="HourPresetGlobal" value='2'>24 Hours</option>
+								<option id="MonthPresetGlobal" value='1'>1 Month</option>
+							</select>
+							<input type='hidden' name='pset' id='presetsAppliedGlobal' value=' '/>
+							<img title="Previous Month" style="margin-left: 25px;" src="images/prevMonth.png" disabled
+								onmouseover="if(!this.disabled)this.src = 'images/prevMonthMO.png'; "
+								onmouseout="if(!this.disabled)this.src = 'images/prevMonth.png'; "
+								onclick="if(!this.disabled){ document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,-1,0,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<img title="Previous Day" src="images/prevDay.png" 
+								onmouseover="if(!this.disabled)this.src = 'images/prevDayMO.png'; "
+								onmouseout="if(!this.disabled)this.src = 'images/prevDay.png'; "
+								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,0,-1,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<font style="margin-left: 5px;" >From :  </font>
+							<input  class="datePicker" id="dateDebGlobal" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsGlobal').value, this.id, 'Global');" /> 
+							<input type='hidden' name='dd' id='dateDebAppliedGlobal' value='' />
+							<font>&nbsp;&nbsp;&nbsp;To :  </font>
+							<input  class="datePicker" id="dateFinGlobal" value="" onblur="this.onchange();" onchange="this.value = DateCoherente(this.value); mettreChampsAJour(document.getElementById('presetsGlobal').value, this.id, 'Global');" /> 
+							<input type='hidden' name='df' id='dateFinAppliedGlobal' value=''  />
+							<img title="Next Day"  style="margin-left: 5px;" src="images/nextDay.png" 
+								onmouseover="if(!this.disabled)this.src = 'images/nextDayMO.png'; " 
+								onmouseout="if(!this.disabled)this.src = 'images/nextDay.png'; "
+								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,0,1,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<img title="Next Month" src="images/nextMonth.png" 
+								onmouseover="if(!this.disabled)this.src = 'images/nextMonthMO.png'; "
+								onmouseout="if(!this.disabled)this.src = 'images/nextMonth.png'; "
+								onclick=" if(!this.disabled){document.getElementById('dateDebGlobal').value = decalerDate( document.getElementById('dateDebGlobal').value,0,1,0,0,0 ); document.getElementById('dateDebGlobal').onchange();} "/>
+							<input  style="margin-left: 25px;" type='button' id= 'ApplyGlobal' disabled='true' value='Apply' title='Apply to charts' onclick=" clickApply('Global'); setParameters(document.getElementById('Global'), $('formulaireGlobal').serialize());"/>
+							<input type='hidden' id='dh' name='dh' value=0 /> 
+						</form>
+			
+					</div>
+			
+							<div style="height: 100%;"><!--((BBQ=="hi") ? "hidden" : "")-->
+										<div id="DivGraphe1Global"  style="position: relative; display: none; overflow : auto; height: 100%;">
+											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">
+												<div data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="right" title="Legend" previewOnDblClick="true" >
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="resize">
+														require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
+															ready(function(){
+																//presenteContainerProperly();
+																ChartNetwork[1][ongletActif()].resize();
+															});
+														});
+													</script>
+													<!--script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="onCollapse">
+														alert('hi');
+													</script>
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="onExpand">
+														alert('show');
+													</script-->
+													<div id="legend1Global" style="height:99.5%; border: solid 1px #759dc0; overflow-y : auto;" >
+														<table id="legend1TabGlobal" style=" margin-right: 30px;"  > 
+														</table>
+													</div>
+												</div>
+												<div id="contentPaneGlobal1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+													<button id="Button1Global" onclick="showAccurate(this, 1, 'Global')">Show Accurate Chart</button>
+													<div id="DivChart1Global" style="display:block">
+														<!--div style="position : absolute; ">
+															<FONT id="unit1Global" style = "margin-left: 30px;" size=1> </FONT>
+														</div>
+														<div style="position : absolute; ">
+															<FONT id="unitD1Global" style = "margin-left: 750px;" size=1> </FONT>
+														</div-->
+														<table cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
+															<tr>
+																<td width="90%">
+																	<div id="chart1Global" style=" width: 95%; height: 99%; float:left; margin-left:1px;"  ></div>
+																</td>
+																<td style="border: solid 1px #759dc0;">
+																	<table style="width: 100%; height: 100%;">
+																		<tr height="30px">
+																			<td align="center">
+																				<font><i><u>Zoom</u></i></font>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td align="center">
+																				<div id="zoomTrafficGlobal"
+																					style="height: 100%;" 
+																					intermediateChanges="true"
+																					onChange="chargeZoomVar(ChartNetwork[1]['Global'], 1, JsonObjNetwork[1]['Global']); zoomYAxis('zoomTrafficGlobal');"
+																					type="range"
+																					data-dojo-type="dijit.form.VerticalSlider"
+																					data-dojo-props="value: 0, minimum: 0, maximum: 10, discreteValues: 11">
+																					<div data-dojo-type="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																					<div data-dojo-type="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																				</div>
+																			</td>
+																		</tr>
+																	</table>
+																</td>
+															</tr>
+														</table>
+													</div>
+													<div id="DivChart1GlobalAccurate" style="display:none">
+														<div id="chart1GlobalAccurate" style=" width: 95%; height: 99%; float:left; margin-left:1px;" ></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+										<div id="DivGraphe2Global"  style="position: relative; display: none; overflow : auto;">
+											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">
+												<div data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="right" title="Legend" previewOnDblClick="true" >
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="resize">
+														require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
+															ready(function(){
+																//presenteContainerProperly();
+																ChartNetwork[2][ongletActif()].resize();
+															});
+														});
+													</script>
+													<div id="legend2Global" style="height:99.5%; border: solid 1px #759dc0; overflow-y : auto;" >
+														<table id="legend2TabGlobal" style=" margin-right: 30px;" > 
+														</table>
+													</div>
+												</div>
+												<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+													<button id="Button2Global" onclick="showAccurate(this, 2, 'Global')">Show Accurate Chart</button>
+													<div id="DivChart2Global" style="display:block">
+														<!--div style="position : absolute; ">
+															<FONT id="unit2Global" style = "margin-left: 30px;" size=1> </FONT>
+														</div>
+														<div style="position : absolute; ">
+															<FONT id="unitD2Global" style = "margin-left: 750px;" size=1> </FONT>
+														</div-->
+														<table cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
+															<tr>
+																<td width="90%">
+																	<div id="chart2Global" style=" width: 95%; height: 99%; float:left; margin-left:1px;"></div>
+																</td>
+																<td style="border: solid 1px #759dc0;">
+																	<table style="width: 100%; height: 100%;">
+																		<tr height="30px">
+																			<td align="center">
+																				<font><i><u>Zoom</u></i></font>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td align="center">
+																				<div id="zoomPacketsGlobal"
+																					style="height: 100%;" 
+																					intermediateChanges="true"
+																					onChange="chargeZoomVar(ChartNetwork[2]['Global'], 2, JsonObjNetwork[2]['Global']); zoomYAxis('zoomPacketsGlobal');"
+																					type="range"
+																					data-dojo-type="dijit.form.VerticalSlider"
+																					data-dojo-props="value: 0, minimum: 0, maximum: 10, discreteValues: 11">
+																					<div data-dojo-type="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																					<div data-dojo-type="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																				</div>
+																			</td>
+																		</tr>
+																	</table>
+																</td>
+															</tr>
+														</table>
+													</div>
+													<div id="DivChart2GlobalAccurate" style="display:none">
+														<div id="chart2GlobalAccurate" style=" width: 95%; height: 99%; float:left; margin-left:1px;"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+										<div id="DivGraphe3Global"  style="position: relative; display: none; overflow : auto;">
+											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">
+												<div data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="right" title="Legend" previewOnDblClick="true" >
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="resize">
+														require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
+															ready(function(){
+																//presenteContainerProperly();
+																ChartNetwork[3][ongletActif()].resize();
+															});
+														});
+													</script>
+													<div id="legend3Global" style="height:99.5%; border: solid 1px #759dc0; overflow-y : auto;" >
+														<table id="legend3TabGlobal" style=" margin-right: 30px;"> 
+														</table>
+													</div>
+												</div>
+												<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+													<div>
+														<div>
+															<div style="position : absolute; ">
+																<FONT id="unit3Global" style = "margin-left: 30px;" size=1> </FONT>
+															</div>
+															<div style="position : absolute; ">
+																<FONT id="unitD3Global" style = "margin-left: 750px;" size=1> </FONT>
+															</div>
+															<table cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
+															<tr>
+																<td width="90%">
+																		<div id="chart3Global" style=" width: 95%; height: 99%; float:left; margin-left:1px;"></div>
+																	</td>
+																	<td style="border: solid 1px #759dc0;">
+																		<table style="width: 100%; height: 100%;">
+																			<tr height="30px">
+																				<td align="center">
+																					<font><i><u>Zoom</u></i></font>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td align="center">
+																					<div id="zoomLocGlobal"
+																						style="height: 100%;" 
+																						intermediateChanges="true"
+																						onChange="chargeZoomVar(ChartNetwork[3]['Global'], 3, JsonObjNetwork[3]['Global']); zoomYAxis('zoomLocGlobal');"
+																						type="range"
+																						data-dojo-type="dijit.form.VerticalSlider"
+																						data-dojo-props="value: 0, minimum: 0, maximum: 10, discreteValues: 11">
+																						<div data-dojo-type="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																						<div data-dojo-type="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																					</div>
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+										<div id="DivGraphe4Global"  style="position: relative; display: none; overflow : auto;">
+											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">
+												<div data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="right" title="Legend" previewOnDblClick="true" >
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="resize">
+														require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
+															ready(function(){
+																//presenteContainerProperly();
+																ChartNetwork[4][ongletActif()].resize();
+															});
+														});
+													</script>
+													<div id="legend4Global" style="height:99.5%; border: solid 1px #759dc0; overflow-y : auto;" >
+														<table id="legend4TabGlobal" style=" margin-right: 30px;" > 
+														</table>
+													</div>
+												</div>
+												<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+													<div>
+														<div>
+															<div style="position : absolute; ">
+																<FONT id="unit4Global" style = "margin-left: 30px;" size=1> </FONT>
+															</div>
+															<div style="position : absolute; ">
+																<FONT id="unitD4Global" style = "margin-left: 750px;" size=1> </FONT>
+															</div>
+															<table cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
+																<tr>
+																	<td width="90%">
+																		<div id="chart4Global" style=" width: 95%; height: 99%; float:left; margin-left:1px;"></div>
+																	</td>
+																	<td style="border: solid 1px #759dc0;">
+																		<table style="width: 100%; height: 100%;">
+																			<tr height="30px">
+																				<td align="center">
+																					<font><i><u>Zoom</u></i></font>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td align="center">
+																					<div id="zoomExtGlobal"
+																						style="height: 100%;" 
+																						intermediateChanges="true"
+																						onChange="chargeZoomVar(ChartNetwork[4]['Global'], 4, JsonObjNetwork[4]['Global']); zoomYAxis('zoomExtGlobal');"
+																						type="range"
+																						data-dojo-type="dijit.form.VerticalSlider"
+																						data-dojo-props="value: 0, minimum: 0, maximum: 10, discreteValues: 11">
+																						<div data-dojo-type="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																						<div data-dojo-type="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																					</div>
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+										<div id="DivGraphe5Global"  style="position: relative; display: none; overflow : auto;">
+											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">
+												<div data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="right" title="Legend" previewOnDblClick="true" >
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="resize">
+														require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
+															ready(function(){
+																//presenteContainerProperly();
+																ChartNetwork[5][ongletActif()].resize();
+															});
+														});
+													</script>
+													<div id="legend5Global" style="height:99.5%; border: solid 1px #759dc0; overflow-y : auto;" >
+														<table id="legend5TabGlobal" style=" margin-right: 30px;" > 
+														</table>
+													</div>
+												</div>
+												<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+													<div>
+														<div style="position : absolute; ">
+															<FONT id="unit5Global" style = "margin-left: 30px;" size=1> </FONT>
+														</div>
+														<table cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
+															<tr>
+																<td width="90%">
+																	<div id="chart5Global" style=" width: 95%; height: 99%; float:left; margin-left:1px;"></div>
+																</td>
+																<td style="border: solid 1px #759dc0;">
+																		<table style="width: 100%; height: 100%;">
+																			<tr height="30px">
+																				<td align="center">
+																					<font><i><u>Zoom</u></i></font>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td align="center">
+																					<div id="zoomNbGlobal"
+																						style="height: 100%;" 
+																						intermediateChanges="true"
+																						onChange="chargeZoomVar(ChartNetwork[5]['Global'], 5, JsonObjNetwork[5]['Global']); zoomYAxis('zoomNbGlobal');"
+																						type="range"
+																						data-dojo-type="dijit.form.VerticalSlider"
+																						data-dojo-props="value: 0, minimum: 0, maximum: 10, discreteValues: 11">
+																						<div data-dojo-type="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																						<div data-dojo-type="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color:gray;"></div>
+																					</div>
+																				</td>
+																			</tr>
+																		</table>
+																</td>
+																
+															</tr>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+										<div id="DivGraphe6Global"  style="position: relative; display: none; overflow : auto;">
+											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">
+												<div data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="right" title="Legend" previewOnDblClick="true" >
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="resize">
+														require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
+															ready(function(){
+																//presenteContainerProperly();
+																ChartNetwork[6][ongletActif()].resize();
+															});
+														});
+													</script>
+													<div id="legend6Global" style="height:99.5%; border: solid 1px #759dc0; overflow-y : auto;" >
+														<table id="legend6TabGlobal" style=" margin-right: 30px;" > 
+														</table>
+													</div>
+												</div>
+												<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+													<!--div>
+														<div style="position : absolute; ">
+															<FONT id="unit6Global" style = "margin-left: 30px;" size=1> </FONT>
+														</div>
+														<table cellspacing="0" cellpadding="0">
+															<tr>
+																<td>
+																	<div id="chart6Global" style="width: 800px; height: 300px; float:left; margin-left:1px;"></div>
+																</td>
+															</tr>
+														</table>
+													</div-->
+													<div id="DivChart6GlobalAccurate" ><!--style="display:none"-->
+														<div id="chart6GlobalAccurate" style=" width: 95%; height: 99%; float:left; margin-left:1px;" ></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+										<div id="DivGraphe7Global"  style="position: relative; display: none; overflow : auto;">
+											<div data-dojo-type="dijit/layout/BorderContainer" style="width: 100%;height:100%;  padding: 5px;">
+												<div data-dojo-type="dojox/layout/ExpandoPane" splitter="true" duration="125" region="right" title="Legend" previewOnDblClick="true" >
+													<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="resize">
+														require(["dojo/ready", "dijit/registry", "dojo/domReady!"], function(ready, registry){
+															ready(function(){
+																//presenteContainerProperly();
+																ChartNetwork[7][ongletActif()].resize();
+															});
+														});
+													</script>
+													<div id="legend7Global" style="height:99.5%; border: solid 1px #759dc0; overflow-y : auto;" >
+														<table id="legend7TabGlobal" style=" margin-right: 30px;" > 
+														</table>
+													</div>
+												</div>
+												<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+													<!--div>
+														<div style="position : absolute; ">
+															<FONT id="unit7Global" style = "margin-left: 30px;" size=1> </FONT>
+														</div>
+														<table cellspacing="0" cellpadding="0">
+															<tr>
+																<td>
+																	<div id="chart7Global" style="width: 800px; height: 300px; float:left; margin-left:1px;"></div>
+																</td>
+															</tr>
+														</table>
+													</div-->
+													<div id="DivChart7GlobalAccurate" ><!--style="display:none"-->
+														<div id="chart7GlobalAccurate" style=" width: 95%; height: 99%; float:left; margin-left:1px;" ></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+								</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div id="DivRawData" class="inactive" style="position: relative; display: none; margin-top: 10px; height: 80%; ">
+			<div id="RawDataTabContainer" data-dojo-type="dijit/layout/TabContainer" style="height:100%; " >
+				<script type="dojo/aspect" data-dojo-advice="after" data-dojo-method="selectChild">
+					setActiveTabDojo(this.selectedChildWidget);
+				</script>
+				
+				<!--div data-dojo-type="dijit/layout/ContentPane" title="Tree" data-dojo-props="selected:true" id="DivDataPlusTree" data-dojo-id="DivDataPlusTree">
+				
+				</div-->
+				
+				<div data-dojo-type="dijit/layout/ContentPane" title="Search filter" id="DivDataPlus">
+				
+					<div style="position: relative; margin-top: 10px; background-color: #FFF;">
+
+						<div id="2ndPartDetailTab" >
+							<form id='formDataPlus' onsubmit="return false;">
+								<table width="100%" cellpadding=0 cellspacing=0 border=0 col=3 class="formulaire">
+									<!--tr><th colspan=3>Raw data selection</th></tr>
+									<tr><td colspan=3><br/></td></tr-->
+									<tr>
+										<td align="center" valign="top" width="350px" style="height: 100%">
+											<fieldset id="TabQueryForm">
+												<legend id="TabQueryForm">Timestamp filter</legend>
+												<table align="center" valign="top"cellspacing="10px">
+													<tr>
+														<td valign="top" align="center" class="TabQueryFormTD">
+															<table>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="from">From</label>
+																	</td>
+																	<td>
+																		<input  class="datePicker" id="dateDebData" size='16' maxlength="16" name='dd' value="" style="color: black" onblur="this.onchange();"
+																			onchange="this.value = DateCoherente(this.value); /*DateCoherente(debutDeCycle(DateCoherente(this.value)));*/
+																			if( (document.getElementById('dateFinData').value != '' && this.value>document.getElementById('dateFinData').value)
+																			|| this.value==''
+																			/*|| document.getElementById('dateFinData').value==''*/){this.style.color = 'red'; document.getElementById('dateFinData').style.color = 'red'; document.getElementById('TabQueryFormData').disabled = true;}
+																			else{ this.style.color = 'black';document.getElementById('dateFinData').style.color = 'black'; document.getElementById('TabQueryFormData').disabled = false;}"/> 
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="to">To</label>
+																	</td>
+																	<td>
+																		<input   class="datePicker" id="dateFinData" size='16' maxlength="16" name='df' value="" style="color: black"  onblur="this.onchange();"
+																			onchange="this.value = DateCoherente(this.value); /*DateCoherente(finDeCycle(DateCoherente(this.value))); */
+																			//alert(this.value);
+																			//alert(this.value<document.getElementById('dateDebData').value);
+																			if((this.value != '' && this.value<document.getElementById('dateDebData').value)
+																			/*|| this.value==''*/
+																			|| document.getElementById('dateDebData').value==''){this.style.color = 'red'; document.getElementById('dateDebData').style.color = 'red'; document.getElementById('TabQueryFormData').disabled = true;}
+
+																			else{ this.style.color = 'black';document.getElementById('dateDebData').style.color = 'black'; document.getElementById('TabQueryFormData').disabled = false;}"/> 
+																	
+																		<input type='hidden' id='dh2' name='dh' value=0 />
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="duration">minDuration in s</label>
+																	</td>
+																	<td>
+																		<input type="text" id="duration" size="5" name='dur' maxlength="5"/>
+																	</td>
+																</tr>
+															</table>
+															
+															<!--img  style="cursor: pointer; vertical-align:text-bottom;" title="hostname" src="images/lhost.png" onclick="dialogHostName.domNode.source = 'SelectIpData'; if(autoIptoName(SelectIpData.value)==null)SelectName.setAttribute('value',''); else 'SelectName.setAttribute('value',  autoIptoName(SelectIpData.value)); dialogHostName.show();"/-->
+															<!--br/>
+															<i><font id="lhNameData" size=1 style="left: 0px"></font></i-->
+														</td>
+													</tr>
+												</table>	
+											</fieldset>
+										</td>
+										<td  align="center" valign="top">
+											<fieldset id="TabQueryForm">
+												<legend id="TabQueryForm">Hosts filter</legend>
+												<table align="center" valign="top"cellspacing="10px">
+													<tr>
+														<td valign="top" align="center" class="TabQueryFormTD">
+															<label id="TabQueryForm" for="iploc" class="TabQueryFormTDLabel" >Local Host</label><br/>
+															<table>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="iploc">Ip: </label>
+																	</td>
+																	<td>
+																		<input type="text" id="iploc" size="17" maxlength="39" value="" onchange="setIpLocValue(); if(!this.value.split('/')[1])SelectIp.attr('value', this.value );"/>/
+																		<input type="text" id="iplocMask"  size="3" maxlength="3" value="" onchange="setIpLocValue();" />
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="iploc">Name: </label>
+																	</td>
+																	<td>
+																		<input type="text" id="nameloc" size="17" maxlength="39" value="" onchange="setIpLocValue(); if(!this.value.split('/')[1])SelectIp.attr('value', this.value );"/>
+																		<input type="hidden" name="iploc" id="iplocHidden"  value=""/>
+																	</td>
+																</tr>
+															</table>
+															
+															<!--img  style="cursor: pointer; vertical-align:text-bottom;" title="hostname" src="images/lhost.png" onclick="dialogHostName.domNode.source = 'SelectIpData'; if(autoIptoName(SelectIpData.value)==null)SelectName.setAttribute('value',''); else 'SelectName.setAttribute('value',  autoIptoName(SelectIpData.value)); dialogHostName.show();"/-->
+															<!--br/>
+															<i><font id="lhNameData" size=1 style="left: 0px"></font></i-->
+														</td>
+														<td valign="top" align="center" class="TabQueryFormTD">
+															<label id="TabQueryForm" for="dir"  class="TabQueryFormTDLabel">Dir</label>
+															<br/>
+															<select id="dir" name="dir" onchange="display(this.value)" style=' cursor: pointer;'>
+																<option value="" selected="selected">All</option>
+																<option value=">" >-></option>
+																<option value="<"><-</option>
+															</select>
+														</td>
+														<td valign="top" align="center" class="TabQueryFormTD">
+															<label id="TabQueryForm" for="iploc"  class="TabQueryFormTDLabel">External Host</label><br/>
+															<table>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="ipext">Ip: </label>
+																	</td>
+																	<td>
+																		<input type="text" id="ipext"  size="17" maxlength="39" value="" onchange="if(this.value.indexOf(':')!=-1)document.getElementById('ipextMask').value = 128; else if(this.value.indexOf('.')!=-1) document.getElementById('ipextMask').value = 32; else document.getElementById('ipextMask').value = ''; document.getElementById('whoIs').value = this.value; setIpExtValue(); "/>/
+																		<input type="text" id="ipextMask"  size="3" maxlength="3" value="" onchange="setIpExtValue();" />
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																	</td>
+																	<td>
+																		<input type="hidden" name="ipext" id="ipextHidden"  value=""/></td>
+																	</td>
+																</tr>	
+																<tr id ="externalAsCountry">
+																	<td>
+																		<label id="TabQueryForm" for="Country">Country: </label>
+																	</td>
+																	<td>
+																		<input type="text" id="country" class="countryTextBox"  size="26" maxlength="26" value=""/>
+																		<input type="hidden" name="country" id="hiddenCountry" value=""/>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="AS" style="width:100%;">AS Number: </label>
+																	</td>
+																	<td>
+																		<input type="text" name="as" id="AS"  size="17" maxlength="39" value="" />
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label id="TabQueryForm" for="APP" style="width:100%;">Application: </label>
+																	</td>
+																	<td>
+																	<input type="text" id="app"  class="appTextBox"  size="26" maxlength="26" value=""/>
+																		<input type="hidden" name="app" id="hiddenApp" value=""/>	</td>
+																</tr>
+																<tr>
+																	<td>
+																	</td>
+																	<td>
+																		<i><font id="resolvedAS" size=1 ></font></i>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<!--tr>
+														<td align="center">
+														</td>
+														<td align="center">
+														</td>
+														<td align="center">
+														</td>
+													</tr-->
+												</table>	
+											</fieldset>
+										</td>
+									</tr>
+								</table>
+								
+								<fieldset id="TabQueryFormMore">
+									<legend id="TabQueryFormMore" onclick="moreRDSearch();">Advanced</legend>
+									<table id="TQFMTable" width="100%" cellpadding=0 cellspacing=0 border=0 col=3 class="formulaire">
+										<tr>
+											<td align="center" valign="top">
+												<fieldset id="TabQueryForm">
+													<legend id="TabQueryForm">Traffic filter</legend>
+													<table align="center" valign="top"cellspacing="10px">
+														<tr>
+															<td valign="top" align="center" class="TabQueryFormTD">
+																<label id="TabQueryForm" for="iploc" class="TabQueryFormTDLabel">Outgoing Traffic</label><br/>
+																<table>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Min.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="minOutTraffic"  name="minOutTraf" size="12" maxlength="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Max.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="maxOutTraffic" name="maxOutTraf" size="12" maxlength="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+														<tr>
+															<td valign="top" align="center" class="TabQueryFormTD">
+																<label id="TabQueryForm"  class="TabQueryFormTDLabel">Incoming Traffic</label><br/>
+																<table>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Min.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="minInTraffic" name="minIncTraf"  size="12" maxlength="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Max.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="maxInTraffic" name="maxIncTraf" size="12" maxlength="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>	
+																</table>
+															</td>
+														</tr>
+													</table>	
+												</fieldset>
+											</td>
+											<td align="center" valign="top">
+												<fieldset  id="TabQueryForm">
+													<legend id="TabQueryForm">Packets filter</legend>
+													<table align="center" valign="top"cellspacing="10px">
+														<tr>
+															<td valign="top" align="center" class="TabQueryFormTD">
+																<label id="TabQueryForm" for="iploc" class="TabQueryFormTDLabel">Outgoing Packets</label><br/>
+																<table>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Min.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="minOutPkts" name="minOutPkts" size="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Max.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="maxOutPkts" name="maxOutPkts" size="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+														<tr>
+															<td valign="top" align="center" class="TabQueryFormTD">
+																<label id="TabQueryForm" class="TabQueryFormTDLabel" >Incoming Packets</label><br/>
+																<table>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Min.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="minIncPkts" name="minIncPkts" size="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Max.: </label>
+																		</td>
+																		<td>
+																			<input type="text" id="maxIncPkts" name="maxIncPkts" size="12" value=""/>
+																		</td>
+																		<td>
+																			<label id="TabQueryForm" for="formQuery">Bytes</label>
+																		</td>
+																	</tr>	
+																</table>
+															</td>
+														</tr>
+													</table>	
+												</fieldset>
+											</td>
+											<td align="center" valign="top" style="height: 100%">
+												<fieldset id="TabQueryForm">
+													<legend id="TabQueryForm">Protocole filter</legend>
+													<table align="center" valign="top"cellspacing="10px">
+														<tr>
+															<td valign="top" align="center" class="TabQueryFormTD" colspan=2>
+																<label id="TabQueryForm" for="formQuery">Protocole</label>
+																<select name="proto" id="proto" onchange="updateProtoFilter(this.value)" style=' cursor: pointer;'>
+																	<option value="" selected=true>All</option>
+																	<option value="tcp" >TCP</option>
+																	<option value="udp">UDP</option>
+																	<option value="others">Others</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td valign="top" align="center" class="TabQueryFormTD">
+																<label id="TabQueryForm" for="portLoc">PortLoc</label> 
+																<input type="text" id="portLoc" name='portL' size="5" maxlength="5" value="" />
+																<br />
+															
+																<label id="TabQueryForm" for="formQuery">PortExt</label>
+																<input type="text" id="portExt" name='portE' size="5" maxlength="5" value=""/>
+															</td>
+															<td valign="top" align="center" class="TabQueryFormTD">
+																<label id="TabQueryForm" for="formQuery" >maskTcpFlags</label>
+																<table border="0" cellspacing="0" cellpadding="0" id="TabQueryFormTcpFlags" name='tcpFlags'>
+																	<tr>
+																		<td><input type="checkbox" checked="checked" id="tcpflagC" value='C'/> C</td>
+																		<td><input type="checkbox" checked="checked" id="tcpflagE" value='E'/> E</td>
+																		<td><input type="checkbox" checked="checked" id="tcpflagU" value='U'/> U</td>
+																		<td><input type="checkbox" checked="checked" id="tcpflagA" value='A'/> A</td>
+																	</tr>
+																	<tr>
+																		<td><input type="checkbox" checked="checked" id="tcpflagP" value='P'/> P</td>
+																		<td><input type="checkbox" checked="checked" id="tcpflagR" value='R'/> R</td>
+																		<td><input type="checkbox" checked="checked" id="tcpflagS" value='S'/> S</td>
+																		<td><input type="checkbox" checked="checked" id="tcpflagF" value='F'/> F</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</fieldset>
+											</td>
+										</tr>
+									</table>
+								</fieldset>
+								<table width="100%" cellpadding=0 cellspacing=0 border=0 col=3 class="formulaire">
+									<tr>
+										<td align="center" valign="top">
+											<input type="submit" value="View raw data" id="TabQueryFormData" disabled="true" onclick="/*alert($('formDataPlus').serialize());*/ disableEmpty(); setParameters(null , $('formDataPlus').serialize()); enableAll(); clickApply('PlusData');" />
+											<p class="asterisk"><font style="font-family:sans-serif; font-size:60%;">(*) optional entry</font></p>
+										</td>
+									</tr>
+								</table>
+							</form> 
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		
+	</div>
+	
+	
+	<span id="whoisSearchBar">
+		<table align=center>
+			<tr>
+				<td>Ip:
+				</td>
+				<td>
+					<input id="whoIs" style="font-style: italic; width: 14.5em; margin-left: 2px;" maxlength="39"  value="" onkeypress="if(event.keyCode == 13)makeWhoIs(this.value);"/>
+				</td>
+				<td>Server:
+				</td>
+				<td>
+					<input type='text' id='serverWhoIs'  size='18' maxlength="39" value=''  />
+				</td>
+				<td>
+					<button type="button" style="cursor: pointer;"onclick="if(document.getElementById('whoIs').value != '') makeWhoIs(document.getElementById('whoIs').value, serverWhoIs.value);">
+						<img src="images/whois.png" />
+					</button>
+				</td>
+			</tr>
+		</table>
+	</span>
+	
+	
+	<!--div id="DivGrapheProtoTest" style="position: relative; overflow : auto;">
+		<div id="chartProtoTest" style="width: 100%; height: 800px; float:left; margin-left:1px;"></div>
+	</div-->
+	
+								<!--button onClick="checkForTreeLeafSelectedGlobal()"/-->
+	
+	
+	<!--div style="position: relative; width: 100%; height: 100%; background: black;">
+		<div style="background: red; width: 100%; height: 100%;"></div>
+		<div style="background: yellow; width: 100%; height: 100%;"></div>
+	</div-->
+	
+</body>
+
+ 
+

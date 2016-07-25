@@ -588,7 +588,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
         svg.axisx = svg.append("g")
-          .attr("class", "axis")
+          .attr("class", "axisGraph")
           .attr('transform', 'translate(' + [svg.margin.left, svg.heightOutput + svg.margin.top] + ")");
 
         svg.axisx.rect = svg.axisx.append("rect").classed("rectAxis", true).attr("height", svg.margin.zero - 1 ).attr("y",0.5);
@@ -604,13 +604,13 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
         svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
-          .attr("class", "axis");
+          .attr("class", "axisGraph");
         svg.axisyInput.call(d3.axisLeft(svg.yInput));
 
         niceTicks(svg.axisyInput);
 
         svg.axisyOutput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
-          .attr("class", "axis");
+          .attr("class", "axisGraph");
         svg.axisyOutput.call(d3.axisLeft(svg.yOutput));
 
         niceTicks(svg.axisyOutput);
@@ -619,7 +619,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         //Label of the y axis
         svg.ylabel = svg.axisyInput.append("text")
-          .attr("class", "label")
+          .attr("class", "labelGraph")
           .attr("text-anchor", "middle")
           .attr("dy", "1em")
           .attr('y', -svg.margin.left)
@@ -1196,7 +1196,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
         svg.axisx = svg.append("g")
-          .attr("class", "axis")
+          .attr("class", "axisGraph")
           .attr('transform', 'translate(' + [svg.margin.left, svg.heightOutput + svg.margin.top] + ")");
 
         svg.axisx.rect = svg.axisx.append("rect").classed("rectAxis", true).attr("height", svg.margin.zero - 1 ).attr("y",0.5);
@@ -1212,13 +1212,13 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
         svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
-          .attr("class", "axis");
+          .attr("class", "axisGraph");
         svg.axisyInput.call(d3.axisLeft(svg.yInput));
 
         niceTicks(svg.axisyInput);
 
         svg.axisyOutput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
-          .attr("class", "axis");
+          .attr("class", "axisGraph");
         svg.axisyOutput.call(d3.axisLeft(svg.yOutput));
 
         niceTicks(svg.axisyOutput);
@@ -1227,7 +1227,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         //Label of the y axis
         svg.ylabel = svg.axisyInput.append("text")
-          .attr("class", "label")
+          .attr("class", "labelGraph")
           .attr("text-anchor", "middle")
           .attr("dy", "1em")
           .attr('y', -svg.margin.left)
@@ -1704,7 +1704,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
         svg.axisx = svg.append("g")
-          .attr("class", "axis")
+          .attr("class", "axisGraph")
           .attr('transform', 'translate(' + [svg.margin.left, svg.height + svg.margin.top] + ")");
 
         svg.axisx.call(d3.axisBottom(svg.x));
@@ -1712,7 +1712,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         legendAxisX(svg);
 
         svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
-          .attr("class", "axis");
+          .attr("class", "axisGraph");
         svg.axisy.call(d3.axisLeft(svg.y));
 
         niceTicks(svg.axisy);
@@ -1722,7 +1722,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
         //      Label of the y axis
         svg.ylabel = svg.axisy.append("text")
-          .attr("class", "label")
+          .attr("class", "labelGraph")
           .attr("text-anchor", "middle")
           .attr("dy", "1em")
           .attr('y', -svg.margin.left)
@@ -3530,12 +3530,12 @@ function createCurve(div, svg, mydiv, urlJson){
 
 
         svg.axisx = svg.append("g")
-          .classed("x axis", true)
+          .classed("x axisGraph", true)
           .attr('transform', 'translate(' + [svg.margin.left, svg.height + svg.margin.top] + ")");
 
         svg.axisx.call(d3.axisBottom(svg.x));
 
-        svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')').classed("y axis", true);
+        svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')').classed("y axisGraph", true);
         svg.axisy.call(d3.axisLeft(svg.y));
 
         niceTicks(svg.axisy);
@@ -3544,7 +3544,7 @@ function createCurve(div, svg, mydiv, urlJson){
 
         //      Label of the y axis
         svg.ylabel = svg.axisy.append("text")
-          .attr("class", "label")
+          .attr("class", "labelGraph")
           .attr("text-anchor", "middle")
           .attr("dy", "1em")
           .attr('y', -svg.margin.left)

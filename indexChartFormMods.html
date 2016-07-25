@@ -145,7 +145,7 @@
         <div class="panel-heading padding2px">
             <fieldset class="container">
 
-                <div class="form-group col-md-4">
+                <!--div class="form-group col-md-4">
                     <label class="control-label col-xs-2 col-md-4" for="typeOfChart">Chart:</label>
                     <div class="col-xs-10 col-md-8">
                         <select class="form-control" id="typeOfChart"">
@@ -155,27 +155,29 @@
                             <option value="lastMonth">Last month</option>
                         </select>
                     </div>
-                </div>
+                </div-->
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
                     <div class="col-xs-10 col-md-8">
-                        <select class="form-control" id="timesliceCharts" onchange="onChangeChartsTimeslice(); updateChartsTimeslice(this)">
+                        <select class="form-control" id="timesliceCharts" onchange="onChangeChartsForm(); updateChartsTimeslice(this)">
                             <option value="lastHour">Last hour</option>
-                            <option value="lastDay">Last day</option>
+                            <option value="lastDay" selected>Last day</option>
                             <option value="lastWeek">Last week</option>
                             <option value="lastMonth">Last month</option>
+                            <option value="custom">Custom</option>
                         </select>
+                        <input type="hidden" id="timeslice_ChartsForm"/>
                     </div>
                 </div>
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label class="control-label col-xs-2 col-md-4" for="timestepCharts">Timestep:</label>
                     <div class="col-xs-10 col-md-8">
-                        <select class="form-control" id="timestepCharts" onchange="onChangeChartsTimestep(); updateChartsTimestep(this)">
-                            <option value="minutes">Minutes</option>
-                            <option value="hourly">Hours</option>
-                            <option value="daily" >Days</option>
+                        <select class="form-control" id="timestepCharts" onchange="onChangeChartsForm()">
+                            <option value="MINUTE">Minutes</option>
+                            <option value="HOURLY" selected>Hours</option>
+                            <option value="DAILY" >Days</option>
                         </select>
                         <input type="hidden" name="pset" id="preset_ChartsForm"/>
                     </div>
@@ -185,7 +187,7 @@
                     <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
                     <div class="col-xs-10">
                         <div class='input-group date' id='fromDate_ChartsForm'>
-                            <input type='text' class="form-control" onchange="onChangeChartsTimestep();" required disabled/>
+                            <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -198,7 +200,7 @@
                     <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
                     <div class="col-xs-10">
                         <div class='input-group date' id='toDate_ChartsForm'>
-                            <input type='text' class="form-control" onchange="onChangeChartsTimestep();" required disabled/>
+                            <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -208,11 +210,11 @@
                 </div>
 
                 <div class="form-group col-xs-12 col-md-1 text-center">
-                    <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsTimestep()" disabled>Apply</button>
+                    <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
                 </div>
 
                 <div class="form-group col-xs-12 col-md-1 text-center">
-                    <button type="button" class="btn btn-default" id="resetBtn_charts_form" onclick="resetChartsTimeslice()" disabled>Reset</button>
+                    <button type="button" class="btn btn-default" id="resetBtn_charts_form" onclick="resetChartsForm()" disabled>Reset</button>
                 </div>
 
             </fieldset>
@@ -245,7 +247,7 @@
         /*********************************************************************************************************
          Initialize Chart Formular
          ********************************************************************************************************/
-        applyChartsTimestep();
+        applyChartsFormClass();
 
     });
 </script>

@@ -124,6 +124,8 @@ function Localhosts(theWSEventNotifier) {
         $('#tableLocalhosts').DataTable( {
 
             data: jsonContent.data,
+
+            iDisplayLength: 25,
             columns: tableColumns,
             scrollY: 1,
             lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
@@ -206,6 +208,15 @@ function Localhosts(theWSEventNotifier) {
                     "targets": [6, 7]
                 },*/
                 { "targets": [6, 7], "visible": false, "searchable": false },
+                { "targets": [8, 9],
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).attr("title",cellData);
+                    },
+                    "render": function ( data, type, row ) {
+                        var renderedString = data.toString().substring(0, 30);
+                        return renderedString+ ( (data.toString() != renderedString) ? "..." : "" );
+                    }
+                },
                 {
                     "targets": tableColumns.length,
                     "data": null,

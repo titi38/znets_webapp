@@ -104,7 +104,6 @@ var typeGraph = urlJson.split(/[\.\/]+/);
             return createHisto2DStackDoubleFormatVariation;
         case "netTopServicesNbFlow":
         case "netTopNbExtHosts":
-        //case "netTop10NbExtHosts":
             return createHisto2DStackSimple;
         //for now
         case "worldmap":
@@ -647,7 +646,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
 
-        addZoomDouble(svg, updateHisto1DStackDouble);
+        addZoomDouble(svg, updateHisto2DStackDouble);
         d3.select(window).on("resize." + mydiv, function () {
             console.log("resize");
             redrawHisto2DStackDouble(div, svg);
@@ -1243,7 +1242,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
 
-        addZoomDouble(svg, updateHisto1DStackDouble);
+        addZoomDouble(svg, updateHisto2DStackDouble);
         d3.select(window).on("resize." + mydiv, function () {
             console.log("resize");
             redrawHisto2DStackDouble(div, svg);
@@ -1394,8 +1393,31 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
 
-        //step = 1 hour by default
-        svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
+
+
+
+
+
+
+        //Compute 1% of total amount by date.
+        sumMapByX.forEach(function(value, key){
+           sumMapByX.set(key,value/100)
+        });
+
+        var elemValue, valuesLength = svg.values.length;
+        i = 0;
+        while(i < valuesLength){
+
+            elemValue = svg.values[i];
+
+            if(elemValue.height < sumMapByX.get(elemValue.x)){
+                svg.values.splice(i,1);
+                valuesLength --;
+            }else{
+                i++;
+            }
+
+        }
 
 
 
@@ -1417,29 +1439,13 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
         svg.values.sort(sortValues);
 
-
-
-
-        //Compute 1% of total amount by date.
-        sumMapByX.forEach(function(value, key){
-           sumMapByX.set(key,value/100)
-        });
-
-        var elemValue;
-        i = 0;
-        while(i < svg.values.length){
-
-            elemValue = svg.values[i];
-
-            if(elemValue.height < sumMapByX.get(elemValue.x)){
-                svg.values.splice(i,1);
-            }else{
-                i++;
-            }
-
-        }
-
         console.log(sumMapByX);
+
+
+        //step = 1 hour by default
+        svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
+
+
 
         svg.values.forEach(function(elem,i){
             elem.x = (elem.x - svg.timeMin)/svg.step;
@@ -1718,7 +1724,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
 
-        addZoomSimple(svg, updateHisto1DStackSimple);
+        addZoomSimple(svg, updateHisto2DStackSimple);
 
         d3.select(window).on("resize." + mydiv, function () {
             console.log("resize");
@@ -1836,7 +1842,7 @@ function hideShowValuesSimple(svg,trSelec,selection,xlength){
                 var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
                 svg.y.domain([0,totalTrans*1.05]);
                 svg.newY.domain([svg.y.invert(actTranslate1 + svg.height/(svg.transform.k*svg.scaley)), svg.y.invert(actTranslate1)]);
-                updateHisto1DStackSimple(svg);
+                updateHisto2DStackSimple(svg);
 
             }
         });
@@ -1930,7 +1936,7 @@ function hideShowValuesSimple(svg,trSelec,selection,xlength){
                 var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
                 svg.y.domain([0,totalTrans*1.05]);
                 svg.newY.domain([svg.y.invert(actTranslate1 + svg.height/(svg.transform.k*svg.scaley)), svg.y.invert(actTranslate1) ]);
-                updateHisto1DStackSimple(svg);
+                updateHisto2DStackSimple(svg);
 
             }
         });
@@ -2125,7 +2131,7 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
                     svg.yInput.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
 
 
-                updateHisto1DStackDouble(svg);
+                updateHisto2DStackDouble(svg);
 
             }
 
@@ -2305,7 +2311,7 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
                     svg.yInput.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
 
 
-                updateHisto1DStackDouble(svg);
+                updateHisto2DStackDouble(svg);
 
             }
 
@@ -2330,7 +2336,7 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
 
 
 
-function updateHisto1DStackSimple(svg){
+function updateHisto2DStackSimple(svg){
 
     /*
      svg.chartOutput.attr("transform","matrix(" + (svg.scalex*svg.scale) + ", 0, 0, " + (svg.scaley*svg.scale) + ", " + svg.translate[0] + "," + svg.translate[1] + ")" );
@@ -2370,7 +2376,7 @@ function updateHisto1DStackSimple(svg){
 
 
 
-function updateHisto1DStackDouble(svg){
+function updateHisto2DStackDouble(svg){
 
 /*
     svg.chartOutput.attr("transform","matrix(" + (svg.scalex*svg.scale) + ", 0, 0, " + (svg.scaley*svg.scale) + ", " + svg.translate[0] + "," + svg.translate[1] + ")" );
@@ -2790,7 +2796,7 @@ function redrawHisto2DStackDouble(div,svg){
     svg._groups[0][0].__zoom.x =svg.transform.x;
     svg._groups[0][0].__zoom.y =svg.transform.y;
 
-    updateHisto1DStackDouble(svg);
+    updateHisto2DStackDouble(svg);
 
     redrawPopup(div, svg);
 
@@ -2849,7 +2855,7 @@ function redrawHisto2DStackSimple(div,svg){
     svg._groups[0][0].__zoom.x =svg.transform.x;
     svg._groups[0][0].__zoom.y =svg.transform.y;
 
-    updateHisto1DStackSimple(svg);
+    updateHisto2DStackSimple(svg);
 
     redrawPopup(div, svg);
 
@@ -4165,8 +4171,8 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTopHostsNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
-//drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-20+00:00&df=2016-07-22+23:00&pset=HOURLY&dh=2", "Graph");
-drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-21+00:00&df=2016-07-21+23:59&pset=MINUTE&dh=2", "Graph");
+drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-17+00:00&df=2016-07-22+23:59&pset=DAILY&dh=2", "Graph");
+//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-21+00:00&df=2016-07-21+23:59&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");

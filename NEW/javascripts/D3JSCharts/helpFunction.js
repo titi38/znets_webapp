@@ -796,3 +796,41 @@ function firstLetterUppercase(string){
   return string.charAt(0).toUpperCase() + string.slice(1);
 
 }
+
+
+/************************************************************************************************************/
+
+function addCirclePosition(svg){
+
+
+
+
+  svg.circlePosition = svg.append("circle").classed("circlePosition",true).remove().attr("r",4);
+
+
+  svg
+    .on("mouseover.circlePosition",function(){
+
+      updateCirclePosition(svg);
+      svg.chart.node().appendChild(svg.circlePosition.node());
+
+      svg
+        .on("mousemove.circlePosition",function(){
+        updateCirclePosition(svg);
+      })
+        .on("mouseover.circlePosition",null);
+
+    })
+}
+
+/************************************************************************************************************/
+
+function updateCirclePosition(svg){
+  var newXDomain;
+  var xPosRound;
+  var nodeReference = svg.svg.node();
+  newXDomain = svg.newX.domain();
+  xPosRound = Math.round(Math.min(newXDomain[1],Math.max(newXDomain[0],svg.newX.invert(d3.mouse(nodeReference)[0]))));
+
+  svg.circlePosition.attr("cx", svg.newX(xPosRound)).attr("cy",svg.newY(svg.data[xPosRound]));
+}

@@ -775,9 +775,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         // Data are processed and sorted according to their direction.
 
         if(svg.step === 60000){
-
-            //TODO faire pset=MINUTE. copier/coller else et adapter (cf createcurve).
-
+            
             var elemAmountMinuteArray;
 
             for(i = 0; i < dataLength; i++){
@@ -3547,6 +3545,7 @@ function createCurve(div, svg, mydiv, urlJson){
             }
         });
 
+        addCirclePosition(svg);
 
         addZoomSimple(svg, updateCurve);
 
@@ -3554,6 +3553,7 @@ function createCurve(div, svg, mydiv, urlJson){
             console.log("resize");
             redrawCurve(div, svg);
         });
+        
 
     });
 
@@ -3642,6 +3642,8 @@ function updateCurve(svg){
     legendAxisX(svg);
 
     gridSimpleGraph(svg,true);
+
+    updateCirclePosition(svg);
 
 
 

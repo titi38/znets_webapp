@@ -48,6 +48,14 @@
     stroke-width: 0;
 }
 
+.circlePosition {
+
+    fill:#dfd8e6;
+    stroke: #805500;
+    stroke-width: 1;
+
+}
+
 .tableTitle{
     border-bottom-style: ridge;
     margin-top: 0em;

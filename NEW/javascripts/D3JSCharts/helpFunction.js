@@ -79,12 +79,6 @@ function ticksSecondAxisXDouble(svg){
 
 function getPieJsonQuery(svg, clickData) {
 
-  /***** Temporaire *****/
-
-  if(typeof proxyPass === "undefined"){
-    proxyPass = "dynamic/"
-  }
-
   /*
   console.error(moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD HH:mm"));// &dd=
   console.error(moment(getDateFromAbscissa(svg, clickData.x+1)).format("YYYY-MM-DD HH:mm"));// &df=
@@ -95,12 +89,10 @@ function getPieJsonQuery(svg, clickData) {
    */
 
   //?
-  var pieUrl = "netExtHostsTopHostsTraffic.json?pset=HOURLY&net=network";
 
-  //return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
-    return proxyPass + pieUrl
-      +( ( moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") : "" )
-      + ( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
+  return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
+      +( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") : "" )
+      + ( ( moment(getDateFromAbscissa(svg, clickData.x + 1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
       + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
       + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
       + ( ( clickData.item ) ? "&ip="+clickData.item : "" )
@@ -889,5 +881,17 @@ function updateCirclePosition(svg,x){
       svg.hiddenCircle.tooltip.text(amount + " " + svg.units + "\n" +(date.getMonth() + 1) + "/" + date.getDate());
       break;
   }
+
+}
+
+/************************************************************************************************************/
+
+function getTimeShift(url){
+  url = url.split(/[?&=]+/);
+  var index = url.indexOf("dh");
+  if(index === -1){
+    return 0;
+  }
+  return +(url[index + 1]);
 
 }

@@ -118,8 +118,9 @@ var typeGraph = urlJson.split(/[\.\/]+/);
 function noData(div,svg,mydiv){
     console.log("incorrect url/data");
 
-    var divWidth = parseInt(div.style("width"),10),
-      divHeight = parseInt(div.style("height"),10);
+    var clientRect = div.node().getBoundingClientRect();
+    var divWidth = clientRect.width,
+      divHeight = clientRect.height;
 
     svg.attr("width",divWidth).attr("height",divHeight);
 
@@ -130,8 +131,9 @@ function noData(div,svg,mydiv){
       .style("fill", "#000");
 
     d3.select(window).on("resize." + mydiv, function(){
-        var divWidth = parseInt(div.style("width"),10),
-          divHeight = parseInt(div.style("height"),10);
+        var clientRect = div.node().getBoundingClientRect();
+        var divWidth = clientRect.width,
+          divHeight = clientRect.height;
 
         svg.attr("width",divWidth).attr("height",divHeight);
 
@@ -162,9 +164,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         //table for legend
         svg.tableWidth = 200;
 
-
-        var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
+        var clientRect = div.node().getBoundingClientRect();
+        var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
 
 
 
@@ -632,11 +634,17 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             desactivationElems);
 
         //Legend creation
-
+        var cA;
         var trSelec;
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
-            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
+
+            cA = quantityConvertUnit(d.sum);
+            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" 
+              + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
+              + "(" +  d.sum + " " + svg.units + ")";
         });
+
+
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
@@ -686,9 +694,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         //table for legend
         svg.tableWidth = 200;
 
-
-        var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
+        var clientRect = div.node().getBoundingClientRect();
+        var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
 
 
 
@@ -1231,11 +1239,17 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           desactivationElems);
 
         //Legend creation
-
+        var cA;
         var trSelec;
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
-            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
+
+            cA = quantityConvertUnit(d.sum);
+            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n"
+              + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
+              + "(" +  d.sum + " " + svg.units + ")";
         });
+
+
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
@@ -1285,9 +1299,9 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         //table for legend
         svg.tableWidth = 200;
 
-
-        var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, parseInt(div.style("height"),10));
+        var clientRect = div.node().getBoundingClientRect();
+        var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
 
 
 
@@ -1716,11 +1730,16 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
         //Legend creation
 
+        var cA;
         var trSelec;
-
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
-            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" + "Overall volume: " + Math.round(d.sum * 100) / 100 + " " + svg.units;
+
+            cA = quantityConvertUnit(d.sum);
+            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n"
+              + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
+              + "(" +  d.sum + " " + svg.units + ")";
         });
+
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
         });
@@ -2729,9 +2748,10 @@ function addZoomDouble(svg,updateFunction){
 
 function redrawHisto2DStackDouble(div,svg){
 
-    var divWidth = Math.max(1.15*svg.tableWidth + svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1,parseInt(div.style("height"),10));
-    console.log("width " + divWidth );
+    var clientRect = div.node().getBoundingClientRect();
+    var divWidth = Math.max(1.15*svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
+    //console.log("width " + divWidth );
 
     var oldsvgheight = svg.height;
     var oldsvgwidth = svg.width;
@@ -2754,7 +2774,7 @@ function redrawHisto2DStackDouble(div,svg){
     svg.heightOutput = svg.heightOutput*svg.heightData/oldheightData;
 
 
-    console.log("marginview " + margInView);
+    //console.log("marginview " + margInView);
 
   
     var ratiox = svg.width/oldsvgwidth;
@@ -2778,7 +2798,7 @@ function redrawHisto2DStackDouble(div,svg){
 
 
 
-    console.log("marincltransl " + margIncTransl);
+    //console.log("marincltransl " + margIncTransl);
     svg.transform.y = (svg.transform.y - margIncTransl) * (svg.height + margInView)/(oldsvgheight + margInView) + margIncTransl;
     svg.transform.x *= ratiox;
 
@@ -2817,10 +2837,10 @@ function redrawHisto2DStackDouble(div,svg){
 /************************************************************************************************************/
 
 function redrawHisto2DStackSimple(div,svg){
-
-    var divWidth = Math.max(1.15*svg.tableWidth + svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1,parseInt(div.style("height"),10));
-    console.log("width " + divWidth );
+    var clientRect = div.node().getBoundingClientRect();
+    var divWidth = Math.max(1.15*svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
+    //console.log("width " + divWidth );
 
     var oldsvgheight = svg.height;
     var oldsvgwidth = svg.width;
@@ -3375,8 +3395,9 @@ function createCurve(div, svg, mydiv, urlJson){
         json = json.response;
         console.log(json);
 
-        var divWidth = Math.max(svg.margin.left + svg.margin.right + 1, parseInt(div.style("width"), 10)),
-          divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1, parseInt(div.style("height"),10));
+        var clientRect = div.node().getBoundingClientRect();
+        var divWidth = Math.max(svg.margin.left + svg.margin.right + 1, clientRect.width),
+          divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1, clientRect.height);
 
         svg.attr("width", divWidth).attr("height", divHeight);
 
@@ -3603,9 +3624,10 @@ function createCurve(div, svg, mydiv, urlJson){
 
 function redrawCurve(div,svg){
 
-    var divWidth = Math.max(svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,parseInt(div.style("height"),10));
-    console.log("width " + divWidth );
+    var clientRect = div.node().getBoundingClientRect();
+    var divWidth = Math.max(svg.margin.left + svg.margin.right + 1,clientRect.width),
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,clientRect.height);
+    //console.log("width " + divWidth );
 
     var oldsvgheight = svg.height;
     var oldsvgwidth = svg.width;
@@ -3850,8 +3872,9 @@ function createMap(div,svg,mydiv, urlJson){
 
     //finding/computing the div dimensions
 
-    var divWidth = Math.max(svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10)),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,parseInt(div.style("height"),10));
+    var clientRect = div.node().getBoundingClientRect();
+    var divWidth = Math.max(svg.margin.left + svg.margin.right + 1,clientRect.width),
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,clientRect.height);
 
 
 
@@ -4070,9 +4093,9 @@ function addResizeMap(div,svg,mydiv){
         oldHeight = svg.height;
 
         //finding/computing the div dimensions
-
-        divWidth = Math.max(svg.margin.left + svg.margin.right + 1,parseInt(div.style("width"),10));
-        divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,parseInt(div.style("height"),10));
+        var clientRect = div.node().getBoundingClientRect();
+        divWidth = Math.max(svg.margin.left + svg.margin.right + 1,clientRect.width);
+        divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,clientRect.height);
 
 
         //Some computation to find the new dimensions of the map (with a constant height/width ratio)
@@ -4203,7 +4226,7 @@ function addZoomMap(svg){
 //drawChart("/dynamic/netTopServicesTraffic.json?service=loc&pset=DAILY&dd=2016-06-25+12%3A34&df=2016-07-25+12%3A34&dh=2","Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbExternalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-25%2011%3A44&pset=MINUTE", "Graph");
-drawChart("/dynamic/netTopAppNbFlow.json?&pset=HOURLY&dd=2016-06-25+12%3A34&df=2016-07-25+12%3A34&dh=2", "Graph");
+drawChart("/dynamic/netNbLocalHosts.json?&pset=HOURLY&dd=2016-07-24+16%3A28&df=2016-07-25+16%3A28&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-17+00:00&df=2016-07-22+23:59&pset=DAILY&dh=2", "Graph");

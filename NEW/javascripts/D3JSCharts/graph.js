@@ -4191,8 +4191,8 @@ function addZoomMap(svg){
 
 //drawChart("/dynamic/netTopHostsNbFlow.json?&pset=DAILY&dd=2016-06-20+12%3A34&df=2016-07-25+12%3A34&dh=2","Graph");
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
-//drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
-drawChart("/dynamic/netTopAppTraffic.json?&pset=DAILY&dd=2016-06-25+12%3A34&df=2016-07-25+12%3A34&dh=2", "Graph");
+drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-18%2011%3A44&pset=2", "Graph");
+//drawChart("/dynamic/netTopAppNbFlow.json?&pset=DAILY&dd=2016-06-25+12%3A34&df=2016-07-25+12%3A34&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-17+00:00&df=2016-07-22+23:59&pset=DAILY&dh=2", "Graph");

@@ -808,7 +808,7 @@ function addCirclePosition(svg){
 
 
   svg.circlePosition = svg.append("circle").classed("circlePosition",true).remove().attr("r",4);
-  svg.hiddenCircle = svg.append("circle").classed("hiddenCircle",true).remove().attr("r",40);
+  svg.hiddenCircle = svg.append("circle").classed("hiddenCircle",true).remove().attr("r",svg.height/2);
   var nodeReference = svg.svg.node();
   svg.hiddenCircle.tooltip = svg.hiddenCircle.append("svg:title");
 

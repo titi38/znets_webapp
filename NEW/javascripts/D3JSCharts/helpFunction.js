@@ -806,17 +806,18 @@ function addCirclePosition(svg){
 
 
   svg.circlePosition = svg.append("circle").classed("circlePosition",true).remove().attr("r",4);
+  var nodeReference = svg.svg.node();
 
 
   svg
     .on("mouseover.circlePosition",function(){
 
-      updateCirclePosition(svg);
+      updateCirclePosition(svg,d3.mouse(nodeReference)[0]);
       svg.chart.node().appendChild(svg.circlePosition.node());
 
       svg
         .on("mousemove.circlePosition",function(){
-        updateCirclePosition(svg);
+        updateCirclePosition(svg,d3.mouse(nodeReference)[0]);
       })
         .on("mouseover.circlePosition",null);
 
@@ -825,12 +826,14 @@ function addCirclePosition(svg){
 
 /************************************************************************************************************/
 
-function updateCirclePosition(svg){
+function updateCirclePosition(svg,x){
+  if(!x){
+    return;
+  }
   var newXDomain;
   var xPosRound;
-  var nodeReference = svg.svg.node();
   newXDomain = svg.newX.domain();
-  xPosRound = Math.round(Math.min(newXDomain[1],Math.max(newXDomain[0],svg.newX.invert(d3.mouse(nodeReference)[0]))));
+  xPosRound = Math.round(Math.min(newXDomain[1],Math.max(newXDomain[0],svg.newX.invert(x))));
 
   svg.circlePosition.attr("cx", svg.newX(xPosRound)).attr("cy",svg.newY(svg.data[xPosRound]));
 }

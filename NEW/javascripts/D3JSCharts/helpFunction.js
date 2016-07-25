@@ -520,7 +520,9 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
     for(var i = 0;i < length; i++ ){
 
-        if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"){
+      //TODO demander changer nom ?column? en truc correct, ça va causer des soucis si c'est pas déjà le cas.
+        if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"
+          || jsonContent[i] === "?column?"){
 
                   return i;
 

@@ -50,10 +50,16 @@
 
 .circlePosition {
 
-    fill:#dfd8e6;
+    fill: rgba(255, 206, 15, 0.3);
     stroke: #805500;
     stroke-width: 1;
 
+}
+
+.hiddenCircle {
+
+    fill: #00000;
+    opacity: 0;
 }
 
 .tableTitle{

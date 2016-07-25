@@ -520,7 +520,9 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
     for(var i = 0;i < length; i++ ){
 
-        if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"){
+      //TODO demander changer nom ?column? en truc correct, ça va causer des soucis si c'est pas déjà le cas.
+        if(jsonContent[i] === "code" || jsonContent[i] === "host" || jsonContent[i] === "localhostip"
+          || jsonContent[i] === "appid" || jsonContent[i] === "?column?"){
 
                   return i;
 
@@ -806,31 +808,73 @@ function addCirclePosition(svg){
 
 
   svg.circlePosition = svg.append("circle").classed("circlePosition",true).remove().attr("r",4);
+  svg.hiddenCircle = svg.append("circle").classed("hiddenCircle",true).remove().attr("r",svg.height/2);
+  var nodeReference = svg.svg.node();
+  svg.hiddenCircle.tooltip = svg.hiddenCircle.append("svg:title");
 
 
   svg
     .on("mouseover.circlePosition",function(){
 
-      updateCirclePosition(svg);
+      updateCirclePosition(svg,d3.mouse(nodeReference)[0]);
       svg.chart.node().appendChild(svg.circlePosition.node());
+      svg.chart.node().appendChild(svg.hiddenCircle.node());
+
 
       svg
         .on("mousemove.circlePosition",function(){
-        updateCirclePosition(svg);
+        updateCirclePosition(svg,d3.mouse(nodeReference)[0]);
       })
         .on("mouseover.circlePosition",null);
 
-    })
+    });
 }
 
 /************************************************************************************************************/
 
-function updateCirclePosition(svg){
+function updateCirclePosition(svg,x){
+  if(!x){
+
+    //Various reason. for cosmetic reasons, the circles disappear until they are called again by a mousemove event.
+    svg.circlePosition.remove();
+    svg.hiddenCircle.remove();
+    svg.on("mousemove.append",function(){
+      svg.chart.node().appendChild(svg.circlePosition.node());
+      svg.chart.node().appendChild(svg.hiddenCircle.node());
+      svg.on("mousemove.append",null);
+    });
+
+    return;
+  }
   var newXDomain;
   var xPosRound;
-  var nodeReference = svg.svg.node();
   newXDomain = svg.newX.domain();
-  xPosRound = Math.round(Math.min(newXDomain[1],Math.max(newXDomain[0],svg.newX.invert(d3.mouse(nodeReference)[0]))));
+  xPosRound = Math.round(Math.min(newXDomain[1],Math.max(newXDomain[0],svg.newX.invert(x))));
 
-  svg.circlePosition.attr("cx", svg.newX(xPosRound)).attr("cy",svg.newY(svg.data[xPosRound]));
+  var cx =  svg.newX(xPosRound);
+  var amount = svg.data[xPosRound];
+  var cy = svg.newY(amount);
+
+  svg.circlePosition.attr("cx", cx).attr("cy", cy);
+  svg.hiddenCircle.attr("cx", cx).attr("cy", cy);
+  var date, mn;
+  date = getDateFromAbscissa(svg, xPosRound);
+
+  switch(svg.step){
+    //minute
+    //hourly
+    default:
+    case 60000:
+    case 3600000:
+      mn = date.getMinutes();
+      mn = (mn < 10)?("0" + mn):mn;
+      svg.hiddenCircle.tooltip.text(amount + " " + svg.units + "\n" + (date.getMonth() + 1) + "/" + date.getDate() + ", " + date.getHours() + "h" + mn);
+      break;
+
+    //daily
+    case 86400000:
+      svg.hiddenCircle.tooltip.text(amount + " " + svg.units + "\n" +(date.getMonth() + 1) + "/" + date.getDate());
+      break;
+  }
+
 }

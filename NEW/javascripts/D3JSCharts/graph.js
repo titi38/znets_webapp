@@ -255,7 +255,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var timeMax = 0;
 
 
-        var hourShift = getTimeShift(urlJson);
+        var hourShift = getTimeShift(urlJson)  * 3600000;
 
         // Data are processed and sorted according to their direction.
         for(i = 0; i < dataLength; i++){
@@ -266,7 +266,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             }
 
             elemToPush = {
-                x: (new Date(elemJson[contentDateValue])).getTime() + hourShift * 3600000,
+                x: (new Date(elemJson[contentDateValue])).getTime() + hourShift,
                 height: +elemJson[contentAmountValue],
                 item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
                 direction: elemJson[contentDirectionValue].toLowerCase()
@@ -788,7 +788,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         var timeMax = 0;
 
 
-        var hourShift = getTimeShift(urlJson);
+        var hourShift = getTimeShift(urlJson)  * 3600000;
 
 
         // Data are processed and sorted according to their direction.
@@ -818,7 +818,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
                         elemToPush = {
                             //The given time is the corresping, we add the correct minutes according to the position k
                             //of the element in the array
-                            x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + hourShift * 3600000,
+                            x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + hourShift,
                             height: +elemAmountMinuteArray[k],
                             item: jsonContent[j][0],
                             direction: jsonContent[j][1]
@@ -869,7 +869,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
                     }
 
                     elemToPush = {
-                        x: (new Date(elemJson[contentDateValue])).getTime() + hourShift * 3600000,
+                        x: (new Date(elemJson[contentDateValue])).getTime() + hourShift,
                         height: +elemJson[j],
                         item: jsonContent[j][0],
                         direction: jsonContent[j][1]
@@ -1388,7 +1388,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
 
-        var hourShift = getTimeShift(urlJson);
+        var hourShift = getTimeShift(urlJson)  * 3600000;
 
 
         // Data are processed and sorted.
@@ -1400,7 +1400,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
             }
 
             elemToPush = {
-                x: (new Date(elemJson[contentDateValue])).getTime() + hourShift * 3600000,
+                x: (new Date(elemJson[contentDateValue])).getTime() + hourShift,
                 height: +elemJson[contentAmountValue],
                 item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue]
             };
@@ -3444,12 +3444,12 @@ function createCurve(div, svg, mydiv, urlJson){
             return;
         }
 
-        var hourShift = getTimeShift(urlJson);
+        var hourShift = getTimeShift(urlJson) * 3600000;
 
 
         //Conversion date to elapsed time since 1st January 1970.
         jsonData.forEach(function(elem){
-            elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + hourShift * 3600000;
+            elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + hourShift;
         });
 
         //sort, to make sure

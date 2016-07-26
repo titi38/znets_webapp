@@ -512,7 +512,7 @@ function searchItemValue(jsonContent){
     var length = jsonContent.length;
 
     //TODO demander changer nom ?column? en truc correct, ça va causer des soucis si c'est pas déjà le cas.
-    var itemArray = ["code","host","localhostip","appid","?column?"];
+    var itemArray = ["code","host","localhostip","appid","portproto","asnum","?column?"];
 
     for(var i = 0;i < length; i++ ){
 
@@ -617,7 +617,7 @@ function searchDisplayValue(jsonContent){
 
   var length = jsonContent.length;
 
-  var displayArray = ["hostname", "name"];
+  var displayArray = ["hostname", "name","descr","fullname"];
 
   for(var i = 0;i < length; i++ ){
 

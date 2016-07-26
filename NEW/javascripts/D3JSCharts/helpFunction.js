@@ -511,8 +511,7 @@ function searchItemValue(jsonContent){
   
     var length = jsonContent.length;
 
-    //TODO demander changer nom ?column? en truc correct, ça va causer des soucis si c'est pas déjà le cas.
-    var itemArray = ["code","host","localhostip","appid","portproto","asnum","?column?"];
+    var itemArray = ["code","host","localhostip","appid","portproto","asnum"];
 
     for(var i = 0;i < length; i++ ){
 
@@ -659,6 +658,10 @@ function getDateFromAbscissa(svg,x){
  ************************************************************************************************************/
 
 function quantityConvertUnit(qty, unitIsByte){
+
+  if(qty === 0){
+    return ["",1];
+  }
   var base;
   var infMetric;
   if(unitIsByte === true) {
@@ -674,8 +677,8 @@ function quantityConvertUnit(qty, unitIsByte){
   }
 
   var rawExp = Math.log(qty)/Math.log(base);
-  var absRawExp = Math.abs(rawExp);
-  var exp = Math.min(8,Math.max(0,Math.floor(absRawExp)));
+  var absExp = Math.abs(Math.floor(rawExp));
+  var exp = Math.min(8,Math.max(0,absExp));
 
   if(rawExp < 0){
     exp = -exp;
@@ -894,4 +897,31 @@ function getTimeShift(url){
   }
   return +(url[index + 1]);
 
+}
+
+/************************************************************************************************************/
+
+function mapCountryTitleOut(svg){
+  return function(d){
+
+    var amount = (svg.amountByCountryCodeOut.has(d.id)?svg.amountByCountryCodeOut.get(d.id):0);
+
+    var cvA = quantityConvertUnit(amount, false);
+
+    return d.properties.name + "\n" + "value (temp): "
+      + Math.round(amount*cvA[1]*100)/100 + cvA[0] + "\n" + "(" + amount + ")";
+  }
+}
+
+/************************************************************************************************************/
+
+function mapCountryTitleIn(svg){
+  return function(d){
+
+    var amount = (svg.amountByCountryCodeIn.has(d.id)?svg.amountByCountryCodeIn.get(d.id):0);
+
+    var cvA = quantityConvertUnit(amount, false);
+
+    return d.properties.name + "\n" + "value (temp): "
+      + Math.round(amount*cvA[1]*100)/100 + cvA[0] + "\n" + "(" + amount + ")";}
 }

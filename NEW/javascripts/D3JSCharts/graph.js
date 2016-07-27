@@ -151,6 +151,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     d3.json(urlJson, function (error, json) {
 
+        svg.margin.left = 50;
 
         console.log(json);
 
@@ -682,7 +683,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     d3.json(urlJson, function (error, json) {
 
+        svg.margin.left = 50;
 
+        
         console.log(json);
 
         //test json conformity
@@ -1287,8 +1290,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
+
     d3.json(urlJson, function (error, json) {
 
+        svg.margin.left = 50;
 
         console.log(json);
 
@@ -2752,6 +2757,11 @@ function addZoomDouble(svg,updateFunction){
         });
 
     svg.call(svg.zoom);
+
+    //A fresh start...
+    svg._groups[0][0].__zoom.k =svg.transform.k;
+    svg._groups[0][0].__zoom.x =svg.transform.x;
+    svg._groups[0][0].__zoom.y =svg.transform.y;
 }
 /************************************************************************************************************/
 
@@ -3184,9 +3194,13 @@ function addZoomSimple(svg,updateFunction){
     svg.scalex = 1;
     svg.scaley = 1;
 
+
+
+
     //coordinates within the x&y ranges frames, points towards the top left corner of the actual view
     //workaround for the zoom.translate([0,0]) which doesn't work as intended.
     svg.transform = {k:1,x:0,y:0};
+
 
 
     //Vector pointing towards the top left corner of the current view in the x&y ranges frame
@@ -3379,6 +3393,12 @@ function addZoomSimple(svg,updateFunction){
       });
 
     svg.call(svg.zoom);
+
+    //A fresh start...
+    svg._groups[0][0].__zoom.k =svg.transform.k;
+    svg._groups[0][0].__zoom.x =svg.transform.x;
+    svg._groups[0][0].__zoom.y =svg.transform.y;
+
 }
 
 
@@ -4756,6 +4776,11 @@ function addZoomMap(svg){
 
     svg.svg.call(svg.zoom);
 
+    //A fresh start...
+    svg.svg._groups[0][0].__zoom.k =svg.transform.k;
+    svg.svg._groups[0][0].__zoom.x =svg.transform.x;
+    svg.svg._groups[0][0].__zoom.y =svg.transform.y;
+
 
 }
 
@@ -4810,6 +4835,11 @@ function addZoomMapDirection(parentSvg,svg){
     //the listener is finally created on the svg element used as the map container.
 
     svg.call(svg.zoom);
+
+    //A fresh start...
+    svg._groups[0][0].__zoom.k =svg.transform.k;
+    svg._groups[0][0].__zoom.x =svg.transform.x;
+    svg._groups[0][0].__zoom.y =svg.transform.y;
 
 
 }

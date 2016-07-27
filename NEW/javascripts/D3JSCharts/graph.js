@@ -622,7 +622,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         //Label of the y axis
         svg.ylabel = svg.axisyInput.append("text")
           .attr("class", "labelGraph")
-          .attr("text-anchor", "middle")
           .attr("dy", "1em")
           .attr('y', -svg.margin.left)
           .attr("x", -svg.height / 2)
@@ -3903,6 +3902,15 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
 
 function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
+    var colorInStart = "#ffff00", colorInEnd = "#ff0000";
+    var colorOutStart = "#66ffcc", colorOutEnd = "#0066ff";
+
+    svg.margin.offsetLegend = 5;
+    svg.margin.legendWidth = 10;
+    svg.margin.right = svg.margin.offsetLegend * 2 + svg.margin.legendWidth + 60;
+    svg.margin.left = 5;
+    svg.margin.top = 20;
+    svg.margin.bottom = 5;
 
     if(error || typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined"){
         noData(div,svg,mydiv);
@@ -3981,12 +3989,11 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
     svg.lastMinute = json.minute;
 
 
-
     //finding/computing the div dimensions
 
     var clientRect = div.node().getBoundingClientRect();
     var divWidth = Math.max(svg.margin.left + svg.margin.right + 1,clientRect.width),
-      divHeight = Math.max(svg.margin.bottom + svg.margin.top + 1,clientRect.height);
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1,clientRect.height);
 
 
 
@@ -4026,8 +4033,8 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
     //dimensions of the root svg (= with margins)
 
-    svg.attr("width", svg.width + svg.margin.top + svg.margin.bottom + "px")
-      .attr("height", svg.height + svg.margin.left + svg.margin.right + "px");
+    svg.attr("width", svg.width + svg.margin.left + svg.margin.right + "px")
+      .attr("height", svg.height + svg.margin.bottom + svg.margin.top + "px");
 
     //dimensions of the svg map container (= without margins)
 
@@ -4040,7 +4047,9 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
       .attr("width",svg.width)
       .attr("height",svg.mapHeight)
       .attr("y",0)
-      .classed("backgroundSea",true);
+      .classed("backgroundSea sizeMap",true);
+
+
 
     //Computation of the cylindrical equal-area projection with the given standard latitude and
     // the precomputed scale projectionScale
@@ -4076,11 +4085,48 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
 
 
-    svg.scaleLinearIn = d3.scaleLinear().range([0,1]).domain([inMin, inMax]).nice();
-    var colorInterpolatorIn = d3.interpolateRgb("#ffff00","#ff0000");
 
-    svg.scaleLinearOut = d3.scaleLinear().range([0,1]).domain([outMin, outMax]).nice();
-    var colorInterpolatorOut = d3.interpolateRgb("#66ffcc","#0066ff");
+
+    svg.scaleLinearIn = d3.scaleLinear().range([0,1]);
+    var colorInterpolatorIn = d3.interpolateRgb(colorInStart,colorInEnd);
+
+    svg.scaleLinearOut = d3.scaleLinear().range([0,1]);
+    var colorInterpolatorOut = d3.interpolateRgb(colorOutStart,colorOutEnd);
+
+    //Axes
+
+    svg.scaleInDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
+
+    svg.axisIn = svg.append("g")
+      .attr("class", "axisGraph");
+
+    svg.labelGradientIn = svg.append("text")
+      .classed("labelChoropleth",true)
+      .attr("x",svg.margin.top + 1.5 * svg.mapHeight + svg.margin.zero)
+      .attr("y",-svg.margin.left - svg.width - svg.margin.right)
+      .attr("dy","1.3em")
+      .attr("transform", "rotate(90)");
+
+
+    svg.scaleOutDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
+
+    svg.axisOut = svg.append("g").attr("class", "axisGraph");
+
+    svg.labelGradientOut = svg.append("text")
+      .classed("labelChoropleth",true)
+      .attr("x",svg.margin.top + 0.5 * svg.mapHeight)
+      .attr("y",-svg.margin.left - svg.width - svg.margin.right)
+      .attr("dy","1.3em")
+      .attr("transform", "rotate(90)");
+
+    updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
+
+
+
+
+
+
+
 
 
     svg.scaleColorIn = function(countryCode){
@@ -4117,15 +4163,15 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
     console.log(data);
 
-    svg.titleIn = mapCountryTitleIn(svg);
+    svg.titleOut = mapCountryTitleOut(svg);
     //Creation of the countries
     svg.map.selectAll(".countries")
       .data(data)
       .enter().append("path")
-      .style("fill",function(d){return svg.scaleColorIn(d.id)})
+      .style("fill",function(d){return svg.scaleColorOut(d.id)})
       .attr("d",path)
       .classed("countries",true)
-      .append("svg:title").text(svg.titleIn);
+      .append("svg:title").text(svg.titleOut);
 
 
     //stroke-dasharray controlled by javascript to adapt it to the current scale
@@ -4153,6 +4199,13 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
       .attr("d",path)
       .classed("countries_boundaries exterior",true);
 
+    //map border.
+    svg.svg.append("rect")
+      .attr("width",svg.width)
+      .attr("height",svg.mapHeight)
+      .attr("y",0)
+      .classed("rectBorder sizeMap",true);
+
 
     //A duplicate map is created and translated next to the other, outside viewport
     //The .99991 operation avoid a little cut to be too visible where the 2 maps meet.
@@ -4174,14 +4227,53 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
     svg.svg2.maps = svg.svg2.select("g");
 
-    svg.titleOut = mapCountryTitleOut(svg);
+    svg.titleIn = mapCountryTitleIn(svg);
 
-    svg.countriesOut = svg.svg2.maps.selectAll(".gMap").selectAll(".countries");
-    svg.countriesOut.data(data)
-      .style("fill",function(d){return svg.scaleColorOut(d.id)})
-      .select("title").text(svg.titleOut);
+    svg.countriesIn = svg.svg2.maps.selectAll(".gMap").selectAll(".countries");
+    svg.countriesIn.data(data)
+      .style("fill",function(d){return svg.scaleColorIn(d.id)})
+      .select("title").text(svg.titleIn);
 
-    svg.countriesIn = svg.svg.maps.selectAll(".gMap").selectAll(".countries");
+    svg.countriesOut = svg.svg.maps.selectAll(".gMap").selectAll(".countries");
+
+
+    //titles
+
+    svg.label1 = svg.append("text")
+      .classed("labelChoropleth",true)
+      .attr("x", svg.margin.left + svg.width/2)
+      .attr("dy", "-0.5em")
+      .attr("y",svg.margin.top)
+      .text("Outgoing");
+
+    svg.label2 = svg.append("text")
+      .classed("labelChoropleth",true)
+      .attr("x", svg.margin.left + svg.width/2)
+      .attr("dy", "-0.5em")
+      .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero)
+      .text("Ingoing");
+
+    
+    //legend
+    //Definition of the colors gradient
+
+    appendVerticalLinearGradientDefs(svg,"linearOut",colorOutStart,colorOutEnd);
+
+    svg.legendOut = svg.append("rect").attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
+      .attr("y",svg.margin.top)
+      .attr("width",svg.margin.legendWidth)
+      .attr("height",svg.mapHeight)
+      .attr("fill", "url(#linearOut)");
+
+
+    appendVerticalLinearGradientDefs(svg,"linearIn",colorInStart,colorInEnd);
+
+    svg.legendIn = svg.append("rect").attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
+      .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero)
+      .attr("width",svg.margin.legendWidth)
+      .attr("height",svg.mapHeight)
+      .attr("fill", "url(#linearIn)");
+    
 
 
     //added functionalities
@@ -4255,8 +4347,8 @@ function createMap(div,svg,mydiv, urlJson){
 
     //dimensions of the root svg (= with margins)
 
-    svg.attr("width", svg.width + svg.margin.top + svg.margin.bottom + "px")
-      .attr("height", svg.height + svg.margin.left + svg.margin.right + "px");
+    svg.attr("width", svg.width + svg.margin.left + svg.margin.right + "px")
+      .attr("height", svg.height + svg.margin.bottom + svg.margin.top + "px");
 
     //dimensions of the svg map container (= without margins)
 
@@ -4444,8 +4536,8 @@ function addResizeMap(div,svg,mydiv){
 
         //svg and svg.svg dimensions are accordingly updated
 
-        svg.attr("width", svg.width + svg.margin.top + svg.margin.bottom + "px")
-          .attr("height", svg.height + svg.margin.left + svg.margin.right + "px");
+        svg.attr("width", svg.width + svg.margin.left + svg.margin.right + "px")
+          .attr("height", svg.height + svg.margin.bottom + svg.margin.top + "px");
         svg.svg.attr("width",svg.width).attr("height",svg.height);
 
         //Evaluation of the resize ratio augmentation
@@ -4526,8 +4618,8 @@ function addResizeMapDirection(div,svg,mydiv){
 
         //svg and svg.svg dimensions are accordingly updated
 
-        svg.attr("width", svg.width + svg.margin.top + svg.margin.bottom + "px")
-          .attr("height", svg.height + svg.margin.left + svg.margin.right + "px");
+        svg.attr("width", svg.width + svg.margin.left + svg.margin.right + "px")
+          .attr("height", svg.height + svg.margin.bottom + svg.margin.top + "px");
 
         svg.svg.attr("width",svg.width).attr("height",svg.mapHeight);
 
@@ -4567,12 +4659,28 @@ function addResizeMapDirection(div,svg,mydiv){
 
         //update of the sea rect
 
-        svg.selectAll(".backgroundSea").attr("width",svg.width).attr("height",svg.mapHeight);
+        svg.selectAll(".sizeMap").attr("width",svg.width).attr("height",svg.mapHeight);
 
         //update of some styling variables.
 
         svg.strokeDash *= coefScaling;
         svg.strokeWidth *= coefScaling;
+
+        //update of labels position
+        svg.label1.attr("x", svg.margin.left + svg.width/2);
+        svg.label2.attr("x", svg.margin.left + svg.width/2)
+          .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero);
+
+        svg.legendIn
+          .attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
+          .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero)
+          .attr("height",svg.mapHeight);
+
+        svg.legendOut
+          .attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
+          .attr("height",svg.mapHeight);
+
+        resizeAxesMap(svg);
 
 
     })
@@ -4709,7 +4817,7 @@ function addZoomMapDirection(parentSvg,svg){
 /********************************************************************************************************************/
 
 function autoUpdateMapDirection(svg,urlJson){
-    var delay = 30000;
+    var delay = 45000;
 
     setTimeout(function(){
         console.log("update");
@@ -4797,9 +4905,11 @@ function autoUpdateMapDirection(svg,urlJson){
                 outMin = 0;
                 outMax = 1;
             }
+            console.log(svg.amountByCountryCodeOut);
+            console.log(svg.amountByCountryCodeIn);
 
-            svg.scaleLinearIn.domain([inMin,inMax]).nice();
-            svg.scaleLinearOut.domain([outMin,outMax]).nice();
+
+            updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
 
             svg.countriesIn.style("fill",function(d){return svg.scaleColorIn(d.id)})
               .select("title").text(svg.titleIn);
@@ -4807,6 +4917,7 @@ function autoUpdateMapDirection(svg,urlJson){
             svg.countriesOut.style("fill",function(d){
                 return svg.scaleColorOut(d.id)})
               .select("title").text(svg.titleOut);
+
 
             autoUpdateMapDirection(svg,urlJson);
 
@@ -4821,9 +4932,9 @@ function autoUpdateMapDirection(svg,urlJson){
 
 
 //map
-//drawChart("/dynamic/netTopCurrentCountryTraffic.json?net=labo","Graph");
+drawChart("/dynamic/netTopCurrentCountryTraffic.json?net=labo","Graph");
 
-drawChart("netTopCurrentCountryTraffic.json","Graph");
+//drawChart("netTopCurrentCountryTraffic.json","Graph");
 
 //drawChart("/dynamic/netTop10appTraffic.json?service=loc&dd=2016-07-07%2011%3A44&df=2016-07-08%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netNbExternalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-25%2011%3A44&pset=MINUTE", "Graph");

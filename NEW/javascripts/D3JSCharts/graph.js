@@ -4932,7 +4932,7 @@ function autoUpdateMapDirection(svg,urlJson){
 
 
 //map
-drawChart("/dynamic/netTopCurrentCountryTraffic.json?net=labo","Graph");
+//drawChart("/dynamic/netTopCurrentCountryTraffic.json?net=labo","Graph");
 
 //drawChart("netTopCurrentCountryTraffic.json","Graph");
 
@@ -4940,7 +4940,7 @@ drawChart("/dynamic/netTopCurrentCountryTraffic.json?net=labo","Graph");
 //drawChart("/dynamic/netNbExternalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-25%2011%3A44&pset=MINUTE", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?&pset=HOURLY&dd=2016-07-24+16%3A28&df=2016-07-25+16%3A28&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
-//drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-17+00:00&df=2016-07-22+23:59&pset=DAILY&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-21+00:00&df=2016-07-21+23:59&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");

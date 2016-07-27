@@ -152,6 +152,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     d3.json(urlJson, function (error, json) {
 
         svg.margin.left = 50;
+        svg.margin.right = 50;
+
 
         console.log(json);
 
@@ -162,7 +164,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         }
 
         //json ok, graph creation
-        
+
 
         //table for legend
         svg.tableWidth = 200;
@@ -241,6 +243,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
 
         svg.units = unitsStringProcessing(json.units);
+
+
 
         console.log(json);
         
@@ -479,10 +483,10 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var selection = svg.selectAll(".data");
 
         //Tooltip creation
-        var convertArray,valDisplay;
+        var convertArray,valDisplay, isBytes = svg.units === "Bytes";
         selection.append("svg:title")
           .text(function (d) {
-              convertArray = quantityConvertUnit(d.height);
+              convertArray = quantityConvertUnit(d.height,isBytes);
               valDisplay = sumMap.get(d.item).display;
               return ((d.item === valDisplay)?"":(valDisplay + "\n"))
                 + d.item + "\n"
@@ -606,30 +610,15 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         legendAxisX(svg);
 
 
-        svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
-          .attr("class", "axisGraph");
-        svg.axisyInput.call(d3.axisLeft(svg.yInput));
+        axesDoubleCreation(svg);
 
-        niceTicks(svg.axisyInput);
 
-        svg.axisyOutput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
-          .attr("class", "axisGraph");
-        svg.axisyOutput.call(d3.axisLeft(svg.yOutput));
+        //TODO TODO TODO finir 
+        //optionalAxesDoubleCreation(svg);
 
-        niceTicks(svg.axisyOutput);
+
 
         gridDoubleGraph(svg);
-
-        //Label of the y axis
-        svg.ylabel = svg.axisyInput.append("text")
-          .attr("class", "labelGraph")
-          .attr("dy", "1em")
-          .attr('y', -svg.margin.left)
-          .attr("x", -svg.height / 2)
-          .attr("transform", "rotate(-90)");
-        
-        axisYLegendDouble(svg);
-        
         
         
         addPopup(selection,div,svg,function(data){
@@ -642,7 +631,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var trSelec;
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
 
-            cA = quantityConvertUnit(d.sum);
+            cA = quantityConvertUnit(d.sum,isBytes);
             return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" 
               + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
               + "(" +  d.sum + " " + svg.units + ")";
@@ -1087,10 +1076,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         var selection = svg.selectAll(".data");
 
         //Tooltip creation
-        var convertArray,valDisplay;
+        var convertArray,valDisplay, isBytes = svg.units === "Bytes";
         selection.append("svg:title")
           .text(function (d) {
-              convertArray = quantityConvertUnit(d.height);
+              convertArray = quantityConvertUnit(d.height, isBytes);
               valDisplay = sumMap.get(d.item).display;
               return ((d.item === valDisplay)?"":(valDisplay + "\n"))
                 + d.item + "\n"
@@ -1215,30 +1204,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         legendAxisX(svg);
 
 
-        svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
-          .attr("class", "axisGraph");
-        svg.axisyInput.call(d3.axisLeft(svg.yInput));
-
-        niceTicks(svg.axisyInput);
-
-        svg.axisyOutput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
-          .attr("class", "axisGraph");
-        svg.axisyOutput.call(d3.axisLeft(svg.yOutput));
-
-        niceTicks(svg.axisyOutput);
+        axesDoubleCreation(svg);
 
         gridDoubleGraph(svg);
 
-        //Label of the y axis
-        svg.ylabel = svg.axisyInput.append("text")
-          .attr("class", "labelGraph")
-          .attr("text-anchor", "middle")
-          .attr("dy", "1em")
-          .attr('y', -svg.margin.left)
-          .attr("x", -svg.height / 2)
-          .attr("transform", "rotate(-90)");
-
-        axisYLegendDouble(svg);
 
 
 
@@ -1252,7 +1221,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         var trSelec;
         trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
 
-            cA = quantityConvertUnit(d.sum);
+            cA = quantityConvertUnit(d.sum, isBytes);
             return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n"
               + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
               + "(" +  d.sum + " " + svg.units + ")";
@@ -2364,10 +2333,6 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
         });
 
 
-
-
-
-
     });
 
 
@@ -2453,15 +2418,7 @@ function updateHisto2DStackDouble(svg){
     svg.axisx.attr("transform","matrix(1, 0, 0, 1," + svg.margin.left+ "," + Math.min(svg.margin.top + svg.height,Math.max(svg.margin.top - svg.margin.zero,(svg.heightOutput)*svg.transform.k*svg.scaley +svg.margin.top + svg.transform.y)) + ")" );
 
 
-    svg.axisyOutput.call(d3.axisLeft(svg.newYOutput));
-
-    niceTicks(svg.axisyOutput);
-
-    svg.axisyInput.call(d3.axisLeft(svg.newYInput));
-
-    niceTicks(svg.axisyInput);
-
-    axisYLegendDouble(svg);
+    axesDoubleUpdate(svg);
 
     gridDoubleGraph(svg);
 

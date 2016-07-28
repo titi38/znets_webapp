@@ -116,8 +116,31 @@ function Localhosts(theWSEventNotifier) {
         nextLocalhostId = jsonContent.nextId;
 
         var tableColumns = [];
-        for (var i = 0; i < jsonContent.content.length; i++)
-            tableColumns.push({'title':jsonContent.content[i]});
+
+        var lh_ipIndex = 0;
+        var lh_nameIndex = 0;
+
+        for (var i = 0; i < jsonContent.content.length; i++) {
+            tableColumns.push({'title': jsonContent.content[i]});
+
+            if(jsonContent.content[i] === "ip")
+                lh_ipIndex = i;
+
+            if(jsonContent.content[i] === "name")
+                lh_nameIndex = i;
+        }
+
+
+
+        // Set Localhost global variable
+        for (var i = 0; i < jsonContent.data.length; i++){
+
+            var lh_ip = jsonContent.data[i][lh_ipIndex];
+            var lh_name = jsonContent.data[i][lh_nameIndex];
+            localhosts_Ip_Name_Array.push({ ip : lh_ip, name : lh_name});
+
+        }
+
 
         $('#divLocalhosts').append('<table id="tableLocalhosts" class="display"></table>');
 
@@ -270,6 +293,33 @@ function Localhosts(theWSEventNotifier) {
         );
     };
 
+}
+
+
+/**
+ * Function to be used as search function in Array.prototype.find() function
+ * in order to find element (localhost) whose ip is past as second attribute of find function ( attribute as 'this' inside findIp function)
+ * @param element
+ * @param index
+ * @param array
+ * @returns {boolean} true if
+ */
+function findIp(element, index, array) {
+    return element.ip == this.toString();
+}
+
+
+
+/**
+ * Function to be used as search function in Array.prototype.find(function, thisArgument) function
+ * in order to find element (localhost) whose name is past as second attribute 'thisArgument' of find function ( attribute as 'this' inside findName function)
+ * @param element
+ * @param index
+ * @param array
+ * @returns {boolean}
+ */
+function findName(element, index, array) {
+    return element.name == this.toString();
 }
 
 

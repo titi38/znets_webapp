@@ -1,10 +1,10 @@
-.axis
+.axisGraph
 {
     fill: none;
-    stroke: #000;
     font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
+    font-weight: 200;
     font-size: 0.9em;
+    stroke: #000;
 
 }
 
@@ -30,7 +30,7 @@
     height: 0.75em;
 }
 
-.line{
+.lineGraph{
     fill: none;
     stroke: #805500;
     stroke-width: 1;
@@ -56,9 +56,7 @@
 
 }
 
-.hiddenCircle {
-
-    fill: #00000;
+.hiddenRect {
     opacity: 0;
 }
 
@@ -211,8 +209,18 @@
 
     fill: #bdeeff;
 
+}
+
+.rectBorder{
+    shape-rendering: crispEdges;
+
+    fill: none;
+    stroke-width: 2;
+    stroke: #a6a6a6;
+
 
 }
+
 
 .pieSvg{
     shape-rendering: geometricPrecision;
@@ -280,4 +288,21 @@
 
 .outlined td:nth-of-type(2){
     border-right: 1px solid black;
+}
+
+
+.labelChoropleth{
+    fill:#404040;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    font-size: 0.9em;
+    text-anchor: middle;
+
+}
+
+.labelGraph{
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    text-anchor: middle;
+
 }

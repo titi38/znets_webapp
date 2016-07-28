@@ -483,17 +483,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         var selection = svg.selectAll(".data");
 
         //Tooltip creation
-        var convertArray,valDisplay, isBytes = svg.units === "Bytes";
-        selection.append("svg:title")
-          .text(function (d) {
-              convertArray = quantityConvertUnit(d.height,isBytes);
-              valDisplay = sumMap.get(d.item).display;
-              return ((d.item === valDisplay)?"":(valDisplay + "\n"))
-                + d.item + "\n"
-                + getDateFromAbscissa(svg,d.x).toString() + "\n"
-                + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
-                + "(" +  d.height + " " + svg.units + ")";
-          });
+        
+        createTooltipHisto(svg,selection,sumMap);
+
 
 
         function blink() {
@@ -611,10 +603,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
         axesDoubleCreation(svg);
-
-
-        //TODO TODO TODO finir 
-        //optionalAxesDoubleCreation(svg);
+        optionalAxesDoubleCreation(svg);
 
 
 
@@ -627,16 +616,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
             desactivationElems);
 
         //Legend creation
-        var cA;
-        var trSelec;
-        trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
+        var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");
 
-            cA = quantityConvertUnit(d.sum,isBytes);
-            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n" 
-              + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
-              + "(" +  d.sum + " " + svg.units + ")";
-        });
-
+        tableLegendTitle(svg,trSelec);
 
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
@@ -1075,19 +1057,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         var selection = svg.selectAll(".data");
 
-        //Tooltip creation
-        var convertArray,valDisplay, isBytes = svg.units === "Bytes";
-        selection.append("svg:title")
-          .text(function (d) {
-              convertArray = quantityConvertUnit(d.height, isBytes);
-              valDisplay = sumMap.get(d.item).display;
-              return ((d.item === valDisplay)?"":(valDisplay + "\n"))
-                + d.item + "\n"
-                + getDateFromAbscissa(svg,d.x).toString() + "\n"
-                + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
-                + "(" +  d.height + " " + svg.units + ")";
-          });
-
+        createTooltipHisto(svg,selection,sumMap);
 
         function blink() {
 
@@ -1205,6 +1175,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
         axesDoubleCreation(svg);
+        optionalAxesDoubleCreation(svg);
 
         gridDoubleGraph(svg);
 
@@ -1218,14 +1189,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         //Legend creation
         var cA;
-        var trSelec;
-        trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
+        var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");
 
-            cA = quantityConvertUnit(d.sum, isBytes);
-            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n"
-              + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
-              + "(" +  d.sum + " " + svg.units + ")";
-        });
+        tableLegendTitle(svg,trSelec);
 
 
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
@@ -1263,6 +1229,8 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     d3.json(urlJson, function (error, json) {
 
         svg.margin.left = 50;
+        svg.margin.right = 50;
+
 
         console.log(json);
 
@@ -1568,17 +1536,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
         //Tooltip creation
-        var convertArray,valDisplay;
-        selection.append("svg:title")
-          .text(function (d) {
-              convertArray = quantityConvertUnit(d.height);
-              valDisplay = sumMap.get(d.item).display;
-              return ((d.item === valDisplay)?"":(valDisplay + "\n"))
-                + d.item + "\n"
-                + getDateFromAbscissa(svg,d.x).toString() + "\n"
-                + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
-                + "(" +  d.height + " " + svg.units + ")";
-          });
+        createTooltipHisto(svg,selection,sumMap);
 
 
         function blink() {
@@ -1685,43 +1643,22 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         svg.axisx.call(d3.axisBottom(svg.x));
 
         legendAxisX(svg);
-
-        svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
-          .attr("class", "axisGraph");
-        svg.axisy.call(d3.axisLeft(svg.y));
-
-        niceTicks(svg.axisy);
-
+        
+        
+        yAxeSimpleCreation(svg);
+        optionalYAxeSimpleCreation(svg);
+        
         gridSimpleGraph(svg);
-
-
-        //      Label of the y axis
-        svg.ylabel = svg.axisy.append("text")
-          .attr("class", "labelGraph")
-          .attr("text-anchor", "middle")
-          .attr("dy", "1em")
-          .attr('y', -svg.margin.left)
-          .attr("x", -svg.height / 2)
-          .attr("transform", "rotate(-90)");
-
-        axisYLegendSimple(svg);
-
+        
         addPopup(selection,div,svg,function(data){
               desactivationElems();
               activationElemsAutoScrollPopup(data);},
           desactivationElems);
 
         //Legend creation
+        var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");
 
-        var cA;
-        var trSelec;
-        trSelec = table.selectAll("tr").data(sumArray).enter().append("tr").attr("title", function (d) {
-
-            cA = quantityConvertUnit(d.sum);
-            return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n"
-              + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
-              + "(" +  d.sum + " " + svg.units + ")";
-        });
+        tableLegendTitle(svg,trSelec);
 
         trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
             return colorMap.get(d.item);
@@ -2369,11 +2306,8 @@ function updateHisto2DStackSimple(svg){
 
     legendAxisX(svg);
 
-    svg.axisy.call(d3.axisLeft(svg.newY));
-
-    niceTicks(svg.axisy);
-
-    axisYLegendSimple(svg);
+    yAxeSimpleUpdate(svg);
+    optionalYAxeSimpleUpdate(svg);
 
     gridSimpleGraph(svg);
 
@@ -2419,6 +2353,7 @@ function updateHisto2DStackDouble(svg){
 
 
     axesDoubleUpdate(svg);
+    optionalAxesDoubleUpdate(svg);
 
     gridDoubleGraph(svg);
 
@@ -2768,8 +2703,6 @@ function redrawHisto2DStackDouble(div,svg){
 
     axisXDoubleDraw(svg);
 
-    svg.ylabel.attr("x",- svg.height/2).attr('y',- svg.margin.left);
-
     svg.frame.select(".rectOverlay").attr("height",svg.height);
 
 
@@ -2837,8 +2770,6 @@ function redrawHisto2DStackSimple(div,svg){
     svg.y.range([svg.height,0]);
 
     svg.svg.attr("width",svg.width).attr("height",svg.height);
-
-    svg.ylabel.attr("x",- svg.height/2).attr('y',- svg.margin.left);
 
     svg.frame.select(".rectOverlay").attr("height",svg.height);
 
@@ -3506,6 +3437,8 @@ function createCurve(div, svg, mydiv, urlJson){
             return svg.y(d);
         });
 
+        svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
+        svg.newY = d3.scaleLinear().range(svg.y.range()).domain(svg.y.domain());
 
         svg.axisx = svg.append("g")
           .classed("x axisGraph", true)
@@ -3513,25 +3446,8 @@ function createCurve(div, svg, mydiv, urlJson){
 
         svg.axisx.call(d3.axisBottom(svg.x));
 
-        svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')').classed("y axisGraph", true);
-        svg.axisy.call(d3.axisLeft(svg.y));
-
-        niceTicks(svg.axisy);
-
+        yAxeSimpleCreation(svg);
         gridSimpleGraph(svg, true);
-
-        //      Label of the y axis
-        svg.ylabel = svg.axisy.append("text")
-          .attr("class", "labelGraph")
-          .attr("text-anchor", "middle")
-          .attr("dy", "1em")
-          .attr('y', -svg.margin.left)
-          .attr("x", -svg.height / 2)
-          .attr("transform", "rotate(-90)");
-
-
-        svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
-        svg.newY = d3.scaleLinear().range(svg.y.range()).domain(svg.y.domain());
 
         axisYLegendSimple(svg);
 
@@ -3637,8 +3553,6 @@ function redrawCurve(div,svg){
 
     svg.svg.attr("width",svg.width).attr("height",svg.height);
 
-    svg.ylabel.attr("x",- svg.height/2).attr('y',- svg.margin.left);
-
     svg.frame.select(".rectOverlay").attr("height",svg.height);
 
 
@@ -3667,6 +3581,7 @@ function redrawCurve(div,svg){
 
     svg.axisx.attr('transform', 'translate(' + [svg.margin.left, svg.height+svg.margin.top] +  ")");
 
+    svg.hiddenRect.attr("width",svg.width).attr("height",svg.height);
     updateCurve(svg);
 
 
@@ -3682,13 +3597,9 @@ function updateCurve(svg){
 
     svg.axisx.call(d3.axisBottom(svg.newX));
 
-    svg.axisy.call(d3.axisLeft(svg.newY));
-
-    niceTicks(svg.axisy);
-
-    axisYLegendSimple(svg);
-
     legendAxisX(svg);
+
+    yAxeSimpleUpdate(svg);
 
     gridSimpleGraph(svg,true);
 
@@ -4927,7 +4838,7 @@ function autoUpdateMapDirection(svg,urlJson){
 //drawChart("/dynamic/netNbExternalHosts.json?dd=2016-07-16%2011%3A44&df=2016-07-25%2011%3A44&pset=MINUTE", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?&pset=HOURLY&dd=2016-07-24+16%3A28&df=2016-07-25+16%3A28&dh=2", "Graph");
 //drawChart("/dynamic/netTopHostsTraffic.json?dd=2016-07-19+23:00&df=2016-07-20+23:00&pset=HOURLY", "Graph");
-drawChart("/dynamic/netTopCountryNbFlow.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
+drawChart("/dynamic/netTopCountryTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-17+00:00&df=2016-07-22+23:59&pset=DAILY&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-21+00:00&df=2016-07-21+23:59&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");

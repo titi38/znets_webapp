@@ -816,9 +816,11 @@ function addCirclePosition(svg){
 
 
   svg.circlePosition = svg.append("circle").classed("circlePosition",true).remove().attr("r",4);
-  svg.hiddenCircle = svg.append("circle").classed("hiddenCircle",true).remove().attr("r",svg.height/2);
+  svg.hiddenRect = svg.svg.append("rect").classed("hiddenRect",true)
+    .attr("x",0).attr("y",0).attr("width",svg.width).attr("height",svg.height);
+
   var nodeReference = svg.svg.node();
-  svg.hiddenCircle.tooltip = svg.hiddenCircle.append("svg:title");
+  svg.hiddenRect.tooltip = svg.hiddenRect.append("svg:title");
 
 
   svg
@@ -826,7 +828,6 @@ function addCirclePosition(svg){
 
       updateCirclePosition(svg,d3.mouse(nodeReference)[0]);
       svg.chart.node().appendChild(svg.circlePosition.node());
-      svg.chart.node().appendChild(svg.hiddenCircle.node());
 
 
       svg
@@ -843,12 +844,10 @@ function addCirclePosition(svg){
 function updateCirclePosition(svg,x){
   if(!x){
 
-    //Various reason. for cosmetic reasons, the circles disappear until they are called again by a mousemove event.
+    //Various reason. for cosmetic reasons, the elements disappear until they are called again by a mousemove event.
     svg.circlePosition.remove();
-    svg.hiddenCircle.remove();
     svg.on("mousemove.append",function(){
       svg.chart.node().appendChild(svg.circlePosition.node());
-      svg.chart.node().appendChild(svg.hiddenCircle.node());
       svg.on("mousemove.append",null);
     });
 
@@ -864,7 +863,6 @@ function updateCirclePosition(svg,x){
   var cy = svg.newY(amount);
 
   svg.circlePosition.attr("cx", cx).attr("cy", cy);
-  svg.hiddenCircle.attr("cx", cx).attr("cy", cy);
   var date, mn;
   date = getDateFromAbscissa(svg, xPosRound);
 
@@ -876,12 +874,12 @@ function updateCirclePosition(svg,x){
     case 3600000:
       mn = date.getMinutes();
       mn = (mn < 10)?("0" + mn):mn;
-      svg.hiddenCircle.tooltip.text(amount + " " + svg.units + "\n" + (date.getMonth() + 1) + "/" + date.getDate() + ", " + date.getHours() + "h" + mn);
+      svg.hiddenRect.tooltip.text(amount + " " + svg.units + "\n" + (date.getMonth() + 1) + "/" + date.getDate() + ", " + date.getHours() + "h" + mn);
       break;
 
     //daily
     case 86400000:
-      svg.hiddenCircle.tooltip.text(amount + " " + svg.units + "\n" +(date.getMonth() + 1) + "/" + date.getDate());
+      svg.hiddenRect.tooltip.text(amount + " " + svg.units + "\n" +(date.getMonth() + 1) + "/" + date.getDate());
       break;
   }
 
@@ -1025,53 +1023,124 @@ function resizeAxesMap(svg){
 
 function optionalAxesDoubleCreation(svg){
 
-  if(svg.units === "Bytes" || svg.units === "Flow"){
+  var isBytes = svg.units === "Bytes";
 
-    var domain = svg.newYInput.domain();
+
+  if(isBytes || svg.units === "Flow"){
+
+
+
     var coef = 1000/svg.step;
+
+    var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+
+    domainInput.forEach(function(elem,i){ domainInput[i] *= coef;});
+    domainOutput.forEach(function(elem,i){ domainOutput[i] *= coef;});
+
+    var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
+      domainOutput[1] - domainOutput[0]), isBytes);
+
+
     svg.yInputRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYInput.range())
-      .domain([domain[0]*coef,domain[1]*coef]);
-
-    domain = svg.newYOutput.domain();
-
+      .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
     svg.yOutputRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYOutput.range())
-      .domain([domain[0]*coef,domain[1]*coef]);
+      .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
+
 
     svg.axisyOutRight = svg.append("g")
       .attr('transform', 'translate(' + [svg.margin.left + svg.width, svg.margin.top] + ')')
       .attr("class", "axisGraph");
-
     svg.axisyInRight = svg.append("g").attr('transform', 'translate(' + [svg.margin.left + svg.width,
         svg.margin.top - 1] + ')')
       .attr("class", "axisGraph");
 
+
     svg.axisyOutRight.call(d3.axisRight(svg.yOutputRightDisplay));
+    svg.axisyInRight.call(d3.axisRight(svg.yInputRightDisplay));
+
+    niceTicks(svg.axisyInRight);
     niceTicks(svg.axisyOutRight);
 
-    svg.axisyInRight.call(d3.axisRight(svg.yInputRightDisplay));
-    niceTicks(svg.axisyInRight);
+    svg.ylabelRight = svg.append("text")
+      .attr("class", "labelGraph")
+      .attr("dy", "-0.4em")
+      .attr('y', svg.margin.left + svg.width + svg.margin.right)
+      .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
+      .attr("transform", "rotate(-90)")
+      .text(convert[0] + svg.units + "/s");
 
   }
 }
 
+
 /************************************************************************************************************/
 
-//TODO tout juste c/c finir
+function optionalAxesDoubleUpdate(svg){
+
+  var isBytes = svg.units === "Bytes";
+
+
+  if(isBytes || svg.units === "Flow"){
+
+
+
+    var coef = 1000/svg.step;
+
+    var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+
+    domainInput.forEach(function(elem,i){ domainInput[i] *= coef;});
+    domainOutput.forEach(function(elem,i){ domainOutput[i] *= coef;});
+
+    var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
+      domainOutput[1] - domainOutput[0]), isBytes);
+
+
+    svg.yInputRightDisplay.range(svg.newYInput.range())
+      .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
+    svg.yOutputRightDisplay.range(svg.newYOutput.range())
+      .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
+
+
+    svg.axisyOutRight
+      .attr('transform', 'translate(' + [svg.margin.left + svg.width, svg.margin.top] + ')');
+    svg.axisyInRight
+      .attr('transform', 'translate(' + [svg.margin.left + svg.width,
+        svg.margin.top - 1] + ')');
+
+
+    svg.axisyOutRight.call(d3.axisRight(svg.yOutputRightDisplay));
+    svg.axisyInRight.call(d3.axisRight(svg.yInputRightDisplay));
+
+    niceTicks(svg.axisyInRight);
+    niceTicks(svg.axisyOutRight);
+
+    svg.ylabelRight
+      .attr('y', svg.margin.left + svg.width + svg.margin.right)
+      .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
+      .text(convert[0] + svg.units + "/s");
+
+  }
+}
+
+
+/************************************************************************************************************/
 
 function axesDoubleCreation(svg){
 
-    var isBytes = svg.units === "Bytes";
-    var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1] - svg.newYInput.domain()[0],
-      svg.newYOutput.domain()[1] - svg.newYOutput.domain()[0]), isBytes);
+  var isBytes = svg.units === "Bytes";
 
-    var domain = svg.newYInput.domain();
+  var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+
+
+  var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
+      domainOutput[1] - domainOutput[0]), isBytes);
+
 
     svg.yInputDisplay = d3.scaleLinear().clamp(true).range(svg.newYInput.range())
-      .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+      .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
 
-    domain = svg.newYOutput.domain();
     svg.yOutputDisplay = d3.scaleLinear().clamp(true).range(svg.newYOutput.range())
-      .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+      .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
 
     svg.axisyOutput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
     .attr("class", "axisGraph");
@@ -1086,11 +1155,11 @@ function axesDoubleCreation(svg){
     niceTicks(svg.axisyOutput);
 
     //Label of the y axis
-    svg.ylabel = svg.axisyInput.append("text")
+    svg.ylabel = svg.append("text")
       .attr("class", "labelGraph")
-      .attr("dy", "1em")
-      .attr('y', -svg.margin.left)
-      .attr("x", -svg.height / 2)
+      .attr("dy", "0.8em")
+      .attr('y', 0)
+      .attr("x", -(svg.height + svg.margin.top + svg.margin.bottom) / 2)
       .attr("transform", "rotate(-90)")
       .text(convert[0] + svg.units);
 
@@ -1102,17 +1171,17 @@ function axesDoubleCreation(svg){
 function axesDoubleUpdate(svg){
 
   var isBytes = svg.units === "Bytes";
-  var convert = quantityConvertUnit(Math.max(svg.newYInput.domain()[1] - svg.newYInput.domain()[0],
-    svg.newYOutput.domain()[1] - svg.newYOutput.domain()[0]), isBytes);
 
-  var domain = svg.newYInput.domain();
+  var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+
+  var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
+    domainOutput[1] - domainOutput[0]), isBytes);
 
   svg.yInputDisplay.range(svg.newYInput.range())
-    .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+    .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
 
-  domain = svg.newYOutput.domain();
   svg.yOutputDisplay.range(svg.newYOutput.range())
-    .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+    .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
 
   svg.axisyOutput.attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')');
   svg.axisyInput.attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')');
@@ -1125,8 +1194,208 @@ function axesDoubleUpdate(svg){
 
   //Label of the y axis
   svg.ylabel
-    .attr("x", -svg.height / 2)
+    .attr("x", -(svg.height + svg.margin.top + svg.margin.bottom) / 2)
     .text(convert[0] + svg.units);
 
+
+}
+
+/************************************************************************************************************/
+
+function createTooltipHisto(svg, selection, sumMap){
+
+  var isBytes = svg.units === "Bytes",hasOptionalAxes = isBytes || svg.units === "Flow",coef = 1000/svg.step;
+
+  var convertArray, valDisplay;
+
+  if(hasOptionalAxes){
+
+    var heightPerSec, cAOptionel;
+
+    selection.append("svg:title")
+      .text(function (d) {
+        heightPerSec = d.height * coef;
+        convertArray = quantityConvertUnit(d.height,isBytes);
+        cAOptionel = quantityConvertUnit(heightPerSec,isBytes);
+        valDisplay = sumMap.get(d.item).display;
+        return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+          + d.item + "\n"
+          + getDateFromAbscissa(svg,d.x).toString() + "\n"
+          + ((Math.round(100 * heightPerSec * cAOptionel[1])/100) + " " + cAOptionel[0] + svg.units + "/s") + "\n"
+          + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+          + "(" +  d.height + " " + svg.units + ")";
+      });
+
+  }else{
+
+    selection.append("svg:title")
+      .text(function (d) {
+        convertArray = quantityConvertUnit(d.height,isBytes);
+        valDisplay = sumMap.get(d.item).display;
+        return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+          + d.item + "\n"
+          + getDateFromAbscissa(svg,d.x).toString() + "\n"
+          + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+          + "(" +  d.height + " " + svg.units + ")";
+      });
+
+  }
+
+
+
+}
+
+
+/************************************************************************************************************/
+
+function tableLegendTitle(svg,trSelec){
+
+  var cA, isBytes = svg.units === "Bytes";
+
+  trSelec.attr("title", function (d) {
+
+    cA = quantityConvertUnit(d.sum,isBytes);
+    return ((d.item === d.display)?"":(d.display + "\n")) + d.item + "\n"
+      + "Overall volume: " + ((Math.round(100 * d.sum * cA[1])/100) + " " + cA[0] + svg.units) + "\n"
+      + "(" +  d.sum + " " + svg.units + ")";
+  });
+
+}
+
+/************************************************************************************************************/
+
+function yAxeSimpleCreation(svg){
+
+  var isBytes = svg.units === "Bytes";
+
+  var domain = svg.newY.domain();
+
+  var convert = quantityConvertUnit(domain[1] - domain[0], isBytes);
+
+
+  svg.yDisplay = d3.scaleLinear().clamp(true).range(svg.newY.range())
+    .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+
+  svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
+    .attr("class", "axisGraph");
+  svg.axisy.call(d3.axisLeft(svg.yDisplay));
+
+  niceTicks(svg.axisy);
+
+  //Label of the y axis
+  svg.ylabel = svg.append("text")
+    .attr("class", "labelGraph")
+    .attr("dy", "0.8em")
+    .attr('y', 0)
+    .attr("x", -(svg.height + svg.margin.top + svg.margin.bottom) / 2)
+    .attr("transform", "rotate(-90)")
+    .text(convert[0] + svg.units);
+
+}
+
+/************************************************************************************************************/
+
+function optionalYAxeSimpleCreation(svg) {
+
+  var isBytes = svg.units === "Bytes";
+
+  if (isBytes || svg.units === "Flow") {
+
+    var coef = 1000 / svg.step;
+
+
+    var domain = svg.newY.domain();
+
+    domain.forEach(function(elem,i){ domain[i] *= coef;});
+
+    var convert = quantityConvertUnit(domain[1] - domain[0], isBytes);
+
+
+    svg.yDisplayRight = d3.scaleLinear().clamp(true).range(svg.newY.range())
+      .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+
+    svg.axisyRight = svg.append("g").attr('transform', 'translate(' + [svg.margin.left + svg.width, svg.margin.top] + ')')
+      .attr("class", "axisGraph");
+
+    svg.axisyRight.call(d3.axisRight(svg.yDisplayRight));
+
+    niceTicks(svg.axisyRight);
+
+    //Label of the y axis
+    svg.ylabelRight = svg.append("text")
+      .attr("class", "labelGraph")
+      .attr("dy", "-0.4em")
+      .attr('y', svg.margin.left + svg.width + svg.margin.right)
+      .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
+      .attr("transform", "rotate(-90)")
+      .text(convert[0] + svg.units + "/s");
+
+
+  }
+
+}
+
+/************************************************************************************************************/
+
+
+function optionalYAxeSimpleUpdate(svg) {
+
+  var isBytes = svg.units === "Bytes";
+
+  if (isBytes || svg.units === "Flow") {
+
+    var coef = 1000 / svg.step;
+
+
+    var domain = svg.newY.domain();
+
+    domain.forEach(function(elem,i){ domain[i] *= coef;});
+
+    var convert = quantityConvertUnit(domain[1] - domain[0], isBytes);
+
+
+    svg.yDisplayRight.range(svg.newY.range())
+      .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+
+    svg.axisyRight.attr('transform', 'translate(' + [svg.margin.left + svg.width, svg.margin.top] + ')');
+
+    svg.axisyRight.call(d3.axisRight(svg.yDisplayRight));
+
+    niceTicks(svg.axisyRight);
+
+    //Label of the y axis
+    svg.ylabelRight
+      .attr('y', svg.margin.left + svg.width + svg.margin.right)
+      .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
+      .text(convert[0] + svg.units + "/s");
+
+
+  }
+
+}
+
+/************************************************************************************************************/
+
+function yAxeSimpleUpdate(svg){
+
+  var isBytes = svg.units === "Bytes";
+
+  var domain = svg.newY.domain();
+
+  var convert = quantityConvertUnit(domain[1] - domain[0], isBytes);
+
+
+  svg.yDisplay.range(svg.newY.range())
+    .domain([domain[0]*convert[1],domain[1]*convert[1]]);
+
+  svg.axisy.attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')');
+  svg.axisy.call(d3.axisLeft(svg.yDisplay));
+
+  niceTicks(svg.axisy);
+
+  //Label of the y axis
+  svg.ylabel
+    .attr("x", -(svg.height + svg.margin.top + svg.margin.bottom) / 2)
+    .text(convert[0] + svg.units);
 
 }

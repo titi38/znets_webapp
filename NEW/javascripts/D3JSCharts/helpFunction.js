@@ -900,28 +900,36 @@ function getTimeShift(url){
 /************************************************************************************************************/
 
 function mapCountryTitleOut(svg){
+
+  var isBytes = svg.units === "Bytes";
+
   return function(d){
 
     var amount = (svg.amountByCountryCodeOut.has(d.id)?svg.amountByCountryCodeOut.get(d.id):0);
 
-    var cvA = quantityConvertUnit(amount, true);
+    var cvA = quantityConvertUnit(amount, isBytes);
 
-    return d.properties.name + "\n" + "value (temp): "
-      + Math.round(amount*cvA[1]*100)/100 + cvA[0] + "\n" + "(" + amount + ")";
+    return d.properties.name + "\n"
+      + Math.round(amount*cvA[1]*100)/100 + " " + cvA[0]  + svg.units + "\n" + "(" + amount + " " + svg.units + ")";
   }
 }
 
 /************************************************************************************************************/
 
 function mapCountryTitleIn(svg){
+
+  var isBytes = svg.units === "Bytes";
+
+
   return function(d){
 
     var amount = (svg.amountByCountryCodeIn.has(d.id)?svg.amountByCountryCodeIn.get(d.id):0);
 
     var cvA = quantityConvertUnit(amount, true);
 
-    return d.properties.name + "\n" + "value (temp): "
-      + Math.round(amount*cvA[1]*100)/100 + cvA[0] + "\n" + "(" + amount + ")";}
+    return d.properties.name + "\n"
+      + Math.round(amount*cvA[1]*100)/100 + " " + cvA[0] + svg.units + "\n" + "(" + amount + " " + svg.units + ")";
+  }
 }
 
 /************************************************************************************************************/
@@ -949,8 +957,10 @@ function appendVerticalLinearGradientDefs(svg,nameId,colorStart,colorEnd){
 /************************************************************************************************************/
 
 function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
+
+  var isBytes = svg.units === "Bytes";
   
-  var convertArray = quantityConvertUnit(outMax,true);
+  var convertArray = quantityConvertUnit(outMax,isBytes);
   
   svg.scaleOutDisplay.domain([outMin * convertArray[1], outMax * convertArray[1]]).nice();
   
@@ -961,13 +971,13 @@ function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
   svg.axisOut.call(d3.axisRight(svg.scaleOutDisplay));
   niceTicks(svg.axisOut);
 
-  svg.labelGradientOut.text(convertArray[0] + "units (temp)");
+  svg.labelGradientOut.text(convertArray[0] + svg.units);
 
   var domain = svg.scaleOutDisplay.domain();
 
   svg.scaleLinearOut.domain([domain[0]/convertArray[1],domain[1]/convertArray[1]]);
   
-  convertArray = quantityConvertUnit(inMax,true);
+  convertArray = quantityConvertUnit(inMax,isBytes);
   
   svg.scaleInDisplay.domain([inMin * convertArray[1], inMax * convertArray[1]]).nice();
 
@@ -978,7 +988,7 @@ function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
   svg.axisIn.call(d3.axisRight(svg.scaleInDisplay));
   niceTicks(svg.axisIn);
 
-  svg.labelGradientIn.text(convertArray[0] + "units (temp)");
+  svg.labelGradientIn.text(convertArray[0] + svg.units);
 
   domain = svg.scaleInDisplay.domain();
 
@@ -1398,4 +1408,10 @@ function yAxeSimpleUpdate(svg){
     .attr("x", -(svg.height + svg.margin.top + svg.margin.bottom) / 2)
     .text(convert[0] + svg.units);
 
+}
+
+/************************************************************************************************************/
+
+function trueModulo(n,d){
+  return ((n%d) +d)%d;
 }

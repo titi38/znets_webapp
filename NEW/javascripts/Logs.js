@@ -21,6 +21,8 @@ function Logs(theWSEventNotifier) {
   Parameter : logEntry
   return : nothing
    */
+  
+  
   this.insertLogDisplay = function(logEntry)
   {
     // TODO write D3JS update table function

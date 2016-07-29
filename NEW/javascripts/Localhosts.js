@@ -141,6 +141,9 @@ function Localhosts(theWSEventNotifier) {
 
         }
 
+        //initialize localhost list in rawdata form now that "localhosts_Ip_Name_Array" global variable is setted
+        initializeRawDataLocalhostsIp();
+
 
         $('#divLocalhosts').append('<table id="tableLocalhosts" class="display"></table>');
 

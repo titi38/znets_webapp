@@ -1,4 +1,4 @@
-5/**
+/**
  * Created by smile on 17/06/16.
  */
 
@@ -11,11 +11,21 @@ function initializeApplicationsId(){
 
 function setApplicationsId(jsonResponse) {
 
-    $("#appId").append('<option value="">All</option>')
+    var appIdIndex = jsonResponse.content.indexOf("id");
+    var appNameIndex = jsonResponse.content.indexOf("n");
 
-    for (var i = 0; i < jsonResponse.data.length; i++) {
-        $("#appId").append('<option value="' + jsonResponse.data[i][1] + '">' + jsonResponse.data[i][0] + '</option>')
+    var data = jsonResponse.data.sort(function(a, b){
+        if(a[appNameIndex] < b[appNameIndex]) return -1;
+        if(a[appNameIndex] > b[appNameIndex]) return 1;
+        return 0;
+    });
+
+    for (var i = 0; i < data.length; i++) {
+        $("#appId").append('<option value="' + data[i][appIdIndex] + '">' + data[i][appNameIndex] + '</option>')
     }
+
+    // Process JQuery-UI combobox drawing
+    $( "#appId" ).combobox();
 
 }
 

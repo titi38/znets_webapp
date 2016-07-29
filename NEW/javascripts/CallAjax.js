@@ -75,6 +75,8 @@ function callAJAX(url, params, outputType, callback, callbackParams)
     {
         //alert( "Request failed: " + textStatus + "\nConnection lost or server down" );
         console.warn("TODO in CallAjax.js : Request failed (%i)", 555);
+        console.warn(jqXHR);
+        console.warn(textStatus);
         addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
     });
 

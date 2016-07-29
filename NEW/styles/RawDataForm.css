@@ -1,0 +1,14 @@
+
+
+
+form#rawData_form{
+    font-size: 0.8em;
+}
+
+form#rawData_form .panel-heading {
+    padding: 5px 5px 15px 15px;
+}
+
+form#rawData_form legend {
+    margin-bottom: 10px;
+}

@@ -100,10 +100,10 @@ function initialisation(){
     activateTabOfClass("rawdata");
 
 
-    /*********************************************************************************************************
-     Initialize RawData known Application's Ids
+    /********************************************************************************************************
+     Initialize RawData Form (selects and others)
      ********************************************************************************************************/
-    initializeApplicationsId();
+    initializeRawDataForm();
 
 
     $( document ).ready(function() {
@@ -186,54 +186,6 @@ function getHtmlTemplate( elementJQuery, url, callBack)
 
 
 
-
-
-function initializeRawDataForm() {
-
-    $('#fromDate_RawDataForm').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        //defaultDate: moment(),
-
-
-    });
-    $('#toDate_RawDataForm').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        //defaultDate: moment(),
-
-
-    });
-
-
-    $("#fromDate_RawDataForm").on("dp.show", function (e) {
-        if($('#toDate_RawDataForm').data("DateTimePicker").maxDate())
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate($('#toDate_RawDataForm').data("DateTimePicker").maxDate());
-        else
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
-
-    });
-
-    $("#fromDate_RawDataForm").on("dp.change", function (e) {
-        if(!e.date)
-            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
-
-    });
-
-    $("#toDate_RawDataForm").on("dp.change", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
-
-        if(e.date)
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(e.date);
-        else {
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
-            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
-        }
-    });
-
-    $("#toDate_RawDataForm").on("dp.show", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
-    });
-
-}
 
 
 
@@ -319,7 +271,7 @@ $( document ).ready(function() {
 
     activateTabOfClass("home");
 
-    getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", initializeRawDataForm);
+    getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null);
 
     tryRestaureConnectSession();
 

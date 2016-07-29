@@ -2,6 +2,67 @@
  * Created by smile on 14/06/16.
  */
 
+
+function initializeRawDataForm(){
+
+    $('#fromDate_RawDataForm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        //defaultDate: moment(),
+
+
+    });
+    $('#toDate_RawDataForm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        //defaultDate: moment(),
+
+
+    });
+
+
+    $("#fromDate_RawDataForm").on("dp.show", function (e) {
+        if($('#toDate_RawDataForm').data("DateTimePicker").maxDate())
+            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate($('#toDate_RawDataForm').data("DateTimePicker").maxDate());
+        else
+            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
+
+    });
+
+    $("#fromDate_RawDataForm").on("dp.change", function (e) {
+        if(!e.date)
+            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
+
+    });
+
+    $("#toDate_RawDataForm").on("dp.change", function (e) {
+        $(this).data("DateTimePicker").maxDate(moment());
+
+        if(e.date)
+            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(e.date);
+        else {
+            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
+            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
+        }
+    });
+
+    $("#toDate_RawDataForm").on("dp.show", function (e) {
+        $(this).data("DateTimePicker").maxDate(moment());
+    });
+
+
+    initializeApplicationsId();
+    initializeCountriesId();
+    initializeProtosId();
+    initializeASNumsId();
+    initializeCountriesId();
+}
+
+
+
+
+
+
+
+
 /**
  *
  * @returns {*|jQuery} serialized rawdata form string
@@ -181,6 +242,7 @@ function invalidMsg(textbox) {
 function setIpLocValue(){
 
     $("#iplocHidden").val( $("#iploc").val() + ( ($("#iplocMask").val()) ? ("/"+$("#iplocMask").val()) : "" ) )
+
 }
 
 
@@ -190,6 +252,7 @@ function setIpLocValue(){
 function setIpExtValue(){
 
     $("#ipextHidden").val( $("#ipext").val() + ( ($("#ipextMask").val()) ? ("/"+$("#ipextMask").val()) : "" ) )
+    
 }
 
 
@@ -228,15 +291,13 @@ function setOutTcpFlagsValue(){
 
 function setLocalhostName(){
 
-    if( $("#iplocMask").val() === "" || $("#iplocMask").val() === "32" || $("#iplocMask").val() === "128" ){
-
-        var localhostObject = localhosts_Ip_Name_Array.find( findIp, $("#iploc").val() );
-
-        console.warn(localhostObject);
-
-        if(localhostObject)
-            $("#nameloc").val( localhostObject.name );
-
+    if( $("#iplocMask").val() === "" || $("#iplocMask").val() === "32" || $("#iplocMask").val() === "128" )
+    {
+        $('#nameloc').combobox('setValueTo', $("#iploc").val());
+    }
+    else
+    {
+        $('#nameloc').combobox('setValueTo', "");
     }
 
 }
@@ -250,12 +311,7 @@ function setLocalhostIp(){
 
     $("#iplocMask").val("");
 
-    var localhostObject = localhosts_Ip_Name_Array.find( findName, $("#nameloc").val() );
-
-    console.warn(localhostObject);
-
-    if(localhostObject)
-        $("#iploc").val( localhostObject.ip );
+    $("#iploc").val( $("#nameloc").val() );
 
 }
 

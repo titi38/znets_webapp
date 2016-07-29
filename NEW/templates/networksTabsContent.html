@@ -23,7 +23,7 @@
                 <li><a data-toggle="collapse" rv-href="network | prepend '#flowsBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> Nb FLOWS</a></li>
                 <ul rv-id="network | prepend 'flowsBy'" class="nav nav-tabs nav-stacked collapse">
                     <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsAll'" rv-data-network="network" data-chart-json="netNbFlow.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> All</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByLocalhosts'" rv-data-network="network" data-chart-json="netTopHostsNbFlow.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Top Localhosts</a></li>
+                    <li class="hourly_only"><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByLocalhosts'" rv-data-network="network" data-chart-json="netTopHostsNbFlow.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Top Localhosts</a></li>
                     <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByServices'" rv-data-network="network" data-chart-json="netTopServicesNbFlow.json" data-ajax-params="service=loc"><i class="fa fa-area-chart" aria-hidden="true"></i> Top Local Services</a></li>
                     <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByServices'" rv-data-network="network" data-chart-json="netTopServicesNbFlow.json" data-ajax-params="service=ext"><i class="fa fa-area-chart" aria-hidden="true"></i> Top External Services</a></li>
                     <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByCountries'" rv-data-network="network" data-chart-json="netTopCountryNbFlow.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Top Countries</a></li>
@@ -52,7 +52,7 @@
                 <li><a data-toggle="collapse" rv-href="network | prepend '#nbHosts'"><i class="fa fa-plus-square " aria-hidden="true"></i> Nb HOSTS</a></li>
                 <ul rv-id="network | prepend 'nbHosts'" class="nav nav-tabs nav-stacked collapse">
                     <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbHostsActiveLocalHosts'" rv-data-network="network" data-chart-json="netNbLocalHosts.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Active Local Hosts</a></li>
-                    <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbHostsDistinctExternalHosts'" rv-data-network="network" data-chart-json="netNbExternalHosts.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Touched External Hosts</a></li>
+                    <li class="minute_only"><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbHostsDistinctExternalHosts'" rv-data-network="network" data-chart-json="netNbExternalHosts.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Touched External Hosts</a></li>
                     <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#nbHostsDestByLocalhosts'" rv-data-network="network" data-chart-json="netTopNbExtHosts.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Top Dest. by LH</a></li>
                 </ul>
 
@@ -101,7 +101,7 @@
                 <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsAll'">
                     <svg class = "diagram" rv-data-network="network" ></svg>
                 </div>
-                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsByLocalhosts'">
+                <div class="graph tab-pane fade toBottomChartsContainer hourly_only" rv-id="network | prepend 'flowsByLocalhosts'">
                     <svg class = "diagram" rv-data-network="network" data-pie-json="netExtHostsTopHostsNbFlow.json" ></svg>
                 </div>
                 <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'flowsByServices'">
@@ -147,7 +147,7 @@
                 <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'nbHostsActiveLocalHosts'">
                     <svg class = "diagram" rv-data-network="network" ></svg>
                 </div>
-                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'nbHostsDistinctExternalHosts'">
+                <div class="graph tab-pane fade toBottomChartsContainer minute_only" rv-id="network | prepend 'nbHostsDistinctExternalHosts'">
                     <svg class = "diagram" rv-data-network="network" ></svg>
                 </div>
                 <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'nbHostsDestByLocalhosts'">

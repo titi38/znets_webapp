@@ -14,4 +14,6 @@ var chartsPreset = {
     timeStep : "HOURLY",
     startDate : "HOURLY",
     endDate : "HOURLY"
-}
+};
+
+var localhosts_Ip_Name_Array = [];

@@ -8,6 +8,8 @@
  */
 function serializeRawDataForm(){
 
+    console.log($("form[id='rawData_form']").find("input,select").filter(function(index, element) {return ($(element).val() != "" && $(element).attr("name") != "");}).serialize())
+
     return $("form[id='rawData_form']").find("input,select").filter(function(index, element) {return ($(element).val() != "" && $(element).attr("name") != "");}).serialize();
 
 }
@@ -15,6 +17,18 @@ function serializeRawDataForm(){
 function getRawData(paramRawData){
 
     callAJAX("rawDataFlow.json", paramRawData, "json", addRawDataResults, null);
+
+}
+
+
+
+function submitFormRawData(){
+
+    if ( !$("#advancedFiltersButton").hasClass( "collapsed" ) ){
+        $("#advancedFiltersButton").click();
+    }
+
+    getRawData(serializeRawDataForm());
 
 }
 
@@ -155,3 +169,96 @@ function invalidMsg(textbox) {
     }
     return true;
 }
+
+
+
+
+
+
+
+
+
+function setIpLocValue(){
+
+    $("#iplocHidden").val( $("#iploc").val() + ( ($("#iplocMask").val()) ? ("/"+$("#iplocMask").val()) : "" ) )
+}
+
+
+
+
+
+function setIpExtValue(){
+
+    $("#ipextHidden").val( $("#ipext").val() + ( ($("#ipextMask").val()) ? ("/"+$("#ipextMask").val()) : "" ) )
+}
+
+
+
+function setIncTcpFlagsValue(){
+
+    var incTcpFlags = "";
+    var incCheckboxesTable = $("#incTcpFlagsHidden").siblings().find("input[type='checkbox']");
+    for (var i = 0 ; i < incCheckboxesTable.length ; i++){
+        if($(incCheckboxesTable[i]).is(':checked'))
+            incTcpFlags += $(incCheckboxesTable[i]).val();
+    }
+
+    $("#incTcpFlagsHidden").val( incTcpFlags );
+
+}
+
+
+
+function setOutTcpFlagsValue(){
+
+    var outTcpFlags = "";
+    var outCheckboxesTable = $("#outTcpFlagsHidden").siblings().find("input[type='checkbox']");
+    for (var i = 0 ; i < outCheckboxesTable.length ; i++){
+        if($(outCheckboxesTable[i]).is(':checked'))
+            outTcpFlags += $(outCheckboxesTable[i]).val();
+    }
+
+    $("#outTcpFlagsHidden").val( outTcpFlags );
+
+}
+
+
+
+
+
+function setLocalhostName(){
+
+    if( $("#iplocMask").val() === "" || $("#iplocMask").val() === "32" || $("#iplocMask").val() === "128" ){
+
+        var localhostObject = localhosts_Ip_Name_Array.find( findIp, $("#iploc").val() );
+
+        console.warn(localhostObject);
+
+        if(localhostObject)
+            $("#nameloc").val( localhostObject.name );
+
+    }
+
+}
+
+
+
+
+
+
+function setLocalhostIp(){
+
+    $("#iplocMask").val("");
+
+    var localhostObject = localhosts_Ip_Name_Array.find( findName, $("#nameloc").val() );
+
+    console.warn(localhostObject);
+
+    if(localhostObject)
+        $("#iploc").val( localhostObject.ip );
+
+}
+
+
+
+

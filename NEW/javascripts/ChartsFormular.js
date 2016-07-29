@@ -46,7 +46,14 @@ function onChangeChartsForm() {
 
 function applyChartsForm(){
 
+    console.error($("#timestepCharts").val() === "MINUTE");
+    console.error($("#timestepCharts").val());
+
     $("#preset_ChartsForm").val($("#timestepCharts").val());
+
+    $("#timestepCharts").val() === "MINUTE" ? $(".minute_only").removeClass("hidden") : $(".minute_only").addClass("hidden") ;
+    $("#timestepCharts").val() === "HOURLY" ? $(".hourly_only").removeClass("hidden") : $(".hourly_only").addClass("hidden") ;
+
 
     $("#dateDebCharts").val($("#fromDate_ChartsForm").data("DateTimePicker").date().format('YYYY-MM-DD HH:mm'));
     $("#dateFinCharts").val($("#toDate_ChartsForm").data("DateTimePicker").date().format('YYYY-MM-DD HH:mm'));

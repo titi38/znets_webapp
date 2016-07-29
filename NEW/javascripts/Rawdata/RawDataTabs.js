@@ -4,7 +4,7 @@
 
 function addRawDataTab(rawdataTabID){
 
-    var element_tab = $('<li class="tab'+rawdataTabID+' tab"><a data-toggle="tab" href="#divRawdata'+rawdataTabID+'">RawData <span class="closeTab close-icon" title="Remove this page">&#x2715</span></a></li>');
+    var element_tab = $('<li class="tab'+rawdataTabID+' tab"><a data-toggle="tab" href="#divRawdata'+rawdataTabID+'">Flow Data <span class="closeTab close-icon" title="Remove this page">&#x2715</span></a></li>');
     var element_div = $('<div class="tab-pane fade" id="divRawdata'+rawdataTabID+'"></div>');
 
     element_tab.click(adjustOnTabClick);

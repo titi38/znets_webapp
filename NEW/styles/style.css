@@ -12,6 +12,15 @@ html, body {
 */
 
 
+.margin-right-5px{
+    margin-right: 5px;
+}
+
+.z-index-100 {
+    position: absolute;
+    z-index: 100;
+}
+
 .form-section {
     margin-right: -15px;
     margin-left: -15px;
@@ -386,6 +395,10 @@ hr.myhr{
 /*************************************************
 * Bootstrap Styles Modification
 */
+
+.dropdown-menu {
+    min-width: 100px;
+}
 
 .form-group {
     margin-top: 2px;

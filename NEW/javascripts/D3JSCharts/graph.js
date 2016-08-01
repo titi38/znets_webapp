@@ -487,22 +487,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         createTooltipHisto(svg,selection,sumMap);
 
 
-
-        function blink() {
-
-            this.parentNode.appendChild(this);
-            var rect = d3.select(this);
-
-            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = "#000000";
-            rect.attr("stroke", col3).attr("fill", col2);
-            (function doitagain() {
-                rect.transition().duration(1000)
-                  .attr("stroke", col4).attr("fill", col1)
-                  .transition().duration(1000)
-                  .attr("stroke", col3).attr("fill", col2)
-                  .on("end", doitagain);
-            })()
-        }
+        var blink = blinkCreate(colorMap);
 
         svg.activeItem = null;
 
@@ -1059,21 +1044,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         createTooltipHisto(svg,selection,sumMap);
 
-        function blink() {
-
-            this.parentNode.appendChild(this);
-            var rect = d3.select(this);
-
-            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = "#000000";
-            rect.attr("stroke", col3).attr("fill", col2);
-            (function doitagain() {
-                rect.transition().duration(1000)
-                  .attr("stroke", col4).attr("fill", col1)
-                  .transition().duration(1000)
-                  .attr("stroke", col3).attr("fill", col2)
-                  .on("end", doitagain);
-            })()
-        }
+        var blink = blinkCreate(colorMap);
 
         svg.activeItem = null;
 
@@ -1538,22 +1509,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         //Tooltip creation
         createTooltipHisto(svg,selection,sumMap);
 
-
-        function blink() {
-
-            this.parentNode.appendChild(this);
-            var rect = d3.select(this);
-
-            var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = "#ff0000", col4 = "#000000";
-            rect.attr("stroke", col3).attr("fill", col2);
-            (function doitagain() {
-                rect.transition().duration(1000)
-                  .attr("stroke", col4).attr("fill", col1)
-                  .transition().duration(1000)
-                  .attr("stroke", col3).attr("fill", col2)
-                  .on("end", doitagain);
-            })()
-        }
+        var blink = blinkCreate(colorMap);
 
         svg.activeItem = null;
 
@@ -3448,9 +3404,7 @@ function createCurve(div, svg, mydiv, urlJson){
 
         yAxeSimpleCreation(svg);
         gridSimpleGraph(svg, true);
-
-        axisYLegendSimple(svg);
-
+        
         legendAxisX(svg);
 
         svg.newValueline = d3.line().curve(d3.curveMonotoneX);
@@ -4715,113 +4669,103 @@ function addZoomMapDirection(parentSvg,svg){
 /********************************************************************************************************************/
 
 function autoUpdateMapDirection(svg,urlJson){
-    var delay = 45000;
 
-    setTimeout(function(){
-        console.log("update");
-        d3.json(urlJson,function(error,json){
+    var id = test.addMinuteRequest(urlJson,function(json){
 
-            if(error || typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined"){
-                console.warn("map update: no data");
-                autoUpdateMapDirection(svg,urlJson);
+        console.log(json);
+
+        if(typeof json === "undefined"|| typeof json.data === "undefined"){
+            console.warn("map update: no data");
+            return;
+        }
+
+        if(json.data[0][0] === svg.lastMinute){
+            console.log("same minute");
+            return;
+        }
+
+        svg.lastMinute = json.data[0][0];
+        var jsonContent = json.content;
+        var jsonData = json.data[0][1];
+
+        var itemValue = searchItemValue(jsonContent);
+        var amountValue = searchAmountValue(jsonContent);
+        var directionValue = searchDirectionValue(jsonContent);
+
+        svg.amountByCountryCodeIn = new Map();
+        svg.amountByCountryCodeOut = new Map();
+
+        if(!(itemValue && amountValue && directionValue)){
+            return;
+        }
+
+        var inMax = 0;
+        var inMin = Infinity;
+
+        var outMax = 0;
+        var outMin = Infinity;
+
+        var elemAmount;
+        var elemItem;
+
+
+        jsonData.forEach(function(elem){
+
+            elemItem = elem[itemValue];
+            elemAmount = +elem[amountValue];
+
+            if(elemItem === "--" || elemItem === ""){
                 return;
             }
 
+            switch(elem[directionValue]){
 
-            json = json.response;
-            if(json.data[0][0] === svg.lastMinute){
-                console.log("same minute");
-                autoUpdateMapDirection(svg,urlJson);
-                return;
+                case "IN":
+                    svg.amountByCountryCodeIn.set(elem[itemValue], elemAmount);
+                    inMax = Math.max(inMax, elemAmount);
+                    inMin = Math.min(inMin, elemAmount);
+                    break;
+
+                case "OUT":
+                    svg.amountByCountryCodeOut.set(elem[itemValue], elemAmount);
+                    outMax = Math.max(outMax, elemAmount);
+                    outMin = Math.min(outMin, elemAmount);
+                    break;
+
+                default:
+                    console.warn("inconsistent direction value");
+                    break;
+
             }
 
-            svg.lastMinute = json.data[0][0];
-            var jsonContent = json.content;
-            var jsonData = json.data[0][1];
+        });
 
-            var itemValue = searchItemValue(jsonContent);
-            var amountValue = searchAmountValue(jsonContent);
-            var directionValue = searchDirectionValue(jsonContent);
-
-            svg.amountByCountryCodeIn = new Map();
-            svg.amountByCountryCodeOut = new Map();
-
-            if(!(itemValue && amountValue && directionValue)){
-                autoUpdateMapDirection(svg,urlJson);
-                return;
-            }
-
-            var inMax = 0;
-            var inMin = Infinity;
-
-            var outMax = 0;
-            var outMin = Infinity;
-
-            var elemAmount;
-            var elemItem;
+        if(svg.amountByCountryCodeIn.size === 0){
+            inMin = 0;
+            inMax = 1;
+        }
 
 
-
-            jsonData.forEach(function(elem){
-
-                elemItem = elem[itemValue];
-                elemAmount = +elem[amountValue];
-
-                if(elemItem === "--" || elemItem === ""){
-                    return;
-                }
-
-                switch(elem[directionValue]){
-
-                    case "IN":
-                        svg.amountByCountryCodeIn.set(elem[itemValue], elemAmount);
-                        inMax = Math.max(inMax, elemAmount);
-                        inMin = Math.min(inMin, elemAmount);
-                        break;
-
-                    case "OUT":
-                        svg.amountByCountryCodeOut.set(elem[itemValue], elemAmount);
-                        outMax = Math.max(outMax, elemAmount);
-                        outMin = Math.min(outMin, elemAmount);
-                        break;
-
-                    default:
-                        console.warn("inconsistent direction value");
-                        break;
-
-                }
-
-            });
-
-            if(svg.amountByCountryCodeIn.size === 0){
-                inMin = 0;
-                inMax = 1;
-            }
+        if(svg.amountByCountryCodeOut.size === 0){
+            outMin = 0;
+            outMax = 1;
+        }
+        console.log(svg.amountByCountryCodeOut);
+        console.log(svg.amountByCountryCodeIn);
 
 
-            if(svg.amountByCountryCodeOut.size === 0){
-                outMin = 0;
-                outMax = 1;
-            }
-            console.log(svg.amountByCountryCodeOut);
-            console.log(svg.amountByCountryCodeIn);
+        updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
 
+        svg.countriesIn.style("fill",function(d){return svg.scaleColorIn(d.id)})
+          .select("title").text(svg.titleIn);
 
-            updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
+        svg.countriesOut.style("fill",function(d){
+            return svg.scaleColorOut(d.id)})
+          .select("title").text(svg.titleOut);
 
-            svg.countriesIn.style("fill",function(d){return svg.scaleColorIn(d.id)})
-              .select("title").text(svg.titleIn);
+    },-1);
 
-            svg.countriesOut.style("fill",function(d){
-                return svg.scaleColorOut(d.id)})
-              .select("title").text(svg.titleOut);
-
-
-            autoUpdateMapDirection(svg,urlJson);
-
-        })
-
-    },delay)
+    console.log(id);
 }
 
 

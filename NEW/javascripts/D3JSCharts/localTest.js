@@ -31,8 +31,10 @@ function testtest(){
   /*********************************************************************************************************
    New Logs Object
    ********************************************************************************************************/
-  test = new update(myWSEventNotifier);
+  test = new LastHourHistory(myWSEventNotifier);
   test.init();
+
+  drawChart("/dynamic/netTopCurrentCountryTraffic.json?net=labo","Graph");
 
 }
 

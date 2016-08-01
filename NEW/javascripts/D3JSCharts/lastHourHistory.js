@@ -4,7 +4,7 @@
  update Constructor
  ********************************************************************************************************/
 
-function update(theWSEventNotifier) {
+function LastHourHistory(theWSEventNotifier) {
 
   var idGenerator = 0;
   var currentTime = new Date(0);
@@ -80,12 +80,10 @@ function update(theWSEventNotifier) {
           var durationResult = trueModulo(jsonCurrentMinute - minuteParam, 60);
           var lastResultDataLength = lastResultData.length;
 
-          console.log(durationResult);
 
           //an 1 hour window is kept
           for(var i = lastResultDataLength - 1; i >=0 ; i --){
 
-            console.log(trueModulo(minuteParam - lastResultData[i][0], 60) + 1 + durationResult);
             if(trueModulo(minuteParam - lastResultData[i][0], 60) + 1 + durationResult <= 60){
               break;
             }
@@ -94,7 +92,7 @@ function update(theWSEventNotifier) {
 
           i++;
 
-          console.log(lastResultData.splice(i,lastResultDataLength - i));
+          lastResultData.splice(i,lastResultDataLength - i);
 
 
           //new data is stored
@@ -117,7 +115,23 @@ function update(theWSEventNotifier) {
 
         //now, the data (newResult) is ready to be sent through the callbacks
         callbacks.sort(function(a,b){
+
+          if(a.lastMinute === -1 && b.lastMinute === -1){
+
+            return 0;
+
+          }
+
+          if(a.lastMinute === -1){
+            return trueModulo(jsonCurrentMinute - b.lastMinute,60) - 1;
+          }
+
+          if(b.lastMinute === -1){
+            return 1 - trueModulo(jsonCurrentMinute - a.lastMinute,60);
+          }
+
           return trueModulo(jsonCurrentMinute - b.lastMinute,60) - trueModulo(jsonCurrentMinute - a.lastMinute,60);
+
         });
 
 
@@ -134,8 +148,13 @@ function update(theWSEventNotifier) {
 
             var responseData = response.data;
             var responseDataLength = responseData.length;
+            var durationResponse;
+            if(lastMinute=== -1){
+              durationResponse = 1;
+            }else{
+              durationResponse = trueModulo(jsonCurrentMinute - lastMinute,60);
+            }
 
-            var durationResponse = trueModulo(jsonCurrentMinute - lastMinute,60);
             for(var i = 0; i < responseDataLength ; i ++){
 
               if(trueModulo(jsonCurrentMinute - responseData[i][0],60) >= durationResponse){
@@ -146,7 +165,7 @@ function update(theWSEventNotifier) {
             processedLastMinute = lastMinute;
           }
 
-          callbackObj.lastMinute = jsonCurrentMinute;
+          callbackObj.lastMinute = (lastMinute === -1)?-1:jsonCurrentMinute;
 
           try {
             callbackObj.callback(response);
@@ -167,18 +186,22 @@ function update(theWSEventNotifier) {
 
   this.addMinuteRequest = function(urlRequest, callback, lastMinute){
 
+    var id = generateId();
+
     if(mapRequestsOnNewMinute.has(urlRequest)){
 
       var requests = mapRequestsOnNewMinute.get(urlRequest);
-      requests.push({callback:callback, lastMinute: lastMinute, id:generateId()});
+      requests.push({callback:callback, lastMinute: lastMinute, id:id});
 
     }else{
-      mapRequestsOnNewMinute.set(urlRequest,[{callback: callback, lastMinute:lastMinute, id:generateId()}]);
+      mapRequestsOnNewMinute.set(urlRequest,[{callback: callback, lastMinute:lastMinute, id:id}]);
     }
+
+    return id;
 
   };
 
-  this.unsuscribe = function(urlRequest, id){
+  this.unsubscribe = function(urlRequest, id){
     var r = mapRequestsOnNewMinute.get(urlRequest);
     if(r){
       r.some(function(elem,i){

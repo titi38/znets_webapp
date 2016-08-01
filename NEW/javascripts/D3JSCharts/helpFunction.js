@@ -1036,11 +1036,11 @@ function optionalAxesDoubleCreation(svg){
   var isBytes = svg.units === "Bytes";
 
 
-  if(isBytes || svg.units === "Flow"){
+  if(isBytes){
 
 
 
-    var coef = 1000/svg.step;
+    var coef = 8000/svg.step;
 
     var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
 
@@ -1077,7 +1077,7 @@ function optionalAxesDoubleCreation(svg){
       .attr('y', svg.margin.left + svg.width + svg.margin.right)
       .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
       .attr("transform", "rotate(-90)")
-      .text(convert[0] + svg.units + "/s");
+      .text(convert[0] + "bits/s");
 
   }
 }
@@ -1094,7 +1094,7 @@ function optionalAxesDoubleUpdate(svg){
 
 
 
-    var coef = 1000/svg.step;
+    var coef = 8000/svg.step;
 
     var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
 
@@ -1127,7 +1127,7 @@ function optionalAxesDoubleUpdate(svg){
     svg.ylabelRight
       .attr('y', svg.margin.left + svg.width + svg.margin.right)
       .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
-      .text(convert[0] + svg.units + "/s");
+      .text(convert[0] + "bits/s");
 
   }
 }
@@ -1214,7 +1214,7 @@ function axesDoubleUpdate(svg){
 
 function createTooltipHisto(svg, selection, sumMap){
 
-  var isBytes = svg.units === "Bytes",hasOptionalAxes = isBytes || svg.units === "Flow",coef = 1000/svg.step;
+  var isBytes = svg.units === "Bytes",hasOptionalAxes = isBytes,coef = 8000/svg.step;
 
   var convertArray, valDisplay;
 
@@ -1231,7 +1231,7 @@ function createTooltipHisto(svg, selection, sumMap){
         return ((d.item === valDisplay)?"":(valDisplay + "\n"))
           + d.item + "\n"
           + getDateFromAbscissa(svg,d.x).toString() + "\n"
-          + ((Math.round(100 * heightPerSec * cAOptionel[1])/100) + " " + cAOptionel[0] + svg.units + "/s") + "\n"
+          + ((Math.round(100 * heightPerSec * cAOptionel[1])/100) + " " + cAOptionel[0] + "bits/s") + "\n"
           + ((Math.round(100 * d.height * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
           + "(" +  d.height + " " + svg.units + ")";
       });
@@ -1309,9 +1309,9 @@ function optionalYAxeSimpleCreation(svg) {
 
   var isBytes = svg.units === "Bytes";
 
-  if (isBytes || svg.units === "Flow") {
+  if (isBytes) {
 
-    var coef = 1000 / svg.step;
+    var coef = 8000 / svg.step;
 
 
     var domain = svg.newY.domain();
@@ -1338,7 +1338,7 @@ function optionalYAxeSimpleCreation(svg) {
       .attr('y', svg.margin.left + svg.width + svg.margin.right)
       .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
       .attr("transform", "rotate(-90)")
-      .text(convert[0] + svg.units + "/s");
+      .text(convert[0] + "bits/s");
 
 
   }
@@ -1352,9 +1352,9 @@ function optionalYAxeSimpleUpdate(svg) {
 
   var isBytes = svg.units === "Bytes";
 
-  if (isBytes || svg.units === "Flow") {
+  if (isBytes) {
 
-    var coef = 1000 / svg.step;
+    var coef = 8000 / svg.step;
 
 
     var domain = svg.newY.domain();
@@ -1377,7 +1377,7 @@ function optionalYAxeSimpleUpdate(svg) {
     svg.ylabelRight
       .attr('y', svg.margin.left + svg.width + svg.margin.right)
       .attr("x", -(svg.margin.bottom + svg.height + svg.margin.top) / 2)
-      .text(convert[0] + svg.units + "/s");
+      .text(convert[0] + "bits/s");
 
 
   }
@@ -1414,4 +1414,30 @@ function yAxeSimpleUpdate(svg){
 
 function trueModulo(n,d){
   return ((n%d) +d)%d;
+}
+
+/************************************************************************************************************/
+
+
+
+function blinkCreate(colorMap) {
+  var duration = 500;
+  return function(){
+
+    this.parentNode.appendChild(this);
+    var rect = d3.select(this);
+
+    var col1 = colorMap.get(rect.datum().item), col2 = "#ffffff", col3 = col1, col4 = "#000000";
+    rect.attr("stroke", col3).attr("fill", col2);
+    (function doitagain() {
+      rect.transition().duration(duration)
+        .attr("stroke", col4).attr("fill", col1)
+        .transition().duration(duration)
+        .attr("stroke", col3).attr("fill", col2)
+        .on("end", doitagain);
+    })()
+
+  }
+
+
 }

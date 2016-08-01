@@ -214,7 +214,7 @@ function LastHourHistory(theWSEventNotifier) {
         return false;
       });
     }
-  }
+  };
 
 
 

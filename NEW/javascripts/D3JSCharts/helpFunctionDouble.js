@@ -237,34 +237,6 @@ function drawChartDouble(svg,newHeightOutput,newHOmarg){
 
 }
 
-/***********************************************************************************************************/
-
-
-function drawCharts2Histo(svg){
-
-
-
-  var dataWidth = 0.75*(svg.newX(svg.newX.domain()[0] + 1) - svg.newX.range()[0]);
-
-
-
-  var adjust;
-
-  svg.svgInput.chart.selectAll(".data")
-    .attr("x",function(d){return svg.newX(d.x - 0.375);})
-    .attr("y", function(d){return svg.newYInput(d.y);})
-    .attr("height", function(d){return svg.heightGraph - svg.newYInput(d.height);})
-    .attr("width", dataWidth);
-
-
-
-  svg.chartOutput.selectAll(".data")
-    .attr("x",function(d){return svg.newX(d.x - 0.375);})
-    .attr("y", function(d){return svg.newYOutput(d.y);})
-    .attr("height", function(d){return svg.heightGraph -  svg.newYOutput(d.height);})
-    .attr("width", dataWidth);
-
-}
 
 
 

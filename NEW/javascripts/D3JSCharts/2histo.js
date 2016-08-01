@@ -64,11 +64,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       return;
     }
 
-    //Now, no more nodata can happen,so we create the table
-    var divtable = div.append("div").classed("diagram divtable", true);
-    divtable.append("h4").classed("tableTitle", true).text("Legend");
-    var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-      (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
+    
 
     svg.units = unitsStringProcessing(json.units);
 
@@ -78,12 +74,12 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
 
-    svg.valuesIn = [];
-    svg.valuesOut = [];
+    svg.svgInput.values = [];
+    svg.svgOutput.values = [];
 
     var dataLength = jsonData.length;
 
-    var colorMap = new Map();
+    svg.colorMap = new Map();
     var sumMap = new Map();
     var sumInMap = new Map();
     var sumOutMap = new Map();
@@ -130,7 +126,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
         elemToPush.direction = "inc";
-        svg.valuesIn.push(elemToPush);
+        svg.svgInput.values.push(elemToPush);
 
       }else{
 
@@ -141,7 +137,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           elemSumMap.sum += elemToPush.height;
         }
 
-        svg.valuesOut.push(elemToPush);
+        svg.svgOutput.values.push(elemToPush);
 
       }
 
@@ -152,16 +148,25 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
 
-    var sumArray = [];
+    svg.sumArrayTotal = [];
+    svg.svgInput.sumArray = [];
+    svg.svgOutput.sumArray = [];
+
 
     var f = colorEval();
+    
+    function mapToArray(array){
+      return function(value, key) {
+      array.push({item: key, sum: value.sum, display: value.display});
+      };
+    }
 
 
-    sumMap.forEach(function (value, key) {
-      sumArray.push({item: key, sum: value.sum, display: value.display});
-    });
-
-    sumArray.sort(function (a, b) {
+    sumMap.forEach(mapToArray(svg.sumArrayTotal));
+    sumInMap.forEach(mapToArray(svg.svgInput.sumArray));
+    sumOutMap.forEach(mapToArray(svg.svgOutput.sumArray));
+    
+    function sortArray(a, b) {
 
       if (a.item == " Remainder " || a.item == "OTHERS") {
         return -1;
@@ -170,268 +175,39 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         return 1;
       }
       return b.sum - a.sum;
-    });
-
-
-    console.log(sumArray);
+    }
+    
+    svg.sumArrayTotal.sort(sortArray);
+    svg.svgInput.sumArray.sort(sortArray);
+    svg.svgOutput.sumArray.sort(sortArray);
+    
     //The most importants elements should have distinct colors.
     i = 0;
-    if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
-      colorMap.set(sumArray[0].item, "#f2f2f2");
+    if (svg.sumArrayTotal[0].item == " Remainder " || svg.sumArrayTotal[0].item == "OTHERS") {
+      svg.colorMap.set(svg.sumArrayTotal[0].item, "#f2f2f2");
       i = 1;
     }
 
-    while (i < sumArray.length) {
-      colorMap.set(sumArray[i].item, f());
+    while (i < svg.sumArrayTotal.length) {
+      svg.colorMap.set(svg.sumArrayTotal[i].item, f());
       i++;
     }
 
-
-    console.log(colorMap);
-
+    
     //step = 1 hour by default
     svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
 
-    svg.valuesIn.forEach(function(elem){
-      elem.x = (elem.x - svg.timeMin)/svg.step
-    });
+    svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
-    svg.valuesOut.forEach(function(elem){
-      elem.x = (elem.x - svg.timeMin)/svg.step
-    });
-
-
-    function sortValues(a, b) {
-
-      if (a.x - b.x != 0) {
-        return a.x - b.x;
-      }
-      if (a.item == " Remainder " || a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == " Remainder " || b.item == "OTHERS") {
-        return 1;
-      }
-      return b.height - a.height;
-    }
-
-    svg.valuesIn.sort(sortValues);
-    svg.valuesOut.sort(sortValues);
-
-    var xMax = (timeMax - svg.timeMin)/svg.step + 1;
-
-
-    //Evaluation of the abscissa domain
-    svg.x.domain([-0.625, xMax - 0.375]);
-
-    var totalSumIn = [];
-    var totalSumOut = [];
-
-    var x = svg.valuesIn[0].x;
-    var sum = 0;
-    i = 0;
-
-    while (x < xMax) {
-
-      while (i < svg.valuesIn.length && svg.valuesIn[i].x == x) {
-        sum += svg.valuesIn[i].height;
-        svg.valuesIn[i].y = sum;
-        i++;
-      }
-      totalSumIn.push(sum);
-      sum = 0;
-      x++;
-    }
-
-    x = svg.valuesOut[0].x;
-    i = 0;
-
-    while (x < xMax) {
-
-      while (i < svg.valuesOut.length && svg.valuesOut[i].x == x) {
-        sum += svg.valuesOut[i].height;
-        svg.valuesOut[i].y = sum;
-        i++;
-      }
-      totalSumOut.push(sum);
-      sum = 0;
-      x++;
-    }
-
-
-    var totalIn = d3.max(totalSumIn);
-    var totalOut = d3.max(totalSumOut);
-
-
-    svg.yInput.range([svg.heightGraph, 0]);
-    svg.yOutput.range([svg.heightGraph, 0]);
-
-
-    //the *1.1 operation allow a little margin
-    svg.yInput.domain([0, totalIn * 1.1]);
-    svg.yOutput.domain([0, totalOut * 1.1]);
-
-    //Text background
-
-
-    svg.rectInput = svg.svgInput.chartBackground.append("rect").attr("x", 0).attr("y", 0)
-      .attr("width", svg.width)
-      .attr("height", svg.heightGraph)
-      .style("fill", "#e6e6e6");
-
-
-    svg.textOutput = svg.svgOutput.chartBackground.append("text").classed("bckgr-txt", true)
-      .style("fill", "#e6e6e6")
-      .text("Outgoing");
-
-    svg.textOutput.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightGraph/8 +
-      parseFloat(getComputedStyle(svg.textOutput.node()).fontSize)) + ")");
-
-
-    svg.textInput = svg.svgInput.chartBackground.append("text").attr("transform", "translate(" + (svg.width / 2) + "," +
-        (svg.heightGraph/8) + ")")
-      .classed("bckgr-txt", true)
-      .text("Ingoing")
-      .style("fill", "#fff");
-
-
-    //Here, the grid, after the text
-    svg.svgOutput.grid = svg.svgOutput.chartBackground.append("g").classed("grid", true);
-    svg.svgInput.grid = svg.svgInput.chartBackground.append("g").classed("grid", true);
-
-    svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
-    svg.newYOutput = d3.scaleLinear().range(svg.yOutput.range()).domain(svg.yOutput.domain());
-    svg.newYInput = d3.scaleLinear().range(svg.yInput.range()).domain(svg.yInput.domain());
-
-    var selectionIn = svg.svgInput.chart.selectAll(".data")
-      .data(svg.valuesIn)
-      .enter().append("rect")
-      .classed("data", true)
-      .attr("fill", function (d) {
-        return colorMap.get(d.item);
-      })
-      .attr("stroke", "#000000");
-
-    var selectionOut = svg.svgOutput.chart.selectAll(".data")
-      .data(svg.valuesOut)
-      .enter().append("rect")
-      .classed("data", true)
-      .attr("fill", function (d) {
-        return colorMap.get(d.item);
-      })
-      .attr("stroke", "#000000");
-
-
-    drawCharts2Histo(svg);
+    blabla(div, svg, svg.svgOutput,0);
+    blabla(div, svg, svg.svgInput,1);
 
     var selection = svg.selectAll(".data");
 
     //Tooltip creation
-
     createTooltipHisto(svg,selection,sumMap);
 
-
-    var blink = blinkCreate(colorMap);
-
-    svg.activeItem = null;
-
-    function activationElems(d) {
-
-      if (svg.popup.pieChart !== null) {
-        return;
-      }
-
-      svg.activeItem = d.item;
-
-      function testitem(data) {
-        return d.item == data.item;
-
-      }
-
-      trSelec.filter(testitem).classed("outlined", true);
-
-      selection.filter(testitem).each(blink);
-
-    }
-
-    function activationElemsAutoScroll(d) {
-
-
-      if (svg.popup.pieChart !== null) {
-        return;
-      }
-      svg.activeItem = d.item;
-
-
-      function testitem(data) {
-        return d.item == data.item;
-
-      }
-
-      var elem = trSelec.filter(testitem).classed("outlined", true);
-
-      scrollToElementTableTransition(elem,table);
-
-      selection.filter(testitem).each(blink);
-
-    }
-
-    function activationElemsAutoScrollPopup(d) {
-
-      desactivationElems();
-      svg.activeItem = d.item;
-
-
-      function testitem(data) {
-        return d.item == data.item;
-
-      }
-
-      var elem = trSelec.filter(testitem).classed("outlined", true);
-      scrollToElementTableTransition(elem,table);
-
-
-    }
-
-    function desactivationElems() {
-
-      if (svg.activeItem == null || svg.popup.pieChart !== null) {
-        return;
-      }
-
-
-      function testitem(data) {
-        return data.item == svg.activeItem;
-      }
-
-      trSelec.filter(testitem).classed("outlined", false);
-
-      selection.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
-
-      svg.activeItem = null;
-
-    }
-
-    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
-
-
-    svg.axisx = svg.append("g")
-      .attr("class", "axisGraph")
-      .attr('transform', 'translate(' + [svg.margin.left, svg.heightOutput + svg.margin.top] + ")");
-
-    svg.axisx.rect = svg.axisx.append("rect").classed("rectAxis", true).attr("height", svg.margin.zero - 1 ).attr("y",0.5);
-    svg.axisx.path = svg.axisx.append("path");
-    svg.axisx.call(d3.axisBottom(svg.x));
-    svg.heightTick = svg.axisx.select(".tick").select("line").attr("y2");
-
-    axisXDoubleDraw(svg);
-
-    ticksSecondAxisXDouble(svg);
-
-    legendAxisX(svg);
-
-
-    axesDoubleCreation(svg);
+    
     optionalAxesDoubleCreation(svg);
 
 
@@ -450,7 +226,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     tableLegendTitle(svg,trSelec);
 
     trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
-      return colorMap.get(d.item);
+      return svg.colorMap.get(d.item);
     });
     trSelec.append("td").text(function (d) {
       return d.display;
@@ -468,7 +244,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       redrawHisto2DStackDouble(div, svg);
     });
 
-    hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xMax);
+    hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, svg.xMax);
 
   });
 

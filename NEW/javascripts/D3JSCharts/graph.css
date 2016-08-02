@@ -77,9 +77,14 @@
     border-style: ridge;
 
 }
+
+.borderTable{
+    border-style: ridge;
+
+}
+
 .tableLegend{
 
-    width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
     overflow: scroll;
@@ -174,6 +179,14 @@
     top: 0;
     left: 0;
     height: 100%;
+    background-color: #b3b3b3;
+    opacity:0.5;
+}
+
+.overlay2Histo{
+    position:absolute;
+    left:0;
+    height: 50%;
     background-color: #b3b3b3;
     opacity:0.5;
 }

@@ -88,15 +88,12 @@ var typeGraph = urlJson.split(/[\.\/]+/);
         case "netNbLocalHosts":
         case "netNbExternalHosts":
             return createCurve;
+        //commented for test
         case "netTopHostsTraffic":
         case "netTopServicesTraffic":
         case "netTopAsTraffic":
         case "netTopAppTraffic":
         case "netTopCountryTraffic":
-        case "netTopHostsNbFlow":
-        case "netTopCountryNbFlow":
-        case "netTopAsNbFlow":
-        case "netTopAppNbFlow":
             return createHisto2DStackDouble;
         case "netNbFlow":
         case "netProtocolePackets":
@@ -110,6 +107,11 @@ var typeGraph = urlJson.split(/[\.\/]+/);
             return createMap;
         case "netTopCurrentCountryTraffic":
             return createChoroplethDirection;
+        case "netTopHostsNbFlow":
+        case "netTopCountryNbFlow":
+        case "netTopAsNbFlow":
+        case "netTopAppNbFlow":
+        return create2HistoStack;
         default:
             return noData;
     }

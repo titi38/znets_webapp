@@ -45,7 +45,7 @@ function initialisation(){
     myLocalhosts.init();
 
     /*********************************************************************************************************
-     New Localhosts Object
+     New LastHourHistory Object
      ********************************************************************************************************/
     var myLastHourHistory = new LastHourHistory(myWSEventNotifier);
     myLastHourHistory.init();

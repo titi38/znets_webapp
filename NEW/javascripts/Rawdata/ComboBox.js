@@ -17,6 +17,15 @@ $( function() {
             this._createShowAllButton();
         },
 
+        /*_renderItem: function( ul, item ) {
+
+            console.error("rendering");
+            return $( "<li>" )
+                .attr( "data-value", item.value )
+                .append( item.label )
+                .appendTo( ul );
+        },*/
+
         setValueTo: function (value) {
             this.element.val(value);
 

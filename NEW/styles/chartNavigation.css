@@ -1,6 +1,27 @@
+.chartNavDropdownContainer{
+    position: absolute;
+    z-index: 1000;
+}
+
+.chartNavContainer{
+    padding: 0px;
+    margin: 0px;
+    background-color: #fff;
+    /*-webkit-background-clip: padding-box;
+    background-clip: padding-box;*/
+    border: 0px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px;
+    box-shadow: 0px;
+}
+
+.chartTitle{
+    margin: 0 0 0 10px;
+    z-index: -10;
+}
 
 .nav-tabs.nav-stacked {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     border-bottom: 0px;
 }
 .nav-tabs.nav-stacked > li {
@@ -26,10 +47,10 @@
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-.nav-tabs.nav-nest > li:first-child > a {
+/*.nav-tabs.nav-nest > li:first-child > a {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-}
+}*/
 .nav-tabs.nav-stacked > li > a:hover, .nav-tabs.nav-stacked > li > a:focus {
     border: none;
     outline: none;

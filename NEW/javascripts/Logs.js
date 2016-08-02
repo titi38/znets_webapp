@@ -29,14 +29,14 @@ function Logs(theWSEventNotifier) {
     console.log("NEW LOG ENTRY :");
     console.log(logEntry);
 
-      var t = $('#tableLogs').DataTable();
+    var t = $('#tableLogs').DataTable();
 
-        t.row.add( [
-          logEntry.severity,
-          logEntry.date,
-          logEntry.message,
-          logEntry.detail
-        ] ).draw( false );
+    t.row.add( [
+      logEntry.severity,
+      logEntry.date,
+      logEntry.message,
+      logEntry.detail
+    ] ).draw( false );
 
 
   }

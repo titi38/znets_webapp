@@ -3,51 +3,69 @@
  */
 
 
-function initializeRawDataForm(){
+function initializeRawDataForm_TimeFields(){
 
     $('#fromDate_RawDataForm').datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
+        useCurrent: false,
         //defaultDate: moment(),
 
 
     });
     $('#toDate_RawDataForm').datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
+        useCurrent: false,
         //defaultDate: moment(),
 
 
     });
 
-
     $("#fromDate_RawDataForm").on("dp.show", function (e) {
-        if($('#toDate_RawDataForm').data("DateTimePicker").maxDate())
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate($('#toDate_RawDataForm').data("DateTimePicker").maxDate());
-        else
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
-
-    });
-
-    $("#fromDate_RawDataForm").on("dp.change", function (e) {
-        if(!e.date)
-            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
-
-    });
-
-    $("#toDate_RawDataForm").on("dp.change", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
-
-        if(e.date)
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(e.date);
-        else {
-            $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment());
-            $(this).data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
-        }
+        if(!$(this).data("DateTimePicker").date())
+            $(this).data("DateTimePicker").date(moment($(this).data("DateTimePicker").maxDate()));
     });
 
     $("#toDate_RawDataForm").on("dp.show", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
+        if(!$(this).data("DateTimePicker").date())
+            $(this).data("DateTimePicker").date($(this).data("DateTimePicker").maxDate());
     });
 
+    $("#fromDate_RawDataForm").on("dp.change", function (e) {
+        checkDateConsistency("#fromDate_RawDataForm", "#toDate_RawDataForm");
+    });
+
+    $("#toDate_RawDataForm").on("dp.change", function (e) {
+        checkDateConsistency("#fromDate_RawDataForm", "#toDate_RawDataForm");
+    });
+
+}
+
+
+
+function checkDateConsistency(fromDateQuery, toDateQuery){
+    var fromDate = moment($(fromDateQuery).data("DateTimePicker").date());
+    var toDate = moment($(toDateQuery).data("DateTimePicker").date());
+
+    if(fromDate.isAfter(toDate)){
+        // Dates are consistent.
+        $(fromDateQuery).find("input").addClass("color-red-danger");
+        $(toDateQuery).find("input").addClass("color-red-danger");
+
+        $(fromDateQuery).parents("form").find("button[type='submit']").prop("disabled", true);
+    }
+    else
+    {
+        // Dates are NOT consistent.
+        $(fromDateQuery).find("input").removeClass("color-red-danger");
+        $(toDateQuery).find("input").removeClass("color-red-danger");
+
+        $(fromDateQuery).parents("form").find("button[type='submit']").prop("disabled", false);
+    }
+}
+
+
+
+function initializeRawDataForm_OtherFields(){
 
     initializeApplicationsId();
     initializeCountriesId();

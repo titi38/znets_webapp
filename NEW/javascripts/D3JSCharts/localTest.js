@@ -31,13 +31,15 @@ function testtest(){
   /*********************************************************************************************************
    New Logs Object
    ********************************************************************************************************/
-  test = new update(myWSEventNotifier);
+  test = new LastHourHistory(myWSEventNotifier);
   test.init();
+  drawChart("/dynamic/netNbLocalHosts.json?&pset=MINUTE&dd=2016-07-24+16%3A28&df=2016-07-25+16%3A28&dh=2", "Graph");
+
+
+  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},40);
+  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);
 
 }
 
 proxyPass = "dynamic/";
 testtest();
-
-test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},40);
-test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);

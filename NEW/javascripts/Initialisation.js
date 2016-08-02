@@ -21,6 +21,12 @@ function initialisation(){
     var myWSEventNotifier = new WSEventNotifier('EventNotifier');
 
     /*********************************************************************************************************
+     New ServerDate Object
+     ********************************************************************************************************/
+    var myServerDate = new ServerDate(myWSEventNotifier);
+    myServerDate.init();
+
+    /*********************************************************************************************************
      New Logs Object
      ********************************************************************************************************/
     var myLogs = new Logs(myWSEventNotifier);
@@ -39,7 +45,7 @@ function initialisation(){
     myLocalhosts.init();
 
     /*********************************************************************************************************
-     New Localhosts Object
+     New LastHourHistory Object
      ********************************************************************************************************/
     var myLastHourHistory = new LastHourHistory(myWSEventNotifier);
     myLastHourHistory.init();
@@ -108,17 +114,13 @@ function initialisation(){
     /********************************************************************************************************
      Initialize RawData Form (selects and others)
      ********************************************************************************************************/
-    initializeRawDataForm();
+    initializeRawDataForm_OtherFields();
 
 
-    $( document ).ready(function() {
-
-        /*********************************************************************************************************
-         Initialize NetworkTab
-         ********************************************************************************************************/
-        initializeNetwork();
-
-    });
+    /*********************************************************************************************************
+     Initialize NetworkTab
+     ********************************************************************************************************/
+    initializeNetwork();
 
 
 }
@@ -223,12 +225,47 @@ function initNetworksChartsNavTabs() {
     });
 
 
+
+    initTabsNavAnimation("#network");
+
+
     /*********************************************************************************************************
      Initialize Chart Formular
      ********************************************************************************************************/
     applyChartsForm();
 
 }
+
+
+
+function initTabsNavAnimation(tabIDQuery){
+
+    $( document ).ready(function() {
+
+        // Block default behavior : avoid click event propagation on chart navigation nodes which are not leaves
+        $(document).on('click', tabIDQuery+' a.navtab', function (e) {
+            e.stopPropagation();
+        });
+
+        // Set selected chart title next to "+" dropdown of chart selection
+        $(document).on('click', tabIDQuery+' a.subnavtab[data-toggle="tab"]', function (e) {
+            $(this).parents(".chartNavDropdownContainer").find("p.chartTitle").html($(this).data("chartTitle"));
+        });
+
+        // Set animation : show selected chart title on mouse enter "+" dropdown
+        $(document).on('mouseenter', tabIDQuery+' button.chartNavDropdownButton', function (e) {
+            $(this).find("p").removeClass("hidden");
+        });
+
+        // Set animation : hide selected chart title on mouse leave "+" dropdown
+        $(document).on('mouseleave', tabIDQuery+' button.chartNavDropdownButton', function (e) {
+            $(this).find("p").addClass("hidden");
+        });
+    });
+
+}
+
+
 
 function loadChartJsonToDiv(selectedNavChart) {
 

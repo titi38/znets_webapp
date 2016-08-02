@@ -48,20 +48,6 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label col-xs-2 col-md-6" for="timestepCharts">Timestep:</label>
-                                <div class="col-xs-10 col-md-6">
-                                    <select class="form-control" id="timestepCharts" onchange="onChangeChartsForm()">
-                                        <option value="MINUTE">Minutes</option>
-                                        <option value="HOURLY" selected>Hours</option>
-                                        <option value="DAILY" >Days</option>
-                                    </select>
-                                    <input type="hidden" name="pset" id="preset_ChartsForm"/>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
@@ -92,13 +78,23 @@
                             </div>
                         </div>
 
-                        <div class="col-xs-6 col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
+                                <label class="control-label col-xs-2 col-md-6" for="timestepCharts">Timestep:</label>
+                                <div class="col-xs-10 col-md-6">
+                                    <select class="form-control" id="timestepCharts" onchange="onChangeChartsForm()">
+                                        <option value="MINUTE">Minutes</option>
+                                        <option value="HOURLY" selected>Hours</option>
+                                        <option value="DAILY" >Days</option>
+                                    </select>
+                                    <input type="hidden" name="pset" id="preset_ChartsForm"/>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-xs-6 col-md-1 ">
-                            <div class="form-group">
+
+                        <div class="col-xs-6 col-md-2">
+                            <div class="form-group text-center">
+                                <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
                                 <button type="button" class="btn btn-default" id="resetBtn_charts_form" onclick="resetChartsForm()" disabled>Reset</button>
                             </div>
                         </div>

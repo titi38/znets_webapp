@@ -36,13 +36,18 @@ function callAJAX(url, params, outputType, callback, callbackParams)
         {
             if(callback)
                 if(msg.response)
-                    if(callbackParams)
-                        if(sensorCommandType)
-                            callback(msg.response, callbackParams, sensorCommandType);
+                    if(!msg.response.errMsg)
+                        if(callbackParams)
+                            if(sensorCommandType)
+                                callback(msg.response, callbackParams, sensorCommandType);
+                            else
+                                callback(msg.response, callbackParams);
                         else
-                            callback(msg.response, callbackParams);
-                    else
-                        callback(msg.response);
+                            callback(msg.response);
+                    else {
+                        console.warn("TODO in CallAjax.js : Implement interface alerts on callAjax response contains errMsg (%i)", 107);
+                        addAjaxNotification(msg, null);
+                    }
                 else{
                     if(callback.length === 0)
                         callback();
@@ -54,6 +59,7 @@ function callAJAX(url, params, outputType, callback, callbackParams)
                 }
             else
                 console.log("In CallAjax : No callback function specified on CallAjax");
+
 
 
             addAjaxNotification(msg, null);

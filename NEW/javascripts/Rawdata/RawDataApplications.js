@@ -21,7 +21,7 @@ function setApplicationsId(jsonResponse) {
     });
 
     for (var i = 0; i < data.length; i++) {
-        $("#appId").append('<option value="' + data[i][appIdIndex] + '">' + data[i][appNameIndex] + '</option>')
+        $("#appId").append('<option value="' + data[i][appIdIndex] + '">' + ( (data[i][appNameIndex].indexOf('z') == 0) ? data[i][appNameIndex].substr(1) : data[i][appNameIndex] ) + '</option>')
     }
 
     // Process JQuery-UI combobox drawing

@@ -20,7 +20,12 @@ function setCountriesId(jsonResponse) {
     }
 
     // Process JQuery-UI combobox drawing
-    $( "#countryId" ).combobox();
+    $( "#countryId" ).combobox().data()._renderItem = function( ul, item ) {
+        return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( "<a>" + item.label + "<br>" + item.desc + "</a>" )
+            .appendTo( ul );
+    };;
 
 }
 

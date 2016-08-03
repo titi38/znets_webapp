@@ -36,7 +36,8 @@ $( function() {
 
         _createAutocomplete: function() {
             var selected = this.element.children( ":selected" ),
-                value = selected.val() ? selected.text() : "";
+                value = selected.val() ? selected.text() : "",
+                element_id = this.element.attr("id");
 
             this.input = $( "<input>" )
                 .appendTo( this.wrapper )
@@ -46,7 +47,30 @@ $( function() {
                 .autocomplete({
                     delay: 0,
                     minLength: 0,
-                    source: $.proxy( this, "_source" )
+                    source: $.proxy( this, "_source" ),
+                    create: function() {
+                        $(this).data('ui-autocomplete')._renderItem  = function (ul, item) {
+
+
+                            if (element_id === "countryId") {
+                                console.warn("countryId");
+                                return $("<li>")
+                                    .attr("data-value", item.value)
+                                    .append("<img src='images/flags/" + item.val.toLowerCase() + ".png'> " + item.label)
+                                    .appendTo(ul);
+                            }
+                            else
+                            {
+                                console.warn("other");
+                                return $("<li>")
+                                    .attr("data-value", item.label)
+                                    .append(item.label)
+                                    .appendTo(ul);
+                            }
+
+                        };
+
+                    }
                 })
                 .tooltip({
                     classes: {
@@ -63,6 +87,7 @@ $( function() {
 
                     if(this._onchange)
                         this._onchange();
+
                 },
 
                 autocompletechange: "_removeIfInvalid"
@@ -106,13 +131,16 @@ $( function() {
         },
 
         _source: function( request, response ) {
-            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" ),
+                element_id = this.element.attr("id");;
             response( this.element.children( "option" ).map(function() {
                 var text = $( this ).text();
+                var val = $( this ).val();
                 if ( this.value && ( !request.term || matcher.test(text) ) )
                     return {
                         label: text,
-                        value: text,
+                        value: (element_id === "countryId") ? ("<img src='images/flags/" + val.toLowerCase() + ".png'> " + text) : text,
+                        val: val,
                         option: this
                     };
             }) );

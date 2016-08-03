@@ -73,7 +73,8 @@ function ServerDate(theWSEventNotifier) {
     this.serverDateChanges = function(dateString){
 
         // change server date display
-        $("#serverDate").html(": "+moment(dateString).format('YYYY-MM-DD HH:mm')+ " (GMT)");
+        //$("#serverDate").html(": "+moment(dateString).format('YYYY-MM-DD HH:mm')+ " (GMT)");
+        $("#serverDate").html(": "+moment(dateString).format('HH:mm'));
 
 
         // change calendar max date

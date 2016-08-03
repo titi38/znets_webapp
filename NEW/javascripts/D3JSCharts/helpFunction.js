@@ -624,6 +624,52 @@ function updateTransform(selection,transform){
 }
 
 
+/************************************************************************************************************/
+
+function mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue){
+
+  if (!sumMap.has(elemToPush.item)) {
+    sumMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
+  } else {
+    elemSumMap = sumMap.get(elemToPush.item);
+    elemSumMap.sum += elemToPush.height;
+  }
+
+}
+
+/************************************************************************************************************/
+
+function sortAlphabet(a,b){
+
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return -1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return 1;
+  }
+
+  if(a.item === a.display && b.item !== b.display){
+    return 1;
+  }
+
+
+  if(b.item === b.display && a.item !== a.display){
+    return -1;
+  }
+
+  return a.display.localeCompare(b.display,"en");
+
+}
+
+/************************************************************************************************************/
+
+function mapToArray(array){
+  return function (value, key) {
+    array.push({item: key, sum: value.sum, display: value.display});
+  }
+
+}
+
 
 
 

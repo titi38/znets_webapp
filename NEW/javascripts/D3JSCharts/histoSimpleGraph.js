@@ -226,16 +226,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
       sumArray.push({item: key, sum: value.sum, display: value.display});
     });
 
-    sumArray.sort(function (a, b) {
-
-      if (a.item == " Remainder " || a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == " Remainder " || b.item == "OTHERS") {
-        return 1;
-      }
-      return b.sum - a.sum;
-    });
+    sumArray.sort(sortAlphabet);
 
     console.log(sumArray);
     //The most importants elements should have distinct colors.

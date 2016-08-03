@@ -25,19 +25,17 @@
 
 
 function testtest(){
-
+/*
   var myWSEventNotifier = new WSEventNotifier('EventNotifier');
-
-  /*********************************************************************************************************
-   New Logs Object
-   ********************************************************************************************************/
   test = new LastHourHistory(myWSEventNotifier);
   test.init();
-  drawChart("/dynamic/netNbLocalHosts.json?&pset=MINUTE&dd=2016-07-24+16%3A28&df=2016-07-25+16%3A28&dh=2", "Graph");
+
+ test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},40);
+ test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);
+  */
+  drawChart("/dynamic/netTopHostsTraffic.json?&pset=HOURLY&dd=2016-08-01+11%3A39&df=2016-08-02+11%3A39&dh=2", "Graph");
 
 
-  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},40);
-  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);
 
 }
 

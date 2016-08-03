@@ -1,9 +1,9 @@
-function createHisto2DStackDouble(div,svg,mydiv,urlJson){
+function create2HistoStack(div,svg,mydiv,urlJson){
 
+  svg.margin = {left: 60, right: 60, top: 40, zero: 40, bottom: 40};
   d3.json(urlJson, function (error, json) {
 
-    svg.margin.left = 50;
-    svg.margin.right = 50;
+
 
 
     console.log(json);
@@ -25,9 +25,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
 
 
-
-
-
     svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
 
 
@@ -39,6 +36,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     svg.svgOutput = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
     svg.svgInput = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top + svg.heightGraph + svg.margin.zero).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
 
+
+    var divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
 
     json = json.response;
     var jsonData = json.data;
@@ -199,54 +198,185 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
-    blabla(div, svg, svg.svgOutput,0);
-    blabla(div, svg, svg.svgInput,1);
+    blabla(div, svg, svg.svgOutput,0, divLegend, mydiv);
+    blabla(div, svg, svg.svgInput,1, divLegend, mydiv);
 
     var selection = svg.selectAll(".data");
 
     //Tooltip creation
     createTooltipHisto(svg,selection,sumMap);
 
-    
-    optionalAxesDoubleCreation(svg);
+
+    d3.select(window).on("resize." + mydiv, function () {
+      console.log("resize");
+
+      var clientRect = div.node().getBoundingClientRect();
+      var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+        divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
+      
+
+      svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
 
 
+      var oldsvgheightgraph = svg.heightGraph;
+      var oldsvgwidth = svg.width;
 
-    gridDoubleGraph(svg);
+      svg.width = divWidth - 1.15 * svg.tableWidth - svg.margin.left - svg.margin.right;
+      svg.height = divHeight - svg.margin.bottom - svg.margin.top;
 
 
-    addPopup(selection,div,svg,function(data){
-        desactivationElems();
-        activationElemsAutoScrollPopup(data);},
-      desactivationElems);
+      svg.heightGraph = (svg.height - svg.margin.zero)/2;
 
-    //Legend creation
-    var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");
 
-    tableLegendTitle(svg,trSelec);
+      svg.svgOutput
+        .attr("width", svg.width)
+        .attr("height", svg.heightGraph);
+      
+      svg.svgInput
+        .attr("y", svg.margin.top + svg.heightGraph + svg.margin.zero)
+        .attr("width", svg.width)
+        .attr("height", svg.heightGraph);
 
-    trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
-      return svg.colorMap.get(d.item);
+      svg.pieside = 0.75*Math.min(svg.height,svg.width);
+
+      redraw2HistoStack( svg,svg.svgOutput,0,oldsvgwidth,oldsvgheightgraph);
+      redraw2HistoStack( svg,svg.svgInput,1,oldsvgwidth,oldsvgheightgraph);
     });
-    trSelec.append("td").text(function (d) {
-      return d.display;
-    });
-    trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
-
 
     //zoom
-
+/*
 
 
     addZoomDouble(svg, updateHisto2DStackDouble);
-    d3.select(window).on("resize." + mydiv, function () {
-      console.log("resize");
-      redrawHisto2DStackDouble(div, svg);
-    });
+
 
     hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, svg.xMax);
-
+*/
   });
 
 
 }
+
+
+
+/************************************************************************************************************/
+
+function redraw2HistoStack(svg, svgChild, numSvg,oldsvgwidth,oldsvgheightgraph){
+
+  var ratiox = svg.width/oldsvgwidth;
+  var ratioy = svg.heightGraph/oldsvgheightgraph;
+
+  svgChild.x.range([0, svg.width]);
+  svgChild.y.range([svg.heightGraph,0]);
+
+  svgChild.frame.select(".rectOverlay").attr("height",svg.heightGraph);
+  svgChild.backgroundRect.attr("width",svg.width).attr("height",svg.heightGraph);
+
+  svgChild.transform.x = svgChild.transform.x*ratiox;
+  svgChild.transform.y = svgChild.transform.y*ratioy;
+
+  var scaleytot = svgChild.transform.k*svgChild.scaley;
+  var scalextot = svgChild.transform.k*svgChild.scalex;
+
+  svgChild.transform.k = Math.max(scalextot,scaleytot);
+  svgChild.scalex = scalextot/svgChild.transform.k;
+  svgChild.scaley = scaleytot/svgChild.transform.k;
+
+  svgChild.newX.range([0,svg.width]);
+  svgChild.newY.range([svg.heightGraph,0]);
+
+  svgChild.axisx
+    .attr('transform', 'translate(' + [svg.margin.left, svg.margin.top + svg.heightGraph + numSvg * (svg.heightGraph + svg.margin.zero) - 0.5] + ")");
+
+  svgChild.axisy
+    .attr('transform', 'translate(' + [svg.margin.left,
+        svg.margin.top + numSvg * (svg.heightGraph + svg.margin.zero) - 0.5 ] + ')');
+
+  if(svgChild.axisyRight){
+    svgChild.axisyRight
+      .attr('transform', 'translate(' + [svg.margin.left + svg.width,
+          svg.margin.top + numSvg * (svg.margin.zero + svg.heightGraph) - 0.5 ] + ')');
+  }
+
+  svgChild.ylabel.attr("x", -svg.margin.top -(svg.heightGraph) / 2 - numSvg  * (svg.margin.zero + svg.heightGraph));
+
+  if(svgChild.ylabelRight){
+
+    svgChild.ylabelRight
+      .attr('y', svg.margin.left + svg.width + svg.margin.right)
+      .attr("x", - svg.margin.top - svg.heightGraph/2 - numSvg * (svg.margin.zero + svg.heightGraph));
+
+  }
+
+  svgChild._groups[0][0].__zoom.k =svgChild.transform.k;
+  svgChild._groups[0][0].__zoom.x =svgChild.transform.x;
+  svgChild._groups[0][0].__zoom.y =svgChild.transform.y;
+
+  var maxHeight = svg.margin.top/2 + svg.margin.zero/4 + svg.heightGraph;
+
+
+  svgChild.table.style("max-height", maxHeight + "px");
+  svgChild.divtable.style("margin-bottom",maxHeight - parseInt(svgChild.table.style("height"),10) + "px");
+
+  svgChild.text.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightGraph/8 +
+    parseFloat(getComputedStyle(svgChild.text.node()).fontSize)) + ")");
+
+  update2HistoStack(svg,svgChild);
+
+  redrawPopup2Histo(svg, svgChild, numSvg);
+
+
+}
+
+
+/***********************************************************************************************************/
+
+
+function redrawPopup2Histo(svg, svgChild, numSvg){
+
+  svgChild.overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px")
+    .style("top",(numSvg ===0?0:svg.margin.top + svg.height/2) + "px");
+
+  if(svgChild.popup.pieChart != null){
+    svgChild.popup.pieChart.attr("width", svg.pieside).attr("height", svg.pieside);
+    /*
+    var chartside = 0.75*svg.pieside;
+    svgChild.popup.innerRad = 0;
+    svgChild.popup.outerRad = chartside/2;
+    svgChild.popup.pieChart.g.attr("transform","translate(" + (svg.pieside/2) + "," + (svg.pieside/2) + ")");
+
+
+    var arc = d3.arc()
+      .innerRadius(svgChild.popup.innerRad)
+      .outerRadius(svgChild.popup.outerRad)
+      .startAngle(function(d){return d.startAngle})
+      .endAngle(function(d){return d.endAngle});
+
+
+    svgChild.popup.pieChart.g.selectAll("path").attr("d",arc);
+    svgChild.popup.pieChart.g.selectAll("text").attr("transform",function(d){
+      var midAngle = (d.endAngle + d.startAngle)/2;
+      var dist = svgChild.popup.outerRad * 0.8;
+      return "translate(" + (Math.sin(midAngle)*dist) + "," +(-Math.cos(midAngle)*dist) +")";});
+
+
+
+    svgChild.popup.pieChart.table.style("max-height",svg.pieside + "px");
+
+
+    positionPopup(svg);
+
+    svgChild.popup.dist = Child.popup.outerRad * 0.8;
+    svgChild.popup.distTranslTemp = svgChild.popup.outerRad/4;
+    svgChild.popup.distTransl = svgChild.popup.outerRad/10;
+
+
+    */
+  }
+
+
+}
+
+
+
+

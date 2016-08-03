@@ -25,9 +25,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
       divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
 
-
-
-
+    
 
     svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
 
@@ -109,6 +107,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     var colorMap = new Map();
     var sumMap = new Map();
+    var sumMapIn = new Map();
+    var sumMapOut = new Map();
+
     var i, elemJson, elemToPush, elemSumMap;
     svg.timeMin = Infinity;
     var timeMax = 0;
@@ -131,22 +132,22 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         direction: elemJson[contentDirectionValue].toLowerCase()
       };
 
-      if (!sumMap.has(elemToPush.item)) {
-        sumMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
-      } else {
-        elemSumMap = sumMap.get(elemToPush.item);
-        elemSumMap.sum += elemToPush.height;
-      }
+
+      mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue);
 
       svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
       timeMax = Math.max(timeMax,elemToPush.x);
 
       if(elemJson[contentDirectionValue] === "IN"){
         elemToPush.direction = "inc";
+
+        mapElemToSum(sumMapIn, elemToPush, elemJson, contentDisplayValue);
         svg.valuesIn.push(elemToPush);
 
       }else{
 
+
+        mapElemToSum(sumMapOut, elemToPush, elemJson, contentDisplayValue);
         svg.valuesOut.push(elemToPush)
 
       }
@@ -159,25 +160,25 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     var sumArray = [];
+    var sumArrayIn = [];
+    var sumArrayOut = [];
+
+    
 
     var f = colorEval();
 
 
-    sumMap.forEach(function (value, key) {
-      sumArray.push({item: key, sum: value.sum, display: value.display});
-    });
+    sumMap.forEach(mapToArray(sumArray));
+    sumMapIn.forEach(mapToArray(sumArrayIn));
+    sumMapOut.forEach(mapToArray(sumArrayOut));
 
-    sumArray.sort(function (a, b) {
 
-      if (a.item == " Remainder " || a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == " Remainder " || b.item == "OTHERS") {
-        return 1;
-      }
-      return b.sum - a.sum;
-    });
 
+    //sort alphabetically
+    
+    sumArray.sort(sortAlphabet);
+    sumArrayIn.sort(sortAlphabet);
+    sumArrayOut.sort(sortAlphabet);
 
     console.log(sumArray);
     //The most importants elements should have distinct colors.
@@ -194,6 +195,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     console.log(colorMap);
+
+
 
     //step = 1 hour by default
     svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
@@ -729,16 +732,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       sumArray.push({item: key, sum: value.sum, display: value.display});
     });
 
-    sumArray.sort(function (a, b) {
-
-      if (a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == "OTHERS") {
-        return 1;
-      }
-      return b.sum - a.sum;
-    });
+    sumArray.sort(sortAlphabet);
 
 
     console.log(sumArray);

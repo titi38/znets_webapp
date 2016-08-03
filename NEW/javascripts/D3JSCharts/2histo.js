@@ -154,31 +154,18 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     var f = colorEval();
     
-    function mapToArray(array){
-      return function(value, key) {
-      array.push({item: key, sum: value.sum, display: value.display});
-      };
-    }
+
 
 
     sumMap.forEach(mapToArray(svg.sumArrayTotal));
     sumInMap.forEach(mapToArray(svg.svgInput.sumArray));
     sumOutMap.forEach(mapToArray(svg.svgOutput.sumArray));
     
-    function sortArray(a, b) {
 
-      if (a.item == " Remainder " || a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == " Remainder " || b.item == "OTHERS") {
-        return 1;
-      }
-      return b.sum - a.sum;
-    }
     
-    svg.sumArrayTotal.sort(sortArray);
-    svg.svgInput.sumArray.sort(sortArray);
-    svg.svgOutput.sumArray.sort(sortArray);
+    svg.sumArrayTotal.sort(sortAlphabet);
+    svg.svgInput.sumArray.sort(sortAlphabet);
+    svg.svgOutput.sumArray.sort(sortAlphabet);
     
     //The most importants elements should have distinct colors.
     i = 0;

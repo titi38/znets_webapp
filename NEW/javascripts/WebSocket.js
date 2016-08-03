@@ -44,8 +44,12 @@ function WSEventNotifier(webSocketName)
 
             addWebsocketNotification(json.type, json.name, json.param, null);
             
-            if(key in eventSuscribers)
-                eventSuscribers[key](json.param);
+            if(key in eventSuscribers){
+                for (var i = 0; i < eventSuscribers[key].length; i++) {
+                    console.error(eventSuscribers[key][i]);
+                    eventSuscribers[key][i](json.param);
+                }
+            }
             else
                 console.error("TODO webSocket.onmessage : no eventSuscribers for key '%s' | %i", key, 101);
         };
@@ -74,7 +78,9 @@ function WSEventNotifier(webSocketName)
 
     this.addCallback = function(type, nom, func)
     {
-        eventSuscribers[type+':'+nom]=func;
+        if(!eventSuscribers[type+':'+nom])
+            eventSuscribers[type+':'+nom] = [];
+        eventSuscribers[type+':'+nom].push(func);
     }
 
 

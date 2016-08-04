@@ -100,7 +100,7 @@ function optionalAxesDoubleCreation(svg){
     domainOutput.forEach(function(elem,i){ domainOutput[i] *= coef;});
 
     var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
-      domainOutput[1] - domainOutput[0]), isBytes);
+      domainOutput[1] - domainOutput[0]), false);
 
 
     svg.yInputRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYInput.range())
@@ -154,7 +154,7 @@ function optionalAxesDoubleUpdate(svg){
     domainOutput.forEach(function(elem,i){ domainOutput[i] *= coef;});
 
     var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
-      domainOutput[1] - domainOutput[0]), isBytes);
+      domainOutput[1] - domainOutput[0]), false);
 
 
     svg.yInputRightDisplay.range(svg.newYInput.range())

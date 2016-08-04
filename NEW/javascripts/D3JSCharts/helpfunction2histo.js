@@ -1,6 +1,6 @@
 
 
-function blabla(div, svg, svgChild, numSvg, divLegend, mydiv){
+function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   var maxHeight = svg.margin.top/2 + svg.margin.zero/4 + svg.heightGraph;
 
@@ -222,22 +222,6 @@ function xValues(svg) {
   }
 }
 
-/************************************************************************************************************/
-
-
-function sortValues(a, b) {
-
-  if (a.x - b.x != 0) {
-    return a.x - b.x;
-  }
-  if (a.item == " Remainder " || a.item == "OTHERS") {
-    return -1;
-  }
-  if (b.item == " Remainder " || b.item == "OTHERS") {
-    return 1;
-  }
-  return b.height - a.height;
-}
 
 
 /************************************************************************************************************/
@@ -385,7 +369,7 @@ function optionalAxes2HistoCreation(svg, svgChild, numSvg){
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), isBytes);
+    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), false);
 
 
     svgChild.yRightDisplay = d3.scaleLinear().range(svgChild.newY.range())
@@ -428,7 +412,7 @@ function optionalAxes2HistoUpdate(svg, svgChild){
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), isBytes);
+    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), false);
 
 
     svgChild.yRightDisplay.range(svgChild.newY.range())

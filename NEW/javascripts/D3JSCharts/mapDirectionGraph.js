@@ -426,10 +426,10 @@ function autoUpdateMapDirection(svg,urlJson){
   var duration = 800;
 
   var id = test.addMinuteRequest(urlJson,function(json){
-    
+
     console.log(json);
 
-    if(typeof json === "undefined"|| typeof json.data === "undefined"){
+    if(typeof json === "undefined" || typeof json.data === "undefined"){
       console.warn("map update: no data");
       return;
     }
@@ -511,10 +511,10 @@ function autoUpdateMapDirection(svg,urlJson){
 
     updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
 
-    svg.countriesIn.transition().duration(duration).style("fill",function(d){return svg.scaleColorIn(d.id)})
+    svg.countriesIn.style("fill",function(d){return svg.scaleColorIn(d.id)})
       .select("title").text(svg.titleIn);
 
-    svg.countriesOut.transition().duration(duration).style("fill",function(d){
+    svg.countriesOut.style("fill",function(d){
         return svg.scaleColorOut(d.id)})
       .select("title").text(svg.titleOut);
 

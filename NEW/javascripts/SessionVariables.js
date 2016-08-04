@@ -10,9 +10,9 @@ function initializeRawdataShownColumnsSessionVariable(tableColumns) {
 
     for (var i = 0; i < tableColumns.length; i++) {
 
-            rawdataShownColumns[tableColumns[i].title] = true;
+        rawdataShownColumns[tableColumns[i].title] = true;
 
-            $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '"><input type="checkbox" checked/>&nbsp;' + tableColumns[i].title + '</a></li>');
+        $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '"><div class="columnIcon glyphicon glyphicon-ok"></div>&nbsp;' + tableColumns[i].title + '</a></li>');
 
     }
 
@@ -31,16 +31,19 @@ function setRawdataShownColumnsSessionVariable(tableColumns) {
         if (rawdataShownColumns[tableColumns[i].title] == 'undefined' || rawdataShownColumns[tableColumns[i].title] == null)
         {
             rawdataShownColumns[tableColumns[i].title] = true;
-            $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '" onclick="switchShownColumnState($(this))"><input type="checkbox" checked/>&nbsp;' + tableColumns[i].title + '</a></li>');
+            $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '" onclick="switchShownColumnState($(this))"><div class="columnIcon glyphicon glyphicon-ok"></div>&nbsp;' + tableColumns[i].title + '</a></li>');
         }
         else {
             if ($('#shownColumns').find('a[data-column-name="' + tableColumns[i].title + '"]').length > 0)
             {
-                $('#shownColumns').find('a[data-column-name="'+tableColumns[i].title+'"]').find('input').attr('checked', rawdataShownColumns[tableColumns[i].title]);
+                if(rawdataShownColumns[tableColumns[i].title])
+                    $('#shownColumns').find('a[data-column-name="'+tableColumns[i].title+'"]').find('div.columnIcon').switchClass('glyphicon-remove','glyphicon-ok');
+                else
+                    $('#shownColumns').find('a[data-column-name="'+tableColumns[i].title+'"]').find('div.columnIcon').switchClass('glyphicon-ok','glyphicon-remove');
             }
             else
             {
-                $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '" onclick="switchShownColumnState($(this))"><input type="checkbox" ' + ( (rawdataShownColumns[tableColumns[i].title]) ? 'checked' : '' ) + '/>&nbsp;' + tableColumns[i].title + '</a></li>')
+                $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '" onclick="switchShownColumnState($(this))"><div class="columnIcon glyphicon ' + ( (rawdataShownColumns[tableColumns[i].title]) ? 'glyphicon-ok' : 'glyphicon-remove' ) + '"></div>&nbsp;' + tableColumns[i].title + '</a></li>')
             }
         }
 
@@ -48,7 +51,7 @@ function setRawdataShownColumnsSessionVariable(tableColumns) {
 
     /*rawdataShownColumns[key] = value;
 
-    localStorage.setItem('rawdataShownColumns', JSON.stringify(rawdataShownColumns));*/
+     localStorage.setItem('rawdataShownColumns', JSON.stringify(rawdataShownColumns));*/
 
 }
 
@@ -72,5 +75,3 @@ function changeRawdataShownColumnsSessionVariableKey(key) {
     localStorage.setItem('rawdataShownColumns', JSON.stringify(rawdataShownColumns));
 
 }
-
-

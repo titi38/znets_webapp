@@ -95,7 +95,7 @@ function serializeRawDataForm(){
 
 function getRawData(paramRawData){
 
-    callAJAX("rawDataFlow.json", paramRawData, "json", addRawDataResults, null);
+    callAJAX("rawDataFlow.json", paramRawData, "json", checkRawDataResults, paramRawData);
 
 }
 
@@ -108,6 +108,28 @@ function submitFormRawData(){
     }
 
     getRawData(serializeRawDataForm());
+
+}
+
+function checkRawDataResults(jsonResponse, paramRawData){
+
+    console.error(jsonResponse);
+    console.error(paramRawData);
+
+    if(jsonResponse.warnMsg ){
+        if(jsonResponse.warnMsg === "Long query detected, continue ?" ){
+            var r = confirm("Long query detected, do you still want to continue ?");
+            if (r == true) {
+                callAJAX("rawDataFlow.json", paramRawData+"&force", "json", addRawDataResults, null);
+            } else {
+                // DO NOTHING
+            }
+        }
+        else
+            console.error("TODO in RawDataForm.js : UNEXPECTED value (on callAjax response.result) of 'warnMsg' attribute !", 777);
+    }
+    else
+        callAJAX("rawDataFlow.json", paramRawData, "json", addRawDataResults, null);
 
 }
 
@@ -146,7 +168,7 @@ function drawRawdataDatatable(rawdataTabID, jsonResponse) {
     var datatableColumnDefs = []
 
     for (var i = 0; i < jsonResponse.content.length; i++) {
-       // if(jsonResponse.content[i] === )
+        // if(jsonResponse.content[i] === )
         datatableColumnDefs.push({"targets": i, "visible": getRawdataShownColumnsSessionVariable()[tableColumns[i].title], "className": "dt-head-center dt-body-center"});
     }
 
@@ -194,6 +216,14 @@ function drawShownColumnsSelector(rawdataTabID) {
         // Blur (unfocus) clicked "a" tag
         $(event.target).blur();
 
+
+        var div = $(this).find('div.columnIcon');
+
+        if(div.hasClass("glyphicon-ok"))
+            div.switchClass("glyphicon-ok", "glyphicon-remove")
+        else
+            div.switchClass("glyphicon-remove", "glyphicon-ok")
+
         // Prevent "a" tag default behavior (href redirection)
         //event.preventDefault();
 
@@ -201,35 +231,13 @@ function drawShownColumnsSelector(rawdataTabID) {
         return false;
     });
 
-
-    $('#shownColumns a input').on('click', function (event) {
-
-        // Prevent "a" tag default behavior (href redirection)
-        event.stopPropagation();
-        event.preventDefault();
-
-        // Prevent Dropdown menu closing
-        return false;
-
-    });
 }
 
 
 function switchShownColumnState(a_element) {
 
-
-    // Get the input checkbox object
-    var input = a_element.find('input');
-
-    // Toggle the checked state
-    if (input.prop('checked'))
-        input.prop('checked', false);
-    else
-        input.prop('checked', true);
-
     // Refresh session variable shownColumns
     changeRawdataShownColumnsSessionVariableKey(a_element.attr('data-column-name'));
-
 
 }
 
@@ -271,7 +279,7 @@ function setIpLocValue(){
 function setIpExtValue(){
 
     $("#ipextHidden").val( $("#ipext").val() + ( ($("#ipextMask").val()) ? ("/"+$("#ipextMask").val()) : "" ) )
-    
+
 }
 
 
@@ -333,7 +341,6 @@ function setLocalhostIp(){
     $("#iploc").val( $("#nameloc").val() );
 
 }
-
 
 
 

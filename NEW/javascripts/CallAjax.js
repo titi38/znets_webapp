@@ -83,8 +83,22 @@ function callAJAX(url, params, outputType, callback, callbackParams)
         console.warn("TODO in CallAjax.js : Request failed (%i)", 555);
         console.warn(jqXHR);
         console.warn(textStatus);
-        //addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
-addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", "");    
+
+        switch ( textStatus ){
+
+            case "parseError" :
+                addNotification("parseError : error while parsing received Json. Check it in the console (network tab)! (401)", "alert-danger", null);
+                break;
+            default :
+                console.error("Something went wrong :");
+                console.error(jqXHR);
+                console.error(textStatus);
+                addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
+                break;
+
+        }
+        // TODO : uncomment ? (adding a page reload on request fail) addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
+        addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", null);
 });
 
     /**

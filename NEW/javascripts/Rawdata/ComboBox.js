@@ -18,8 +18,6 @@ $( function() {
         },
 
         /*_renderItem: function( ul, item ) {
-
-            console.error("rendering");
             return $( "<li>" )
                 .attr( "data-value", item.value )
                 .append( item.label )
@@ -53,7 +51,6 @@ $( function() {
 
 
                             if (element_id === "countryId") {
-                                console.warn("countryId");
                                 return $("<li>")
                                     .attr("data-value", item.value)
                                     .append("<img src='images/flags/" + item.val.toLowerCase() + ".png'> " + item.label)
@@ -61,7 +58,6 @@ $( function() {
                             }
                             else
                             {
-                                console.warn("other");
                                 return $("<li>")
                                     .attr("data-value", item.label)
                                     .append(item.label)
@@ -69,6 +65,18 @@ $( function() {
                             }
 
                         };
+
+                    },
+                    select: function( event, ui ) {
+
+                        if (element_id === "countryId") {
+
+                            $(this).css("background-image", "url(images/flags/" + ui.item.val.toLowerCase() + ".png)");
+                            $(this).css("background-position", "7px 7px");
+                            $(this).css("background-repeat", "no-repeat");
+                            $(this).css("padding-left", "30px");
+
+                        }
 
                     }
                 })
@@ -139,7 +147,8 @@ $( function() {
                 if ( this.value && ( !request.term || matcher.test(text) ) )
                     return {
                         label: text,
-                        value: (element_id === "countryId") ? ("<img src='images/flags/" + val.toLowerCase() + ".png'> " + text) : text,
+                        // DOESN'T WORK ! value: (element_id === "countryId") ? ("<img src='images/flags/" + val.toLowerCase() + ".png'> " + text) : text,
+                        value: text,
                         val: val,
                         option: this
                     };

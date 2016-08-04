@@ -10,8 +10,8 @@
         <div class="dropdown open col-xs-12">
 
             <div class="btn-group chartNavDropdownContainer">
-                <button class="fa fa-plus-square fa-2x btn btn-lg btn-secondary dropdown-toggle chartNavDropdownButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <p class="chartTitle pull-right hidden" id="network | prepend 'shownChartTitle'">Chart Title</p>
+                <button class="fa fa-plus-square fa-1_3x btn btn-lg btn-secondary dropdown-toggle chartNavDropdownButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <p class="chartTitle pull-right" id="network | prepend 'shownChartTitle'">Select a chart to display</p>
                 </button>
                 <div class="dropdown-menu chartNavContainer">
                     <ul class="nav nav-tabs nav-stacked nav-nest">
@@ -28,7 +28,7 @@
 
                         <li><a class="navtab" data-toggle="collapse" rv-href="network | prepend '#flowsBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> Nb FLOWS</a></li>
                         <ul rv-id="network | prepend 'flowsBy'" class="nav nav-tabs nav-stacked collapse">
-                            <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsAll'" rv-data-network="network" data-chart-json="netNbFlow.json" data-chart-title="Traffic by Localhost (Top)" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Flow count</a></li>
+                            <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsAll'" rv-data-network="network" data-chart-json="netNbFlow.json" data-chart-title="Flow Count" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Flow count</a></li>
                             <li class="hourly_only"><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByLocalhosts'" rv-data-network="network" data-chart-json="netTopHostsNbFlow.json" data-chart-title="Flow number by Localhost (Top)" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> by Localhosts (Top)</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByServices'" rv-data-network="network" data-chart-json="netTopServicesNbFlow.json" data-chart-title="Flow number by Local Service (Top)" data-ajax-params="service=loc"><i class="fa fa-area-chart" aria-hidden="true"></i> by Local Services (Top)</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#flowsByServices'" rv-data-network="network" data-chart-json="netTopServicesNbFlow.json" data-chart-title="Flow number by External Service (Top)" data-ajax-params="service=ext"><i class="fa fa-area-chart" aria-hidden="true"></i> by External Services (Top)</a></li>

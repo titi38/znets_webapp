@@ -426,9 +426,7 @@ function autoUpdateMapDirection(svg,urlJson){
   var duration = 800;
 
   var id = test.addMinuteRequest(urlJson,function(json){
-
-    throw "bjr hihi";
-
+    
     console.log(json);
 
     if(typeof json === "undefined"|| typeof json.data === "undefined"){

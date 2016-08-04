@@ -1,6 +1,6 @@
 
 
-
+/*
 form#rawData_form{
     font-size: 0.8em;
 }
@@ -17,4 +17,21 @@ form#rawData_form legend {
 div.countryIcon {
     content:url('../../images/more.png');
     float: right;
+}*/
+
+div.columnIcon.glyphicon-ok{
+    color: darkgreen;
+}
+
+div.columnIcon.glyphicon-remove{
+    color: darkred;
+}
+
+div.columnIcon{
+    float: left;
+    height: 14px;
+}
+
+#shownColumns.dropdown-menu>li>a {
+     padding: 3px 10px;
 }

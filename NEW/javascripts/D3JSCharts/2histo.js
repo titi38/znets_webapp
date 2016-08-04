@@ -89,6 +89,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     var hourShift = getTimeShift(urlJson)  * 3600000;
 
+    var itemType = jsonContent[contentItemValue];
+
     // Data are processed and sorted according to their direction.
     for(i = 0; i < dataLength; i++){
       elemJson = jsonData[i];
@@ -104,24 +106,14 @@ function create2HistoStack(div,svg,mydiv,urlJson){
         direction: elemJson[contentDirectionValue].toLowerCase()
       };
 
-      if (!sumMap.has(elemToPush.item)) {
-        sumMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
-      } else {
-        elemSumMap = sumMap.get(elemToPush.item);
-        elemSumMap.sum += elemToPush.height;
-      }
+      mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
       svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
       timeMax = Math.max(timeMax,elemToPush.x);
 
       if(elemJson[contentDirectionValue] === "IN"){
 
-        if (!sumInMap.has(elemToPush.item)) {
-          sumInMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
-        } else {
-          elemSumMap = sumInMap.get(elemToPush.item);
-          elemSumMap.sum += elemToPush.height;
-        }
+        mapElemToSum(sumInMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
 
         elemToPush.direction = "inc";
@@ -129,12 +121,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
       }else{
 
-        if (!sumOutMap.has(elemToPush.item)) {
-          sumOutMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
-        } else {
-          elemSumMap = sumOutMap.get(elemToPush.item);
-          elemSumMap.sum += elemToPush.height;
-        }
+        mapElemToSum(sumOutMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
         svg.svgOutput.values.push(elemToPush);
 
@@ -185,8 +172,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
-    blabla(div, svg, svg.svgOutput,0, divLegend, mydiv);
-    blabla(div, svg, svg.svgInput,1, divLegend, mydiv);
+    createChildSvg(div, svg, svg.svgOutput,0, divLegend, mydiv);
+    createChildSvg(div, svg, svg.svgInput,1, divLegend, mydiv);
 
     var selection = svg.selectAll(".data");
 

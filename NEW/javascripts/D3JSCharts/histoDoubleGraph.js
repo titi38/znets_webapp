@@ -116,6 +116,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     var hourShift = getTimeShift(urlJson)  * 3600000;
 
+    var itemType = jsonContent[contentItemValue];
+
     // Data are processed and sorted according to their direction.
     for(i = 0; i < dataLength; i++){
       elemJson = jsonData[i];
@@ -132,7 +134,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       };
 
 
-      mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue);
+      mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
       svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
       timeMax = Math.max(timeMax,elemToPush.x);
@@ -140,13 +142,13 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       if(elemJson[contentDirectionValue] === "IN"){
         elemToPush.direction = "inc";
 
-        mapElemToSum(sumMapIn, elemToPush, elemJson, contentDisplayValue);
+        mapElemToSum(sumMapIn, elemToPush, elemJson, contentDisplayValue,itemType);
         svg.valuesIn.push(elemToPush);
 
       }else{
 
 
-        mapElemToSum(sumMapOut, elemToPush, elemJson, contentDisplayValue);
+        mapElemToSum(sumMapOut, elemToPush, elemJson, contentDisplayValue,itemType);
         svg.valuesOut.push(elemToPush)
 
       }
@@ -208,20 +210,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       elem.x = (elem.x - svg.timeMin)/svg.step
     });
 
-
-    function sortValues(a, b) {
-
-      if (a.x - b.x != 0) {
-        return a.x - b.x;
-      }
-      if (a.item == " Remainder " || a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == " Remainder " || b.item == "OTHERS") {
-        return 1;
-      }
-      return b.height - a.height;
-    }
 
     svg.valuesIn.sort(sortValues);
     svg.valuesOut.sort(sortValues);
@@ -865,19 +853,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     });
 
 
-    function sortValues(a, b) {
-
-      if (a.x - b.x != 0) {
-        return a.x - b.x;
-      }
-      if (a.item == " Remainder " || a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == " Remainder " || b.item == "OTHERS") {
-        return 1;
-      }
-      return b.height - a.height;
-    }
 
     svg.valuesIn.sort(sortValues);
     svg.valuesOut.sort(sortValues);
@@ -1187,10 +1162,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     var trSelecIn = createTableLegendDouble(svg,"In",sumArrayIn,colorMap, activationElemsFromTable,desactivationElems);
 
     //zoom
-
-
-
-
     addZoomDouble(svg, updateHisto2DStackDouble);
     d3.select(window).on("resize." + mydiv, function () {
       console.log("resize");

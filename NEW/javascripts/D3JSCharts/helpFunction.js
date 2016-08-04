@@ -318,7 +318,7 @@ function createTooltipHisto(svg, selection, sumMap){
       .text(function (d) {
         heightPerSec = d.height * coef;
         convertArray = quantityConvertUnit(d.height,isBytes);
-        cAOptionel = quantityConvertUnit(heightPerSec,isBytes);
+        cAOptionel = quantityConvertUnit(heightPerSec,false);
         valDisplay = sumMap.get(d.item).display;
         return ((d.item === valDisplay)?"":(valDisplay + "\n"))
           + d.item + "\n"
@@ -626,10 +626,14 @@ function updateTransform(selection,transform){
 
 /************************************************************************************************************/
 
-function mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue){
+function mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue,itemType){
 
   if (!sumMap.has(elemToPush.item)) {
-    sumMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
+    sumMap.set(elemToPush.item, {sum: elemToPush.height,display:
+      (elemToPush.item === " Remainder ")?" Remainder ":
+        (elemJson[contentDisplayValue] === "")?elemToPush.item:
+          (itemType === "portproto")?elemToPush.item + " (" +  elemJson[contentDisplayValue] + ")":
+            elemJson[contentDisplayValue]});
   } else {
     sumMap.get(elemToPush.item).sum += elemToPush.height;
   }
@@ -673,3 +677,19 @@ function mapToArray(array){
 
 
 
+/************************************************************************************************************/
+
+
+function sortValues(a, b) {
+
+  if (a.x - b.x != 0) {
+    return a.x - b.x;
+  }
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return 1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return -1;
+  }
+  return a.height - b.height;
+}

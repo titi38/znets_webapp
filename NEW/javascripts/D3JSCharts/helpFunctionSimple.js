@@ -119,7 +119,7 @@ function yAxeSimpleCreation(svg){
 
   var domain = svg.newY.domain();
 
-  var convert = quantityConvertUnit(domain[1] - domain[0], isBytes);
+  var convert = svg.units === "hosts"?["",1]:quantityConvertUnit(domain[1] - domain[0], isBytes);
 
 
   svg.yDisplay = d3.scaleLinear().clamp(true).range(svg.newY.range())
@@ -127,6 +127,7 @@ function yAxeSimpleCreation(svg){
 
   svg.axisy = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
     .attr("class", "axisGraph");
+  
   svg.axisy.call(d3.axisLeft(svg.yDisplay));
 
   niceTicks(svg.axisy);
@@ -157,7 +158,7 @@ function optionalYAxeSimpleCreation(svg) {
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(domain[1] - domain[0], isBytes);
+    var convert = quantityConvertUnit(domain[1] - domain[0], false);
 
 
     svg.yDisplayRight = d3.scaleLinear().clamp(true).range(svg.newY.range())
@@ -200,7 +201,7 @@ function optionalYAxeSimpleUpdate(svg) {
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(domain[1] - domain[0], isBytes);
+    var convert = quantityConvertUnit(domain[1] - domain[0], false);
 
 
     svg.yDisplayRight.range(svg.newY.range())

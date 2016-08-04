@@ -84,10 +84,12 @@
 }
 
 .tableLegend{
-
+    padding-top: auto;
+    padding-bottom: auto;
     border-collapse: collapse;
     table-layout: fixed;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     cursor: default;
 }
 
@@ -318,4 +320,22 @@
     font-weight: bold;
     text-anchor: middle;
 
+}
+
+.parentSvg {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    shape-rendering: crispEdges;
+
+}
+
+tr{
+    margin-bottom: 0;
+}
+table {
+    margin-bottom: 0;
 }

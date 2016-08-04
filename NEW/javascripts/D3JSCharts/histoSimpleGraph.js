@@ -109,6 +109,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     var hourShift = getTimeShift(urlJson)  * 3600000;
 
+    var itemType = jsonContent[contentItemValue];
 
     // Data are processed and sorted.
     for(i = 0; i < dataLength; i++){
@@ -124,7 +125,8 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
         item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue]
       };
 
-      elemToPush.display = (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue];
+      elemToPush.display = (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:
+        (itemType === "portproto")?elemToPush.item + " (" +  elemJson[contentDisplayValue] + ")": elemJson[contentDisplayValue];
 
       if(!sumMapByX.has(elemToPush.x)){
         sumMapByX.set(elemToPush.x,elemToPush.height);
@@ -173,19 +175,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
 
-    function sortValues(a, b) {
-
-      if (a.x - b.x != 0) {
-        return a.x - b.x;
-      }
-      if (a.item == " Remainder " || a.item == "OTHERS") {
-        return -1;
-      }
-      if (b.item == " Remainder " || b.item == "OTHERS") {
-        return 1;
-      }
-      return b.height - a.height;
-    }
 
     //values are sorted according primarily x (date) then height.
 

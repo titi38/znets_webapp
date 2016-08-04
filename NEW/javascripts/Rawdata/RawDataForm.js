@@ -116,38 +116,60 @@ function checkRawDataResults(jsonResponse, paramRawData){
     console.error(jsonResponse);
     console.error(paramRawData);
 
+    // Set cursor style to 'load' status
+    $(document.body).css({'cursor' : 'wait'});
+
+
+    var rawdataTabID = moment();
+
     if(jsonResponse.warnMsg ){
         if(jsonResponse.warnMsg === "Long query detected, continue ?" ){
             var r = confirm("Long query detected, do you still want to continue ?");
             if (r == true) {
-                callAJAX("rawDataFlow.json", paramRawData+"&force", "json", addRawDataResults, null);
+                // Create rawdata Tab
+                addRawDataTab(rawdataTabID);
+                // Force callAjax execution on server side
+                callAJAX("rawDataFlow.json", paramRawData+"&force", "json", drawRawdataDatatable, rawdataTabID);
             } else {
-                // DO NOTHING
+                // Set cursor style to 'default' status
+                $(document.body).css({'cursor' : 'default'});
             }
         }
-        else
-            console.error("TODO in RawDataForm.js : UNEXPECTED value (on callAjax response.result) of 'warnMsg' attribute !", 777);
+        else {
+            console.error("TODO in RawDataForm.js : UNEXPECTED value (on callAjax response.result) of 'warnMsg' attribute ! (707)");
+
+            // Set cursor style to 'default' status
+            $(document.body).css({'cursor' : 'default'});
+        }
     }
-    else
-        callAJAX("rawDataFlow.json", paramRawData, "json", addRawDataResults, null);
+    else if(jsonResponse.content) {
+        // Create rawdata Tab
+        addRawDataTab(rawdataTabID);
+        drawRawdataDatatable(jsonResponse, rawdataTabID);
+    }
+    else {
+        console.error("TODO in RawDataForm.js : UNEXPECTED response on rawdata callAjax ! (708)");
+
+        // Set cursor style to 'default' status
+        $(document.body).css({'cursor': 'default'});
+    }
 
 }
 
-function addRawDataResults(jsonResponse){
+/*function addRawDataResults(jsonResponse, rawdataTabID){
 
     var rawdataTabID = moment();
 
     addRawDataTab(rawdataTabID);
 
-    drawRawdataDatatable(rawdataTabID, jsonResponse);
+    drawRawdataDatatable(jsonResponse, rawdataTabID);
 
-}
-
-
+}*/
 
 
-function drawRawdataDatatable(rawdataTabID, jsonResponse) {
 
+
+function drawRawdataDatatable(jsonResponse, rawdataTabID) {
 
     var tableColumns = [];
     for (var i = 0; i < jsonResponse.content.length; i++){
@@ -196,6 +218,9 @@ function drawRawdataDatatable(rawdataTabID, jsonResponse) {
     drawShownColumnsSelector(rawdataTabID);
 
 
+
+    // Set cursor style to 'default' status after datatable is created
+    $(document.body).css({'cursor' : 'default'});
 
 }
 

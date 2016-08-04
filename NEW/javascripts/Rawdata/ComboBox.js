@@ -69,6 +69,8 @@ $( function() {
                     },
                     select: function( event, ui ) {
 
+                        console.log("select");
+
                         if (element_id === "countryId") {
 
                             $(this).css("background-image", "url(images/flags/" + ui.item.val.toLowerCase() + ".png)");
@@ -94,7 +96,10 @@ $( function() {
                     });
 
                     if(this._onchange)
+                    {
+                        console.error("Applying onchange :");
                         this._onchange();
+                    }
 
                 },
 
@@ -158,9 +163,10 @@ $( function() {
         _removeIfInvalid: function( event, ui ) {
 
             // Selected an item, nothing to do
-            if ( ui.item ) {
-                return;
-            }
+            if ( ui )
+                if ( ui.item ) {
+                    return;
+                }
 
             // Search for a match (case-insensitive)
             var value = this.input.val(),
@@ -174,26 +180,42 @@ $( function() {
             });
 
             // Found a match, nothing to do
-            if ( valid ) {
-                return;
+            if ( !valid ) {
+
+                // If process is here, then, no match was found : THEN ===>
+
+                // Select the first otion element which is "All" with value = 0
+                this.element.children( "option" )[0].selected = true;
+
+                // Remove invalid value
+                this.input
+                    .val( "" );
+                    //.attr( "title", value + " didn't match any item" )
+                    //.tooltip( "open" );
+                this.element.val( "" );
+                this._delay(function() {
+                    this.input.tooltip( "close" ).attr( "title", "" );
+                }, 2500 );
+                this.input.autocomplete( "instance" ).term = "";
+
             }
 
-            // Remove invalid value
-            this.input
-                .val( "" )
-                .attr( "title", value + " didn't match any item" )
-                .tooltip( "open" );
-            this.element.val( "" );
-            this._delay(function() {
-                this.input.tooltip( "close" ).attr( "title", "" );
-            }, 2500 );
-            this.input.autocomplete( "instance" ).term = "";
+            if (this.element.attr("id") === "countryId")
+                $(this.input).css("background-image", "");
+
+            // Apply onchange function if it exist
+            if(this._onchange)
+                this._onchange();
+
+
         },
 
         _destroy: function() {
             this.wrapper.remove();
             this.element.show();
         }
+
+
     });
 
 } );

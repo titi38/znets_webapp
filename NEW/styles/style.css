@@ -10,6 +10,17 @@ html, body {
 /*************************************************
 * Styles
 */
+.navbar-brand.mybrand{
+    padding: 9px;
+}
+
+.brand.logo {
+    background-image: url("../../images/ZNeTS_3.gif");
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 120px;
+    background-size: contain;
+}
 
 .color-red-danger{
     color: #a94442;

@@ -146,6 +146,7 @@ function drawRawdataDatatable(rawdataTabID, jsonResponse) {
     var datatableColumnDefs = []
 
     for (var i = 0; i < jsonResponse.content.length; i++) {
+       // if(jsonResponse.content[i] === )
         datatableColumnDefs.push({"targets": i, "visible": getRawdataShownColumnsSessionVariable()[tableColumns[i].title], "className": "dt-head-center dt-body-center"});
     }
 

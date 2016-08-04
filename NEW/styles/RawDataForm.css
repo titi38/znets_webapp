@@ -12,3 +12,9 @@ form#rawData_form .panel-heading {
 form#rawData_form legend {
     margin-bottom: 10px;
 }
+
+
+div.countryIcon {
+    content:url('../../images/more.png');
+    float: right;
+}

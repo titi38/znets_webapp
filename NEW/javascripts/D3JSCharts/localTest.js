@@ -33,7 +33,7 @@ function testtest(){
  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},40);
  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);
   */
-  drawChart("/dynamic/netTopHostsTraffic.json?&pset=HOURLY&dd=2016-08-01+11%3A39&df=2016-08-02+11%3A39&dh=2", "Graph");
+  drawChart("./netTopHostsTraffic.json?pset=HOURLY&dh=2", "Graph");
 
 
 

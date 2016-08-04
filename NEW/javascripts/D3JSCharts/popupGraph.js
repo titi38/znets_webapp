@@ -53,7 +53,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
         //drawComplData("/dynamic/netExtHostsTopHostsTraffic.json?dd=2016-07-18%2020:00&df=2016-07-18%2021:00&pset=HOURLY&type=out&ip=193.48.83.251", svg, svg.pieside, d,div.overlay);
-        drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
+        //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
       }, 500);
 
     });

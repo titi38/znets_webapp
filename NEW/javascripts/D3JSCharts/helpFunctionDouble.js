@@ -274,3 +274,431 @@ function gridDoubleGraph(svg){
 
 
 }
+
+
+/***********************************************************************************************************/
+
+function createTableLegendDouble(svg, direction, sumArrayDirection, colorMap,activFunct,desacFunct){
+
+  var maxHeight = svg.height/2;
+
+  console.log(svg.divLegend);
+
+  var divtableStr = "divtable" + direction;
+  svg.divLegend[divtableStr] = svg.divLegend.append("div").classed("borderTable diagram",true)
+    .style("top", svg.margin.top/2 +  "px")
+    .style("position","relative");
+
+  var divtable = svg.divLegend[divtableStr];
+
+  divtable.table = divtable.append("table")
+    .classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px")
+    .style("max-height", maxHeight + "px");
+  
+  var table = divtable.table;
+
+  var trSelec = table.selectAll("tr").data(sumArrayDirection).enter().append("tr");
+
+  tableLegendTitle(svg,trSelec);
+
+  trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
+    return colorMap.get(d.item);
+  });
+
+  trSelec.append("td").text(function (d) {
+    return d.display;
+  });
+  
+  divtable.style("margin-bottom",maxHeight - parseInt(table.style("height"),10) + "px");
+  
+  trSelec.on("mouseover",activFunct(direction)).on("mouseout", desacFunct);
+
+  hideShowValuesDirection(svg,trSelec,direction);
+  
+
+  return trSelec;
+
+}
+
+
+/***********************************************************************************************************/
+
+function hideShowValuesDirection(svg,trSelec,direction){
+
+  var duration = 800;
+  var trSelecSize = trSelec.size();
+  var valuesDirectionBounded = svg["values" + direction];
+  var stringifiedDirection = JSON.stringify(valuesDirectionBounded);
+  var valuesDirectionImmutable = JSON.parse(stringifiedDirection);
+  var valuesDirectionFinal = JSON.parse(stringifiedDirection);
+
+  var hiddenValuesDirection = [];
+
+  var firstX = valuesDirectionImmutable[0].x;
+  var lengthX = valuesDirectionImmutable[valuesDirectionImmutable.length - 1].x + 1;
+
+  var valuesFinalLength = valuesDirectionFinal.length;
+
+  var totalDirectionString = "total" + direction;
+
+
+
+
+    trSelec.on("click", function(d){
+
+
+      var clickedRow = d3.select(this);
+
+
+      svg.transition("hideshow" + direction).duration(duration).tween("",function(){
+  
+        var x, sum, i, index, elemValues;
+  
+  
+        if(svg.popup.pieChart !==null){
+          return;
+        }
+  
+        index = hiddenValuesDirection.indexOf(d.item);
+  
+        var functionHeight;
+  
+        if(index === -1){
+          //hide the data
+  
+          hiddenValuesDirection.push(d.item);
+          clickedRow.classed("strikedRow",true);
+          functionHeight = function(){
+            return 0;
+          }
+  
+        }else{
+          //show the data
+  
+          hiddenValuesDirection.splice(index,1);
+          clickedRow.classed("strikedRow",false);
+  
+          functionHeight = function(){
+            return valuesDirectionImmutable[i].height;
+          }
+  
+        }
+  
+        x = firstX;
+        i = 0;
+        var totalSumDirection = [];
+  
+        if(direction === "Out"){
+
+          elemValues = valuesDirectionFinal[i];
+
+          while(x < lengthX){
+  
+            sum = 0;
+            
+            while(i < valuesFinalLength && elemValues.x === x){
+  
+  
+              if(elemValues.item === d.item){
+                elemValues.height = functionHeight();
+              }
+  
+              sum += elemValues.height;
+              elemValues.y = sum;
+              i++;
+              elemValues = valuesDirectionFinal[i];
+            }
+            totalSumDirection.push(sum);
+            x++;
+          }
+  
+        }else{
+
+          elemValues = valuesDirectionFinal[i];
+
+          while(x < lengthX){
+  
+            sum = 0;
+  
+  
+            while(i < valuesFinalLength && elemValues.x === x){
+  
+              if(elemValues.item === d.item){
+                elemValues.height = functionHeight();
+              }
+  
+              elemValues.y = sum;
+              sum += elemValues.height;
+              i++;
+              elemValues = valuesDirectionFinal[i];
+            }
+            totalSumDirection.push(sum);
+            x++;
+          }
+  
+        }
+  
+  
+  
+        var finalTotalDirection;
+  
+        if(hiddenValuesDirection.length === trSelecSize){
+  
+          finalTotalDirection = 1;
+  
+        }else{
+  
+          finalTotalDirection = d3.max(totalSumDirection);
+  
+        }
+  
+  
+
+        var startTotalDirection = svg[totalDirectionString];
+  
+        var valuesDirectionStart = JSON.parse(JSON.stringify(valuesDirectionBounded));
+  
+        var t0;
+  
+        return function(t){
+  
+          t0 = (1-t);
+  
+          var valueStart, valueFinal;
+  
+          valuesDirectionBounded.forEach(function(valueBounded,i){
+  
+            valueStart = valuesDirectionStart[i];
+            valueFinal = valuesDirectionFinal[i];
+            valueBounded.y = t0 * valueStart.y + t * valueFinal.y;
+            valueBounded.height = t0 * valueStart.height + t * valueFinal.height;
+  
+          });
+  
+          svg[totalDirectionString] = t0 * startTotalDirection + t * finalTotalDirection;
+  
+          calculationsHideShowDirection(svg);
+  
+        }; //function t
+  
+  
+  
+      }); //svg tween transition on click
+
+
+
+
+  }) //trselec on click
+      
+    .on("contextmenu",function(d){
+      d3.event.preventDefault();
+
+      var clickedRow = d3.select(this);
+
+      svg.transition("hideshow" + direction).duration(duration).tween("",function() {
+
+        var x, sum, i, index, elemValues;
+
+
+        if(svg.popup.pieChart !==null){
+          return;
+        }
+
+        index = hiddenValuesDirection.indexOf(d.item);
+
+        var functionHeight;
+
+        if ((index !== -1) || (trSelecSize - 1 !== hiddenValuesDirection.length )) {
+          //Hide all data except this one
+
+          hiddenValuesDirection = trSelec.data().map(function (elem) {
+            return elem.item;
+          });
+          
+          hiddenValuesDirection.splice(hiddenValuesDirection.indexOf(d.item), 1);
+
+          trSelec.classed("strikedRow", true);
+          clickedRow.classed("strikedRow", false);
+
+          functionHeight = function(){
+
+            if(elemValues.item !== d.item){
+              return 0;
+            }
+
+            return valuesDirectionImmutable[i].height;
+
+          };
+
+        }else{
+
+
+          //index === -1 && hiddenValues.length == trSelec.size() -1
+          // ->show all data.
+          hiddenValuesDirection = [];
+          trSelec.classed("strikedRow", false);
+
+          functionHeight = function(){
+            return valuesDirectionImmutable[i].height;
+          };
+          
+          
+        }
+
+
+
+
+        x = firstX;
+        i = 0;
+        var totalSumDirection = [];
+
+        if(direction === "Out"){
+
+          elemValues = valuesDirectionFinal[i];
+
+          while(x < lengthX){
+
+            sum = 0;
+
+
+            while(i < valuesFinalLength && elemValues.x === x){
+
+
+              elemValues.height = functionHeight();
+
+              sum += elemValues.height;
+              elemValues.y = sum;
+              i++;
+              elemValues = valuesDirectionFinal[i];
+            }
+            totalSumDirection.push(sum);
+            x++;
+          }
+
+        }else{
+
+          elemValues = valuesDirectionFinal[i];
+
+          while(x < lengthX){
+
+            sum = 0;
+
+
+            while(i < valuesFinalLength && elemValues.x === x){
+
+              elemValues.height = functionHeight();
+
+
+              elemValues.y = sum;
+              sum += elemValues.height;
+              i++;
+              elemValues = valuesDirectionFinal[i];
+            }
+            totalSumDirection.push(sum);
+            x++;
+          }
+
+        }
+
+
+        var finalTotalDirection;
+
+        if(hiddenValuesDirection.length === trSelecSize){
+
+          finalTotalDirection = 1;
+
+        }else{
+
+          finalTotalDirection = d3.max(totalSumDirection);
+
+        }
+
+
+
+        var startTotalDirection = svg[totalDirectionString];
+
+        var valuesDirectionStart = JSON.parse(JSON.stringify(valuesDirectionBounded));
+
+        var t0;
+
+        return function(t){
+
+          t0 = (1-t);
+
+          var valueStart, valueFinal;
+
+          valuesDirectionBounded.forEach(function(valueBounded,i){
+
+            valueStart = valuesDirectionStart[i];
+            valueFinal = valuesDirectionFinal[i];
+            valueBounded.y = t0 * valueStart.y + t * valueFinal.y;
+            valueBounded.height = t0 * valueStart.height + t * valueFinal.height;
+
+          });
+
+          svg[totalDirectionString] = t0 * startTotalDirection + t * finalTotalDirection;
+
+          calculationsHideShowDirection(svg);
+
+        }; //function t
+
+
+
+
+      }); //svg tween transition on contextmenu
+
+
+    }); //trselec on contextmenu
+      
+
+
+}
+
+
+/**********************************************************************************************************************/
+
+function calculationsHideShowDirection(svg){
+
+  var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
+
+  svg.heightOutput = (svg.height - svg.margin.zero)*svg.totalOut/(svg.totalIn+svg.totalOut);
+
+  var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
+    svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
+  var marginViewBottom = marginViewTop + svg.margin.zero;
+
+  svg.yInput.range([svg.heightOutput+svg.margin.zero,svg.height]);
+  svg.yOutput.range([svg.heightOutput,0]);
+  svg.yInput.domain([0,svg.totalIn*1.1]);
+  svg.yOutput.domain([0,svg.totalOut*1.1]);
+  svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
+  svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
+  svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate1),
+    svg.yOutput.invert(actTranslate1)]);
+
+  svg.newYInput.domain([svg.yInput.invert(actTranslate1  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
+    svg.yInput.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
+
+
+  updateHisto2DStackDouble(svg);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -423,9 +423,10 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 /********************************************************************************************************************/
 
 function autoUpdateMapDirection(svg,urlJson){
+  var duration = 800;
 
   var id = test.addMinuteRequest(urlJson,function(json){
-
+    
     console.log(json);
 
     if(typeof json === "undefined"|| typeof json.data === "undefined"){
@@ -510,10 +511,10 @@ function autoUpdateMapDirection(svg,urlJson){
 
     updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
 
-    svg.countriesIn.style("fill",function(d){return svg.scaleColorIn(d.id)})
+    svg.countriesIn.transition().duration(duration).style("fill",function(d){return svg.scaleColorIn(d.id)})
       .select("title").text(svg.titleIn);
 
-    svg.countriesOut.style("fill",function(d){
+    svg.countriesOut.transition().duration(duration).style("fill",function(d){
         return svg.scaleColorOut(d.id)})
       .select("title").text(svg.titleOut);
 

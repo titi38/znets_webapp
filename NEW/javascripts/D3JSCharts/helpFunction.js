@@ -631,8 +631,7 @@ function mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue){
   if (!sumMap.has(elemToPush.item)) {
     sumMap.set(elemToPush.item, {sum: elemToPush.height,display: (elemToPush.item === " Remainder ")?" Remainder ":(elemJson[contentDisplayValue] === "")?elemToPush.item:elemJson[contentDisplayValue]});
   } else {
-    elemSumMap = sumMap.get(elemToPush.item);
-    elemSumMap.sum += elemToPush.height;
+    sumMap.get(elemToPush.item).sum += elemToPush.height;
   }
 
 }

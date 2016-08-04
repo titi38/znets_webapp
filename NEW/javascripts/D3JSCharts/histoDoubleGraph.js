@@ -5,6 +5,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     svg.margin.left = 50;
     svg.margin.right = 50;
+    svg.margin.top = 20;
+    svg.margin.bottom = 20;
+    svg.margin.zero = 28;
 
 
     console.log(json);
@@ -86,11 +89,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       return;
     }
 
-    //Now, no more nodata can happen,so we create the table
-    var divtable = div.append("div").classed("diagram divtable", true);
-    divtable.append("h4").classed("tableTitle", true).text("Legend");
-    var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-      (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
+
 
     svg.units = unitsStringProcessing(json.units);
 
@@ -156,7 +155,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     }
 
 
-
+    //
 
 
     var sumArray = [];
@@ -268,18 +267,18 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     }
 
 
-    var totalIn = d3.max(totalSumIn);
-    var totalOut = d3.max(totalSumOut);
+    svg.totalIn = d3.max(totalSumIn);
+    svg.totalOut = d3.max(totalSumOut);
 
-    svg.heightOutput = (svg.height - svg.margin.zero) * totalOut / (totalIn + totalOut);
+    svg.heightOutput = (svg.height - svg.margin.zero) * svg.totalOut / (svg.totalIn + svg.totalOut);
 
     svg.yInput.range([svg.heightOutput + svg.margin.zero, svg.height]);
     svg.yOutput.range([svg.heightOutput, 0]);
 
 
     //the *1.1 operation allow a little margin
-    svg.yInput.domain([0, totalIn * 1.1]);
-    svg.yOutput.domain([0, totalOut * 1.1]);
+    svg.yInput.domain([0, svg.totalIn * 1.1]);
+    svg.yOutput.domain([0, svg.totalOut * 1.1]);
 
     //Text background
 
@@ -346,22 +345,45 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     svg.activeItem = null;
 
-    function activationElems(d) {
+    function activationElemsFromTable(direction){
 
-      if (svg.popup.pieChart !== null) {
-        return;
+      if(direction === "Out"){
+
+        return function(d){
+          if (svg.popup.pieChart !== null) {
+            return;
+          }
+
+          svg.activeItem = {item: d.item, direction: "out"};
+
+          function testitem(data) {
+            return d.item === data.item;
+
+          }
+
+          trSelecOut.filter(testitem).classed("outlined", true);
+          selectionOut.filter(testitem).each(blink);
+
+        };
+
       }
 
-      svg.activeItem = d.item;
+      return function(d){
+        if (svg.popup.pieChart !== null) {
+          return;
+        }
 
-      function testitem(data) {
-        return d.item == data.item;
+        svg.activeItem = {item: d.item, direction: "inc"};
 
-      }
+        function testitem(data) {
+          return d.item === data.item;
 
-      trSelec.filter(testitem).classed("outlined", true);
+        }
 
-      selection.filter(testitem).each(blink);
+        trSelecIn.filter(testitem).classed("outlined", true);
+        selectionIn.filter(testitem).each(blink);
+
+      };
 
     }
 
@@ -371,7 +393,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       if (svg.popup.pieChart !== null) {
         return;
       }
-      svg.activeItem = d.item;
+      
+      svg.activeItem = {item: d.item, direction: d.direction};
 
 
       function testitem(data) {
@@ -379,18 +402,32 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
       }
 
-      var elem = trSelec.filter(testitem).classed("outlined", true);
+      var elem;
 
-      scrollToElementTableTransition(elem,table);
+      if(d.direction === "out"){
 
-      selection.filter(testitem).each(blink);
+        elem = trSelecOut.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+
+        selectionOut.filter(testitem).each(blink);
+        
+      }else{
+
+        elem = trSelecIn.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+
+        selectionIn.filter(testitem).each(blink);
+        
+      }
 
     }
-
     function activationElemsAutoScrollPopup(d) {
 
       desactivationElems();
-      svg.activeItem = d.item;
+
+      svg.activeItem = {item: d.item, direction: d.direction};
 
 
       function testitem(data) {
@@ -398,9 +435,21 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
       }
 
-      var elem = trSelec.filter(testitem).classed("outlined", true);
-      scrollToElementTableTransition(elem,table);
+      var elem;
 
+      if(d.direction === "out"){
+
+        elem = trSelecOut.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+
+      }else{
+
+        elem = trSelecIn.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+
+      }
 
     }
 
@@ -410,20 +459,35 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         return;
       }
 
+      var activeItem = svg.activeItem.item;
 
       function testitem(data) {
-        return data.item == svg.activeItem;
+        return data.item == activeItem;
       }
 
-      trSelec.filter(testitem).classed("outlined", false);
 
-      selection.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
+      if(svg.activeItem.direction === "out"){
+
+
+        trSelecOut.filter(testitem).classed("outlined", false);
+
+        selectionOut.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+
+
+      }else{
+
+        trSelecIn.filter(testitem).classed("outlined", false);
+
+        selectionIn.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+
+
+      }
+
 
       svg.activeItem = null;
 
     }
 
-    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
 
     svg.axisx = svg.append("g")
@@ -455,22 +519,20 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         activationElemsAutoScrollPopup(data);},
       desactivationElems);
 
-    //Legend creation
-    var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");
 
-    tableLegendTitle(svg,trSelec);
 
-    trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
-      return colorMap.get(d.item);
-    });
-    trSelec.append("td").text(function (d) {
-      return d.display;
-    });
-    trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
+    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
+
+    //Now, no more nodata can happen,so we create the table
+    svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
+
+    var trSelecOut = createTableLegendDouble(svg,"Out",sumArrayOut,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecIn = createTableLegendDouble(svg,"In",sumArrayIn,colorMap, activationElemsFromTable,desactivationElems);
 
     //zoom
 
+    
 
 
     addZoomDouble(svg, updateHisto2DStackDouble);
@@ -478,8 +540,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       console.log("resize");
       redrawHisto2DStackDouble(div, svg);
     });
-
-    hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xMax);
 
   });
 
@@ -495,7 +555,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
   d3.json(urlJson, function (error, json) {
 
     svg.margin.left = 50;
-
+    svg.margin.right = 50;
+    svg.margin.top = 20;
+    svg.margin.bottom = 20;
+    svg.margin.zero = 28;
 
     console.log(json);
 
@@ -565,12 +628,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       noData(div,svg,mydiv);
       return;
     }
-
-    //Now, no more nodata can happen,so we create the table
-    var divtable = div.append("div").classed("diagram divtable", true);
-    divtable.append("h4").classed("tableTitle", true).text("Legend");
-    var table = divtable.append("table").classed("diagram font2 tableLegend", true).style("width", svg.tableWidth + "px").style("max-height",
-      (divHeight - 2 * parseInt(div.style("font-size"),10) - 60) + "px");
+    
 
     svg.units = unitsStringProcessing(json.units);
 
@@ -598,6 +656,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     var colorMap = new Map();
     var sumMap = new Map();
+    var sumMapIn = new Map();
+    var sumMapOut = new Map();
+    
     var i,j,k, elemJson, elemToPush, elemSumMap;
     svg.timeMin = Infinity;
     var timeMax = 0;
@@ -652,9 +713,24 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
             if (elemToPush.direction === "in") {
               elemToPush.direction = "inc";
+
+              if (!sumMapIn.has(elemToPush.item)) {
+                sumMapIn.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+              } else {
+                elemSumMap = sumMapIn.get(elemToPush.item);
+                elemSumMap.sum += elemToPush.height;
+              }
+
               svg.valuesIn.push(elemToPush);
 
             } else {
+
+              if (!sumMapOut.has(elemToPush.item)) {
+                sumMapOut.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+              } else {
+                elemSumMap = sumMapOut.get(elemToPush.item);
+                elemSumMap.sum += elemToPush.height;
+              }
 
               svg.valuesOut.push(elemToPush)
 
@@ -703,9 +779,24 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
           if(elemToPush.direction === "in"){
             elemToPush.direction = "inc";
+
+            if (!sumMapIn.has(elemToPush.item)) {
+              sumMapIn.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+            } else {
+              elemSumMap = sumMapIn.get(elemToPush.item);
+              elemSumMap.sum += elemToPush.height;
+            }
+
             svg.valuesIn.push(elemToPush);
 
           }else{
+
+            if (!sumMapOut.has(elemToPush.item)) {
+              sumMapOut.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+            } else {
+              elemSumMap = sumMapOut.get(elemToPush.item);
+              elemSumMap.sum += elemToPush.height;
+            }
 
             svg.valuesOut.push(elemToPush)
 
@@ -719,26 +810,35 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     }
 
-
+    //
 
 
 
     var sumArray = [];
+    var sumArrayIn = [];
+    var sumArrayOut = [];
+
+
 
     var f = colorEval();
 
 
-    sumMap.forEach(function (value, key) {
-      sumArray.push({item: key, sum: value.sum, display: value.display});
-    });
+    sumMap.forEach(mapToArray(sumArray));
+    sumMapIn.forEach(mapToArray(sumArrayIn));
+    sumMapOut.forEach(mapToArray(sumArrayOut));
+
+
+
+    //sort alphabetically
 
     sumArray.sort(sortAlphabet);
-
+    sumArrayIn.sort(sortAlphabet);
+    sumArrayOut.sort(sortAlphabet);
 
     console.log(sumArray);
     //The most importants elements should have distinct colors.
     i = 0;
-    if (sumArray[0].item == "OTHERS") {
+    if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
       colorMap.set(sumArray[0].item, "#f2f2f2");
       i = 1;
     }
@@ -751,6 +851,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     console.log(colorMap);
 
+
+
+    //step = 1 hour by default
+    svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
 
     svg.valuesIn.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
@@ -766,10 +870,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       if (a.x - b.x != 0) {
         return a.x - b.x;
       }
-      if (a.item == "OTHERS") {
+      if (a.item == " Remainder " || a.item == "OTHERS") {
         return -1;
       }
-      if (b.item == "OTHERS") {
+      if (b.item == " Remainder " || b.item == "OTHERS") {
         return 1;
       }
       return b.height - a.height;
@@ -819,18 +923,18 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
 
 
-    var totalIn = d3.max(totalSumIn);
-    var totalOut = d3.max(totalSumOut);
+    svg.totalIn = d3.max(totalSumIn);
+    svg.totalOut = d3.max(totalSumOut);
 
-    svg.heightOutput = (svg.height - svg.margin.zero) * totalOut / (totalIn + totalOut);
+    svg.heightOutput = (svg.height - svg.margin.zero) * svg.totalOut / (svg.totalIn + svg.totalOut);
 
     svg.yInput.range([svg.heightOutput + svg.margin.zero, svg.height]);
     svg.yOutput.range([svg.heightOutput, 0]);
 
 
     //the *1.1 operation allow a little margin
-    svg.yInput.domain([0, totalIn * 1.1]);
-    svg.yOutput.domain([0, totalOut * 1.1]);
+    svg.yInput.domain([0, svg.totalIn * 1.1]);
+    svg.yOutput.domain([0, svg.totalOut * 1.1]);
 
     //Text background
 
@@ -888,28 +992,54 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     var selection = svg.selectAll(".data");
 
+    //Tooltip creation
+
     createTooltipHisto(svg,selection,sumMap);
+
 
     var blink = blinkCreate(colorMap);
 
     svg.activeItem = null;
 
-    function activationElems(d) {
+    function activationElemsFromTable(direction){
 
-      if (svg.popup.pieChart !== null) {
-        return;
+      if(direction === "Out"){
+
+        return function(d){
+          if (svg.popup.pieChart !== null) {
+            return;
+          }
+
+          svg.activeItem = {item: d.item, direction: "out"};
+
+          function testitem(data) {
+            return d.item === data.item;
+
+          }
+
+          trSelecOut.filter(testitem).classed("outlined", true);
+          selectionOut.filter(testitem).each(blink);
+
+        };
+
       }
 
-      svg.activeItem = d.item;
+      return function(d){
+        if (svg.popup.pieChart !== null) {
+          return;
+        }
 
-      function testitem(data) {
-        return d.item == data.item;
+        svg.activeItem = {item: d.item, direction: "inc"};
 
-      }
+        function testitem(data) {
+          return d.item === data.item;
 
-      trSelec.filter(testitem).classed("outlined", true);
+        }
 
-      selection.filter(testitem).each(blink);
+        trSelecIn.filter(testitem).classed("outlined", true);
+        selectionIn.filter(testitem).each(blink);
+
+      };
 
     }
 
@@ -919,7 +1049,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       if (svg.popup.pieChart !== null) {
         return;
       }
-      svg.activeItem = d.item;
+
+      svg.activeItem = {item: d.item, direction: d.direction};
 
 
       function testitem(data) {
@@ -927,18 +1058,32 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
       }
 
-      var elem = trSelec.filter(testitem).classed("outlined", true);
+      var elem;
 
-      scrollToElementTableTransition(elem,table);
+      if(d.direction === "out"){
 
-      selection.filter(testitem).each(blink);
+        elem = trSelecOut.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+
+        selectionOut.filter(testitem).each(blink);
+
+      }else{
+
+        elem = trSelecIn.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+
+        selectionIn.filter(testitem).each(blink);
+
+      }
 
     }
-
     function activationElemsAutoScrollPopup(d) {
 
       desactivationElems();
-      svg.activeItem = d.item;
+
+      svg.activeItem = {item: d.item, direction: d.direction};
 
 
       function testitem(data) {
@@ -946,9 +1091,21 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
       }
 
-      var elem = trSelec.filter(testitem).classed("outlined", true);
-      scrollToElementTableTransition(elem,table);
+      var elem;
 
+      if(d.direction === "out"){
+
+        elem = trSelecOut.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+
+      }else{
+
+        elem = trSelecIn.filter(testitem).classed("outlined", true);
+
+        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+
+      }
 
     }
 
@@ -958,21 +1115,35 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         return;
       }
 
+      var activeItem = svg.activeItem.item;
 
       function testitem(data) {
-        return data.item == svg.activeItem;
+        return data.item == activeItem;
       }
 
-      trSelec.filter(testitem).classed("outlined", false);
 
-      selection.filter(testitem).transition().duration(0).attr("stroke", "#000000")
-        .attr("fill", colorMap.get(svg.activeItem));
+      if(svg.activeItem.direction === "out"){
+
+
+        trSelecOut.filter(testitem).classed("outlined", false);
+
+        selectionOut.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+
+
+      }else{
+
+        trSelecIn.filter(testitem).classed("outlined", false);
+
+        selectionIn.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+
+
+      }
+
 
       svg.activeItem = null;
 
     }
 
-    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
 
     svg.axisx = svg.append("g")
@@ -994,9 +1165,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     axesDoubleCreation(svg);
     optionalAxesDoubleCreation(svg);
 
+
+
     gridDoubleGraph(svg);
-
-
 
 
     addPopup(selection,div,svg,function(data){
@@ -1004,23 +1175,19 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         activationElemsAutoScrollPopup(data);},
       desactivationElems);
 
-    //Legend creation
-    var cA;
-    var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");
-
-    tableLegendTitle(svg,trSelec);
 
 
-    trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
-      return colorMap.get(d.item);
-    });
-    trSelec.append("td").text(function (d) {
-      return d.display;
-    });
-    trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
+    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
+
+    //Now, no more nodata can happen,so we create the table
+    svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
+
+    var trSelecOut = createTableLegendDouble(svg,"Out",sumArrayOut,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecIn = createTableLegendDouble(svg,"In",sumArrayIn,colorMap, activationElemsFromTable,desactivationElems);
 
     //zoom
+
 
 
 
@@ -1030,10 +1197,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       redrawHisto2DStackDouble(div, svg);
     });
 
-    hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, xMax);
-
   });
-
 
 }
 
@@ -1099,8 +1263,12 @@ function redrawHisto2DStackDouble(div,svg){
 
   svg.width = divWidth-1.15*svg.tableWidth - svg.margin.left - svg.margin.right;
   svg.height = divHeight - svg.margin.bottom - svg.margin.top;
-  div.select("table").style("max-height",
-    (divHeight - 2*parseInt(div.style("font-size"),10) -60)  + "px");
+
+  var maxHeight = svg.height/2, table;
+  table = svg.divLegend.divtableOut.table.style("max-height",maxHeight + "px");
+  svg.divLegend.divtableOut.style("margin-bottom",maxHeight - parseInt(table.style("height"),10) + "px");
+  table = svg.divLegend.divtableIn.table.style("max-height",maxHeight + "px");
+  svg.divLegend.divtableIn.style("margin-bottom",maxHeight - parseInt(table.style("height"),10) + "px");
 
   var oldheightoutput = svg.heightOutput;
 
@@ -1503,12 +1671,14 @@ function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
 
       var index = hiddenValues.indexOf(d.item);
 
+      
+      
+      
+      
       if( index === -1){
         //Hide the data
         hiddenValues.push(d.item);
         clickedRow.classed("strikedRow",true);
-
-
 
         x=svg.valuesIn[0].x;
         i=0;

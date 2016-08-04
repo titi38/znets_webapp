@@ -195,10 +195,7 @@ function blabla(div, svg, svgChild, numSvg, divLegend, mydiv){
   trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
 
   svgChild.divtable.style("margin-bottom",maxHeight - parseInt(svgChild.table.style("height"),10) + "px");
-
-  //TODO temporaire a supprimer après addpopup
-  svgChild.popup = [];
-  svgChild.popup.pieChart = null;
+  
 
   addZoom2Histo(svg, svgChild, update2HistoStack);
 

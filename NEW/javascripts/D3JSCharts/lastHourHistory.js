@@ -138,7 +138,7 @@ function LastHourHistory(theWSEventNotifier) {
         var response = newResult;
         var processedLastMinute=60;
         var indexesToClear = [];
-        callbacks.forEach(function(callbackObj,i){
+        callbacks.forEach(function(callbackObj,index){
 
           response = JSON.parse(JSON.stringify(response));
 
@@ -172,14 +172,19 @@ function LastHourHistory(theWSEventNotifier) {
             callbackObj.callback(response);
           }catch(e){
             console.warn("callback error: " + e);
-            indexesToClear.push(i);
+            indexesToClear.push(index);
           }
 
         });
 
-        indexesToClear.forEach(function(i){
-          callbacks.splice(i,1);
-        })
+        indexesToClear.sort(function (a,b) {
+          return b - a;
+        });
+        
+        indexesToClear.forEach(function(index){
+          callbacks.splice(index,1);
+        });
+
 
       });
 

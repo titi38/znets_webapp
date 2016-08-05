@@ -8,7 +8,8 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
 
 
   d3.queue()
-    .defer(d3.json,"worldmap.json")
+    .defer(d3.json,"NEW/javascripts/D3JSCharts/worldmap.json")
+//    .defer(d3.json, "worldmap.json")
     .defer(d3.json, urlJson)
     .await(function(error,worldmap,json){
       createMapDirection(error, div, svg, mydiv, urlJson, worldmap, json);
@@ -31,6 +32,8 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
  ***********************************************************************************************************/
 
 function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
+
+  svg.style("margin", "auto").classed("diagram",false).style("display","block");
 
   var colorInStart = "#ffff00", colorInEnd = "#ff0000";
   var colorOutStart = "#66ffcc", colorOutEnd = "#0066ff";
@@ -425,7 +428,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 function autoUpdateMapDirection(svg,urlJson){
   var duration = 800;
 
-  var id = test.addMinuteRequest(urlJson,function(json){
+  var id = myLastHourHistory.addMinuteRequest(urlJson,function(json){
 
     console.log(json);
 

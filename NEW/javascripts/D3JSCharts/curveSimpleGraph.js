@@ -229,7 +229,6 @@ function createCurve(div, svg, mydiv, urlJson){
 
   });
 
-
 }
 
 

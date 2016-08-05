@@ -47,7 +47,7 @@ function initialisation(){
     /*********************************************************************************************************
      New LastHourHistory Object
      ********************************************************************************************************/
-    var myLastHourHistory = new LastHourHistory(myWSEventNotifier);
+    myLastHourHistory = new LastHourHistory(myWSEventNotifier);
     myLastHourHistory.init();
 
     /*********************************************************************************************************

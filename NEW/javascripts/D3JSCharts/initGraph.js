@@ -33,7 +33,8 @@ function drawChartFromInterface(urlJson, mydiv) {
     svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
 
 
-    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson)
+    //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json?net=labo");
+    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson);
 
 }
 
@@ -57,7 +58,7 @@ function drawChart(urlJson, mydiv) {
 
     var svg = div.append("svg").classed("diagram",true);
 
-    svg.classed("parentSvg",true).on("contextmenu.preventDefault",function(){d3.event.preventDefault();});;
+    svg.classed("parentSvg",true).on("contextmenu.preventDefault",function(){d3.event.preventDefault();});
 
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 

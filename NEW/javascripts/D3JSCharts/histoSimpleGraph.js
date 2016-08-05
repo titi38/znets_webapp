@@ -714,6 +714,7 @@ function addZoomSimple(svg,updateFunction){
     })
 
     .on("start",function () {
+      svg.on("contextmenu.zoomReset",null);
       clearTimeout(svg.timer);
       event = {k:svg.transform.k,x:svg.transform.x,y:svg.transform.y};
 
@@ -796,6 +797,8 @@ function addZoomSimple(svg,updateFunction){
       svg.style("cursor","auto");
 
 
+      svg.on("contextmenu.zoomReset",simpleZoomReset(svg, updateFunction));
+      
     });
 
   svg.call(svg.zoom);

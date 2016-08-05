@@ -289,7 +289,7 @@ function legendAxisX2Histo(svg, svgChild){
     });
 
   }
-  
+
   axisXNiceLegend(svgChild);
 }
 
@@ -679,6 +679,9 @@ function addZoom2Histo(svg, svgChild, updateFunction){
     })
 
     .on("start",function () {
+
+      svgChild.on("contextmenu.zoomReset",null);
+
       clearTimeout(svgChild.timer);
       event = {k:svgChild.transform.k,x:svgChild.transform.x,y:svgChild.transform.y};
 
@@ -760,6 +763,8 @@ function addZoom2Histo(svg, svgChild, updateFunction){
       mouseCoord = [NaN,NaN];
       svgChild.style("cursor","auto");
 
+      svgChild.on("contextmenu.zoomReset",graph2histoZoomReset(svg, svgChild,updateFunction));
+
 
     });
 
@@ -769,6 +774,8 @@ function addZoom2Histo(svg, svgChild, updateFunction){
   svgChild._groups[0][0].__zoom.k = svgChild.transform.k;
   svgChild._groups[0][0].__zoom.x = svgChild.transform.x;
   svgChild._groups[0][0].__zoom.y = svgChild.transform.y;
+
+
 
 }
 
@@ -974,5 +981,31 @@ function hideShowValues2Histo(svg, svgChild,trSelec,selection,xlength){
     });
 
   });
+
+}
+
+
+/************************************************************************************************************/
+
+function graph2histoZoomReset(svg,svgChild, updateFunction){
+
+  return function(){
+
+    svgChild._groups[0][0].__zoom.k = 1;
+    svgChild._groups[0][0].__zoom.x = 0;
+    svgChild._groups[0][0].__zoom.y = 0;
+
+    svgChild.transform.k = 1;
+    svgChild.transform.x = 0;
+    svgChild.transform.y = 0;
+
+    svgChild.scalex = 1;
+    svgChild.scaley = 1;
+
+    svgChild.newX.domain(svgChild.x.domain());
+    svgChild.newY.domain(svgChild.y.domain());
+
+    updateFunction(svg, svgChild);
+  };
 
 }

@@ -26,15 +26,17 @@
 
 function testtest(){
 
- /* var myWSEventNotifier = new WSEventNotifier('EventNotifier');
+  var myWSEventNotifier = new WSEventNotifier('EventNotifier');
   test = new LastHourHistory(myWSEventNotifier);
   test.init();
 
  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},40);
- test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);*/
+ test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);
+
+  drawChart("/dynamic/netTopCurrentCountryTraffic.json?net=labo","Graph");
 
   //drawChart("./netTopHostsTraffic.json?pset=HOURLY&dh=2", "Graph");
-  drawChart("./netTopServicesNbFlow.json?net=labo","Graph");
+  //drawChart("./netTopHostsTraffic.json?net=labo","Graph");
 
 
 }

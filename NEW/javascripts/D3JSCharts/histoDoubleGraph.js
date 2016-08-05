@@ -1487,6 +1487,8 @@ function addZoomDouble(svg,updateFunction){
 
     .on("start",function () {
 
+      svg.on("contextmenu.zoomReset",null);
+
       clearTimeout(svg.timer);
       event = {k:svg.transform.k,x:svg.transform.x,y:svg.transform.y};
 
@@ -1595,6 +1597,7 @@ function addZoomDouble(svg,updateFunction){
 
       svg.style("cursor","auto");
 
+      svg.on("contextmenu.zoomReset",doubleZoomReset(svg,updateFunction));
 
     });
 

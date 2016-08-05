@@ -67,8 +67,54 @@ function legendAxisX(svg){
 
 
   }
+  
+  axisXNiceLegend(svg);
 }
 
+/************************************************************************************************************/
+
+
+function axisXNiceLegend(svg){
+
+  var selecticks = svg.axisx.selectAll(".tick");
+  var selecsize = selecticks.size();
+
+  if(selecsize <= 1){
+    return;
+  }
+
+  var distTick = Math.abs(selecticks._groups[0][0].getAttribute("transform").split(/[,)(]+/)[1]
+    - selecticks._groups[0][1].getAttribute("transform").split(/[,)(]+/)[1]);
+
+  var old = - Infinity, current;
+  var max = distTick/2;
+  var selectext = selecticks.select("text");
+
+  selectext.each(function(){
+
+    current = this.getBoundingClientRect().width/2;
+    max = Math.max(max, old + current);
+    old = current;
+    
+  });
+
+  var nb = Math.ceil(max/distTick);
+
+  if(nb <= 1){
+    return;
+  }
+
+  var dec = Math.ceil(nb/2);
+
+  selecticks.each(function(d,i){
+      if((i + dec)%nb !== 0){
+        this.remove();
+      }
+
+  });
+
+
+}
 
 /************************************************************************************************************
  *

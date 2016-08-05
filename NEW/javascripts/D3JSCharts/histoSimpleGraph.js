@@ -384,8 +384,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     svg.axisx.call(d3.axisBottom(svg.x));
 
     legendAxisX(svg);
-
-
+    
     yAxeSimpleCreation(svg);
     optionalYAxeSimpleCreation(svg);
 

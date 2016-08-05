@@ -13,8 +13,9 @@ function niceTicks(axis) {
     var fontsize = parseFloat(getComputedStyle(selectick._groups[0][0]).fontSize);
     var nb = Math.ceil(fontsize/distTick);
     if (nb>1){
-      for (var i=1; i<selecsize;i++){
-        if(i%nb !=0){
+      var dec = Math.floor(nb/2);
+      for (var i=0; i<selecsize;i++){
+        if((i + dec)%nb !==0){
           selectick._groups[0][i].remove();
         }
       }

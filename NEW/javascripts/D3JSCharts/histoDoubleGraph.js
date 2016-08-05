@@ -176,13 +176,12 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     //sort alphabetically
-    
     sumArray.sort(sortAlphabet);
     sumArrayIn.sort(sortAlphabet);
     sumArrayOut.sort(sortAlphabet);
 
-    console.log(sumArray);
-    //The most importants elements should have distinct colors.
+
+
     i = 0;
     if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
       colorMap.set(sumArray[0].item, "#f2f2f2");
@@ -194,8 +193,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       i++;
     }
 
-
-    console.log(colorMap);
 
 
 
@@ -334,7 +331,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-
+      desactivationElems();
       if(direction === "Out"){
 
         return function(d){
@@ -376,7 +373,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-
+      desactivationElems();
 
       if (svg.popup.pieChart !== null) {
         return;
@@ -823,8 +820,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     sumArrayIn.sort(sortAlphabet);
     sumArrayOut.sort(sortAlphabet);
 
-    console.log(sumArray);
-    //The most importants elements should have distinct colors.
+
     i = 0;
     if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
       colorMap.set(sumArray[0].item, "#f2f2f2");
@@ -837,9 +833,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
 
 
-    console.log(colorMap);
 
-
+   
 
     //step = 1 hour by default
     svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
@@ -977,7 +972,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-
+      desactivationElems();
       if(direction === "Out"){
 
         return function(d){
@@ -1019,7 +1014,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-
+      desactivationElems();
 
       if (svg.popup.pieChart !== null) {
         return;
@@ -1146,7 +1141,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
     addPopup(selection,div,svg,function(data){
-        desactivationElems();
         activationElemsAutoScrollPopup(data);},
       desactivationElems);
 

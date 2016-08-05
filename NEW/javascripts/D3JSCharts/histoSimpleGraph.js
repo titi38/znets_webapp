@@ -214,11 +214,12 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     sumMap.forEach(function (value, key) {
       sumArray.push({item: key, sum: value.sum, display: value.display});
     });
+    
+
+    console.log(sumArray);
 
     sumArray.sort(sortAlphabet);
 
-    console.log(sumArray);
-    //The most importants elements should have distinct colors.
     i = 0;
     if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
       colorMap.set(sumArray[0].item, "#f2f2f2");
@@ -299,7 +300,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     svg.activeItem = null;
 
     function activationElems(d) {
-
+      desactivationElems();
       if (svg.popup.pieChart !== null) {
         return;
       }
@@ -318,7 +319,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-
+      desactivationElems();
       if (svg.popup.pieChart !== null) {
         return;
       }
@@ -356,7 +357,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     function desactivationElems() {
-
       if (svg.activeItem == null || svg.popup.pieChart !== null) {
         return;
       }

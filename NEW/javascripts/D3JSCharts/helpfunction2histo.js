@@ -82,6 +82,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   svgChild.activeItem = null;
 
   function activationElems(d) {
+    desactivationElems();
 
     if (svgChild.popup.pieChart !== null) {
       return;
@@ -101,7 +102,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   }
 
   function activationElemsAutoScroll(d) {
-
+    desactivationElems();
 
     if (svgChild.popup.pieChart !== null) {
       return;

@@ -63,7 +63,7 @@ function searchItemValue(jsonContent){
   
     var length = jsonContent.length;
 
-    var itemArray = ["code","host","localhostip","appid","portproto","asnum"];
+    var itemArray = ["code","host","localhostip","appid","portproto","asnum","ip"];
 
     for(var i = 0;i < length; i++ ){
 
@@ -116,7 +116,7 @@ function searchAmountValue(jsonContent){
 
   var length = jsonContent.length;
 
-  var amountArray = ["amount","nbhosts", "nblocalhosts","nbexternhosts"];
+  var amountArray = ["amount","nbhosts", "nblocalhosts","nbexternhosts","y"];
   for(var i = 0;i < length; i++ ){
 
     if(amountArray.indexOf(jsonContent[i]) !== -1){

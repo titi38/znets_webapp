@@ -45,14 +45,12 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   selection
     .on("click", function (d) {
 
-      console.log(getPieJsonQuery(svg, d));
-
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {
         div.overlay.style("display", null);
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        //drawComplData("/dynamic/netExtHostsTopHostsTraffic.json?dd=2016-07-18%2020:00&df=2016-07-18%2021:00&pset=HOURLY&type=out&ip=193.48.83.251", svg, svg.pieside, d,div.overlay);
+        drawComplData("/dynamic/netLocHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
         //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
       }, 500);
 
@@ -159,7 +157,44 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
 
   d3.json(urlJson,function(error, json){
 
-    var values = json.data;
+    if(testJson(json) || error){
+      console.warn("no data");
+    }
+    
+    json = json.response;
+    
+    var jsonData = json.data;
+    var jsonContent = json.content;
+    
+    var jsonAmountValue = searchAmountValue(jsonContent);
+    var jsonItemValue = searchItemValue(jsonContent);
+    var jsonDisplayValue = searchDisplayValue(jsonContent);
+
+    if(jsonAmountValue === false){
+      console.warn("no amount value");
+    }
+
+    if(jsonItemValue === false){
+      console.warn("no item value");
+    }
+
+    if(jsonDisplayValue === false){
+      console.log("no display value");
+      jsonDisplayValue = jsonItemValue;
+    }
+
+    var values = [];
+
+    jsonData.forEach(function(elem){
+
+      values.push({
+        item: elem[jsonItemValue],
+        y: elem[jsonAmountValue],
+        display:elem[jsonDisplayValue],
+        amount: bytesConvert(elem[jsonAmountValue])
+      });
+
+    });
 
     //data are prepared
 
@@ -167,26 +202,22 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
       return e.y;
     });
 
-    //sorted
-    values.sort(function(a,b){
-      return a.y -b.y;
-    });
-
+    
     //We attribute a color to each
     var f = colorEval(170);
-    var listColors = [];
+    var mapColors = new Map();
     var length = values.length;
 
 
     for(var w = 0; w < length; w++){
 
-      listColors.push(f())
+      mapColors.set(values[w].item,f());
 
     }
 
-    values.unshift({y: total -sum, hostname:" Remainder ",amount:bytesConvert(total-sum)});
+    values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder "});
 
-    listColors.unshift("#f2f2f2");
+    mapColors.set(" Remainder ","#f2f2f2");
 
 
     //The angles of the pie arcs are evaluated
@@ -233,9 +264,9 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
     //path elements, the arcs themselves
     var pathSelec = svg.popup.pieChart.g.selectAll("path").data(values).enter().append("path")
       .attr("d","")
-      .style("fill",function(d,i){ return listColors[i]; });
+      .style("fill",function(d){ return mapColors.get(d.item); });
     pathSelec.append("svg:title").text(function(d){
-      return  d.hostname + "\n" + d.amount});
+      return  d.display + "\n" + (d.display !== d.item? + "\n" + d.item:"") + d.amount});
 
     //text elements, the arcs' legends
     var textSelec = svg.popup.pieChart.g.selectAll("text").data(values).enter().append("text")
@@ -254,21 +285,24 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
     svg.popup.pieChart.table = svg.popup.pieChart.divTable.append("table").classed("popupTableLegend",true)
       .style("max-height",svg.pieside + "px");
 
+
+    values.sort(sortAlphabet);
+
     var trSelec = svg.popup.pieChart.table.selectAll("tr").data(values)
       .enter().append("tr").attr("title",function(d){
-        return d.hostname + "\nVolume: " + d.amount;
+        return d.display + (d.display !== d.item? "\n" + d.item:"") + "\nVolume: " + d.amount;
       });
 
-    trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d,i) {
-      return listColors[i];
+    trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
+      return mapColors.get(d.item);
     });
-    trSelec.append("td").text(function(d){return d.hostname;});
+    trSelec.append("td").text(function(d){return d.display;});
 
 
 
 
     //name of the current element being hovered, at first none then null.
-    var activeHostname = null;
+    var activeItem = null;
 
     //Hover listener on the pie chart svg.
     svg.popup
@@ -287,8 +321,8 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
       var d;
       var onTable = false;
 
-      //hostname of the element being hovered currently
-      var hostname;
+      //item of the element being hovered currently
+      var item;
       console.log(target.tagName);
       //detection of the element being hovered
       switch (target.tagName){
@@ -296,52 +330,52 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
         case "path":
           path = d3.select(target);
           d = path.datum();
-          hostname = d.hostname;
-          text = textSelec.filter(function(data){return data.hostname === hostname;});
+          item = d.item;
+          text = textSelec.filter(function(data){return data.item === item;});
           break;
 
         case "text":
           text = d3.select(target);
           d = text.datum();
-          hostname = d.hostname;
-          path = pathSelec.filter(function(data){return data.hostname === hostname;});
+          item = d.item;
+          path = pathSelec.filter(function(data){return data.item === item;});
           break;
 
         case "TD":
         case "DIV":
           d = d3.select(target).datum();
           if(!d){
-            hostname = null;
+            item = null;
             break;
           }
           onTable = true;
-          hostname = d.hostname;
-          text = textSelec.filter(function(data){return data.hostname === hostname;});
-          path = pathSelec.filter(function(data){return data.hostname === hostname;});
+          item = d.item;
+          text = textSelec.filter(function(data){return data.item === item;});
+          path = pathSelec.filter(function(data){return data.item === item;});
           break;
 
         //if anything else, no pie element is hovered.
         default:
-          hostname = null;
+          item = null;
           break;
       }
 
-      //activeHostname records the last element hovered (before this one)
+      //activeItem records the last element hovered (before this one)
 
       //if the cursor is hovering between text and path of the same data (or comes and goes on the svg), nothing
       //should be done.
-      if(activeHostname === hostname){
+      if(activeItem === item){
         return;
       }
 
-      //From here, the last hovered element and the current have different hostnames (one of them can be null)
+      //From here, the last hovered element and the current have different items (one of them can be null)
 
       //if the last hovered element wasn't the svg (the "background"), the corresponding path and text should
       //be translated to their initial position.
-      if(activeHostname !== null){
+      if(activeItem !== null){
         var textOut, pathOut;
-        textOut = textSelec.filter(function(data){return data.hostname === activeHostname;});
-        pathOut = pathSelec.filter(function(data){return data.hostname === activeHostname;});
+        textOut = textSelec.filter(function(data){return data.item === activeItem;});
+        pathOut = pathSelec.filter(function(data){return data.item === activeItem;});
 
         var dOut = textOut.datum();
         var midAngleOut = (dOut.endAngle + dOut.startAngle)/2;
@@ -349,14 +383,14 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
         var transitionOut = pathOut.transition().attr("transform", "translate(0,0)");
         textOut.transition(transitionOut).attr("transform", "translate(" + (Math.sin(midAngleOut)*svg.popup.dist) + "," +(-Math.cos(midAngleOut)*svg.popup.dist) +")");
 
-        trSelec.filter(function(d){return d.hostname === activeHostname}).classed("outlined",false);
+        trSelec.filter(function(d){return d.item === activeItem}).classed("outlined",false);
       }
 
-      //the activeHostname variable has no further use here, it can be updated with the current hostname.
-      activeHostname = hostname;
+      //the activeItem variable has no further use here, it can be updated with the current item.
+      activeItem = item;
 
       //if the current hovered element is the svg, end of the event.
-      if(hostname === null){
+      if(item === null){
         return;
       }
 
@@ -378,7 +412,7 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
 
 
       //the corresponding row is outlined
-      var elem = trSelec.filter(function(d){return d.hostname === activeHostname;}).classed("outlined",true);
+      var elem = trSelec.filter(function(d){return d.item === activeItem;}).classed("outlined",true);
 
       //no transition if the cursor is on the table
       if(onTable){

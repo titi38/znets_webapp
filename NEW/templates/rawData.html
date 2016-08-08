@@ -6,7 +6,7 @@
 
         <br>
 
-        <div>
+        <div class="container-fluid">
             <div class="dropdown float-right">
                 <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Shown
                     Columns
@@ -16,14 +16,14 @@
                 </ul>
             </div>
 
+            <button class="rawDataFormularTab float-left tab active btn btn-default margin-right-5px" data-toggle="tab" href="#rawDataFormularTab" aria-expanded="true">Search</button>
+
             <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
             <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
-            <div class="container-fluid">
-                <div class="wrapper">
-                    <ul class="nav nav-tabs list rawdata-tab-list" id="rawdataTabsContainer">
-                        <button class="rawDataFormularTab float-left tab active btn btn-default margin-right-5px" data-toggle="tab" href="#rawDataFormularTab" aria-expanded="true">Search</button>
-                    </ul>
-                </div>
+
+            <div class="wrapper">
+                <ul class="nav nav-tabs list rawdata-tab-list" id="rawdataTabsContainer">
+                </ul>
             </div>
 
 
@@ -44,11 +44,11 @@
                                 <form class="form-horizontal" onsubmit="submitFormRawData(); return false;" id="rawData_form">
 
                                     <div class="panel panel-default">
-                                        <div class="panel-heading">
+                                        <div class="panel-heading text-center">
                                             <!--fieldset>
                                                 <legend>Time Filter</legend-->
                                             <div class="col-xs-12 col-md-4">
-                                                <div class="<form-group form-group-sm">
+                                                <div class="form-group form-group-sm">
                                                     <label class="control-label col-xs-2" for="dateDebData">From:</label>
                                                     <div class="col-xs-10">
                                                         <div class='input-group date' id='fromDate_RawDataForm'>
@@ -84,17 +84,8 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-xs-12 col-md-1">
-                                                <div class="text-center">
-                                                    <!--button type="button" class="btn btn-default" onclick="addRawDataTab()" >View raw data</button-->
-                                                    <button type="submit" class="btn btn-default">Search</button>
 
-                                                    <!--button id="advancedFiltersButton" class="btn btn-default collapsed"
-                                                            data-toggle="collapse" data-target="#advancedFilters" onclick="return false;">
-                                                        More Filters
-                                                    </button-->
-                                                </div>
-                                            </div>
+                                            <button type="submit" class="btn btn-default">Search</button>
 
                                             <!--p class="optionalNotification">(*) optional entry</p-->
 
@@ -121,9 +112,6 @@
                                                 </div>
                                             </div-->
 
-
-                                            <br>
-                                            <br>
                                         </div>
                                     </div>
 

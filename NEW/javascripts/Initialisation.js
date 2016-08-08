@@ -103,6 +103,11 @@ function initialisation(){
     activateTabOfClass("network");
 
 
+    $('a.networkTab').on('shown.bs.tab', function (e) {
+        reAdjustAll();
+    });
+
+
 
 
     /*********************************************************************************************************
@@ -121,6 +126,16 @@ function initialisation(){
      Initialize NetworkTab
      ********************************************************************************************************/
     initializeNetwork();
+
+
+
+    /*********************************************************************************************************
+     Initialize Scroll interaction for horizontal tabs
+     ********************************************************************************************************/
+    initializeHorizontalTabsScroll();
+
+
+
 
 
 }
@@ -200,8 +215,8 @@ function addNetworksTabs(networksNamesArrayObject) {
 
     var networksNamesArray = networksNamesArrayObject.data;
 
-     if( !networksNamesArray.includes("Global") )
-     networksNamesArray.unshift("Global");
+    if( !networksNamesArray.includes("Global") )
+        networksNamesArray.unshift("Global");
 
     for(var i=0 ; i<networksNamesArray.length; i++){
         addNetworkTab(networksNamesArray[i]);
@@ -226,7 +241,7 @@ function initNetworksChartsNavTabs() {
 
 
 
-    initTabsNavAnimation("#network");
+    initChartsTabsNavAnimation("#network");
 
 
     /*********************************************************************************************************
@@ -238,7 +253,7 @@ function initNetworksChartsNavTabs() {
 
 
 
-function initTabsNavAnimation(tabIDQuery){
+function initChartsTabsNavAnimation(tabIDQuery){
 
     $( document ).ready(function() {
 

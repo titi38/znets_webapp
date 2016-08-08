@@ -18,7 +18,7 @@ function addNetworkTab(networkName){
     */
 
 
-    //element_tab.click(adjustOnTabClick);
+    element_tab.click(adjustOnTabClick);
 
 
     element_div.html(JST["networksTabsContent"]);

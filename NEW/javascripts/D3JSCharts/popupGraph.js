@@ -50,7 +50,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         div.overlay.style("display", null);
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        drawComplData("/dynamic/netLocHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
+        drawComplData("/dynamic/netExtHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
         //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
       }, 500);
 
@@ -169,6 +169,7 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
     var jsonAmountValue = searchAmountValue(jsonContent);
     var jsonItemValue = searchItemValue(jsonContent);
     var jsonDisplayValue = searchDisplayValue(jsonContent);
+    var jsonAddArrayValues = searchAdditionalValues(jsonContent);
 
     if(jsonAmountValue === false){
       console.warn("no amount value");
@@ -191,10 +192,14 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
         item: elem[jsonItemValue],
         y: elem[jsonAmountValue],
         display:elem[jsonDisplayValue],
-        amount: bytesConvert(elem[jsonAmountValue])
+        amount: bytesConvert(elem[jsonAmountValue]),
+        add: jsonAddArrayValues.map(function(indexAdd){return elem[indexAdd];})
       });
 
     });
+
+
+    console.log(values);
 
     //data are prepared
 
@@ -215,7 +220,11 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
 
     }
 
-    values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder "});
+    values.sort(function(a,b){
+      return b.y - a.y;
+    });
+
+    values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
 
     mapColors.set(" Remainder ","#f2f2f2");
 
@@ -265,8 +274,7 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
     var pathSelec = svg.popup.pieChart.g.selectAll("path").data(values).enter().append("path")
       .attr("d","")
       .style("fill",function(d){ return mapColors.get(d.item); });
-    pathSelec.append("svg:title").text(function(d){
-      return  d.display + "\n" + (d.display !== d.item? + "\n" + d.item:"") + d.amount});
+    pathSelec.append("svg:title").text(titleElemPopup);
 
     //text elements, the arcs' legends
     var textSelec = svg.popup.pieChart.g.selectAll("text").data(values).enter().append("text")
@@ -289,9 +297,7 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
     values.sort(sortAlphabet);
 
     var trSelec = svg.popup.pieChart.table.selectAll("tr").data(values)
-      .enter().append("tr").attr("title",function(d){
-        return d.display + (d.display !== d.item? "\n" + d.item:"") + "\nVolume: " + d.amount;
-      });
+      .enter().append("tr").attr("title",titleTablePopup);
 
     trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
       return mapColors.get(d.item);
@@ -431,3 +437,84 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
 
   }); //end json
 }
+
+
+
+/*********************************************************************************************************************************************/
+
+
+function titleElemPopup(d){
+
+  var str = d.display + "\n" + (d.display !== d.item? d.item + "\n":"");
+
+  d.add.forEach(function(val){
+    str = str + val + "\n";
+  });
+
+  return str +  d.amount;
+
+}
+
+/*********************************************************************************************************************************************/
+
+function titleTablePopup(d){
+
+  var str = d.display + "\n" + (d.display !== d.item? d.item + "\n":"");
+
+  d.add.forEach(function(val){
+    str = str + val + "\n";
+  });
+
+  str = str + "Volume: " + d.amount;
+
+  return str;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

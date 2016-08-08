@@ -300,7 +300,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     svg.activeItem = null;
 
     function activationElems(d) {
-      desactivationElems();
       if (svg.popup.pieChart !== null) {
         return;
       }
@@ -319,7 +318,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-      desactivationElems();
       if (svg.popup.pieChart !== null) {
         return;
       }
@@ -341,7 +339,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     function activationElemsAutoScrollPopup(d) {
 
-      desactivationElems();
       svg.activeItem = d.item;
 
 
@@ -357,7 +354,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     function desactivationElems() {
-      if (svg.activeItem == null || svg.popup.pieChart !== null) {
+      if (svg.activeItem == null || svg.popup.pieChart !== null) {  
         return;
       }
 
@@ -368,7 +365,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
       trSelec.filter(testitem).classed("outlined", false);
 
-      selection.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
+      selection.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
 
       svg.activeItem = null;
 

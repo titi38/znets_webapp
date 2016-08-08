@@ -331,7 +331,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-      desactivationElems();
       if(direction === "Out"){
 
         return function(d){
@@ -343,7 +342,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
           function testitem(data) {
             return d.item === data.item;
-
           }
 
           trSelecOut.filter(testitem).classed("outlined", true);
@@ -373,7 +371,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-      desactivationElems();
 
       if (svg.popup.pieChart !== null) {
         return;
@@ -408,9 +405,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       }
 
     }
+    
     function activationElemsAutoScrollPopup(d) {
-
-      desactivationElems();
 
       svg.activeItem = {item: d.item, direction: d.direction};
 
@@ -440,7 +436,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     function desactivationElems() {
 
-      if (svg.activeItem == null || svg.popup.pieChart !== null) {
+      if (svg.activeItem === null || svg.popup.pieChart !== null) {
         return;
       }
 
@@ -456,14 +452,14 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         trSelecOut.filter(testitem).classed("outlined", false);
 
-        selectionOut.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionOut.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }else{
 
         trSelecIn.filter(testitem).classed("outlined", false);
 
-        selectionIn.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionIn.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }
@@ -672,7 +668,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           for(k = 0; k < 60; k++) {
 
 
-            if(+elemAmountMinuteArray[k] === 0){
+            if(+elemAmountMinuteArray[k] === 0 || !elemAmountMinuteArray[k]){
               continue;
             }
 
@@ -832,12 +828,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       i++;
     }
 
-
-
-   
-
-    //step = 1 hour by default
-    svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
+    
 
     svg.valuesIn.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
@@ -972,7 +963,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-      desactivationElems();
       if(direction === "Out"){
 
         return function(d){
@@ -1014,7 +1004,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-      desactivationElems();
 
       if (svg.popup.pieChart !== null) {
         return;
@@ -1051,7 +1040,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
     function activationElemsAutoScrollPopup(d) {
 
-      desactivationElems();
 
       svg.activeItem = {item: d.item, direction: d.direction};
 
@@ -1097,14 +1085,14 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         trSelecOut.filter(testitem).classed("outlined", false);
 
-        selectionOut.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionOut.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }else{
 
         trSelecIn.filter(testitem).classed("outlined", false);
 
-        selectionIn.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionIn.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }
@@ -1141,6 +1129,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
     addPopup(selection,div,svg,function(data){
+      desactivationElems();
         activationElemsAutoScrollPopup(data);},
       desactivationElems);
 

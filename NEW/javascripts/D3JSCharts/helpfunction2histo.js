@@ -82,7 +82,6 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   svgChild.activeItem = null;
 
   function activationElems(d) {
-    desactivationElems();
 
     if (svgChild.popup.pieChart !== null) {
       return;
@@ -102,7 +101,6 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   }
 
   function activationElemsAutoScroll(d) {
-    desactivationElems();
 
     if (svgChild.popup.pieChart !== null) {
       return;
@@ -125,7 +123,6 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   function activationElemsAutoScrollPopup(d) {
 
-    desactivationElems();
     svgChild.activeItem = d.item;
 
 
@@ -153,7 +150,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
     trSelec.filter(testitem).classed("outlined", false);
 
-    selection.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", svg.colorMap.get(svgChild.activeItem));
+    selection.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", svg.colorMap.get(svgChild.activeItem));
 
     svgChild.activeItem = null;
 

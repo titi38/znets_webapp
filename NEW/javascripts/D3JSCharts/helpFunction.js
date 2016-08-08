@@ -185,7 +185,32 @@ function searchDisplayValue(jsonContent){
 }
 
 
+/************************************************************************************************************
+ *
+ *  Search inside a content array for other values of interest. 
+ *
+ ***********************************************************************************************************/
 
+function searchAdditionalValues(jsonContent){
+
+  var length = jsonContent.length;
+
+  var addArray = ["c"];
+  
+  var resultArray = [];
+
+  for(var i = 0;i < length; i++ ){
+
+    if(addArray.indexOf(jsonContent[i]) !== -1){
+
+      resultArray.push(i);
+
+    }
+  }
+  
+  return resultArray;
+
+}
 
 
 /************************************************************************************************************
@@ -296,9 +321,9 @@ function getTimeShift(url){
   url = url.split(/[?&=]+/);
   var index = url.indexOf("dh");
   if(index === -1){
-    return 0;
+    return -1;
   }
-  return +(url[index + 1]);
+  return +(url[index + 1]) - 1;
 
 }
 

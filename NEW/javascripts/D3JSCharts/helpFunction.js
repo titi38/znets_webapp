@@ -13,8 +13,9 @@ function niceTicks(axis) {
     var fontsize = parseFloat(getComputedStyle(selectick._groups[0][0]).fontSize);
     var nb = Math.ceil(fontsize/distTick);
     if (nb>1){
-      for (var i=1; i<selecsize;i++){
-        if(i%nb !=0){
+      var dec = Math.floor(nb/2);
+      for (var i=0; i<selecsize;i++){
+        if((i + dec)%nb !==0){
           selectick._groups[0][i].remove();
         }
       }
@@ -62,7 +63,7 @@ function searchItemValue(jsonContent){
   
     var length = jsonContent.length;
 
-    var itemArray = ["code","host","localhostip","appid","portproto","asnum"];
+    var itemArray = ["code","host","localhostip","appid","portproto","asnum","ip"];
 
     for(var i = 0;i < length; i++ ){
 
@@ -115,7 +116,7 @@ function searchAmountValue(jsonContent){
 
   var length = jsonContent.length;
 
-  var amountArray = ["amount","nbhosts", "nblocalhosts","nbexternhosts"];
+  var amountArray = ["amount","nbhosts", "nblocalhosts","nbexternhosts","y"];
   for(var i = 0;i < length; i++ ){
 
     if(amountArray.indexOf(jsonContent[i]) !== -1){
@@ -184,7 +185,32 @@ function searchDisplayValue(jsonContent){
 }
 
 
+/************************************************************************************************************
+ *
+ *  Search inside a content array for other values of interest. 
+ *
+ ***********************************************************************************************************/
 
+function searchAdditionalValues(jsonContent){
+
+  var length = jsonContent.length;
+
+  var addArray = ["c"];
+  
+  var resultArray = [];
+
+  for(var i = 0;i < length; i++ ){
+
+    if(addArray.indexOf(jsonContent[i]) !== -1){
+
+      resultArray.push(i);
+
+    }
+  }
+  
+  return resultArray;
+
+}
 
 
 /************************************************************************************************************
@@ -693,3 +719,5 @@ function sortValues(a, b) {
   }
   return a.height - b.height;
 }
+
+

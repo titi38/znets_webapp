@@ -685,7 +685,31 @@ function calculationsHideShowDirection(svg){
 }
 
 
+/************************************************************************************************************/
 
+function doubleZoomReset(svg, updateFunction){
+
+  return function(){
+
+    svg._groups[0][0].__zoom.k = 1;
+    svg._groups[0][0].__zoom.x = 0;
+    svg._groups[0][0].__zoom.y = 0;
+
+    svg.transform.k = 1;
+    svg.transform.x = 0;
+    svg.transform.y = 0;
+
+    svg.scalex = 1;
+    svg.scaley = 1;
+
+    svg.newX.domain(svg.x.domain());
+    svg.newYOutput.domain(svg.yOutput.domain()).range(svg.yOutput.range());
+    svg.newYInput.domain(svg.yInput.domain()).range(svg.yInput.range());
+
+    updateFunction(svg);
+  };
+
+}
 
 
 

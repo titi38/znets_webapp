@@ -176,13 +176,12 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     //sort alphabetically
-    
     sumArray.sort(sortAlphabet);
     sumArrayIn.sort(sortAlphabet);
     sumArrayOut.sort(sortAlphabet);
 
-    console.log(sumArray);
-    //The most importants elements should have distinct colors.
+
+
     i = 0;
     if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
       colorMap.set(sumArray[0].item, "#f2f2f2");
@@ -194,8 +193,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       i++;
     }
 
-
-    console.log(colorMap);
 
 
 
@@ -334,7 +331,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-
       if(direction === "Out"){
 
         return function(d){
@@ -346,7 +342,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
           function testitem(data) {
             return d.item === data.item;
-
           }
 
           trSelecOut.filter(testitem).classed("outlined", true);
@@ -376,7 +371,6 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-
 
       if (svg.popup.pieChart !== null) {
         return;
@@ -411,9 +405,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       }
 
     }
+    
     function activationElemsAutoScrollPopup(d) {
-
-      desactivationElems();
 
       svg.activeItem = {item: d.item, direction: d.direction};
 
@@ -443,7 +436,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     function desactivationElems() {
 
-      if (svg.activeItem == null || svg.popup.pieChart !== null) {
+      if (svg.activeItem === null || svg.popup.pieChart !== null) {
         return;
       }
 
@@ -459,14 +452,14 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
         trSelecOut.filter(testitem).classed("outlined", false);
 
-        selectionOut.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionOut.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }else{
 
         trSelecIn.filter(testitem).classed("outlined", false);
 
-        selectionIn.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionIn.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }
@@ -675,14 +668,14 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           for(k = 0; k < 60; k++) {
 
 
-            if(+elemAmountMinuteArray[k] === 0){
+            if(+elemAmountMinuteArray[k] === 0 || !elemAmountMinuteArray[k]){
               continue;
             }
 
             elemToPush = {
               //The given time is the corresping, we add the correct minutes according to the position k
               //of the element in the array
-              x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + hourShift,
+              x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + hourShift - 3600000,
               height: +elemAmountMinuteArray[k],
               item: jsonContent[j][0],
               direction: jsonContent[j][1]
@@ -823,8 +816,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     sumArrayIn.sort(sortAlphabet);
     sumArrayOut.sort(sortAlphabet);
 
-    console.log(sumArray);
-    //The most importants elements should have distinct colors.
+
     i = 0;
     if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
       colorMap.set(sumArray[0].item, "#f2f2f2");
@@ -836,13 +828,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       i++;
     }
 
-
-    console.log(colorMap);
-
-
-
-    //step = 1 hour by default
-    svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
+    
 
     svg.valuesIn.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
@@ -977,7 +963,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-
       if(direction === "Out"){
 
         return function(d){
@@ -1020,7 +1005,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     function activationElemsAutoScroll(d) {
 
-
       if (svg.popup.pieChart !== null) {
         return;
       }
@@ -1056,7 +1040,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
     function activationElemsAutoScrollPopup(d) {
 
-      desactivationElems();
 
       svg.activeItem = {item: d.item, direction: d.direction};
 
@@ -1102,14 +1085,14 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
         trSelecOut.filter(testitem).classed("outlined", false);
 
-        selectionOut.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionOut.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }else{
 
         trSelecIn.filter(testitem).classed("outlined", false);
 
-        selectionIn.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionIn.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }
@@ -1146,7 +1129,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
     addPopup(selection,div,svg,function(data){
-        desactivationElems();
+      desactivationElems();
         activationElemsAutoScrollPopup(data);},
       desactivationElems);
 
@@ -1305,7 +1288,7 @@ function redrawHisto2DStackDouble(div,svg){
 
   updateHisto2DStackDouble(svg);
 
-  redrawPopup(div, svg);
+  redrawPopup(div.overlay, svg);
 
 
 }
@@ -1487,6 +1470,8 @@ function addZoomDouble(svg,updateFunction){
 
     .on("start",function () {
 
+      svg.on("contextmenu.zoomReset",null);
+
       clearTimeout(svg.timer);
       event = {k:svg.transform.k,x:svg.transform.x,y:svg.transform.y};
 
@@ -1595,6 +1580,7 @@ function addZoomDouble(svg,updateFunction){
 
       svg.style("cursor","auto");
 
+      svg.on("contextmenu.zoomReset",doubleZoomReset(svg,updateFunction));
 
     });
 

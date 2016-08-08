@@ -8,7 +8,8 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
 
 
   d3.queue()
-    .defer(d3.json,"worldmap.json")
+    .defer(d3.json,"NEW/javascripts/D3JSCharts/worldmap.json")
+//    .defer(d3.json, "worldmap.json")
     .defer(d3.json, urlJson)
     .await(function(error,worldmap,json){
       createMapDirection(error, div, svg, mydiv, urlJson, worldmap, json);
@@ -31,6 +32,8 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
  ***********************************************************************************************************/
 
 function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
+
+  svg.style("margin", "auto").classed("diagram",false).style("display","block");
 
   var colorInStart = "#ffff00", colorInEnd = "#ff0000";
   var colorOutStart = "#66ffcc", colorOutEnd = "#0066ff";
@@ -425,7 +428,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 function autoUpdateMapDirection(svg,urlJson){
   var duration = 800;
 
-  var id = test.addMinuteRequest(urlJson,function(json){
+  var id = myLastHourHistory.addMinuteRequest(urlJson,function(json){
 
     console.log(json);
 
@@ -680,10 +683,33 @@ function addZoomMapDirection(parentSvg,svg){
 
 
     })
+    .on("start",function(){
+      svg.on("contextmenu.zoomReset",null);
+    })
+
     .on("end",function(){
       svg._groups[0][0].__zoom.k =svg.transform.k;
       svg._groups[0][0].__zoom.x =svg.transform.x;
       svg._groups[0][0].__zoom.y =svg.transform.y;
+
+      svg.on("contextmenu.zoomReset",function(){
+
+        svg._groups[0][0].__zoom.k = 1;
+        svg._groups[0][0].__zoom.x = 0;
+        svg._groups[0][0].__zoom.y = 0;
+
+        svg.transform.k = 1;
+        svg.transform.x = 0;
+        svg.transform.y = 0;
+
+        scaleTotal = parentSvg.ratioProjectionScale;
+        dashValue = parentSvg.strokeDash/scaleTotal;
+
+        svg.maps.attr("transform","matrix(" + scaleTotal + ", 0, 0, " + scaleTotal + ",0,0)");
+        svg.maps.style("stroke-width",parentSvg.strokeWidth/scaleTotal);
+        svg.maps.selectAll(".interior").style("stroke-dasharray",dashValue + "," + dashValue);
+      });
+
     });
 
   //the listener is finally created on the svg element used as the map container.

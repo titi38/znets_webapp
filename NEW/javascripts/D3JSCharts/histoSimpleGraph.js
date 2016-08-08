@@ -214,11 +214,12 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     sumMap.forEach(function (value, key) {
       sumArray.push({item: key, sum: value.sum, display: value.display});
     });
+    
+
+    console.log(sumArray);
 
     sumArray.sort(sortAlphabet);
 
-    console.log(sumArray);
-    //The most importants elements should have distinct colors.
     i = 0;
     if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
       colorMap.set(sumArray[0].item, "#f2f2f2");
@@ -299,7 +300,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     svg.activeItem = null;
 
     function activationElems(d) {
-
       if (svg.popup.pieChart !== null) {
         return;
       }
@@ -318,7 +318,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     function activationElemsAutoScroll(d) {
-
       if (svg.popup.pieChart !== null) {
         return;
       }
@@ -340,7 +339,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     function activationElemsAutoScrollPopup(d) {
 
-      desactivationElems();
       svg.activeItem = d.item;
 
 
@@ -356,8 +354,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     function desactivationElems() {
-
-      if (svg.activeItem == null || svg.popup.pieChart !== null) {
+      if (svg.activeItem == null || svg.popup.pieChart !== null) {  
         return;
       }
 
@@ -368,7 +365,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
       trSelec.filter(testitem).classed("outlined", false);
 
-      selection.filter(testitem).transition().duration(0).attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
+      selection.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(svg.activeItem));
 
       svg.activeItem = null;
 
@@ -384,8 +381,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     svg.axisx.call(d3.axisBottom(svg.x));
 
     legendAxisX(svg);
-
-
+    
     yAxeSimpleCreation(svg);
     optionalYAxeSimpleCreation(svg);
 
@@ -524,7 +520,7 @@ function redrawHisto2DStackSimple(div,svg){
 
   updateHisto2DStackSimple(svg);
 
-  redrawPopup(div, svg);
+  redrawPopup(div.overlay, svg);
 
 
 }
@@ -715,6 +711,7 @@ function addZoomSimple(svg,updateFunction){
     })
 
     .on("start",function () {
+      svg.on("contextmenu.zoomReset",null);
       clearTimeout(svg.timer);
       event = {k:svg.transform.k,x:svg.transform.x,y:svg.transform.y};
 
@@ -797,6 +794,8 @@ function addZoomSimple(svg,updateFunction){
       svg.style("cursor","auto");
 
 
+      svg.on("contextmenu.zoomReset",simpleZoomReset(svg, updateFunction));
+      
     });
 
   svg.call(svg.zoom);

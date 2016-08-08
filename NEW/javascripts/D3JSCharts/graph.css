@@ -339,3 +339,12 @@ tr{
 table {
     margin-bottom: 0;
 }
+
+.buttonPopup{
+    display:block;
+    top: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+
+}

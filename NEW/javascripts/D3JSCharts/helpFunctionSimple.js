@@ -67,8 +67,54 @@ function legendAxisX(svg){
 
 
   }
+  
+  axisXNiceLegend(svg);
 }
 
+/************************************************************************************************************/
+
+
+function axisXNiceLegend(svg){
+
+  var selecticks = svg.axisx.selectAll(".tick");
+  var selecsize = selecticks.size();
+
+  if(selecsize <= 1){
+    return;
+  }
+
+  var distTick = Math.abs(selecticks._groups[0][0].getAttribute("transform").split(/[,)(]+/)[1]
+    - selecticks._groups[0][1].getAttribute("transform").split(/[,)(]+/)[1]);
+
+  var old = - Infinity, current;
+  var max = distTick/2;
+  var selectext = selecticks.select("text");
+
+  selectext.each(function(){
+
+    current = this.getBoundingClientRect().width/2;
+    max = Math.max(max, old + current);
+    old = current;
+    
+  });
+
+  var nb = Math.ceil(max/distTick);
+
+  if(nb <= 1){
+    return;
+  }
+
+  var dec = Math.ceil(nb/2);
+
+  selecticks.each(function(d,i){
+      if((i + dec)%nb !== 0){
+        this.remove();
+      }
+
+  });
+
+
+}
 
 /************************************************************************************************************
  *
@@ -247,5 +293,30 @@ function yAxeSimpleUpdate(svg){
   svg.ylabel
     .attr("x", -(svg.height + svg.margin.top + svg.margin.bottom) / 2)
     .text(convert[0] + svg.units);
+
+}
+
+/************************************************************************************************************/
+
+function simpleZoomReset(svg, updateFunction){
+
+  return function(){
+
+    svg._groups[0][0].__zoom.k = 1;
+    svg._groups[0][0].__zoom.x = 0;
+    svg._groups[0][0].__zoom.y = 0;
+
+    svg.transform.k = 1;
+    svg.transform.x = 0;
+    svg.transform.y = 0;
+
+    svg.scalex = 1;
+    svg.scaley = 1;
+
+    svg.newX.domain(svg.x.domain());
+    svg.newY.domain(svg.y.domain());
+
+    updateFunction(svg);
+  };
 
 }

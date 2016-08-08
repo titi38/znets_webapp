@@ -147,14 +147,11 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     sumMap.forEach(mapToArray(svg.sumArrayTotal));
     sumInMap.forEach(mapToArray(svg.svgInput.sumArray));
     sumOutMap.forEach(mapToArray(svg.svgOutput.sumArray));
-    
 
-    
     svg.sumArrayTotal.sort(sortAlphabet);
     svg.svgInput.sumArray.sort(sortAlphabet);
     svg.svgOutput.sumArray.sort(sortAlphabet);
-    
-    //The most importants elements should have distinct colors.
+
     i = 0;
     if (svg.sumArrayTotal[0].item == " Remainder " || svg.sumArrayTotal[0].item == "OTHERS") {
       svg.colorMap.set(svg.sumArrayTotal[0].item, "#f2f2f2");
@@ -166,6 +163,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
       i++;
     }
 
+    
     
     //step = 1 hour by default
     svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;

@@ -675,7 +675,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
             elemToPush = {
               //The given time is the corresping, we add the correct minutes according to the position k
               //of the element in the array
-              x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + hourShift,
+              x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + hourShift - 3600000,
               height: +elemAmountMinuteArray[k],
               item: jsonContent[j][0],
               direction: jsonContent[j][1]
@@ -1288,7 +1288,7 @@ function redrawHisto2DStackDouble(div,svg){
 
   updateHisto2DStackDouble(svg);
 
-  redrawPopup(div, svg);
+  redrawPopup(div.overlay, svg);
 
 
 }

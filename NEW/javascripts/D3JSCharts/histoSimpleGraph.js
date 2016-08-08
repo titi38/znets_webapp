@@ -520,7 +520,7 @@ function redrawHisto2DStackSimple(div,svg){
 
   updateHisto2DStackSimple(svg);
 
-  redrawPopup(div, svg);
+  redrawPopup(div.overlay, svg);
 
 
 }

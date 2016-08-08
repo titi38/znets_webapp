@@ -321,9 +321,9 @@ function getTimeShift(url){
   url = url.split(/[?&=]+/);
   var index = url.indexOf("dh");
   if(index === -1){
-    return -1;
+    return 0;
   }
-  return +(url[index + 1]) - 1;
+  return +(url[index + 1]);
 
 }
 

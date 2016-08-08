@@ -36,6 +36,8 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   svg.popup = div.append("div").classed("popup", true).style("display", "none");
 
   svg.popup.title = svg.popup.append("h3").classed("popupTitle",true);
+  svg.popup.button = svg.popup.append("button").classed("buttonPopup", true);
+  svg.popup.button.text("Ext");
 
 
   svg.popup.pieChart = null;
@@ -50,7 +52,8 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         div.overlay.style("display", null);
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        drawComplData("/dynamic/netExtHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
+        createPopup("/dynamic/netLocHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2",
+          "/dynamic/netExtHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
         //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
       }, 500);
 
@@ -64,6 +67,8 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
     }
     svg.popup.pieChart.remove();
     svg.popup.pieChart = null;
+    svg.popup.extPieChart = null;
+    svg.popup.locPieChart = null;
 
     onSupprFunct();
   });
@@ -86,9 +91,9 @@ function positionPopup(svg){
 /***********************************************************************************************************/
 
 
-function redrawPopup(div, svg){
+function redrawPopup(overlay, svg){
 
-  div.overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
+  overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
   svg.pieside = 0.75*Math.min(svg.height,svg.width);
 
 
@@ -130,21 +135,35 @@ function redrawPopup(div, svg){
 
 }
 
+
+
+/************************************************************************************************************/
+
+function createPopup(urlJsonLoc,urlJsonExt,svg,pieside,dataInit,overlay){
+
+  d3.queue()
+    .defer(d3.json,urlJsonLoc)
+    .defer(d3.json,urlJsonExt)
+    .await(function(error, jsonLoc, jsonExt){
+      drawComplData(error, jsonLoc,jsonExt,svg,pieside,dataInit,overlay)
+    });
+
+}
+
 /************************************************************************************************************/
 
 
-function drawComplData(urlJson,svg,pieside,dataInit,overlay){
+function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay){
 
   var chartside = 0.75*pieside;
+  var f = colorEval(170);
 
 
-  //TODO TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
-  console.log(dataInit);
-  total=6000000000;
-  //TEMPORAIRE
+
 
   //Title
   svg.popup.title.text(dataInit.item);
+
 
 
   //Some values relative to the popup dimensions
@@ -155,290 +174,347 @@ function drawComplData(urlJson,svg,pieside,dataInit,overlay){
   svg.popup.distTransl = svg.popup.outerRad/10;
 
 
-  d3.json(urlJson,function(error, json){
 
-    if(testJson(json) || error){
-      console.warn("no data");
-    }
-    
-    json = json.response;
-    
-    var jsonData = json.data;
-    var jsonContent = json.content;
-    
-    var jsonAmountValue = searchAmountValue(jsonContent);
-    var jsonItemValue = searchItemValue(jsonContent);
-    var jsonDisplayValue = searchDisplayValue(jsonContent);
-    var jsonAddArrayValues = searchAdditionalValues(jsonContent);
 
-    if(jsonAmountValue === false){
-      console.warn("no amount value");
-    }
+  //TODO TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
+  console.log(dataInit);
+  var total=2500000000;
+  //TEMPORAIRE
 
-    if(jsonItemValue === false){
-      console.warn("no item value");
-    }
+  if(error){
+    console.warn("error");
+    return;
+  }
 
-    if(jsonDisplayValue === false){
-      console.log("no display value");
-      jsonDisplayValue = jsonItemValue;
-    }
+  drawPopupGraph(jsonLoc, svg, total, overlay, pieside, f);
 
-    var values = [];
+  svg.popup.pieChart.divTable.remove();
+  svg.popup.locPieChart = svg.popup.pieChart.remove();
 
-    jsonData.forEach(function(elem){
+  svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
+  f = colorEval(70);
+  drawPopupGraph(jsonExt, svg, total, overlay, pieside, f);
 
-      values.push({
-        item: elem[jsonItemValue],
-        y: elem[jsonAmountValue],
-        display:elem[jsonDisplayValue],
-        amount: bytesConvert(elem[jsonAmountValue]),
-        add: jsonAddArrayValues.map(function(indexAdd){return elem[indexAdd];})
-      });
 
-    });
+  svg.popup.extPieChart = svg.popup.pieChart;
 
+  var statesArray = ["ext","loc"];
 
-    console.log(values);
+  var actualStateIndex = 0;
+  var currentState;
+  var popupNode = svg.popup.node();
 
-    //data are prepared
+  svg.popup.button.on("click", function(){
+    actualStateIndex = (actualStateIndex + 1)%2;
+    currentState = statesArray[actualStateIndex];
+    svg.popup.button.text(currentState);
 
-    var sum = d3.sum(values,function(e){
-      return e.y;
-    });
 
-    
-    //We attribute a color to each
-    var f = colorEval(170);
-    var mapColors = new Map();
-    var length = values.length;
+    svg.popup.pieChart.divTable.remove();
+    svg.popup.pieChart.remove();
 
+    svg.popup.pieChart = svg.popup[currentState + "PieChart"];
 
-    for(var w = 0; w < length; w++){
+    popupNode.appendChild(svg.popup.pieChart.node());
+    popupNode.appendChild(svg.popup.pieChart.divTable.node());
 
-      mapColors.set(values[w].item,f());
-
-    }
-
-    values.sort(function(a,b){
-      return b.y - a.y;
-    });
-
-    values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
-
-    mapColors.set(" Remainder ","#f2f2f2");
-
-
-    //The angles of the pie arcs are evaluated
-
-    function anglesCalc(){
-      var posAngle = 0;
-      return function(value){
-        value.startAngle = posAngle;
-        posAngle += 2*Math.PI * value.y / total;
-        value.endAngle = posAngle;
-      }
-    }
-
-    var functAngles = anglesCalc();
-
-    values.forEach(functAngles);
-
-    var arc = d3.arc()
-      .innerRadius(svg.popup.innerRad)
-      .outerRadius(svg.popup.outerRad);
-
-    //The arc template is readied
-    function interpolateArc(d){
-
-      //.toFixed(5) avoid having complete circles at the beginning of the transition,
-      //if start and end angles are too close, the precision isn't good enough to order them
-      //correctly and d3 can creates a 2PI angle.
-
-      return function(t){
-        return (arc
-          .innerRadius(svg.popup.innerRad)
-          .outerRadius(svg.popup.outerRad)
-          .startAngle(d.startAngle)
-          .endAngle((d.startAngle + t * (d.endAngle - d.startAngle)).toFixed(5)))();
-      }
-
-    }
-
-    //g element parent of path and text components of the pie chart
-    svg.popup.pieChart.g = svg.popup.pieChart.append("g")
-      .attr("transform","translate(" + (pieside/2) + "," + (pieside/2) + ")")
-      .classed("part",true).classed("elemtext",true);
-
-    //path elements, the arcs themselves
-    var pathSelec = svg.popup.pieChart.g.selectAll("path").data(values).enter().append("path")
-      .attr("d","")
-      .style("fill",function(d){ return mapColors.get(d.item); });
-    pathSelec.append("svg:title").text(titleElemPopup);
-
-    //text elements, the arcs' legends
-    var textSelec = svg.popup.pieChart.g.selectAll("text").data(values).enter().append("text")
-      .attr("transform",function(d){
-        var midAngle = (d.endAngle + d.startAngle)/2;
-        return "translate(" + (Math.sin(midAngle)*svg.popup.dist) + "," +(-Math.cos(midAngle)*svg.popup.dist) +")";})
-      .text(function(d){ return d.amount;});
-
-
-    //transition on paths for fanciness
-    pathSelec.transition("creation").ease(easeFct(3)).duration(800).attrTween("d",interpolateArc);
-
-
-    //Table
-    svg.popup.pieChart.divTable = svg.popup.append("div").classed("popupTableDiv", true);
-    svg.popup.pieChart.table = svg.popup.pieChart.divTable.append("table").classed("popupTableLegend",true)
-      .style("max-height",svg.pieside + "px");
-
-
-    values.sort(sortAlphabet);
-
-    var trSelec = svg.popup.pieChart.table.selectAll("tr").data(values)
-      .enter().append("tr").attr("title",titleTablePopup);
-
-    trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
-      return mapColors.get(d.item);
-    });
-    trSelec.append("td").text(function(d){return d.display;});
-
-
-
-
-    //name of the current element being hovered, at first none then null.
-    var activeItem = null;
-
-    //Hover listener on the pie chart svg.
-    svg.popup
-      .on("mouseover", mouseoverFunction);
-
-    //Hover listener on the table.
-    overlay
-      .on("mouseover",mouseoverFunction);
-
-
-    function mouseoverFunction(){
-
-      var target = d3.event.target;
-      var path;
-      var text;
-      var d;
-      var onTable = false;
-
-      //item of the element being hovered currently
-      var item;
-      console.log(target.tagName);
-      //detection of the element being hovered
-      switch (target.tagName){
-        //if path or text, variables are being instantiated accordingly.
-        case "path":
-          path = d3.select(target);
-          d = path.datum();
-          item = d.item;
-          text = textSelec.filter(function(data){return data.item === item;});
-          break;
-
-        case "text":
-          text = d3.select(target);
-          d = text.datum();
-          item = d.item;
-          path = pathSelec.filter(function(data){return data.item === item;});
-          break;
-
-        case "TD":
-        case "DIV":
-          d = d3.select(target).datum();
-          if(!d){
-            item = null;
-            break;
-          }
-          onTable = true;
-          item = d.item;
-          text = textSelec.filter(function(data){return data.item === item;});
-          path = pathSelec.filter(function(data){return data.item === item;});
-          break;
-
-        //if anything else, no pie element is hovered.
-        default:
-          item = null;
-          break;
-      }
-
-      //activeItem records the last element hovered (before this one)
-
-      //if the cursor is hovering between text and path of the same data (or comes and goes on the svg), nothing
-      //should be done.
-      if(activeItem === item){
-        return;
-      }
-
-      //From here, the last hovered element and the current have different items (one of them can be null)
-
-      //if the last hovered element wasn't the svg (the "background"), the corresponding path and text should
-      //be translated to their initial position.
-      if(activeItem !== null){
-        var textOut, pathOut;
-        textOut = textSelec.filter(function(data){return data.item === activeItem;});
-        pathOut = pathSelec.filter(function(data){return data.item === activeItem;});
-
-        var dOut = textOut.datum();
-        var midAngleOut = (dOut.endAngle + dOut.startAngle)/2;
-
-        var transitionOut = pathOut.transition().attr("transform", "translate(0,0)");
-        textOut.transition(transitionOut).attr("transform", "translate(" + (Math.sin(midAngleOut)*svg.popup.dist) + "," +(-Math.cos(midAngleOut)*svg.popup.dist) +")");
-
-        trSelec.filter(function(d){return d.item === activeItem}).classed("outlined",false);
-      }
-
-      //the activeItem variable has no further use here, it can be updated with the current item.
-      activeItem = item;
-
-      //if the current hovered element is the svg, end of the event.
-      if(item === null){
-        return;
-      }
-
-
-      //Finally, the current element hovered and associated path/text can be translated.
-
-
-      var midAngle = (d.endAngle + d.startAngle)/2;
-      var transition = path.transition()
-        .attr("transform","translate(" + (Math.sin(midAngle)*svg.popup.distTranslTemp) + "," +(-Math.cos(midAngle)*svg.popup.distTranslTemp) +")" )
-        .transition()
-        .attr("transform","translate(" + (Math.sin(midAngle)*svg.popup.distTransl) + "," +(-Math.cos(midAngle)*svg.popup.distTransl) +")" );
-
-      text.transition(transition)
-        .attr("transform","translate(" + (Math.sin(midAngle)*(svg.popup.distTranslTemp + svg.popup.dist)) + "," +(-Math.cos(midAngle)*(svg.popup.distTranslTemp+svg.popup.dist)) +")" )
-        .transition()
-        .attr("transform","translate(" + (Math.sin(midAngle)*(svg.popup.distTransl+svg.popup.dist)) + "," +(-Math.cos(midAngle)*(svg.popup.distTransl+svg.popup.dist)) +")" );
-
-
-
-      //the corresponding row is outlined
-      var elem = trSelec.filter(function(d){return d.item === activeItem;}).classed("outlined",true);
-
-      //no transition if the cursor is on the table
-      if(onTable){
-        return;
-      }
-
-      scrollToElementTableTransition(elem,svg.popup.pieChart.table)
-
-    }
-
-
-    //display and positioning
-    svg.popup.style("display", null);
-
+    redrawPopup(overlay, svg);
     positionPopup(svg);
 
-  }); //end json
+
+  });
+
+
+
+  //Hover listener on the pie chart svg.
+  svg.popup
+    .on("mouseover", mouseoverFunction);
+
+  //Hover listener on the table.
+  overlay
+    .on("mouseover", mouseoverFunction);
+
+
+  function mouseoverFunction(){
+
+    var target = d3.event.target;
+    var path;
+    var text;
+    var d;
+    var onTable = false;
+
+    //item of the element being hovered currently
+    var item;
+    //detection of the element being hovered
+    switch (target.tagName){
+      //if path or text, variables are being instantiated accordingly.
+      case "path":
+        path = d3.select(target);
+        d = path.datum();
+        item = d.item;
+        text = svg.popup.pieChart.textSelec.filter(function(data){return data.item === item;});
+        break;
+
+      case "text":
+        text = d3.select(target);
+        d = text.datum();
+        item = d.item;
+        path = svg.popup.pieChart.pathSelec.filter(function(data){return data.item === item;});
+        break;
+
+      case "TD":
+      case "DIV":
+        d = d3.select(target).datum();
+        if(!d){
+          item = null;
+          break;
+        }
+        onTable = true;
+        item = d.item;
+        text = svg.popup.pieChart.textSelec.filter(function(data){return data.item === item;});
+        path = svg.popup.pieChart.pathSelec.filter(function(data){return data.item === item;});
+        break;
+
+      //if anything else, no pie element is hovered.
+      default:
+        item = null;
+        break;
+    }
+
+    //activeItem records the last element hovered (before this one)
+
+    //if the cursor is hovering between text and path of the same data (or comes and goes on the svg), nothing
+    //should be done.
+    if(svg.popup.pieChart.activeItem === item){
+      return;
+    }
+
+    //From here, the last hovered element and the current have different items (one of them can be null)
+
+    //if the last hovered element wasn't the svg (the "background"), the corresponding path and text should
+    //be translated to their initial position.
+    if(svg.popup.pieChart.activeItem !== null){
+      var textOut, pathOut;
+      textOut = svg.popup.pieChart.textSelec.filter(function(data){return data.item === svg.popup.pieChart.activeItem;});
+      pathOut = svg.popup.pieChart.pathSelec.filter(function(data){return data.item === svg.popup.pieChart.activeItem;});
+
+      var dOut = textOut.datum();
+      var midAngleOut = (dOut.endAngle + dOut.startAngle)/2;
+
+      var transitionOut = pathOut.transition().attr("transform", "translate(0,0)");
+      textOut.transition(transitionOut).attr("transform", "translate(" + (Math.sin(midAngleOut)*svg.popup.dist) + "," +(-Math.cos(midAngleOut)*svg.popup.dist) +")");
+
+      svg.popup.pieChart.trSelec.filter(function(d){return d.item === svg.popup.pieChart.activeItem}).classed("outlined",false);
+    }
+
+    //the activeItem variable has no further use here, it can be updated with the current item.
+    svg.popup.pieChart.activeItem = item;
+
+    //if the current hovered element is the svg, end of the event.
+    if(item === null){
+      return;
+    }
+
+
+    //Finally, the current element hovered and associated path/text can be translated.
+
+
+    var midAngle = (d.endAngle + d.startAngle)/2;
+    var transition = path.transition()
+      .attr("transform","translate(" + (Math.sin(midAngle)*svg.popup.distTranslTemp) + "," +(-Math.cos(midAngle)*svg.popup.distTranslTemp) +")" )
+      .transition()
+      .attr("transform","translate(" + (Math.sin(midAngle)*svg.popup.distTransl) + "," +(-Math.cos(midAngle)*svg.popup.distTransl) +")" );
+
+    text.transition(transition)
+      .attr("transform","translate(" + (Math.sin(midAngle)*(svg.popup.distTranslTemp + svg.popup.dist)) + "," +(-Math.cos(midAngle)*(svg.popup.distTranslTemp+svg.popup.dist)) +")" )
+      .transition()
+      .attr("transform","translate(" + (Math.sin(midAngle)*(svg.popup.distTransl+svg.popup.dist)) + "," +(-Math.cos(midAngle)*(svg.popup.distTransl+svg.popup.dist)) +")" );
+
+
+
+    //the corresponding row is outlined
+    var elem = svg.popup.pieChart.trSelec.filter(function(d){return d.item === svg.popup.pieChart.activeItem;}).classed("outlined",true);
+
+    //no transition if the cursor is on the table
+    if(onTable){
+      return;
+    }
+
+
+    scrollToElementTableTransition(elem,svg.popup.pieChart.table)
+
+  }
+
+
+  //display and positioning
+  svg.popup.style("display", null);
+
+  positionPopup(svg);
+
 }
 
 
+/*********************************************************************************************************************************************/
+
+function drawPopupGraph(json, svg, total,overlay, pieside,f){
+
+  if(testJson(json)){
+    console.warn("no data");
+  }
+
+  json = json.response;
+
+  var jsonData = json.data;
+  var jsonContent = json.content;
+
+  var jsonAmountValue = searchAmountValue(jsonContent);
+  var jsonItemValue = searchItemValue(jsonContent);
+  var jsonDisplayValue = searchDisplayValue(jsonContent);
+  var jsonAddArrayValues = searchAdditionalValues(jsonContent);
+
+  if(jsonAmountValue === false){
+    console.warn("no amount value");
+  }
+
+  if(jsonItemValue === false){
+    console.warn("no item value");
+  }
+
+  if(jsonDisplayValue === false){
+    console.log("no display value");
+    jsonDisplayValue = jsonItemValue;
+  }
+
+  var values = [];
+
+  jsonData.forEach(function(elem){
+
+    values.push({
+      item: elem[jsonItemValue],
+      y: elem[jsonAmountValue],
+      display:elem[jsonDisplayValue],
+      amount: bytesConvert(elem[jsonAmountValue]),
+      add: jsonAddArrayValues.map(function(indexAdd){return elem[indexAdd];})
+    });
+
+  });
+
+
+  console.log(values);
+
+  //data are prepared
+
+  var sum = d3.sum(values,function(e){
+    return e.y;
+  });
+
+
+  //We attribute a color to each
+  var mapColors = new Map();
+  var length = values.length;
+
+
+  for(var w = 0; w < length; w++){
+
+    mapColors.set(values[w].item,f());
+
+  }
+
+  values.sort(function(a,b){
+    return b.y - a.y;
+  });
+
+  //values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
+
+  total = d3.sum(values,function(e){return e.y});
+  console.log(total);
+
+  mapColors.set(" Remainder ","#f2f2f2");
+
+
+  //The angles of the pie arcs are evaluated
+
+  function anglesCalc(){
+    var posAngle = 0;
+    return function(value){
+      value.startAngle = posAngle;
+      posAngle += 2*Math.PI * value.y / total;
+      value.endAngle = posAngle;
+    }
+  }
+
+  var functAngles = anglesCalc();
+
+  values.forEach(functAngles);
+
+  var arc = d3.arc()
+    .innerRadius(svg.popup.innerRad)
+    .outerRadius(svg.popup.outerRad);
+
+  //The arc template is readied
+  function interpolateArc(d){
+
+    //.toFixed(5) avoid having complete circles at the beginning of the transition,
+    //if start and end angles are too close, the precision isn't good enough to order them
+    //correctly and d3 can creates a 2PI angle.
+
+    return function(t){
+      return (arc
+        .innerRadius(svg.popup.innerRad)
+        .outerRadius(svg.popup.outerRad)
+        .startAngle(d.startAngle)
+        .endAngle((d.startAngle + t * (d.endAngle - d.startAngle)).toFixed(5)))();
+    }
+
+  }
+
+  //g element parent of path and text components of the pie chart
+  svg.popup.pieChart.g = svg.popup.pieChart.append("g")
+    .attr("transform","translate(" + (pieside/2) + "," + (pieside/2) + ")")
+    .classed("part",true).classed("elemtext",true);
+
+  //path elements, the arcs themselves
+  svg.popup.pieChart.pathSelec = svg.popup.pieChart.g.selectAll("path").data(values).enter().append("path")
+    .attr("d","")
+    .style("fill",function(d){ return mapColors.get(d.item); });
+  svg.popup.pieChart.pathSelec.append("svg:title").text(titleElemPopup);
+
+  //text elements, the arcs' legends
+  svg.popup.pieChart.textSelec = svg.popup.pieChart.g.selectAll("text").data(values).enter().append("text")
+    .attr("transform",function(d){
+      var midAngle = (d.endAngle + d.startAngle)/2;
+      return "translate(" + (Math.sin(midAngle)*svg.popup.dist) + "," +(-Math.cos(midAngle)*svg.popup.dist) +")";})
+    .text(function(d){ return d.amount;});
+
+
+  //transition on paths for fanciness
+  svg.popup.pieChart.pathSelec.transition("creation").ease(easeFct(3)).duration(800).attrTween("d",interpolateArc);
+
+
+  //Table
+  svg.popup.pieChart.divTable = svg.popup.append("div").classed("popupTableDiv", true);
+  svg.popup.pieChart.table = svg.popup.pieChart.divTable.append("table").classed("popupTableLegend",true)
+    .style("max-height",svg.pieside + "px");
+
+
+  values.sort(sortAlphabet);
+
+  svg.popup.pieChart.trSelec = svg.popup.pieChart.table.selectAll("tr").data(values)
+    .enter().append("tr").attr("title",titleTablePopup);
+
+  svg.popup.pieChart.trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
+    return mapColors.get(d.item);
+  });
+  svg.popup.pieChart.trSelec.append("td").text(function(d){return d.display;});
+
+
+
+
+  //name of the current element being hovered, at first none then null.
+  svg.popup.pieChart.activeItem = null;
+
+
+}
 
 /*********************************************************************************************************************************************/
 

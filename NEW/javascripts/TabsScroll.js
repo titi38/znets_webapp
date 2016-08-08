@@ -7,9 +7,17 @@
 
 function adjustOnTabClick(event) {
 
+    // Redraw active of clicked tab (if there is one)
+    $($(this).find("a").attr('href')).find("li.active > a.subnavtab").click();
+
+    
+
     var tabElement = $(this);
     var tabList = $(this).parent();
     var tabListWrapper = $(this).parent().parent();
+
+    // Redraw all active charts
+    //$("li.active > a.subnavtab").click();
 
     // if tab element is cut on the right side
     if( ( tabElement.position().left + tabElement.outerWidth() ) > ( Math.abs(tabList.position().left) + tabListWrapper.outerWidth() ) )

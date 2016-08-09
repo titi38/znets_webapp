@@ -79,6 +79,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         //createPopup("/dynamic/netLocHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2",
         //  "/dynamic/netExtHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
         //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
+
       }, 500);
 
     });
@@ -197,7 +198,7 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
   var f = colorEval(170);
 
   //Title
-  svg.popup.title.text(dataInit.item);
+  svg.popup.title.text(popupTitleH(dataInit,svg));
 
   //Some values relative to the popup dimensions
   svg.popup.innerRad = 0;
@@ -543,6 +544,7 @@ function drawPopupGraph(json, svg, total, pieside,f){
   //name of the current element being hovered, at first none then null.
   svg.popup.pieChart.activeItem = null;
 
+  console.log(sum + " " + total);
 
   return total;
 
@@ -582,11 +584,13 @@ function titleTablePopup(d){
 
 /**********************************************************************************************************************/
 
-function popupTitle(d, svg){
-  var dateBegin = getDateFromAbscissa(svg, x - 1);
+function popupTitleH(d, svg){
+
+  var dateBegin = getDateFromAbscissa(svg, d.x - 1);
   var dateEnd = getDateFromAbscissa(svg,d.x);
 
-  return d.display + ": from " + dateBegin
+  return (d.display?d.display:d.item) + ": the " + (dateBegin.getMonth() + 1) + "/" + dateBegin.getDate() +  " from "
+    + dateBegin.getHours() + "h to " + dateEnd.getHours() + "h";
 }
 
 

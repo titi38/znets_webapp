@@ -412,6 +412,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
       function testitem(data) {
+
         return d.item == data.item;
 
       }
@@ -421,13 +422,11 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       if(d.direction === "out"){
 
         elem = trSelecOut.filter(testitem).classed("outlined", true);
-
         scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
 
       }else{
 
         elem = trSelecIn.filter(testitem).classed("outlined", true);
-
         scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
 
       }
@@ -1059,6 +1058,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       }
 
     }
+
     function activationElemsAutoScrollPopup(d) {
 
 
@@ -1100,9 +1100,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         return data.item == activeItem;
       }
 
-
       if(svg.activeItem.direction === "out"){
-
 
         trSelecOut.filter(testitem).classed("outlined", false);
 
@@ -1114,7 +1112,6 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         trSelecIn.filter(testitem).classed("outlined", false);
 
         selectionIn.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
-
 
       }
 
@@ -1154,10 +1151,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         activationElemsAutoScrollPopup(data);},
       desactivationElems);
 
-
-
     selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
-
 
     //Now, no more nodata can happen,so we create the table
     svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");

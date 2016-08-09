@@ -10,14 +10,12 @@ function adjustOnTabClick(event) {
     // Redraw active of clicked tab (if there is one)
     $($(this).find("a").attr('href')).find("li.active > a.subnavtab").click();
 
-    
 
+
+    // Adjust clicked tab scroll
     var tabElement = $(this);
     var tabList = $(this).parent();
     var tabListWrapper = $(this).parent().parent();
-
-    // Redraw all active charts
-    //$("li.active > a.subnavtab").click();
 
     // if tab element is cut on the right side
     if( ( tabElement.position().left + tabElement.outerWidth() ) > ( Math.abs(tabList.position().left) + tabListWrapper.outerWidth() ) )
@@ -27,7 +25,7 @@ function adjustOnTabClick(event) {
         });
     }
 
-    // if tab element is cut to the right side
+    // if tab element is cut to the left side
     if( tabElement.position().left < Math.abs(tabList.position().left) )
     {
         tabList.animate({left: "+="+ ( Math.abs(tabList.position().left) - tabElement.position().left - parseInt(tabList.css("margin-left")) ) +"px"},'slow', function(){

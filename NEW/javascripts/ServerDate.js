@@ -23,7 +23,6 @@ function ServerDate(theWSEventNotifier) {
     this.addServerDateEntry = function (date)
     {
         serverDateEntries.push({"date": date});
-        console.warn("TODO ???");
         if (!loadingAJAX)
             this.unstackFIFO();
     };

@@ -72,38 +72,83 @@ function drawChart(urlJson, mydiv) {
 /***********************************************************************************************************/
 
 function whichCreationFunction(urlJson,svg){
-var typeGraph = urlJson.split(/[\.\/]+/);
+
+    var typeGraph = urlJson.split(/[\?]/)[0].split(/[\.\/]+/);
+
     //For test & real use, can be simplified later
     typeGraph = typeGraph[typeGraph.length - 2];
     svg.typeGraph = typeGraph;
-    console.log(typeGraph);
+
     switch(typeGraph){
         case "netNbLocalHosts":
+
+
         case "netNbExternalHosts":
+        case "hostNbDiffHosts":
+
             return createCurve;
+            break;
+
         case "netTopHostsTraffic":
+
         case "netTopServicesTraffic":
+        case "hostTopServicesTraffic":
+
         case "netTopAsTraffic":
+        case "hostTopAsTraffic":
+
         case "netTopAppTraffic":
+        case "hostTopAppTraffic":
+
         case "netTopCountryTraffic":
+        case "hostTopCountryTraffic":
+
             return createHisto2DStackDouble;
+            break;
+
         case "netNbFlow":
+        case "hostNbFlow":
+
         case "netProtocolePackets":
+        case "hostProtocolePacket":
+
         case "netProtocoleTraffic":
+        case "hostProtocoleTraffic":
+
             return createHisto2DStackDoubleFormatVariation;
+            break;
+
         case "netTopServicesNbFlow":
+        case "hostTopServicesNbFlow":
+
         case "netTopNbExtHosts":
             return createHisto2DStackSimple;
+            break;
         //for now
         case "worldmap":
+
             return createMap;
+            break;
+
         case "netTopCurrentCountryTraffic":
+
             return createChoroplethDirection;
+            break;
+
         case "netTopHostsNbFlow":
+
         case "netTopCountryNbFlow":
+        case "hostTopCountryNbFlow":
+
         case "netTopAsNbFlow":
+        case "hostTopAsNbFlow":
+
         case "netTopAppNbFlow":
-        return create2HistoStack;
+        case "hostTopAppNbFlow":
+
+            return create2HistoStack;
+            break;
+
         default:
             return noData;
     }

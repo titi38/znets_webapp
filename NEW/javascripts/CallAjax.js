@@ -112,7 +112,7 @@ function callAJAX(url, params, outputType, callback, callbackParams)
 
 
 
-function setChartJsonFUllURL (jsonData, ajaxParams, subNetwork){
+function setChartJsonFUllURL (jsonData, ajaxParams, subNet_or_lhIp, forNetworks){
 
     var myform = $('#charts_form');
 
@@ -125,11 +125,11 @@ function setChartJsonFUllURL (jsonData, ajaxParams, subNetwork){
     // re-disabled the set of inputs that you previously enabled
     disabled.prop('disabled',true);
 
-    var serializedSubNet = (subNetwork === "") ? "" : "&net="+subNetwork;
+    var serialized_subNet_or_lhIp = (forNetworks) ? ( (subNet_or_lhIp === "") ? "" : "&net="+subNet_or_lhIp ) : ( "&ip="+subNet_or_lhIp );
 
-    console.warn(proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z")));
+    console.warn(proxyPass+jsonData+"?"+ajaxParams+serialized_subNet_or_lhIp+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z")));
 
 
-    return proxyPass+jsonData+"?"+ajaxParams+serializedSubNet+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z"));
+    return proxyPass+jsonData+"?"+ajaxParams+serialized_subNet_or_lhIp+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z"));
 
 }

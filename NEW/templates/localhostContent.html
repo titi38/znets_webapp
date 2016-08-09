@@ -1,74 +1,111 @@
 
+
 <br>
 
 
-<form class="form-horizontal row" id="charts_form"> <!--onsubmit="getRawData(serializeRawDataForm()); return false" -->
-
-    <div class="panel panel-default">
-        <div class="panel-heading padding2px">
-            <fieldset class="container">
-                <!--legend>Timestamp Filter</legend-->
-                <div class="form-group col-md-4">
-                    <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
-                    <div class="col-xs-10 col-md-8">
-                        <select class="form-control" id="timesliceCharts" name="timesliceCharts" onchange="updateChartsTimestep(this.value)">
-                            <option value="lastDay" selected="selected">Last 24h</option>
-                            <option value="lastMonth" >Last Month</option>
-                            <option value="hourly">Custom (Hourly)</option>
-                            <option value="daily" >Custom (Daily)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
-                    <div class="col-xs-10">
-                        <div class='input-group date' id='fromDate_ChartsForm'>
-                            <input type='text' class="form-control" id="dateDebCharts" name='dd' required disabled/>
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
-                    <div class="col-xs-10">
-                        <div class='input-group date' id='toDate_ChartsForm'>
-                            <input type='text' class="form-control"  id="dateFinCharts" name='df' required disabled/>
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group col-xs-12 col-md-1 text-center">
-                    <button type="submit" class="btn btn-default">Apply</button>
-                </div>
-
-            </fieldset>
-        </div>
-    </div>
-
-</form>
-
-<hr class="myhr">
 
 <div class="container-fluid">
     <div>
         <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
         <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
-        <div class="wrapper">
+        <div class="wrapper localhosts">
             <ul class="nav nav-tabs list localhost-tab-list" id="localhostTabsContainer">
-                <!--li class="active"><a data-toggle="tab" href="#divLocalhostGlobal"> Global</a></li-->
+                <li class="active"><a href="#localhostsInventory">Inventory</a></li>
             </ul>
         </div>
 
+        <div id="charts_form_container">
+
+            <form class="form-horizontal container-fluid" id="charts_form">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading padding2px">
+                        <fieldset class="row container-fluid">
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-2 col-md-4" for="timesliceCharts_LH">Timeslice:</label>
+                                    <div class="col-xs-10 col-md-8">
+                                        <select class="form-control" id="timesliceCharts_LH" onchange="onChangeChartsForm(); updateChartsTimeslice(this)">
+                                            <option value="lastHour">Last hour</option>
+                                            <option value="lastDay" selected>Last day</option>
+                                            <option value="lastWeek">Last week</option>
+                                            <option value="lastMonth">Last month</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-2" for="fromDate_ChartsForm_LH">From:</label>
+                                    <div class="col-xs-10">
+                                        <div class='input-group date' id='fromDate_ChartsForm_LH'>
+                                            <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-2" for="timestepCharts_LH">To:</label>
+                                    <div class="col-xs-10">
+                                        <div class='input-group date' id='toDate_ChartsForm_LH'>
+                                            <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label col-xs-2 col-md-6" for="timestepCharts_LH">Timestep:</label>
+                                    <div class="col-xs-10 col-md-6">
+                                        <select class="form-control" id="timestepCharts_LH" onchange="onChangeChartsForm()">
+                                            <option value="MINUTE">Minutes</option>
+                                            <option value="HOURLY" selected>Hours</option>
+                                            <option value="DAILY" >Days</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-md-2">
+                                <div class="form-group text-center">
+                                    <button type="button" class="btn btn-default" id="applyBtn_charts_form_LH" onclick="applyChartsForm()" disabled>Apply</button>
+                                    <button type="button" class="btn btn-default" id="resetBtn_charts_form_LH" onclick="resetChartsForm()" disabled>Reset</button>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+            </form>
+
+            <hr class="myhr">
+
+        </div>
+
+
         <div class="tab-content localhost-tab-content">
             <!--div class="tab-pane fade in localhost active" data-localhost="Global" data-toggle="tab" id="divLocalhostGlobal" >Global Localhost Content</div-->
+            <div class="tab-pane fade active in" id="localhostsInventory">
+                <div id="divLocalhosts" class="toBottomTabsContainer">
+                </div>
+            </div>
         </div>
+
+
     </div>
 
 </div>

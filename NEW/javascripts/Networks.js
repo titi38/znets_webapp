@@ -40,8 +40,6 @@ function addNetworkTab(networkName){
     element_tab.find("a").click(function (e) {
         e.preventDefault();
         $(this).tab('show');
-
-        //adjustTableColumns(networkName);
     });
 
     //element_tab.find("a").click();

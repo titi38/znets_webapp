@@ -8,6 +8,7 @@ function initialisation(){
      Load all templates inside the JST global variable
      ********************************************************************************************************/
     JST["networksTabsContent"] = doT.template(getTemplate("NEW/templates/networksTabsContent.html"));
+    JST["localhostsTabsContent"] = doT.template(getTemplate("NEW/templates/localhostsTabsContent.html"));
     //JST["rawDataDropdownMenu"] = doT.template(getTemplate("NEW/templates/rawDataDropdownMenu.html"));
     /*JST["planView"] = doT.template(getTemplate("Templates/Views/planView.html"));
      JST["configPopup"] = doT.template(getTemplate("Templates/config_sensor-popup_content.html"));
@@ -40,9 +41,9 @@ function initialisation(){
 
     /*********************************************************************************************************
      New Localhosts Object
+     Will used on localhost Tab initialisation. Check further
      ********************************************************************************************************/
     var myLocalhosts = new Localhosts(myWSEventNotifier);
-    myLocalhosts.init();
 
     /*********************************************************************************************************
      New LastHourHistory Object
@@ -76,12 +77,6 @@ function initialisation(){
     $('a.alertTab').on('shown.bs.tab', function (e) {
         $('#tableAlerts').DataTable().columns.adjust();
     });
-
-
-    /*********************************************************************************************************
-     Activate localhosts tab
-     ********************************************************************************************************/
-    activateTabOfClass("localhosts");
 
 
     /**
@@ -126,6 +121,12 @@ function initialisation(){
      Initialize NetworkTab
      ********************************************************************************************************/
     initializeNetwork();
+
+
+    /*********************************************************************************************************
+     Initialize LocalhostsTab
+     ********************************************************************************************************/
+    initializeLocalhosts(myLocalhosts);
 
 
 
@@ -198,11 +199,14 @@ function setHomePage()
 }*/
 
 
-function getHtmlTemplate( elementJQuery, url, callBack)
+function getHtmlTemplate( elementJQuery, url, callBack, callBackParams)
 {
     $(elementJQuery).html(getTemplate(url)).promise().done(function(){
         if(callBack)
-            callBack();
+            if(callBackParams)
+                callBack(callBackParams);
+            else
+                callBack();
     });
 }
 
@@ -235,7 +239,7 @@ function initNetworksChartsNavTabs() {
 
     $('ul.nav-nest a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
-        loadChartJsonToDiv(e.target);
+        loadChartJsonToDiv(e.target, true);
 
     });
 
@@ -257,6 +261,17 @@ function initChartsTabsNavAnimation(tabIDQuery){
 
     $( document ).ready(function() {
 
+
+        // This initialization could used several times when opening localhosts (only once for networks, when all networks tabs are opened)
+        // First, drop all animation if they exist
+        $(document).off('click', tabIDQuery+' a.navtab');
+        $(document).off('click', tabIDQuery+' a.subnavtab[data-toggle="tab"]');
+        $(document).off('mouseenter', tabIDQuery+' button.chartNavDropdownButton');
+        $(document).off('mouseleave', tabIDQuery+' button.chartNavDropdownButton');
+
+        // (Re)Write animations
+        // ===================>
+
         // Block default behavior : avoid click event propagation on chart navigation nodes which are not leaves
         $(document).on('click', tabIDQuery+' a.navtab', function (e) {
             e.stopPropagation();
@@ -276,22 +291,25 @@ function initChartsTabsNavAnimation(tabIDQuery){
         $(document).on('mouseleave', tabIDQuery+' button.chartNavDropdownButton', function (e) {
             $(this).find("p").addClass("hidden");
         });
+
+
+
     });
 
 }
 
 
 
-function loadChartJsonToDiv(selectedNavChart) {
+function loadChartJsonToDiv(selectedNavChart, forNetworks) {
 
     var jsonData = selectedNavChart.dataset.chartJson;
     var ajaxParams = selectedNavChart.dataset.ajaxParams;
-    var subNetwork = (selectedNavChart.dataset.network === "Global") ? "" : selectedNavChart.dataset.network;
     var jqueryTarget = selectedNavChart.hash;
 
     emptyChartContainer(jqueryTarget);
 
-    drawChartFromInterface(setChartJsonFUllURL(jsonData, ajaxParams, subNetwork), jqueryTarget);
+    var subNet_or_lhIp = (forNetworks) ? ( (selectedNavChart.dataset.network === "Global") ? "" : selectedNavChart.dataset.network ) : ( selectedNavChart.dataset.localhostIp );
+    drawChartFromInterface(setChartJsonFUllURL(jsonData, ajaxParams, subNet_or_lhIp, forNetworks), jqueryTarget);
 
 }
 
@@ -307,7 +325,38 @@ function initializeNetworkCallback() {
 function initializeNetwork() {
 
 // TODO START : embed this
-    getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetworkCallback);
+    getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetworkCallback, null);
+//getHtmlTemplate("#network", "NEW/templates/networksTabsContent.html", initializeNetwork);
+
+// TODO END
+
+}
+
+function initializeLocalhostCallback(myLocalhosts) {
+
+    myLocalhosts.init();
+
+    // Initialize localhosts "Inventory" tab
+    $('.localhost-tab-list').find("a").click(function (e) {
+        $(this).tab('show');
+
+        // Hide formular on localhost machine tab click
+        $(this).parents(".wrapper.localhosts").siblings("#charts_form_container").hide();
+    });
+
+
+    /*********************************************************************************************************
+     Activate localhosts tab
+     ********************************************************************************************************/
+    activateTabOfClass("localhosts");
+
+}
+
+
+function initializeLocalhosts(myLocalhosts) {
+
+// TODO START : embed this
+    getHtmlTemplate("#localhosts", "NEW/templates/localhostContent.html", initializeLocalhostCallback, myLocalhosts);
 //getHtmlTemplate("#network", "NEW/templates/networksTabsContent.html", initializeNetwork);
 
 // TODO END
@@ -324,11 +373,11 @@ function initializeNetwork() {
  ********************************************************************************************************/
 $( document ).ready(function() {
 
-    getHtmlTemplate("#home", "NEW/templates/home.html", setHomePage);
+    getHtmlTemplate("#home", "NEW/templates/home.html", setHomePage, null);
 
     activateTabOfClass("home");
 
-    getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null);
+    getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null, null);
 
     tryRestaureConnectSession();
 

@@ -1,4 +1,9 @@
 
+
+
+
+
+
 /***********************************************************************************************************/
 
 
@@ -16,13 +21,27 @@ function getPieJsonQuery(svg, clickData) {
 
   //?
 
-  return proxyPass + ( ( svg.attr("data-pie-json") ) ? svg.attr("data-pie-json")+"?" : "" )
-    +( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") : "" )
-    + ( ( moment(getDateFromAbscissa(svg, clickData.x + 1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
-    + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
-    + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
-    + ( ( clickData.item ) ? "&ip="+clickData.item : "" )
-    + ( ( clickData.direction.toLowerCase() ) ? "&type="+clickData.direction.toLowerCase() : "" ) ;
+  switch(svg.typeGraph){
+
+    case "netProtocoleTraffic":
+
+      var endStr = "HostsProtoTraffic.json" + "?"
+        + ( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") : "" )
+        + ( ( moment(getDateFromAbscissa(svg, clickData.x + 1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
+        + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
+        + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
+        + ( ( clickData.item ) ? "&proto="+ clickData.item.toLowerCase() : "" )
+        + ( ( clickData.direction.toLowerCase() ) ? "&type="+clickData.direction.toLowerCase() : "" )
+        + "&dh=" + svg.hourShift/3600000;
+
+      return [proxyPass + "netLoc"  + endStr,
+        proxyPass + "netExt"  + endStr ];
+
+
+
+  }
+
+
 }
 
 
@@ -37,7 +56,6 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
   svg.popup.title = svg.popup.append("h3").classed("popupTitle",true);
   svg.popup.button = svg.popup.append("button").classed("buttonPopup", true);
-  svg.popup.button.text("Ext");
 
 
   svg.popup.pieChart = null;
@@ -52,25 +70,40 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         div.overlay.style("display", null);
         onCreationFunct(d);
         svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        createPopup("/dynamic/netLocHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2",
-          "/dynamic/netExtHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
+
+        var arrayUrl = getPieJsonQuery(svg,d);
+        console.log(arrayUrl);
+
+        createPopup(arrayUrl[0],arrayUrl[1], svg, svg.pieside, d,div.overlay);
+
+        //createPopup("/dynamic/netLocHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2",
+        //  "/dynamic/netExtHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
         //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
       }, 500);
 
     });
 
   div.overlay.on("click", function () {
+
+    //popup suppression
+    svg.popup.on("mouseover", null);
+    div.overlay.on("mouseover", null);
+    svg.d3queue.abort();
+
     div.overlay.style("display", "none");
     svg.popup.style("display", "none");
+
     if(svg.popup.pieChart.divTable) {
       svg.popup.pieChart.divTable.remove();
     }
+
     svg.popup.pieChart.remove();
     svg.popup.pieChart = null;
     svg.popup.extPieChart = null;
     svg.popup.locPieChart = null;
 
     onSupprFunct();
+
   });
 
 
@@ -141,11 +174,16 @@ function redrawPopup(overlay, svg){
 
 function createPopup(urlJsonLoc,urlJsonExt,svg,pieside,dataInit,overlay){
 
-  d3.queue()
+  svg.d3queue = d3.queue();
+  svg.d3queue
     .defer(d3.json,urlJsonLoc)
     .defer(d3.json,urlJsonExt)
     .await(function(error, jsonLoc, jsonExt){
-      drawComplData(error, jsonLoc,jsonExt,svg,pieside,dataInit,overlay)
+
+      if(error && error.message === "abort"){
+        return;
+      }
+      drawComplData(error, jsonLoc,jsonExt,svg,pieside,dataInit,overlay);
     });
 
 }
@@ -158,13 +196,8 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
   var chartside = 0.75*pieside;
   var f = colorEval(170);
 
-
-
-
   //Title
   svg.popup.title.text(dataInit.item);
-
-
 
   //Some values relative to the popup dimensions
   svg.popup.innerRad = 0;
@@ -174,27 +207,24 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
   svg.popup.distTransl = svg.popup.outerRad/10;
 
 
-
-
-  //TODO TEMPORAIRE: test, à supprimer lors de l'utilisation avec de véritables valeurs.
-  console.log(dataInit);
-  var total=2500000000;
-  //TEMPORAIRE
+  var total = dataInit.height;
 
   if(error){
-    console.warn("error");
+    console.warn(error);
     return;
   }
 
-  drawPopupGraph(jsonLoc, svg, total, overlay, pieside, f);
+  drawPopupGraph(jsonLoc, svg, total, pieside, f);
 
   svg.popup.pieChart.divTable.remove();
   svg.popup.locPieChart = svg.popup.pieChart.remove();
 
   svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
   f = colorEval(70);
-  drawPopupGraph(jsonExt, svg, total, overlay, pieside, f);
 
+  drawPopupGraph(jsonExt, svg, total, pieside, f);
+
+  svg.popup.button.text("ext");
 
   svg.popup.extPieChart = svg.popup.pieChart;
 
@@ -205,6 +235,7 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
   var popupNode = svg.popup.node();
 
   svg.popup.button.on("click", function(){
+
     actualStateIndex = (actualStateIndex + 1)%2;
     currentState = statesArray[actualStateIndex];
     svg.popup.button.text(currentState);
@@ -220,7 +251,6 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
 
     redrawPopup(overlay, svg);
     positionPopup(svg);
-
 
   });
 
@@ -356,7 +386,7 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
 
 /*********************************************************************************************************************************************/
 
-function drawPopupGraph(json, svg, total,overlay, pieside,f){
+function drawPopupGraph(json, svg, total, pieside,f){
 
   if(testJson(json)){
     console.warn("no data");
@@ -424,11 +454,11 @@ function drawPopupGraph(json, svg, total,overlay, pieside,f){
     return b.y - a.y;
   });
 
-  //values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
+  values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
 
-  total = d3.sum(values,function(e){return e.y});
+  /*total = d3.sum(values,function(e){return e.y});
   console.log(total);
-
+*/
   mapColors.set(" Remainder ","#f2f2f2");
 
 
@@ -514,6 +544,8 @@ function drawPopupGraph(json, svg, total,overlay, pieside,f){
   svg.popup.pieChart.activeItem = null;
 
 
+  return total;
+
 }
 
 /*********************************************************************************************************************************************/
@@ -531,7 +563,7 @@ function titleElemPopup(d){
 
 }
 
-/*********************************************************************************************************************************************/
+/**********************************************************************************************************************/
 
 function titleTablePopup(d){
 
@@ -548,8 +580,14 @@ function titleTablePopup(d){
 
 }
 
+/**********************************************************************************************************************/
 
+function popupTitle(d, svg){
+  var dateBegin = getDateFromAbscissa(svg, x - 1);
+  var dateEnd = getDateFromAbscissa(svg,d.x);
 
+  return d.display + ": from " + dateBegin
+}
 
 
 

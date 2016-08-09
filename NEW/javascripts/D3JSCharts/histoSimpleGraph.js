@@ -107,7 +107,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
 
-    var hourShift = getTimeShift(urlJson)  * 3600000;
+    svg.hourShift = getTimeShift(urlJson)  * 3600000;
 
     var itemType = jsonContent[contentItemValue];
 
@@ -120,7 +120,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
       }
 
       elemToPush = {
-        x: (new Date(elemJson[contentDateValue])).getTime() + hourShift,
+        x: (new Date(elemJson[contentDateValue])).getTime() + svg.hourShift,
         height: +elemJson[contentAmountValue],
         item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue]
       };

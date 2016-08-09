@@ -64,7 +64,7 @@ function createCurve(div, svg, mydiv, urlJson){
     }
 
     svg.step = (urlJson.indexOf("pset=MINUTE") === -1)?((urlJson.indexOf("pset=DAILY") === - 1)?3600000:86400000):60000;
-    var hourShift = getTimeShift(urlJson) * 3600000;
+    svg.hourShift = getTimeShift(urlJson) * 3600000;
 
 
     //Conversion date to elapsed time since 1st January 1970.
@@ -72,13 +72,13 @@ function createCurve(div, svg, mydiv, urlJson){
     if(svg.step === 60000){
 
       jsonData.forEach(function(elem){
-        elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + hourShift - 3600000;
+        elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + svg.hourShift - 3600000;
       });
 
     }else{
 
       jsonData.forEach(function(elem){
-        elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + hourShift;
+        elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + svg.hourShift;
       });
 
     }

@@ -114,7 +114,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var timeMax = 0;
 
 
-    var hourShift = getTimeShift(urlJson)  * 3600000;
+    svg.hourShift = getTimeShift(urlJson)  * 3600000;
 
     var itemType = jsonContent[contentItemValue];
 
@@ -127,7 +127,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       }
 
       elemToPush = {
-        x: (new Date(elemJson[contentDateValue])).getTime() + hourShift,
+        x: (new Date(elemJson[contentDateValue])).getTime() + svg.hourShift,
         height: +elemJson[contentAmountValue],
         item: (elemJson[contentItemValue] === "")?" Remainder ":elemJson[contentItemValue],
         direction: elemJson[contentDirectionValue].toLowerCase()
@@ -623,6 +623,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     var dataLength = jsonData.length;
     var contentLength = jsonContent.length;
 
+    
+    
+    
     //More useful jsonContent. 0: item / 1: direction
     for(i = 0; i < contentLength; i++){
 
@@ -630,10 +633,28 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         continue;
       }
 
-      jsonContent[i] = jsonContent[i].split("_");
-      jsonContent[i][0] = jsonContent[i][0].toUpperCase();
+      var tempArrayName = jsonContent[i].split("_");
+      var strName = tempArrayName[0];
+
+      for(var w = 1; w < tempArrayName.length - 2; w++){
+      
+          strName = strName + " " + tempArrayName[w];
+
+      }
+
+      jsonContent[i] = [strName, tempArrayName[tempArrayName.length-2]];
+
+      if(svg.units !== "hosts"){
+
+        jsonContent[i][0] = jsonContent[i][0].toUpperCase();
+
+      }
+
+      console.log(jsonContent[i]);
 
     }
+    
+    
 
     var colorMap = new Map();
     var sumMap = new Map();
@@ -645,7 +666,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     var timeMax = 0;
 
 
-    var hourShift = getTimeShift(urlJson)  * 3600000;
+    svg.hourShift = getTimeShift(urlJson)  * 3600000;
 
 
     // Data are processed and sorted according to their direction.
@@ -675,7 +696,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
             elemToPush = {
               //The given time is the corresping, we add the correct minutes according to the position k
               //of the element in the array
-              x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + hourShift - 3600000,
+              x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + svg.hourShift - 3600000,
               height: +elemAmountMinuteArray[k],
               item: jsonContent[j][0],
               direction: jsonContent[j][1]
@@ -741,7 +762,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           }
 
           elemToPush = {
-            x: (new Date(elemJson[contentDateValue])).getTime() + hourShift,
+            x: (new Date(elemJson[contentDateValue])).getTime() + svg.hourShift,
             height: +elemJson[j],
             item: jsonContent[j][0],
             direction: jsonContent[j][1]

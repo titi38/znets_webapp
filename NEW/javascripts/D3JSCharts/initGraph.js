@@ -34,7 +34,7 @@ function drawChartFromInterface(urlJson, mydiv) {
 
 
     //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json?net=labo");
-    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson);
+    whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
 }
 
@@ -62,23 +62,25 @@ function drawChart(urlJson, mydiv) {
 
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
-    whichCreationFunction(urlJson)(div,svg,mydiv,urlJson);
+    whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
+
+
 
 
 }
 
 /***********************************************************************************************************/
 
-function whichCreationFunction(urlJson){
+function whichCreationFunction(urlJson,svg){
 var typeGraph = urlJson.split(/[\.\/]+/);
     //For test & real use, can be simplified later
     typeGraph = typeGraph[typeGraph.length - 2];
+    svg.typeGraph = typeGraph;
     console.log(typeGraph);
     switch(typeGraph){
         case "netNbLocalHosts":
         case "netNbExternalHosts":
             return createCurve;
-        //commented for test
         case "netTopHostsTraffic":
         case "netTopServicesTraffic":
         case "netTopAsTraffic":

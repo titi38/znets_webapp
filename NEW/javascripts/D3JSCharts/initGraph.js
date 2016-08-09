@@ -13,23 +13,36 @@ function emptyChartContainer(jqueryElement) {
 function drawChartFromInterface(urlJson, mydiv) {
 
     var div = d3.select(mydiv);
+    var svg = div.select("svg").classed("diagram",true).classed("parentSvg",true);
+    var svgNode = svg.node();
+
     if(div.size() === 0){
         return;
     }
-
-
     var divNode = div.node();
     var divChild = divNode.firstChild;
+
     while(divChild){
 
         divNode.removeChild(divChild);
         divChild = divNode.firstChild;
 
     }
+    divNode.appendChild(svgNode);
 
-    var svg = div.append("svg").classed("diagram",true);
+    var svgChild = svgNode.firstChild;
 
-    svg.classed("parentSvg",true).on("contextmenu.preventDefault",function(){d3.event.preventDefault();});
+    while(svgChild){
+
+        svgNode.removeChild(svgChild);
+        svgChild = svgNode.firstChild;
+
+    }
+
+
+
+    svg.on("contextmenu.preventDefault",function(){d3.event.preventDefault();});
+
     svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
 
 
@@ -44,21 +57,35 @@ function drawChartFromInterface(urlJson, mydiv) {
 function drawChart(urlJson, mydiv) {
 
     var div = d3.select('#' + mydiv);
+    var svg = div.select("svg").classed("diagram",true).classed("parentSvg",true);
+    var svgNode = svg.node();
+
     if(div.size() === 0){
         return;
     }
     var divNode = div.node();
     var divChild = divNode.firstChild;
+
     while(divChild){
 
         divNode.removeChild(divChild);
         divChild = divNode.firstChild;
 
     }
+    divNode.appendChild(svgNode);
 
-    var svg = div.append("svg").classed("diagram",true);
+    var svgChild = svgNode.firstChild;
 
-    svg.classed("parentSvg",true).on("contextmenu.preventDefault",function(){d3.event.preventDefault();});
+    while(svgChild){
+
+        svgNode.removeChild(svgChild);
+        svgChild = svgNode.firstChild;
+
+    }
+
+
+
+    svg.on("contextmenu.preventDefault",function(){d3.event.preventDefault();});
 
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 

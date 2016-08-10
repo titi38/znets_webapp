@@ -4,6 +4,22 @@
 
 
 
+function checkLocalhostTab(localhostIp, localhostName){
+
+    var localhostNum = localhostIp.replace(/\./g, "");
+
+    if( $('.tab'+localhostNum).length > 0 )
+    {
+        $('.tab'+localhostNum).find("a").click()
+    }
+    else
+    {
+        addLocalhostTab(localhostIp, localhostName);
+    }
+
+}
+
+
 function addLocalhostTab(localhostIp, localhostName){
 
     var localhostNum = localhostIp.replace(/\./g, "");
@@ -317,7 +333,7 @@ function Localhosts(theWSEventNotifier) {
                 $(row).on("click", function(){
                     // TODO : click on localhost (show localhost details)
                     console.warn( 'TODO: click on localhost ROW (show localhost details ???)' );
-                    addLocalhostTab(data[0], data[1]);
+                    checkLocalhostTab(data[0], data[1]);
                 });
 
                 /*if ( $.inArray(data.DT_RowId, selected) !== -1 ) {

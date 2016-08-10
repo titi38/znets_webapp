@@ -336,8 +336,11 @@ function initializeLocalhostCallback(myLocalhosts) {
 
     myLocalhosts.init();
 
+
+    //$( "#charts_form" ).clone(true, true).appendTo( "#charts_form_container" );
+
     // Initialize localhosts "Inventory" tab
-    $('.localhost-tab-list').find("a").click(function (e) {
+    $('.localhost-tab-list').find("a[href='#localhostsInventory']").click(function (e) {
         $(this).tab('show');
 
         // Hide formular on localhost machine tab click

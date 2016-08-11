@@ -143,7 +143,13 @@ function Logs(theWSEventNotifier) {
         $(row).off("click");
         $(row).on("click", function () {
           // TODO : click on logs (show log details)
-          console.warn('TODO: click on logs (show log details)');
+          if(data[3]) {
+            console.warn('TODO: click on logs (show log details)');
+            console.warn(data);
+            showLogDetailsModal(data);
+          }
+          else
+              console.log("No details for this log");
         });
       }
       

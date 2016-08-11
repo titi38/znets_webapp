@@ -345,6 +345,11 @@ function initializeLocalhosts(myLocalhosts) {
  ********************************************************************************************************/
 $( document ).ready(function() {
 
+
+    $("ul.navbar-nav > li > a").click(function (e) {
+        e.preventDefault();
+    });
+
     getHtmlTemplate("#home", "NEW/templates/home.html", null, null);
 
     activateTabOfClass("home");

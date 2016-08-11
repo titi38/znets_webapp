@@ -299,6 +299,10 @@ function invalidMsg(textbox) {
 
 function setIpLocValue(){
 
+    console.warn(iplocHidden);
+    console.warn($("#iplocHidden"));
+    console.warn($("#iploc").val());
+
     $("#iplocHidden").val( $("#iploc").val() + ( ($("#iplocMask").val()) ? ("/"+$("#iplocMask").val()) : "" ) )
 
 }

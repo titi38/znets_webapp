@@ -140,7 +140,7 @@ html, body {
 
 div.logDetailIcon, div.alertDetailIcon {
     content:url('../../images/more.png');
-    float: right;
+    float: left;
 }
 
 div.logWarningIcon{

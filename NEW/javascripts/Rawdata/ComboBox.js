@@ -97,7 +97,7 @@ $( function() {
 
                     if(this._onchange)
                     {
-                        console.error("Applying onchange :");
+                        console.log("Applying onchange :");
                         this._onchange();
                     }
 

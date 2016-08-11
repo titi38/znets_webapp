@@ -72,6 +72,12 @@ function initializeRawDataForm_OtherFields(){
     initializeProtosId();
     initializeASNumsId();
     initializeCountriesId();
+
+    // Initialize "search" tab (button)
+    $("button.rawDataFormularTab[href='#rawDataFormularTab']").on("click", function () {
+        $(".rawdata-tab-list li.active").removeClass("active");
+    });
+
 }
 
 

@@ -31,9 +31,12 @@ function addRawDataTab(rawdataTabID){
         if($(this).parents('li').hasClass("active")) {
             if ($(this).parents('li').prev().length > 0) {
                 tab2Switch = $(this).parents('li').prev().find("a");
-            }else {
+            }
+            else if ($(this).parents('li').prev().length > 0){
                 tab2Switch = $(this).parents('li').next().find("a");
             }
+            else
+                tab2Switch = $("button.rawDataFormularTab[href='#rawDataFormularTab']");
         }
 
         var tabID = $(this).parents('a').attr('href');

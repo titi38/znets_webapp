@@ -209,7 +209,7 @@ function Localhosts(theWSEventNotifier) {
 
         $('#divLocalhosts').append('<table id="tableLocalhosts" class="display"></table>');
 
-        $('#tableLocalhosts').DataTable( {
+        var table = $('#tableLocalhosts').DataTable( {
 
             data: jsonContent.data,
 
@@ -258,7 +258,7 @@ function Localhosts(theWSEventNotifier) {
                     // this case `data: 0`.
                     "render": function ( data, type, row ) {
 
-                        return data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon-300x300.png' height='100%' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile2.png' title='Mobile' alt='Mobile'/>" : "" );
+                        return data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );
 
                     },
                     "targets": 5
@@ -303,26 +303,6 @@ function Localhosts(theWSEventNotifier) {
                     "render": function ( data, type, row ) {
                         var renderedString = data.toString().substring(0, 30);
                         return renderedString+ ( (data.toString() != renderedString) ? "..." : "" );
-                    }
-                },
-                {
-                    "targets": tableColumns.length,
-                    "data": null,
-
-                    "createdCell": function (td, cellData, rowData, row, col) {
-
-                        var dataJsonObject = {};
-
-                        for (var index in rowData) {
-                            dataJsonObject[tableColumns[index].title] = rowData[index];
-                        }
-
-                        console.warn( 'TODO: click on localhost BUTTON CLICK (open localhost tab)' );
-                        var button = $("<button type='button' class='btn btn-default'> Open Tab</button>").on("click", function(){console.log(dataJsonObject);});
-
-                        $(td).empty();
-
-                        $(td).append(button);
                     }
                 }
 

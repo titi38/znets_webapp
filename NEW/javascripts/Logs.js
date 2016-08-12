@@ -83,14 +83,14 @@ function Logs(theWSEventNotifier) {
     //bufferSize = jsonContent.bufSize;
     nextLogId = jsonContent.nextId;
 
-    var tableColumns = [];
+    /*var tableColumns = [];
     for (var i = 0; i < jsonContent.content.length; i++)
-      tableColumns.push({'title':jsonContent.content[i]});
+      tableColumns.push({'title':jsonContent.content[i]});*/
 
     $('#divLogs').append('<table id="tableLogs" class="display"></table>');
     $('#tableLogs').DataTable( {
       data: jsonContent.data,
-      columns: tableColumns,
+      //columns: tableColumns,
       scrollY: 1,
       lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
       pageLength: 50,
@@ -125,25 +125,44 @@ function Logs(theWSEventNotifier) {
                 break;
             }
           },
-          "targets": 0
+          "targets": 0, "title": "Severity"
+        },
+        {
+          "targets": 1, "title": "Date"
         },
         {
           "render": function ( data, type, row ) {
             if(row[3] == "")
-              return data;
+              return "";
             else
-              return data+ "<div class='logDetailIcon' onclick='displayPopUp(\""+row[3]+"\")'  title='More info'></div>";
+              return "<div class='logDetailIcon' onclick='displayPopUp(\""+row[3]+"\")'  title='More info'></div>";
           },
-          "targets": 2
+          "targets": 2, "title": ""
         },
-        { "targets": 3, "visible": false, "searchable": false }
+        {
+          "render": function ( data, type, row ) {
+              return row[2];
+          },
+          "targets": 3, "title": "Message"
+        },
       ],
       "rowCallback": function( row, data ) {
         $(row).attr("role", "button");
+
+        // Set cursor behavior (pointer if details, default if not)
+        $(row).css('cursor',data[3] ? 'pointer' : 'default')
+
+        // Set click on row function
         $(row).off("click");
         $(row).on("click", function () {
           // TODO : click on logs (show log details)
-          console.warn('TODO: click on logs (show log details)');
+          if(data[3]) {
+            console.warn('TODO: click on logs (show log details)');
+            console.warn(data);
+            showLogDetailsModal(data);
+          }
+          else
+              console.log("No details for this log");
         });
       }
       

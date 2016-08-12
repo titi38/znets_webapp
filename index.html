@@ -133,6 +133,7 @@
     <script type="text/javascript" src="NEW/javascripts/Localhosts.js"></script>
     <script type="text/javascript" src="NEW/javascripts/ServerDate.js"></script>
     <script type="text/javascript" src="NEW/javascripts/TabsScroll.js"></script>
+    <script type="text/javascript" src="NEW/javascripts/DetailsModal.js"></script>
 
 
     <script type="text/javascript" src="NEW/javascripts/D3JSCharts/initGraph.js"></script>
@@ -174,10 +175,27 @@
 <!-- BODY with disabled right-click -->
 <body oncontextmenu="return false;">
 
-<div class="fullWidth"></div>
 <div class="row">
     <div id="notificationsContainer" class="col-xs-8 col-xs-offset-2 col-md-6 col-md-offset-3" data-spy="affix" data-offset-top="1"></div>
 </div>
+
+<div class="modal fade" id="information_Details_Modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>hell yeah !!!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 
@@ -198,11 +216,11 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
             <ul class="nav navbar-nav" id="tabs">
-                <li class="active home"><a href="#home"><i class="fa fa-home fa-1_3x" aria-hidden="true"></i></a></li>
-                <li class="disabled alerts"><a href="#alerts" class="alertTab">Alerts</a></li>
-                <li class="disabled network"><a href="#network" class="networkTab">Network</a></li>
-                <li class="disabled localhosts"><a href="#localhosts" class="localhostTab">Localhosts</a></li>
+                <!--li class="active home"><a href="#home"><i class="fa fa-home fa-1_3x" aria-hidden="true"></i></a></li-->
+                <li class="disabled network"><a href=".tab-network" class="networkTab">Network</a></li>
+                <li class="disabled localhosts"><a href=".tab-localhosts" id="localhostTab" class="localhostTab">Localhosts</a></li>
                 <li class="disabled rawdata"><a href="#rawdata">Flows</a></li>
+                <li class="disabled alerts"><a href="#alerts" class="alertTab">Alerts</a></li>
                 <li class="disabled logs"><a href="#logs" class="logTab">Logs</a></li>
             </ul>
 
@@ -210,20 +228,13 @@
                 <li class="active"><a><i class="fa fa-clock-o fa-1_3x" id="serverDate" aria-hidden="true"></i></a></li>
             </ul>
 
-            <form id="loginform" class="navbar-form navbar-right form-inline" role="form" onsubmit="connect(); return false;">
+            <form id="loginform" class="navbar-form navbar-right form-inline hidden" role="form" onsubmit="connect(); return false;">
                 <!--div id="statusMsg" styles="display: inline !important; margin-right:25px;" role="alert"></div-->
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username">
+                    <input id="shown-login-username" type="text" class="form-control" name="username" value="" placeholder="username">
                 </div>
-                <div class="input-group" id="passwordArea">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
-                </div>
-                <!--div  styles="margin-left: 5px; margin-right:10px;" class="form-group controls"-->
-                <input type="submit" hidden="true">
-                <button type="button" id="btn-login" class="btn btn-success" onclick="connect(); return false;" >Log In </button>
-                <button type="button" id="btn-disconnect" class="btn btn-success" style="display:none;" onclick="disconnect(); return false;">Disconnect </button>
+                <button type="submit" id="btn-disconnect" class="btn btn-default" onclick="disconnect(); return false;">Log out </button>
                 <!--/div-->
             </form>
         </div><!-- /.navbar-collapse -->
@@ -246,6 +257,8 @@
 
                 <div class="tab-pane fade active in" id="home">
                     <!--iframe class="toBottomContainer" src="home.html"></iframe-->
+
+
                 </div>
 
                 <div class="tab-pane fade" id="alerts">
@@ -254,13 +267,73 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="network">
+
+
+
+
+
+
+
+
+                <br>
+
+                <div class="container-fluid tab-pane fade tab-network">
+
+                    <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <div class="wrapper">
+                        <ul class="nav nav-tabs list network-tab-list" id="networkTabsContainer">
+                            <!--li class="active"><a data-toggle="tab" href="#divNetworkGlobal"> Global</a></li-->
+                        </ul>
+                    </div>
 
                 </div>
 
-                <div class="tab-pane fade" id="localhosts">
+                <div class="container-fluid tab-pane fade tab-localhosts">
+
+                    <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <div class="wrapper localhosts">
+                        <ul class="nav nav-tabs list localhost-tab-list" id="localhostTabsContainer">
+                            <li class="active"><a class="localhostsInventory" href="#localhostsInventory">Inventory</a></li>
+                        </ul>
+                    </div>
 
                 </div>
+
+                <div id="charts_form_container" class="container-fluid tab-pane fade tab-localhosts tab-network">
+
+                </div>
+
+                <div class="container-fluid tab-pane fade tab-network" id ="network">
+
+                    <div class="tab-content network-tab-content">
+                        <!--div class="tab-pane fade in network active" data-network="Global" data-toggle="tab" id="divNetworkGlobal" >Global Network Content</div-->
+                    </div>
+
+                </div>
+
+
+                <div class="container-fluid tab-pane fade tab-localhosts" id ="localhosts">
+
+                    <div class="tab-content localhost-tab-content">
+                        <!--div class="tab-pane fade in localhost active" data-localhost="Global" data-toggle="tab" id="divLocalhostGlobal" >Global Localhost Content</div-->
+                        <div class="tab-pane fade active in" id="localhostsInventory">
+                            <div id="divLocalhosts" class="toBottomTabsContainer col-xs-12">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
 
                 <div class="tab-pane fade" id="rawdata">
 

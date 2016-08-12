@@ -72,6 +72,12 @@ function initializeRawDataForm_OtherFields(){
     initializeProtosId();
     initializeASNumsId();
     initializeCountriesId();
+
+    // Initialize "search" tab (button)
+    $("button.rawDataFormularTab[href='#rawDataFormularTab']").on("click", function () {
+        $(".rawdata-tab-list li.active").removeClass("active");
+    });
+
 }
 
 
@@ -292,6 +298,10 @@ function invalidMsg(textbox) {
 
 
 function setIpLocValue(){
+
+    console.warn(iplocHidden);
+    console.warn($("#iplocHidden"));
+    console.warn($("#iploc").val());
 
     $("#iplocHidden").val( $("#iploc").val() + ( ($("#iplocMask").val()) ? ("/"+$("#iplocMask").val()) : "" ) )
 

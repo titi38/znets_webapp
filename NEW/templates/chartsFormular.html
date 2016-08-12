@@ -1,0 +1,94 @@
+<form class="form-horizontal container-fluid charts_form" id="charts_form"> <!--onsubmit="getRawData(serializeRawDataForm()); return false" -->
+
+    <div class="panel panel-default">
+        <div class="panel-heading padding2px">
+            <fieldset class="row container-fluid">
+
+                <!--div class="form-group col-md-4">
+                <label class="control-label col-xs-2 col-md-4" for="typeOfChart">Chart:</label>
+                <div class="col-xs-10 col-md-8">
+                    <select class="form-control" id="typeOfChart"">
+                        <option value="lastHour">Last hour</option>
+                        <option value="lastDay">Last day</option>
+                        <option value="lastWeek">Last week</option>
+                        <option value="lastMonth">Last month</option>
+                    </select>
+                </div>
+            </div-->
+
+                <div class="col-md-3">
+                    <div class="form-group form-group-margin-2px">
+                        <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
+                        <div class="col-xs-10 col-md-8">
+                            <select class="form-control timesliceCharts" id="timesliceCharts" onchange="onChangeChartsForm(); updateChartsTimeslice(this)">
+                                <option value="lastHour">Last hour</option>
+                                <option value="lastDay" selected>Last day</option>
+                                <option value="lastWeek">Last week</option>
+                                <option value="lastMonth">Last month</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <input type="hidden" id="timeslice_ChartsForm"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group form-group-margin-2px">
+                        <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
+                        <div class="col-xs-10">
+                            <div class='input-group date fromDate_ChartsForm' id='fromDate_ChartsForm'>
+                                <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                            </div>
+                            <input type="hidden" name="dd" id="dateDebCharts" value=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group form-group-margin-2px">
+                        <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
+                        <div class="col-xs-10">
+                            <div class='input-group date toDate_ChartsForm' id='toDate_ChartsForm'>
+                                <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                            </div>
+                            <input type="hidden" name="df" id="dateFinCharts" value=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group form-group-margin-2px">
+                        <label class="control-label col-xs-2 col-md-6" for="timestepCharts">Timestep:</label>
+                        <div class="col-xs-10 col-md-6">
+                            <select class="form-control timestepCharts" id="timestepCharts" onchange="onChangeChartsForm()">
+                                <option value="MINUTE">Minutes</option>
+                                <option value="HOURLY" selected>Hours</option>
+                                <option value="DAILY" >Days</option>
+                            </select>
+                            <input type="hidden" name="pset" id="preset_ChartsForm"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-6 col-md-2">
+                    <div class="form-group form-group-margin-2px text-center">
+                        <button type="button" class="btn btn-default applyBtn_charts_form" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
+                        <button type="button" class="btn btn-default resetBtn_charts_form" id="resetBtn_charts_form" onclick="resetChartsForm()" disabled>Reset</button>
+                    </div>
+                </div>
+
+            </fieldset>
+
+        </div>
+    </div>
+
+</form>
+
+<hr class="myhr">
+

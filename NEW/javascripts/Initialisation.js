@@ -82,7 +82,7 @@ function initialisation(){
     /**
      * Adjust alert's dataTable column's widths
      */
-    $('a.localhostTab').on('shown.bs.tab', function (e) {
+    $('a.localhostTab, a.localhostsInventory').on('shown.bs.tab', function (e) {
         $('#tableLocalhosts').DataTable().columns.adjust();
     });
 
@@ -166,37 +166,6 @@ function activateTabOfClass(tabClass)
         $(this).tab('show');
     });
 }
-
-
-
-
-/*********************************************************************************************************
- Set home page content with acquisition status
- ********************************************************************************************************/
-
-function setHomePage()
-{
-    //callAJAX('info.json', '', 'json', setHP, '');
-    /**
-     callAJAX('info.json', '', 'json', '', '');
-     */
-
-}
-
-/**function setHP(json){
-    $("#home_daqVersion").html("<b>Daq Version : </b>"+json.daqVersion);
-    $("#home_acqStatus").html("<b>Acquisition Status : </b>" + ((json.status.acqRunning) ? "<b class='text-success faa-flash animated'> RUNNING </b>" : "<b class='text-danger'> STOPPED </b>") + ((json.status.acqDate) ? ("(since " + json.status.acqDate +")") : "(never runned before !)"));
-
-    if(json.status.acqComment)
-        $("#home_acqComment").html("<b>Comment : </b>"+json.status.acqComment);
-
-
-    /*********************************************************************************************************
-     Activate "home" navigation tab
-     *********************************************************************************************************
-    activateTabOfClass("home");
-
-}*/
 
 
 function getHtmlTemplate( elementJQuery, url, callBack, callBackParams)
@@ -325,8 +294,8 @@ function initializeNetworkCallback() {
 function initializeNetwork() {
 
 // TODO START : embed this
-    getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetworkCallback, null);
-//getHtmlTemplate("#network", "NEW/templates/networksTabsContent.html", initializeNetwork);
+    //getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetworkCallback, null);
+    initializeNetworkCallback();
 
 // TODO END
 
@@ -336,8 +305,11 @@ function initializeLocalhostCallback(myLocalhosts) {
 
     myLocalhosts.init();
 
+
+    //$( "#charts_form" ).clone(true, true).appendTo( "#charts_form_container" );
+
     // Initialize localhosts "Inventory" tab
-    $('.localhost-tab-list').find("a").click(function (e) {
+    $('.localhost-tab-list').find("a[href='#localhostsInventory']").click(function (e) {
         $(this).tab('show');
 
         // Hide formular on localhost machine tab click
@@ -356,8 +328,8 @@ function initializeLocalhostCallback(myLocalhosts) {
 function initializeLocalhosts(myLocalhosts) {
 
 // TODO START : embed this
-    getHtmlTemplate("#localhosts", "NEW/templates/localhostContent.html", initializeLocalhostCallback, myLocalhosts);
-//getHtmlTemplate("#network", "NEW/templates/networksTabsContent.html", initializeNetwork);
+    //getHtmlTemplate("#localhosts", "NEW/templates/localhostContent.html", initializeLocalhostCallback, myLocalhosts);
+    initializeLocalhostCallback(myLocalhosts);
 
 // TODO END
 
@@ -373,9 +345,16 @@ function initializeLocalhosts(myLocalhosts) {
  ********************************************************************************************************/
 $( document ).ready(function() {
 
-    getHtmlTemplate("#home", "NEW/templates/home.html", setHomePage, null);
+
+    $("ul.navbar-nav > li > a").click(function (e) {
+        e.preventDefault();
+    });
+
+    getHtmlTemplate("#home", "NEW/templates/home.html", null, null);
 
     activateTabOfClass("home");
+
+    getHtmlTemplate("#charts_form_container", "NEW/templates/chartsFormular.html", null, null);
 
     getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null, null);
 

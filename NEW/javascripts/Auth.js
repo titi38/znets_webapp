@@ -8,7 +8,7 @@ function userLoggedIn(response)
     // Set login input value to response.username value
     if(response)
     {
-        $("#login-username").val(response.username)
+        $("#shown-login-username").val(response.username)
 
         if (response.auth && response.auth !== "HTML")
         {
@@ -16,14 +16,12 @@ function userLoggedIn(response)
         }
     }
 
-    $("#login-username").prop("disabled", true);
+    $("#shown-login-username").prop("disabled", true);
 
-    //console.warn("TODO : Auth.js : userLoggedIn function (what happend on user logs in)");
-    $("#passwordArea").hide();
-    $("#btn-login").hide();
-    $("#btn-login").attr("type", "button");
-    $("#btn-disconnect").show();
-    $("#btn-disconnect").attr("type", "submit");
+
+    // Show login inside upper navbar
+    $("#loginform").removeClass("hidden");
+    $("#localhostTab").click();
 }
 
 function userDisconnect()
@@ -35,6 +33,9 @@ function userDisconnect()
     $("#btn-disconnect").hide();
     $("#btn-disconnect").attr("type", "button");
     $("#login-username").prop("disabled", false);
+
+    // Hide login inside upper navbar
+    $("#loginform").addClass("hidden");
 }
 
 function connect()

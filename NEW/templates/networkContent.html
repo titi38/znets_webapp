@@ -4,116 +4,115 @@
 
 
 <div class="container-fluid">
-    <div>
-        <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
-        <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
-        <div class="wrapper">
-            <ul class="nav nav-tabs list network-tab-list" id="networkTabsContainer">
-                <!--li class="active"><a data-toggle="tab" href="#divNetworkGlobal"> Global</a></li-->
-            </ul>
-        </div>
+
+    <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
+    <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
+    <div class="wrapper">
+        <ul class="nav nav-tabs list network-tab-list" id="networkTabsContainer">
+            <!--li class="active"><a data-toggle="tab" href="#divNetworkGlobal"> Global</a></li-->
+        </ul>
+    </div>
 
 
-        <form class="form-horizontal container-fluid" id="charts_form"> <!--onsubmit="getRawData(serializeRawDataForm()); return false" -->
+    <form class="form-horizontal container-fluid charts_form" id="charts_form"> <!--onsubmit="getRawData(serializeRawDataForm()); return false" -->
 
-            <div class="panel panel-default">
-                <div class="panel-heading padding2px">
-                    <fieldset class="row container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading padding2px">
+                <fieldset class="row container-fluid">
 
-                        <!--div class="form-group col-md-4">
-                            <label class="control-label col-xs-2 col-md-4" for="typeOfChart">Chart:</label>
+                    <!--div class="form-group col-md-4">
+                        <label class="control-label col-xs-2 col-md-4" for="typeOfChart">Chart:</label>
+                        <div class="col-xs-10 col-md-8">
+                            <select class="form-control" id="typeOfChart"">
+                                <option value="lastHour">Last hour</option>
+                                <option value="lastDay">Last day</option>
+                                <option value="lastWeek">Last week</option>
+                                <option value="lastMonth">Last month</option>
+                            </select>
+                        </div>
+                    </div-->
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
                             <div class="col-xs-10 col-md-8">
-                                <select class="form-control" id="typeOfChart"">
+                                <select class="form-control timesliceCharts" id="timesliceCharts" onchange="onChangeChartsForm(); updateChartsTimeslice(this)">
                                     <option value="lastHour">Last hour</option>
-                                    <option value="lastDay">Last day</option>
+                                    <option value="lastDay" selected>Last day</option>
                                     <option value="lastWeek">Last week</option>
                                     <option value="lastMonth">Last month</option>
+                                    <option value="custom">Custom</option>
                                 </select>
+                                <input type="hidden" id="timeslice_ChartsForm"/>
                             </div>
-                        </div-->
+                        </div>
+                    </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
-                                <div class="col-xs-10 col-md-8">
-                                    <select class="form-control" id="timesliceCharts" onchange="onChangeChartsForm(); updateChartsTimeslice(this)">
-                                        <option value="lastHour">Last hour</option>
-                                        <option value="lastDay" selected>Last day</option>
-                                        <option value="lastWeek">Last week</option>
-                                        <option value="lastMonth">Last month</option>
-                                        <option value="custom">Custom</option>
-                                    </select>
-                                    <input type="hidden" id="timeslice_ChartsForm"/>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
+                            <div class="col-xs-10">
+                                <div class='input-group date fromDate_ChartsForm' id='fromDate_ChartsForm'>
+                                    <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
                                 </div>
+                                <input type="hidden" name="dd" id="dateDebCharts" value=""/>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
-                                <div class="col-xs-10">
-                                    <div class='input-group date' id='fromDate_ChartsForm'>
-                                        <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                    </div>
-                                    <input type="hidden" name="dd" id="dateDebCharts" value=""/>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
+                            <div class="col-xs-10">
+                                <div class='input-group date toDate_ChartsForm' id='toDate_ChartsForm'>
+                                    <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
                                 </div>
+                                <input type="hidden" name="df" id="dateFinCharts" value=""/>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
-                                <div class="col-xs-10">
-                                    <div class='input-group date' id='toDate_ChartsForm'>
-                                        <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                    </div>
-                                    <input type="hidden" name="df" id="dateFinCharts" value=""/>
-                                </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2 col-md-6" for="timestepCharts">Timestep:</label>
+                            <div class="col-xs-10 col-md-6">
+                                <select class="form-control timestepCharts" id="timestepCharts" onchange="onChangeChartsForm()">
+                                    <option value="MINUTE">Minutes</option>
+                                    <option value="HOURLY" selected>Hours</option>
+                                    <option value="DAILY" >Days</option>
+                                </select>
+                                <input type="hidden" name="pset" id="preset_ChartsForm"/>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="control-label col-xs-2 col-md-6" for="timestepCharts">Timestep:</label>
-                                <div class="col-xs-10 col-md-6">
-                                    <select class="form-control" id="timestepCharts" onchange="onChangeChartsForm()">
-                                        <option value="MINUTE">Minutes</option>
-                                        <option value="HOURLY" selected>Hours</option>
-                                        <option value="DAILY" >Days</option>
-                                    </select>
-                                    <input type="hidden" name="pset" id="preset_ChartsForm"/>
-                                </div>
-                            </div>
+                    <div class="col-xs-6 col-md-2">
+                        <div class="form-group text-center">
+                            <button type="button" class="btn btn-default applyBtn_charts_form" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
+                            <button type="button" class="btn btn-default resetBtn_charts_form" id="resetBtn_charts_form" onclick="resetChartsForm()" disabled>Reset</button>
                         </div>
+                    </div>
 
-                        <div class="col-xs-6 col-md-2">
-                            <div class="form-group text-center">
-                                <button type="button" class="btn btn-default" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
-                                <button type="button" class="btn btn-default" id="resetBtn_charts_form" onclick="resetChartsForm()" disabled>Reset</button>
-                            </div>
-                        </div>
+                </fieldset>
 
-                    </fieldset>
-
-                </div>
             </div>
-
-        </form>
-
-        <hr class="myhr">
-
-
-
-
-        <div class="tab-content network-tab-content">
-            <!--div class="tab-pane fade in network active" data-network="Global" data-toggle="tab" id="divNetworkGlobal" >Global Network Content</div-->
         </div>
+
+    </form>
+
+    <hr class="myhr">
+
+
+
+
+    <div class="tab-content network-tab-content">
+        <!--div class="tab-pane fade in network active" data-network="Global" data-toggle="tab" id="divNetworkGlobal" >Global Network Content</div-->
     </div>
 
 </div>

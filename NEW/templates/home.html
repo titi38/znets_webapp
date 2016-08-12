@@ -1,83 +1,31 @@
 
 
+<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-4 col-md-offset-4">
 
+    <br><br><br><br>
 
-
-<!--div class="fullWidth bannerImg">
-    <img alt="Logo" src="images/zDaq_banner_logo.png"/>
-    <img alt="Logo" class="homeLogoImg pull-right" src="images/logoIN2P3-CNRS.png"/>
-</div-->
-
-
-<br><br><br><br>
-
-
-<div class="container">
     <div class="panel panel-default">
+
         <div class="panel-heading">
-            <h3><i>Data acquisition software for physics experiments</i></h3>
-        </div>
-        <div class="panel-body">
-            <div class="textblock">
-                <p><b>Specifications</b> :</p>
-                <ul>
-                    <li>Generic acquisition software for physics experiments</li>
-                    <li>Really fast and scalable</li>
-                    <li>Multithreaded data collection by ethernet </li>
-                    <li>Fully multithreaded sorting and filtering features</li>
-                    <li>Tested and proven in many experiments (OPERA, DIAPHANE, etc.)<br>
-                        Up to <b>10 years of uninterrupted data acquisition</b> <br>
-                        Up to <b>thousands internet devices continuously interrogated</b>
-                    </li>
-                    <li>Secured web interface, intuitive and responsive based on HTML5 and Websockets</li>
-                    <li>Very portable and adaptable</li>
-                </ul>
-            </div>
-        </div>
-        <div class="panel-footer">
-            <p><b>Current acquisition status</b> : </p>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div id="home_daqVersion"></div>
-                    <div id="home_acqStatus"></div>
-                    <div id="home_acqComment"></div>
+            <form id="loginform" class="text-center" role="form" onsubmit="connect(); return false;">
+                <!--div id="statusMsg" styles="display: inline !important; margin-right:25px;" role="alert"></div-->
+                <div class="input-group form-group form-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username">
                 </div>
-            </div>
+                <div class="input-group form-group form-group-lg" id="passwordArea">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+                </div>
+                <!--div  styles="margin-left: 5px; margin-right:10px;" class="form-group controls"-->
+                <input type="submit" hidden="true">
+                <button type="button" id="btn-login" class="btn btn-lg btn-success" onclick="connect(); return false;" >Log in </button>
+                <!--/div-->
+            </form>
+
         </div>
 
     </div>
+
 </div>
-
-<br><br><br><br>
-
-<!--div class="row">
-
-    <div class="col-sm-6">
-
-        <div class="panel panel-default float-left">
-            <div class="panel-heading">
-                <div class="contents">
-                    <div class="textblock">
-                        <p>Need an acquisition software ?</p>
-
-                        <a href="mailto:thierry.descombes@gmail.com">Contact us</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="col-sm-6">
-
-        <div class="panel panel-default float-right text-center">
-            <div class="panel-heading">
-                <img title="LibNavajo" class="libnavajoLogo" src="images/navajo_m.png"/><br>Powered by <a href="http://www.libnavajo.org">libnavajo</a>
-            </div>
-        </div>
-
-    </div>
-
-</div-->

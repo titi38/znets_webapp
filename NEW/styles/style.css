@@ -140,7 +140,7 @@ html, body {
 
 div.logDetailIcon, div.alertDetailIcon {
     content:url('../../images/more.png');
-    float: right;
+    float: left;
 }
 
 div.logWarningIcon{
@@ -413,11 +413,29 @@ hr.myhr{
 
 
 
+#divLocalhosts {
+    position: absolute;
+    z-index: 100;
+    background-color: white;
+    margin: 0;
+    width: inherit;
+    left: 0;
+    right: 0;
+    /*right: 0px;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;*/
+}
+
+#charts_form_container {
+    float: left;
+}
 
 
 
-
-
+table.dataTable.display tbody tr:hover, table.dataTable.display tbody tr:hover .sorting_1, table.dataTable.display tbody tr:hover .sorting_2{
+    background-color: #dff0d8;
+}
 
 /*************************************************
 * Bootstrap Styles Modification
@@ -427,7 +445,7 @@ hr.myhr{
     min-width: 100px;
 }
 
-.form-group {
+.form-group-margin-2px {
     margin-top: 2px;
     margin-bottom: 2px;
 }

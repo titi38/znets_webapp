@@ -146,6 +146,7 @@ function Alerts(theWSEventNotifier) {
         $(row).on("click", function(){
           // TODO : click on alert (show alert details)
           console.warn( 'TODO: click on alert (show alert details)' );
+          getAlertDetail(data);
         });
 
         /*if ( $.inArray(data.DT_RowId, selected) !== -1 ) {

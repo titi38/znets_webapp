@@ -143,13 +143,9 @@ function initializeChartsTimestepForm() {
         }
         else
         {
-            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment());
-            $(this).data("DateTimePicker").date(moment(serverDate).format('YYYY-MM-DD HH:mm'));
+            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment(serverDate).add(parseInt(moment().format("Z")), "hours"));
+            $(this).data("DateTimePicker").date(moment(serverDate).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'));
         }
-    });
-
-    $("#toDate_ChartsForm").on("dp.show", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
     });
 
 }

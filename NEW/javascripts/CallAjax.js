@@ -94,12 +94,13 @@ function callAJAX(url, params, outputType, callback, callbackParams)
                 console.error("Something went wrong :");
                 console.error(jqXHR);
                 console.error(textStatus);
-                addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
+                //addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
+                addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", null);
                 break;
 
         }
         // TODO : uncomment ? (adding a page reload on request fail) addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
-        addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", null);
+        addNotification("Connection lost. Server is down ! (666) Page will reload shortly ...", "alert-danger", null);
 });
 
     /**

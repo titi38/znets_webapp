@@ -27,29 +27,49 @@ function getPieJsonQuery(svg, clickData) {
   console.log(svg.attr("data-pie-json"));
   console.log(svg.typeGraph);
 
-  var endStr;
+  var endStr, type, unit;
 
-  switch(svg.typeGraph){
 
-    case "netTopServicesTraffic":
+  svg.arrayType.find(function(elem){
+
+    var indexof = svg.typeGraph.indexOf(elem);
+
+    if(indexof !== -1 && (svg.typeGraph.length - indexof === elem.length )){
+
+      type = svg.typeGraph.slice(0, -elem.length);
+      unit = elem;
+
+      return true;
+    }
+
+    return false;
+
+  });
+
+
+  console.log(type + " " + unit);
+
+
+  switch(type){
+
+    case "netTopServices":
       var arrayPortProtocol = clickData.item.split("/");
-      endStr = "HostsServiceTraffic.json" + "?"
+      endStr = "HostsService" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
         + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
-        //TODO faire switch proto/id
         + "&proto=" + protocolToId(arrayPortProtocol[1])
         + "&port="+ arrayPortProtocol[0]
-        + "&type=" + clickData.direction.toLowerCase()
+        + (unit === "NbFlow"?"":"&type=" + clickData.direction.toLowerCase())
         + "&service=" + getServiceUrlJson(svg.urlJson);
 
       return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
 
 
-    case "netProtocoleTraffic":
+    case "netProtocole":
 
-      endStr = "HostsProtoTraffic.json" + "?"
+      endStr = "HostsProto" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -61,9 +81,9 @@ function getPieJsonQuery(svg, clickData) {
         proxyPass + "netExt"  + endStr ];
 
 
-    case "netTopHostsTraffic":
+    case "netTopHosts":
 
-      endStr = "HostsTopHostsTraffic.json?"
+      endStr = "HostsTopHosts" + unit + ".json?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -74,9 +94,9 @@ function getPieJsonQuery(svg, clickData) {
       return [proxyPass + "netExt"  + endStr, "ext"];
 
 
-    case "netTopAsTraffic":
+    case "netTopAs":
 
-      endStr = "HostsTopAsTraffic.json" + "?"
+      endStr = "HostsTopAs" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -87,9 +107,9 @@ function getPieJsonQuery(svg, clickData) {
       return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
 
 
-    case "netTopAppTraffic":
+    case "netTopApp":
 
-      endStr = "HostsTopAppTraffic.json" + "?"
+      endStr = "HostsTopApp" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -99,9 +119,9 @@ function getPieJsonQuery(svg, clickData) {
 
       return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
 
-    case "netTopCountryTraffic":
+    case "netTopCountry":
 
-      endStr = "HostsTopCountryTraffic.json" + "?"
+      endStr = "HostsTopCountry" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -118,17 +138,35 @@ function getPieJsonQuery(svg, clickData) {
 /***********************************************************************************************************/
 
 function popupHasButton(svg){
-  switch (svg.typeGraph){
 
-    case "netProtocoleTraffic":
-    case "netTopAsTraffic":
-    case "netTopServicesTraffic":
-    case "netTopAppTraffic":
-    case "netTopCountryTraffic":
+  var type;
+
+  svg.arrayType.find(function(elem){
+
+    var indexof = svg.typeGraph.indexOf(elem);
+
+    if(indexof !== -1 && (svg.typeGraph.length - indexof === elem.length )){
+
+      type = svg.typeGraph.slice(0, -elem.length);
+
+      return true;
+    }
+
+    return false;
+
+  });
+
+  switch (type){
+
+    case "netProtocole":
+    case "netTopAs":
+    case "netTopServices":
+    case "netTopApp":
+    case "netTopCountry":
 
       return true;
 
-    case "netTopHostsTraffic":
+    case "netTopHosts":
       return false;
 
   }
@@ -139,6 +177,7 @@ function popupHasButton(svg){
 
 function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
+  svg.arrayType  = ["Traffic", "Packets", "Hosts", "NbFlow"];
 
   svg.pieside = 0.75 * Math.min(svg.height, svg.width);
   div.overlay = div.append("div").classed("overlay", true).style("display", "none").style("width", (svg.width + svg.margin.left + svg.margin.right) + "px");
@@ -230,7 +269,7 @@ function redrawPopup(overlay, svg){
   overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
   svg.pieside = 0.75*Math.min(svg.height,svg.width);
 
-  if(svg.popup.pieChart != null){
+  if(svg.popup.pieChart != null && svg.popup.pieChart.g){
     svg.popup.pieChart.attr("width", svg.pieside).attr("height", svg.pieside);
     var chartside = 0.75*svg.pieside;
     svg.popup.innerRad = 0;
@@ -553,6 +592,10 @@ function drawPopupGraph(json, svg, total, pieside,f){
 
   json = json.response;
 
+  var units = json.units;
+
+  var isBytes = (units === "B" || units === "Bytes");
+
   var jsonData = json.data;
   var jsonContent = json.content;
 
@@ -578,11 +621,13 @@ function drawPopupGraph(json, svg, total, pieside,f){
 
   jsonData.forEach(function(elem){
 
+    var ca = quantityConvertUnit(elem[jsonAmountValue],isBytes);
+
     values.push({
       item: elem[jsonItemValue],
       y: elem[jsonAmountValue],
       display:(elem[jsonDisplayValue] === ""?elem[jsonItemValue]:elem[jsonDisplayValue]),
-      amount: bytesConvert(elem[jsonAmountValue]),
+      amount: Math.round(ca[1] * elem[jsonAmountValue] * 100)/100 + ca[0] + units,
       add: jsonAddArrayValues.map(function(indexAdd){return elem[indexAdd];})
     });
 
@@ -618,8 +663,12 @@ function drawPopupGraph(json, svg, total, pieside,f){
   });
 
   if(total !== sum){
-    values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
+
+    var ca = quantityConvertUnit(total-sum,isBytes);
+    values.unshift({y: total -sum, item:" Remainder ",amount:Math.round(ca[1] * (total - sum) * 100)/100 + ca[0] + units,
+      display:" Remainder ", add: []});
   }
+
   /*total = d3.sum(values,function(e){return e.y});
   console.log(total);*/
 

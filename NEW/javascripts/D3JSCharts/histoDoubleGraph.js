@@ -494,10 +494,13 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     gridDoubleGraph(svg);
 
 
-    addPopup(selection,div,svg,function(data){
+
+    addPopup(selection, div, svg, function (data) {
         desactivationElems();
-        activationElemsAutoScrollPopup(data);},
+        activationElemsAutoScrollPopup(data);
+      },
       desactivationElems);
+
 
 
 
@@ -519,6 +522,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     d3.select(window).on("resize." + mydiv, function () {
       console.log("resize");
       redrawHisto2DStackDouble(div, svg);
+      
     });
 
   });
@@ -1173,12 +1177,14 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     gridDoubleGraph(svg);
 
-
-    addPopup(selection,div,svg,function(data){
-      desactivationElems();
-        activationElemsAutoScrollPopup(data);},
-      desactivationElems);
-
+    if(svg.typeGraph !== "netNbFlow") {
+      addPopup(selection, div, svg, function (data) {
+          desactivationElems();
+          activationElemsAutoScrollPopup(data);
+        },
+        desactivationElems);
+    }
+    
     selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
     //Now, no more nodata can happen,so we create the table

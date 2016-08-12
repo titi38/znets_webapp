@@ -178,7 +178,24 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     //Tooltip creation
     createTooltipHisto(svg,selection,svg.sumMap);
 
+    function desacAll(){
+      svg.svgInput.desactivationElems();
+      svg.svgOutput.desactivationElems();
+    }
 
+    function activElemAllAutoScrollPopup(data){
+      if(data.direction === "out"){
+        svg.svgOutput.activationElemsAutoScrollPopup(data);
+      }else{
+        svg.svgInput.activationElemsAutoScrollPopup(data);
+      }
+    }
+
+    addPopup(selection,div,svg,function(data){
+        desacAll();
+        activElemAllAutoScrollPopup(data);},
+      desacAll);
+    
     d3.select(window).on("resize." + mydiv, function () {
       console.log("resize");
 
@@ -209,11 +226,14 @@ function create2HistoStack(div,svg,mydiv,urlJson){
         .attr("width", svg.width)
         .attr("height", svg.heightGraph);
 
-      svg.pieside = 0.75*Math.min(svg.height,svg.width);
-
       redraw2HistoStack( svg,svg.svgOutput,0,oldsvgwidth,oldsvgheightgraph);
       redraw2HistoStack( svg,svg.svgInput,1,oldsvgwidth,oldsvgheightgraph);
+      redrawPopup(div.overlay,svg);
+
     });
+
+
+
 
     //zoom
 /*
@@ -295,7 +315,7 @@ function redraw2HistoStack(svg, svgChild, numSvg,oldsvgwidth,oldsvgheightgraph){
 
   update2HistoStack(svg,svgChild);
 
-  redrawPopup2Histo(svg, svgChild, numSvg);
+  //redrawPopup2Histo(svg, svgChild, numSvg);
 
 
 }

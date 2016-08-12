@@ -83,7 +83,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   function activationElems(d) {
 
-    if (svgChild.popup.pieChart !== null) {
+    if (svg.popup.pieChart !== null) {
       return;
     }
 
@@ -102,7 +102,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   function activationElemsAutoScroll(d) {
 
-    if (svgChild.popup.pieChart !== null) {
+    if (svg.popup.pieChart !== null) {
       return;
     }
     svgChild.activeItem = d.item;
@@ -139,7 +139,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   function desactivationElems() {
 
-    if (svgChild.activeItem == null || svgChild.popup.pieChart !== null) {
+    if (svgChild.activeItem == null || svg.popup.pieChart !== null) {
       return;
     }
 
@@ -155,6 +155,11 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
     svgChild.activeItem = null;
 
   }
+
+  svgChild.desactivationElems = desactivationElems;
+  svgChild.activationElemsAutoScrollPopup = activationElemsAutoScrollPopup;
+  svgChild.activationElemsAutoScroll = activationElemsAutoScroll;
+  svgChild.activationElems = activationElems;
 
   selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
@@ -198,12 +203,12 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   addZoom2Histo(svg, svgChild, update2HistoStack);
 
   hideShowValues2Histo(svg,svgChild,trSelec,selection,svg.xMax);
-
+/*
   addPopup2Histo(selection, div, svg , svgChild, numSvg, function(data){
       desactivationElems();
       activationElemsAutoScrollPopup(data);},
     desactivationElems)
-  
+  */
 
 }
 
@@ -805,7 +810,7 @@ function hideShowValues2Histo(svg, svgChild,trSelec,selection,xlength){
       var sum;
       var i = 0;
 
-      if(svgChild.popup.pieChart !==null){
+      if(svg.popup.pieChart !==null){
         return;
       }
 
@@ -900,7 +905,7 @@ function hideShowValues2Histo(svg, svgChild,trSelec,selection,xlength){
       var sum;
       var i=0;
 
-      if(svgChild.popup.pieChart !==null){
+      if(svg.popup.pieChart !==null){
         return;
       }
 

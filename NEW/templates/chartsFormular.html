@@ -1,4 +1,4 @@
-<form class="form-horizontal container-fluid charts_form" id="charts_form"> <!--onsubmit="getRawData(serializeRawDataForm()); return false" -->
+<form class="form-horizontal container-fluid charts_form" id="charts_form" onsubmit="applyChartsForm(); return false">
 
     <div class="panel panel-default">
         <div class="panel-heading padding2px">
@@ -20,7 +20,7 @@
                     <div class="form-group form-group-margin-2px">
                         <label class="control-label col-xs-2 col-md-4" for="timesliceCharts">Timeslice:</label>
                         <div class="col-xs-10 col-md-8">
-                            <select class="form-control timesliceCharts" id="timesliceCharts" onchange="onChangeChartsForm(); updateChartsTimeslice(this)" onfocus="onChangeChartsForm(); updateChartsTimeslice(this)">
+                            <select class="form-control timesliceCharts" id="timesliceCharts" onchange="onChangeChartsForm(); updateChartsTimeslice(this)" onfocus="updateChartsTimeslice(this)">
                                 <option value="lastHour">Last hour</option>
                                 <option value="lastDay" selected>Last day</option>
                                 <option value="lastWeek">Last week</option>
@@ -78,7 +78,7 @@
 
                 <div class="col-xs-6 col-md-2">
                     <div class="form-group form-group-margin-2px text-center">
-                        <button type="button" class="btn btn-default applyBtn_charts_form" id="applyBtn_charts_form" onclick="applyChartsForm()" disabled>Apply</button>
+                        <button type="submit" class="btn btn-default applyBtn_charts_form" id="applyBtn_charts_form" disabled>Apply</button>
                         <button type="button" class="btn btn-default resetBtn_charts_form" id="resetBtn_charts_form" onclick="resetChartsForm()" disabled>Reset</button>
                     </div>
                 </div>

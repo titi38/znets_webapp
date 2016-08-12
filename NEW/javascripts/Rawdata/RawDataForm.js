@@ -193,18 +193,11 @@ function drawRawdataDatatable(jsonResponse, rawdataTabID) {
     }
 
 
-    var datatableColumnDefs = []
-
-    for (var i = 0; i < jsonResponse.content.length; i++) {
-        // if(jsonResponse.content[i] === )
-        datatableColumnDefs.push({"targets": i, "visible": getRawdataShownColumnsSessionVariable()[tableColumns[i].title], "className": "dt-head-center dt-body-center"});
-    }
-
+    var datatableColumnDefs = buildRawdatColumnRefs(jsonResponse);
 
     $('#divRawdata'+rawdataTabID).append('<table id="tableRawdata'+rawdataTabID+'" class="display" cellspacing="0" width="100%"></table>');
     $('#tableRawdata'+rawdataTabID).DataTable( {
         data: jsonResponse.data,
-        columns: tableColumns,
         scrollY: 1,
         scrollX: true,
         lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
@@ -228,6 +221,83 @@ function drawRawdataDatatable(jsonResponse, rawdataTabID) {
     // Set cursor style to 'default' status after datatable is created
     $(document.body).css({'cursor' : 'default'});
 
+}
+
+
+function buildRawdatColumnRefs(jsonResponse) {
+
+    var colDefs = []
+
+    for (var i = 0; i < jsonResponse.content.length; i++) {
+        switch (jsonResponse.content[i]) {
+            case "datecycle":
+                colDefs.push({"targets": i, "title": "Cycle Date", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "iplocal":
+                colDefs.push({"targets": i, "title": "Local Ip", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "dir":
+                colDefs.push({"targets": i, "title": "Direction", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "ipextern":
+                colDefs.push({"targets": i, "title": "External Ip", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "country":
+                colDefs.push({"targets": i, "title": "Country", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "asnum":
+                colDefs.push({"targets": i, "title": "AS Num.", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "proto":
+                colDefs.push({"targets": i, "title": "Protocole", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "ptloc":
+                colDefs.push({"targets": i, "title": "Local Port", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "ptext":
+                colDefs.push({"targets": i, "title": "External Port", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "inctcpflg":
+                colDefs.push({"targets": i, "title": "Inc. TCP Flags", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "outtcpflg":
+                colDefs.push({"targets": i, "title": "Out. TCP Flags", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "inctraf":
+                colDefs.push({"targets": i, "title": "Inc. Traffic", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "outgtraf":
+                colDefs.push({"targets": i, "title": "Out. Traffic", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "incpkts":
+                colDefs.push({"targets": i, "title": "Inc. Packets", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "outgpkts":
+                colDefs.push({"targets": i, "title": "Out. Packets", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "application_id":
+                colDefs.push({"targets": i, "title": "App. Id", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "firsttime":
+                colDefs.push({"targets": i, "title": "First Time", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "lasttime":
+                colDefs.push({"targets": i, "title": "Last Time", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "duration":
+                colDefs.push({"targets": i, "title": "Duration", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            case "appInfo":
+                colDefs.push({"targets": i, "title": "App. Info", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                break;
+            default :
+                console.error("UNEXPECTED rawdata field found : "+jsonResponse.content[i]+" ( in file RawDataForm.js ), %i ", 141);
+                break;
+        }
+
+    }
+    
+    return colDefs;
 }
 
 

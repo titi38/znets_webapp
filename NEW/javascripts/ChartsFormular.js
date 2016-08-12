@@ -17,7 +17,7 @@ function updateChartsTimeslice(element ){
         case "lastWeek" :
         case "lastMonth" :
             $("#toDate_ChartsForm").data("DateTimePicker").date(moment('1900-01-01 00:01'));
-            $("#toDate_ChartsForm").data("DateTimePicker").date(moment().format('YYYY-MM-DD HH:mm'));
+            $("#toDate_ChartsForm").data("DateTimePicker").date(moment(serverDate).format('YYYY-MM-DD HH:mm'));
             $("#fromDate_ChartsForm").data("DateTimePicker").disable();
             $("#toDate_ChartsForm").data("DateTimePicker").disable();
             break;
@@ -46,8 +46,7 @@ function onChangeChartsForm() {
 
 function applyChartsForm(){
 
-    console.error($("#timestepCharts").val() === "MINUTE");
-    console.error($("#timestepCharts").val());
+    $("#timeslice_ChartsForm").val($("#timesliceCharts").val());
 
     $("#preset_ChartsForm").val($("#timestepCharts").val());
 

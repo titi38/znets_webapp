@@ -98,7 +98,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     var dataLength = jsonData.length;
 
     var colorMap = new Map();
-    var sumMap = new Map();
+    svg.sumMap = new Map();
     var sumMapByX = new Map();
 
     var i, elemJson, elemToPush, elemSumMap;
@@ -182,26 +182,22 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     console.log(sumMapByX);
 
-
     //step = 1 hour by default
     svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
-
-
 
     svg.values.forEach(function(elem,i){
       elem.x = (elem.x - svg.timeMin)/svg.step;
 
-      if (!sumMap.has(elem.item)) {
-        sumMap.set(elem.item, {sum: elem.height,display: elem.display});
+      if (!svg.sumMap.has(elem.item)) {
+        svg.sumMap.set(elem.item, {sum: elem.height,display: elem.display});
       } else {
-        elemSumMap = sumMap.get(elem.item);
+        elemSumMap = svg.sumMap.get(elem.item);
         elemSumMap.sum += elem.height;
       }
 
       svg.values[i] = {x:elem.x,height:elem.height,item:elem.item};
 
     });
-
 
     var xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
@@ -211,10 +207,9 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     var f = colorEval();
 
 
-    sumMap.forEach(function (value, key) {
+    svg.sumMap.forEach(function (value, key) {
       sumArray.push({item: key, sum: value.sum, display: value.display});
     });
-    
 
     console.log(sumArray);
 
@@ -232,10 +227,6 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     console.log(colorMap);
-
-
-
-
 
     //Evaluation of the abscissa domain
     svg.x.domain([-0.625, xMax - 0.375]);
@@ -293,7 +284,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
 
     //Tooltip creation
-    createTooltipHisto(svg,selection,sumMap);
+    createTooltipHisto(svg,selection,svg.sumMap);
 
     var blink = blinkCreate(colorMap);
 

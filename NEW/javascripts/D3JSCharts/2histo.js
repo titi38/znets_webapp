@@ -79,7 +79,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     var dataLength = jsonData.length;
 
     svg.colorMap = new Map();
-    var sumMap = new Map();
+    svg.sumMap = new Map();
     var sumInMap = new Map();
     var sumOutMap = new Map();
     var i, elemJson, elemToPush, elemSumMap;
@@ -106,7 +106,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
         direction: elemJson[contentDirectionValue].toLowerCase()
       };
 
-      mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue,itemType);
+      mapElemToSum(svg.sumMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
       svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
       timeMax = Math.max(timeMax,elemToPush.x);
@@ -144,7 +144,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
 
 
-    sumMap.forEach(mapToArray(svg.sumArrayTotal));
+    svg.sumMap.forEach(mapToArray(svg.sumArrayTotal));
     sumInMap.forEach(mapToArray(svg.svgInput.sumArray));
     sumOutMap.forEach(mapToArray(svg.svgOutput.sumArray));
 
@@ -176,7 +176,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     var selection = svg.selectAll(".data");
 
     //Tooltip creation
-    createTooltipHisto(svg,selection,sumMap);
+    createTooltipHisto(svg,selection,svg.sumMap);
 
 
     d3.select(window).on("resize." + mydiv, function () {

@@ -21,27 +21,117 @@ function getPieJsonQuery(svg, clickData) {
 
   //?
 
+  var datedd = new Date((clickData.x - 1)*svg.step + svg.timeMin - svg.hourShift);
+  var datedf = new Date(clickData.x*svg.step + svg.timeMin - svg.hourShift);
+
+  console.log(svg.attr("data-pie-json"));
+  console.log(svg.typeGraph);
+
+  var endStr;
+
   switch(svg.typeGraph){
+
+    case "netTopServicesTraffic":
+      var arrayPortProtocol = clickData.item.split("/");
+      endStr = "HostsServiceTraffic.json" + "?"
+        + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
+        + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
+        + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
+        + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
+        //TODO faire switch proto/id
+        + "&proto=" + protocolToId(arrayPortProtocol[1])
+        + "&port="+ arrayPortProtocol[0]
+        + "&type=" + clickData.direction.toLowerCase()
+        + "&service=" + getServiceUrlJson(svg.urlJson);
+
+      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+
 
     case "netProtocoleTraffic":
 
-      var endStr = "HostsProtoTraffic.json" + "?"
-        + ( ( moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") ) ? "&dd="+moment(getDateFromAbscissa(svg, clickData.x - 1)).format("YYYY-MM-DD+HH:mm") : "" )
-        + ( ( moment(getDateFromAbscissa(svg, clickData.x + 1)).format("YYYY-MM-DD+HH:mm") ) ? "&df="+moment(getDateFromAbscissa(svg, clickData.x)).format("YYYY-MM-DD+HH:mm") : "" )
+      endStr = "HostsProtoTraffic.json" + "?"
+        + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
+        + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
         + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
-        + ( ( clickData.item ) ? "&proto="+ clickData.item.toLowerCase() : "" )
-        + ( ( clickData.direction.toLowerCase() ) ? "&type="+clickData.direction.toLowerCase() : "" )
-        + "&dh=" + svg.hourShift/3600000;
+        + "&proto="+ clickData.item.toLowerCase()
+        + "&type=" + clickData.direction.toLowerCase();
 
       return [proxyPass + "netLoc"  + endStr,
         proxyPass + "netExt"  + endStr ];
 
 
+    case "netTopHostsTraffic":
+
+      endStr = "HostsTopHostsTraffic.json?"
+        + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
+        + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
+        + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
+        + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
+        + "&ip=" + clickData.item
+        + "&type=" + clickData.direction.toLowerCase();
+
+      return [proxyPass + "netExt"  + endStr, "ext"];
+
+
+    case "netTopAsTraffic":
+
+      endStr = "HostsTopAsTraffic.json" + "?"
+        + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
+        + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
+        + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
+        + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
+        + "&as=" + clickData.item.split(" ")[1]
+        + "&type=" + clickData.direction.toLowerCase();
+
+      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+
+
+    case "netTopAppTraffic":
+
+      endStr = "HostsTopAppTraffic.json" + "?"
+        + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
+        + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
+        + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
+        + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
+        + "&app=" + clickData.item
+        + "&type=" + clickData.direction.toLowerCase();
+
+      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+
+    case "netTopCountryTraffic":
+
+      endStr = "HostsTopCountryTraffic.json" + "?"
+        + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
+        + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
+        + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
+        + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
+        + "&c=" + clickData.item
+        + "&type=" + clickData.direction.toLowerCase();
+
+      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
 
   }
 
+}
 
+/***********************************************************************************************************/
+
+function popupHasButton(svg){
+  switch (svg.typeGraph){
+
+    case "netProtocoleTraffic":
+    case "netTopAsTraffic":
+    case "netTopServicesTraffic":
+    case "netTopAppTraffic":
+    case "netTopCountryTraffic":
+
+      return true;
+
+    case "netTopHostsTraffic":
+      return false;
+
+  }
 }
 
 
@@ -55,8 +145,12 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   svg.popup = div.append("div").classed("popup", true).style("display", "none");
 
   svg.popup.title = svg.popup.append("h3").classed("popupTitle",true);
+  svg.popup.infoVolume = svg.popup.append("h5").classed("popupTitle",true);
   svg.popup.button = svg.popup.append("button").classed("buttonPopup", true);
 
+  if(!popupHasButton(svg)){
+    svg.popup.button.attr("disabled",true);
+  }
 
   svg.popup.pieChart = null;
   svg.timer = null;
@@ -64,6 +158,10 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
   selection
     .on("click", function (d) {
+
+      if(d.item === " Remainder " || d.item === "OTHERS"){
+        return;
+      }
 
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {
@@ -74,11 +172,12 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         var arrayUrl = getPieJsonQuery(svg,d);
         console.log(arrayUrl);
 
-        createPopup(arrayUrl[0],arrayUrl[1], svg, svg.pieside, d,div.overlay);
+        if(arrayUrl[1] !== "loc" && arrayUrl[1] !== "ext"){
+          createPopupButton(arrayUrl[0],arrayUrl[1], svg, svg.pieside, d,div.overlay);
+        }else {
+          createPopupSimple(arrayUrl[0], svg, svg.pieside, d,div.overlay, arrayUrl[1]);
+        }
 
-        //createPopup("/dynamic/netLocHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2",
-        //  "/dynamic/netExtHostsTopCountryTraffic.json?dd=2016-08-04+15:00&df=2016-08-04+16:00&pset=HOURLY&type=out&c=FR&dh=2", svg, svg.pieside, d,div.overlay);
-        //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,div.overlay);
       }, 500);
 
     });
@@ -88,7 +187,10 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
     //popup suppression
     svg.popup.on("mouseover", null);
     div.overlay.on("mouseover", null);
-    svg.d3queue.abort();
+
+    if(svg.d3queue){
+      svg.d3queue.abort();
+    }
 
     div.overlay.style("display", "none");
     svg.popup.style("display", "none");
@@ -108,16 +210,15 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
 
 }
+
 /***********************************************************************************************************/
 
 function positionPopup(svg){
 
-
   svg.popup.style("left", ((svg.width - parseInt(svg.popup.style("width"),10)) / 2 + svg.margin.left) + "px")
     .style("bottom", ((svg.height - parseInt(svg.popup.style("height"),10)) / 2 + svg.margin.bottom) + "px");
 
-  svg.popup.pieChart.divTable.style("margin-top",(svg.pieside - svg.popup.pieChart.divTable.node().offsetHeight)/2 + "px");
-
+  svg.popup.pieChart.divTable.style("margin-top",(svg.pieside - svg.popup.pieChart.divTable.node().offsetHeight)/2 + 4 + "px");
 
 }
 
@@ -128,7 +229,6 @@ function redrawPopup(overlay, svg){
 
   overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
   svg.pieside = 0.75*Math.min(svg.height,svg.width);
-
 
   if(svg.popup.pieChart != null){
     svg.popup.pieChart.attr("width", svg.pieside).attr("height", svg.pieside);
@@ -151,18 +251,13 @@ function redrawPopup(overlay, svg){
       var dist = svg.popup.outerRad * 0.8;
       return "translate(" + (Math.sin(midAngle)*dist) + "," +(-Math.cos(midAngle)*dist) +")";});
 
-
-
     svg.popup.pieChart.table.style("max-height",svg.pieside + "px");
-
 
     positionPopup(svg);
 
     svg.popup.dist = svg.popup.outerRad * 0.8;
     svg.popup.distTranslTemp = svg.popup.outerRad/4;
     svg.popup.distTransl = svg.popup.outerRad/10;
-
-
 
   }
 
@@ -172,7 +267,7 @@ function redrawPopup(overlay, svg){
 
 /************************************************************************************************************/
 
-function createPopup(urlJsonLoc,urlJsonExt,svg,pieside,dataInit,overlay){
+function createPopupButton(urlJsonLoc, urlJsonExt, svg, pieside, dataInit, overlay){
 
   svg.d3queue = d3.queue();
   svg.d3queue
@@ -183,28 +278,90 @@ function createPopup(urlJsonLoc,urlJsonExt,svg,pieside,dataInit,overlay){
       if(error && error.message === "abort"){
         return;
       }
-      drawComplData(error, jsonLoc,jsonExt,svg,pieside,dataInit,overlay);
+      drawComplDataButton(error, jsonLoc,jsonExt,svg,pieside,dataInit,overlay);
     });
 
 }
 
 /************************************************************************************************************/
 
+function createPopupSimple(urlJson, svg, pieside, dataInit, overlay,extloc){
 
-function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay){
+  svg.d3queue = d3.queue();
+  svg.d3queue
+    .defer(d3.json,urlJson)
+    .await(function(error, json){
+
+      if(error && error.message === "abort"){
+        return;
+      }
+
+      drawComplDataSimple(error, json,svg,pieside,dataInit,overlay, extloc);
+    });
+
+}
+
+
+/************************************************************************************************************/
+
+
+function drawComplDataSimple(error, json, svg, pieside, dataInit, overlay,extloc){
 
   var chartside = 0.75*pieside;
   var f = colorEval(170);
 
   //Title
-  svg.popup.title.text(dataInit.item);
+  svg.popup.title.text(popupTitleH(dataInit,svg));
+  svg.popup.infoVolume.text(popupInfoVolume(dataInit,svg));
 
   //Some values relative to the popup dimensions
   svg.popup.innerRad = 0;
   svg.popup.outerRad = chartside/2;
   svg.popup.dist = svg.popup.outerRad * 0.8;
   svg.popup.distTranslTemp = svg.popup.outerRad/4;
-  svg.popup.distTransl = svg.popup.outerRad/10;
+  svg.popup.distTransl = svg.popup.outerRad/6;
+
+
+  var total = dataInit.height;
+
+  if(error){
+    console.warn(error);
+    return;
+  }
+
+  drawPopupGraph(json, svg, total, pieside, f);
+
+  //TODO for now...
+  svg.popup.button.text(extloc);
+
+  interactionPopup(svg,overlay);
+
+  //display and positioning
+  svg.popup.style("display", null);
+
+  positionPopup(svg);
+
+}
+
+
+/************************************************************************************************************/
+
+
+function drawComplDataButton(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay){
+
+  var chartside = 0.75*pieside;
+  var f = colorEval(170);
+
+  //Title
+  svg.popup.title.text(popupTitleH(dataInit,svg));
+  svg.popup.infoVolume.text(popupInfoVolume(dataInit,svg));
+
+  //Some values relative to the popup dimensions
+  svg.popup.innerRad = 0;
+  svg.popup.outerRad = chartside/2;
+  svg.popup.dist = svg.popup.outerRad * 0.8;
+  svg.popup.distTranslTemp = svg.popup.outerRad/4;
+  svg.popup.distTransl = svg.popup.outerRad/6;
 
 
   var total = dataInit.height;
@@ -227,6 +384,7 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
   svg.popup.button.text("ext");
 
   svg.popup.extPieChart = svg.popup.pieChart;
+
 
   var statesArray = ["ext","loc"];
 
@@ -254,7 +412,19 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
 
   });
 
+  interactionPopup(svg, overlay);
 
+  //display and positioning
+  svg.popup.style("display", null);
+
+  positionPopup(svg);
+
+}
+
+
+/**********************************************************************************************************************/
+
+function interactionPopup(svg,overlay){
 
   //Hover listener on the pie chart svg.
   svg.popup
@@ -375,22 +545,11 @@ function drawComplData(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay)
 
   }
 
-
-  //display and positioning
-  svg.popup.style("display", null);
-
-  positionPopup(svg);
-
 }
-
 
 /*********************************************************************************************************************************************/
 
 function drawPopupGraph(json, svg, total, pieside,f){
-
-  if(testJson(json)){
-    console.warn("no data");
-  }
 
   json = json.response;
 
@@ -422,7 +581,7 @@ function drawPopupGraph(json, svg, total, pieside,f){
     values.push({
       item: elem[jsonItemValue],
       y: elem[jsonAmountValue],
-      display:elem[jsonDisplayValue],
+      display:(elem[jsonDisplayValue] === ""?elem[jsonItemValue]:elem[jsonDisplayValue]),
       amount: bytesConvert(elem[jsonAmountValue]),
       add: jsonAddArrayValues.map(function(indexAdd){return elem[indexAdd];})
     });
@@ -438,6 +597,10 @@ function drawPopupGraph(json, svg, total, pieside,f){
     return e.y;
   });
 
+  if(total < sum){
+    console.warn(sum/total * 100 + "%");
+    total = sum;
+  }
 
   //We attribute a color to each
   var mapColors = new Map();
@@ -454,11 +617,12 @@ function drawPopupGraph(json, svg, total, pieside,f){
     return b.y - a.y;
   });
 
-  values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
-
+  if(total !== sum){
+    values.unshift({y: total -sum, item:" Remainder ",amount:bytesConvert(total-sum), display:" Remainder ", add: []});
+  }
   /*total = d3.sum(values,function(e){return e.y});
-  console.log(total);
-*/
+  console.log(total);*/
+
   mapColors.set(" Remainder ","#f2f2f2");
 
 
@@ -498,6 +662,9 @@ function drawPopupGraph(json, svg, total, pieside,f){
 
   }
 
+
+  var svgtitlePath = titleElemPopup(total);
+
   //g element parent of path and text components of the pie chart
   svg.popup.pieChart.g = svg.popup.pieChart.append("g")
     .attr("transform","translate(" + (pieside/2) + "," + (pieside/2) + ")")
@@ -507,7 +674,7 @@ function drawPopupGraph(json, svg, total, pieside,f){
   svg.popup.pieChart.pathSelec = svg.popup.pieChart.g.selectAll("path").data(values).enter().append("path")
     .attr("d","")
     .style("fill",function(d){ return mapColors.get(d.item); });
-  svg.popup.pieChart.pathSelec.append("svg:title").text(titleElemPopup);
+  svg.popup.pieChart.pathSelec.append("svg:title").text(svgtitlePath);
 
   //text elements, the arcs' legends
   svg.popup.pieChart.textSelec = svg.popup.pieChart.g.selectAll("text").data(values).enter().append("text")
@@ -529,106 +696,85 @@ function drawPopupGraph(json, svg, total, pieside,f){
 
   values.sort(sortAlphabet);
 
+  var functionTitleTable = titleTablePopup(total);
+
   svg.popup.pieChart.trSelec = svg.popup.pieChart.table.selectAll("tr").data(values)
-    .enter().append("tr").attr("title",titleTablePopup);
+    .enter().append("tr").attr("title",functionTitleTable);
 
   svg.popup.pieChart.trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
     return mapColors.get(d.item);
   });
   svg.popup.pieChart.trSelec.append("td").text(function(d){return d.display;});
 
-
-
-
   //name of the current element being hovered, at first none then null.
   svg.popup.pieChart.activeItem = null;
 
+  console.log(sum + " " + total);
 
   return total;
 
 }
 
-/*********************************************************************************************************************************************/
+/**********************************************************************************************************************/
 
 
-function titleElemPopup(d){
+function titleElemPopup(total){
 
-  var str = d.display + "\n" + (d.display !== d.item? d.item + "\n":"");
+  return function(d){
 
-  d.add.forEach(function(val){
-    str = str + val + "\n";
-  });
+    var str = d.display + "\n" + (d.display !== d.item? d.item + "\n":"");
 
-  return str +  d.amount;
+    d.add.forEach(function(val){
+      str = str + val + "\n";
+    });
+
+    return str +  d.amount + "\n" + Math.round(10000*d.y/total)/100 +"%";
+
+  }
 
 }
 
 /**********************************************************************************************************************/
 
-function titleTablePopup(d){
+function titleTablePopup(total){
 
-  var str = d.display + "\n" + (d.display !== d.item? d.item + "\n":"");
+  return function(d){
 
-  d.add.forEach(function(val){
-    str = str + val + "\n";
-  });
+    var str = d.display + "\n" + (d.display !== d.item? d.item + "\n":"");
 
-  str = str + "Volume: " + d.amount;
+    d.add.forEach(function(val){
+      str = str + val + "\n";
+    });
 
-  return str;
+    str = str + "Volume: " + d.amount  + "\n" + Math.round(10000*d.y/total)/100 +"%";
 
+    return str;
+
+  }
 
 }
 
 /**********************************************************************************************************************/
 
-function popupTitle(d, svg){
-  var dateBegin = getDateFromAbscissa(svg, x - 1);
-  var dateEnd = getDateFromAbscissa(svg,d.x);
+function popupTitleH(d, svg){
 
-  return d.display + ": from " + dateBegin
+  var dateBegin = getDateFromAbscissa(svg, d.x - 1);
+  var dateEnd = getDateFromAbscissa(svg, d.x);
+  console.log(d);
+
+  return svg.sumMap.get(d.item).display + ": from " + (svg.step === 3600000? (dateBegin.getMonth() + 1) + "/"
+    + dateBegin.getDate() + " " + dateBegin.getHours() + "h to " + (dateEnd.getMonth() + 1) + "/" + dateEnd.getDate()
+    + " " + dateEnd.getHours() + "h":
+    (dateBegin.getMonth() + 1) + "/" + dateBegin.getDate() + " to "
+    + (dateEnd.getMonth() + 1) + "/" + dateEnd.getDate());
 }
 
+/**********************************************************************************************************************/
+
+function popupInfoVolume(d, svg){
 
 
+  var arrayConvert = quantityConvertUnit(d.height, svg.units === "Bytes");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  return "Volume: " + Math.round(100 * d.height * arrayConvert[1])/100 + " " + arrayConvert[0] + svg.units;
+}

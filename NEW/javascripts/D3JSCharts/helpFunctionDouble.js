@@ -334,8 +334,8 @@ function hideShowValuesDirection(svg,trSelec,direction){
 
   var hiddenValuesDirection = [];
 
-  var firstX = valuesDirectionImmutable[0].x;
-  var lengthX = valuesDirectionImmutable[valuesDirectionImmutable.length - 1].x + 1;
+  var firstX = 0;
+  var lengthX = (valuesDirectionImmutable.length === 0?0:valuesDirectionImmutable[valuesDirectionImmutable.length - 1].x + 1);
 
   var valuesFinalLength = valuesDirectionFinal.length;
 

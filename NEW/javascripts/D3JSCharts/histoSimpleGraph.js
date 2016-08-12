@@ -378,10 +378,19 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     gridSimpleGraph(svg);
 
-    addPopup(selection,div,svg,function(data){
-        desactivationElems();
-        activationElemsAutoScrollPopup(data);},
-      desactivationElems);
+    if(svg.typeGraph !== "netTopNbExtHosts"){
+
+      addPopup(selection,div,svg,function(data){
+          desactivationElems();
+          activationElemsAutoScrollPopup(data);},
+        desactivationElems);
+
+    }else{
+
+      svg.popup = [];
+      svg.popup.pieChart = null;
+
+    }
 
     //Legend creation
     var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");

@@ -1183,8 +1183,11 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           activationElemsAutoScrollPopup(data);
         },
         desactivationElems);
+    }else{
+      svg.popup = [];
+      svg.popup.pieChart =null;
     }
-    
+
     selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
     //Now, no more nodata can happen,so we create the table
@@ -1303,8 +1306,6 @@ function redrawHisto2DStackDouble(div,svg){
   axisXDoubleDraw(svg);
 
   svg.frame.select(".rectOverlay").attr("height",svg.height);
-
-
 
   //console.log("marincltransl " + margIncTransl);
   svg.transform.y = (svg.transform.y - margIncTransl) * (svg.height + margInView)/(oldsvgheight + margInView) + margIncTransl;

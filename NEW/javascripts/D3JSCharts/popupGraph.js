@@ -61,7 +61,7 @@ function getPieJsonQuery(svg, clickData) {
         + ( ( svg.attr("data-network") && svg.attr("data-network") != "Global" ) ? "&net="+svg.attr("data-network") : "" )
         + "&proto=" + protocolToId(arrayPortProtocol[1])
         + "&port="+ arrayPortProtocol[0]
-        + (unit === "NbFlow"?"":"&type=" + clickData.direction.toLowerCase())
+        + (unit === "NbFlow"?(getServiceUrlJson(svg.urlJson)==="loc"?"&type=inc":"&type=out"):"&type=" + clickData.direction.toLowerCase())
         + "&service=" + getServiceUrlJson(svg.urlJson);
 
       return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];

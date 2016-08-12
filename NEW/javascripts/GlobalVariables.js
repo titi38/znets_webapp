@@ -16,4 +16,6 @@ var chartsPreset = {
     endDate : "HOURLY"
 };
 
+var serverDate = "";
+
 var localhosts_Ip_Name_Array = [];

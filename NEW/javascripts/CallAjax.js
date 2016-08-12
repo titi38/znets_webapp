@@ -46,7 +46,8 @@ function callAJAX(url, params, outputType, callback, callbackParams)
                             callback(msg.response);
                     else {
                         console.warn("TODO in CallAjax.js : Implement interface alerts on callAjax response contains errMsg (%i)", 107);
-                        addAjaxNotification(msg, null);
+                        //addAjaxNotification(msg, null);
+                        addNotification("Error message in response json file : \""+msg.response.errMsg+"\"", "alert-danger", null);
                     }
                 else{
                     if(callback.length === 0)

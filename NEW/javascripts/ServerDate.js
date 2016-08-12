@@ -50,9 +50,12 @@ function ServerDate(theWSEventNotifier) {
 
     this.displayServerDate = function(jsonContent, _this)
     {
+        serverDate = new Date(jsonContent.yr+"-"+jsonContent.m+"-"+jsonContent.d+" "+jsonContent.h+":"+jsonContent.mn);
 
         initializeRawDataForm_TimeFields();
-        _this.serverDateChanges(new Date(jsonContent.yr+"-"+jsonContent.m+"-"+jsonContent.d+" "+jsonContent.h+":"+jsonContent.mn));
+        initializeChartsTimestepForm();
+
+        _this.serverDateChanges(serverDate);
 
         _this.unstackFIFO();
         loadingAJAX = false;
@@ -73,6 +76,9 @@ function ServerDate(theWSEventNotifier) {
 
         // change server date display
         //$("#serverDate").html(": "+moment(dateString).format('YYYY-MM-DD HH:mm')+ " (GMT)");
+
+        serverDate = dateString;
+
         $("#serverDate").html(" "+moment(dateString).add(parseInt(moment().format("Z")), "hours").format('HH:mm'));
 
 

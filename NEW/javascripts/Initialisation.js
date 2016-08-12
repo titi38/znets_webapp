@@ -284,8 +284,6 @@ function loadChartJsonToDiv(selectedNavChart, forNetworks) {
 
 function initializeNetworkCallback() {
 
-    initializeChartsTimestepForm();
-
     callAJAX("getNetworkList.json", "", "json", addNetworksTabs, null);
 
 }

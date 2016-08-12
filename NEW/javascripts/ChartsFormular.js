@@ -91,13 +91,13 @@ function initializeChartsTimestepForm() {
 
     $('#fromDate_ChartsForm').datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
-        defaultDate: moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm'),
+        defaultDate: moment(serverDate).add(parseInt(moment().format("Z")), "hours").subtract(1, 'days').format('YYYY-MM-DD HH:mm'),
 
 
     });
     $('#toDate_ChartsForm').datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
-        defaultDate: moment(),
+        defaultDate: moment(serverDate).add(parseInt(moment().format("Z")), "hours"),
 
 
     });

@@ -164,6 +164,7 @@
     left:0;
     bottom:0;
     padding-bottom: 10px;
+    text-align: center;
 
 }
 
@@ -239,6 +240,7 @@
 
 .pieSvg{
     shape-rendering: geometricPrecision;
+    margin-left: auto;
 
 }
 
@@ -250,7 +252,7 @@
     display:inline-block;
     vertical-align: top;
     border: 2px ridge;
-    margin-right:10px;
+    margin-right:auto;
 
 }
 
@@ -262,6 +264,7 @@
     overflow-x: scroll;
     cursor: default;
     margin-bottom: 0;
+    text-align: start;
 }
 
 
@@ -345,6 +348,8 @@ table {
     top: 0;
     margin-left: auto;
     margin-right: auto;
+}
 
-
+.buttonPopup:disabled{
+    color: graytext;
 }

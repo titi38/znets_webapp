@@ -15,7 +15,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   var totalSumValues = [];
 
-  var x = svgChild.values[0].x;
+  var x = 0;
   var sum = 0;
   var i = 0;
 
@@ -801,7 +801,7 @@ function hideShowValues2Histo(svg, svgChild,trSelec,selection,xlength){
 
       var totalSum = [];
 
-      var x = svgChild.values[0].x;
+      var x = 0;
       var sum;
       var i = 0;
 
@@ -896,7 +896,7 @@ function hideShowValues2Histo(svg, svgChild,trSelec,selection,xlength){
 
       var totalSum = [];
 
-      var x = svgChild.values[0].x;
+      var x = 0;
       var sum;
       var i=0;
 

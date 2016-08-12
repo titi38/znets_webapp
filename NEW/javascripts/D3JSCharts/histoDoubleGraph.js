@@ -105,7 +105,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var dataLength = jsonData.length;
 
     var colorMap = new Map();
-    var sumMap = new Map();
+    svg.sumMap = new Map();
     var sumMapIn = new Map();
     var sumMapOut = new Map();
 
@@ -134,7 +134,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       };
 
 
-      mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue,itemType);
+      mapElemToSum(svg.sumMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
       svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
       timeMax = Math.max(timeMax,elemToPush.x);
@@ -169,7 +169,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var f = colorEval();
 
 
-    sumMap.forEach(mapToArray(sumArray));
+    svg.sumMap.forEach(mapToArray(sumArray));
     sumMapIn.forEach(mapToArray(sumArrayIn));
     sumMapOut.forEach(mapToArray(sumArrayOut));
 
@@ -220,7 +220,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var totalSumIn = [];
     var totalSumOut = [];
 
-    var x = svg.valuesIn[0].x;
+    var x = 0;
     var sum = 0;
     i = 0;
 
@@ -236,7 +236,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       x++;
     }
 
-    x = svg.valuesOut[0].x;
+    x = 0;
     i = 0;
 
     while (x < xMax) {
@@ -323,7 +323,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     //Tooltip creation
 
-    createTooltipHisto(svg,selection,sumMap);
+    createTooltipHisto(svg,selection,svg.sumMap);
 
 
     var blink = blinkCreate(colorMap);
@@ -610,7 +610,11 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
     
 
-    svg.units = unitsStringProcessing(json.units);
+    if(json.units){
+      svg.units = unitsStringProcessing(json.units);
+    }else{
+      svg.units = "";
+    }
 
     console.log(json);
 
@@ -633,15 +637,20 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       }
 
       var tempArrayName = jsonContent[i].split("_");
+
+      if(tempArrayName[tempArrayName.length - 1] === ""){
+        tempArrayName.splice(tempArrayName.length - 1, 1);
+      }
+
       var strName = tempArrayName[0];
 
-      for(var w = 1; w < tempArrayName.length - 2; w++){
+      for(var w = 1; w < tempArrayName.length - 1; w++){
       
           strName = strName + " " + tempArrayName[w];
 
       }
 
-      jsonContent[i] = [strName, tempArrayName[tempArrayName.length-2]];
+      jsonContent[i] = [strName, tempArrayName[tempArrayName.length-1]];
 
       if(svg.units !== "hosts"){
 
@@ -649,18 +658,19 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
       }
 
-      console.log(jsonContent[i]);
 
     }
-    
-    
+
+    console.log(jsonContent);
+
+
 
     var colorMap = new Map();
-    var sumMap = new Map();
+    svg.sumMap = new Map();
     var sumMapIn = new Map();
     var sumMapOut = new Map();
     
-    var i,j,k, elemJson, elemToPush, elemSumMap;
+    var i,j,k, elemJson, elemToPush, elemSumMap,timeElem;
     svg.timeMin = Infinity;
     var timeMax = 0;
 
@@ -668,11 +678,20 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.hourShift = getTimeShift(urlJson)  * 3600000;
 
 
+
     // Data are processed and sorted according to their direction.
 
     if(svg.step === 60000){
 
-      var elemAmountMinuteArray;
+      if(jsonData[dataLength - 1][0][0] === "current"){
+        jsonData[0].push(jsonData[1][0]);
+        jsonData = jsonData[0];
+        dataLength = jsonData.length;
+      }
+
+      var dateCurrent = getDateCurrent(urlJson);
+
+      var elemAmountMinuteArray, elemAmountMinuteArrayLength;
 
       for(i = 0; i < dataLength; i++){
         elemJson = jsonData[i];
@@ -684,35 +703,44 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           }
 
           elemAmountMinuteArray = elemJson[j];
+          
+          if(elemJson[contentDateValue] !== "current"){
+            timeElem = (new Date(elemJson[contentDateValue])).getTime() - 3600000  + svg.hourShift;
+          }
+          else{
+            timeElem = dateCurrent.getTime();
+          }
 
-          for(k = 0; k < 60; k++) {
+          console.log(elemAmountMinuteArray);
+          elemAmountMinuteArrayLength = elemAmountMinuteArray.length;
 
+          for(k = 0; k < elemAmountMinuteArrayLength; k++) {
 
             if(+elemAmountMinuteArray[k] === 0 || !elemAmountMinuteArray[k]){
               continue;
             }
 
             elemToPush = {
-              //The given time is the corresping, we add the correct minutes according to the position k
+              //we add the correct minutes according to the position k
               //of the element in the array
-              x: (new Date(elemJson[contentDateValue])).getTime() + k*svg.step + svg.hourShift - 3600000,
+              x: timeElem + k*svg.step,
               height: +elemAmountMinuteArray[k],
               item: jsonContent[j][0],
               direction: jsonContent[j][1]
             };
 
             // .display kept, can have an use someday
-            if (!sumMap.has(elemToPush.item)) {
-              sumMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+            if (!svg.sumMap.has(elemToPush.item)) {
+              svg.sumMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
             } else {
-              elemSumMap = sumMap.get(elemToPush.item);
+              elemSumMap = svg.sumMap.get(elemToPush.item);
               elemSumMap.sum += elemToPush.height;
             }
 
             svg.timeMin = Math.min(svg.timeMin, elemToPush.x);
             timeMax = Math.max(timeMax, elemToPush.x);
 
-            if (elemToPush.direction === "in") {
+            if (elemToPush.direction === "in" || elemToPush.direction === "inc") {
               elemToPush.direction = "inc";
 
               if (!sumMapIn.has(elemToPush.item)) {
@@ -768,10 +796,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           };
 
           // .display kept, can have an use someday
-          if (!sumMap.has(elemToPush.item)) {
-            sumMap.set(elemToPush.item, {sum: elemToPush.height,display: elemToPush.item});
+          if (!svg.sumMap.has(elemToPush.item)) {
+            svg.sumMap.set(elemToPush.item, {sum: elemToPush.height,display: elemToPush.item});
           } else {
-            elemSumMap = sumMap.get(elemToPush.item);
+            elemSumMap = svg.sumMap.get(elemToPush.item);
             elemSumMap.sum += elemToPush.height;
           }
 
@@ -824,7 +852,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     var f = colorEval();
 
 
-    sumMap.forEach(mapToArray(sumArray));
+    svg.sumMap.forEach(mapToArray(sumArray));
     sumMapIn.forEach(mapToArray(sumArrayIn));
     sumMapOut.forEach(mapToArray(sumArrayOut));
 
@@ -872,7 +900,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     var totalSumIn = [];
     var totalSumOut = [];
 
-    var x = svg.valuesIn[0].x;
+    var x = 0;
     var sum = 0;
     i = 0;
 
@@ -888,7 +916,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       x++;
     }
 
-    x = svg.valuesOut[0].x;
+    x = 0;
     i = 0;
 
     while (x < xMax) {
@@ -904,8 +932,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     }
 
 
-    svg.totalIn = d3.max(totalSumIn);
-    svg.totalOut = d3.max(totalSumOut);
+    svg.totalIn = Math.max(1,d3.max(totalSumIn));
+    svg.totalOut = Math.max(1,d3.max(totalSumOut));
 
     svg.heightOutput = (svg.height - svg.margin.zero) * svg.totalOut / (svg.totalIn + svg.totalOut);
 
@@ -975,7 +1003,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     //Tooltip creation
 
-    createTooltipHisto(svg,selection,sumMap);
+    createTooltipHisto(svg,selection,svg.sumMap);
 
 
     var blink = blinkCreate(colorMap);
@@ -1607,382 +1635,3 @@ function addZoomDouble(svg,updateFunction){
   svg._groups[0][0].__zoom.y =svg.transform.y;
 }
 
-/***********************************************************************************************************/
-
-function hideShowValuesDouble(svg,trSelec,selectionIn,selectionOut,xlength){
-  var duration = 800;
-  var trSelecSize = trSelec.size();
-  var hiddenValues = [];
-  var stringifiedIn = JSON.stringify(svg.valuesIn);
-  var stringifiedOut = JSON.stringify(svg.valuesOut);
-
-  var newValuesIn = JSON.parse(stringifiedIn);
-  var newValuesOut = JSON.parse(stringifiedOut);
-  var valuesInTrans = JSON.parse(stringifiedIn);
-  var valuesOutTrans = JSON.parse(stringifiedOut);
-  selectionIn.data(valuesInTrans);
-  selectionOut.data(valuesOutTrans);
-
-  trSelec.on("click",function(d){
-    var totalSumIn = [];
-    var totalSumOut = [];
-    var clickedRow = d3.select(this);
-
-
-    svg.transition("hideshow").duration(duration).tween("",function(){
-
-
-
-      var x;
-      var sum;
-      var i;
-
-      if(svg.popup.pieChart !==null){
-        return;
-      }
-
-      var index = hiddenValues.indexOf(d.item);
-
-      
-      
-      
-      
-      if( index === -1){
-        //Hide the data
-        hiddenValues.push(d.item);
-        clickedRow.classed("strikedRow",true);
-
-        x=svg.valuesIn[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-          while(i <  newValuesIn.length && newValuesIn[i].x == x){
-            if(newValuesIn[i].item === d.item){
-              newValuesIn[i].height = 0;
-            }
-            newValuesIn[i].y = sum;
-            sum += newValuesIn[i].height;
-            i++;
-          }
-          totalSumIn.push(sum);
-          x++;
-        }
-
-        x = svg.valuesOut[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-
-          while(i <  newValuesOut.length && newValuesOut[i].x == x){
-            if(newValuesOut[i].item === d.item){
-              newValuesOut[i].height = 0;
-            }
-            sum += newValuesOut[i].height;
-            newValuesOut[i].y = sum;
-            i++;
-          }
-          totalSumOut.push(sum);
-          x++;
-        }
-
-
-      }else{
-        //Show the data
-        hiddenValues.splice(index,1);
-        clickedRow.classed("strikedRow",false);
-
-
-        x=svg.valuesIn[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-          while(i <  newValuesIn.length && newValuesIn[i].x == x){
-            if(newValuesIn[i].item === d.item){
-              newValuesIn[i].height = svg.valuesIn[i].height;
-            }
-            newValuesIn[i].y = sum;
-            sum += newValuesIn[i].height;
-            i++;
-          }
-          totalSumIn.push(sum);
-          x++;
-        }
-
-        x = svg.valuesOut[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-
-          while(i <  newValuesOut.length && newValuesOut[i].x == x){
-            if(newValuesOut[i].item === d.item){
-              newValuesOut[i].height = svg.valuesOut[i].height;
-            }
-            sum += newValuesOut[i].height;
-            newValuesOut[i].y = sum;
-            i++;
-          }
-          totalSumOut.push(sum);
-          x++;
-        }
-
-
-      }
-
-
-
-      var newTotalIn;
-      var newTotalOut;
-
-      if(hiddenValues.length === trSelecSize){
-        newTotalIn=1;
-        newTotalOut=1;
-      }else{
-        newTotalIn=d3.max(totalSumIn);
-        newTotalOut=d3.max(totalSumOut);
-      }
-
-      var oldTotalIn = svg.yInput.domain()[1]/1.1;
-      var oldTotalOut = svg.yOutput.domain()[1]/1.1;
-
-      var valuesInStart = JSON.parse(JSON.stringify(valuesInTrans));
-      var valuesOutStart = JSON.parse(JSON.stringify(valuesOutTrans));
-
-
-      var t0,totalInTrans, totalOutTrans;
-
-      return function(t){
-
-        t=Math.min(1,Math.max(0,t));
-        t0 = (1-t);
-
-        valuesInTrans.forEach(function(elem,i){
-          elem.y = t0*valuesInStart[i].y + t*newValuesIn[i].y;
-          elem.height = t0*valuesInStart[i].height + t*newValuesIn[i].height;
-        });
-
-        valuesOutTrans.forEach(function(elem,i){
-          elem.y = t0*valuesOutStart[i].y + t*newValuesOut[i].y;
-          elem.height = t0*valuesOutStart[i].height + t*newValuesOut[i].height;
-        });
-
-
-        totalInTrans = oldTotalIn* t0 + newTotalIn*t;
-        totalOutTrans = oldTotalOut*t0 + newTotalOut*t;
-        var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
-
-        svg.heightOutput = (svg.height - svg.margin.zero)*totalOutTrans/(totalInTrans+totalOutTrans);
-
-        var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
-          svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
-        var marginViewBottom = marginViewTop + svg.margin.zero;
-
-        svg.yInput.range([svg.heightOutput+svg.margin.zero,svg.height]);
-        svg.yOutput.range([svg.heightOutput,0]);
-        svg.yInput.domain([0,totalInTrans*1.1]);
-        svg.yOutput.domain([0,totalOutTrans*1.1]);
-        svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
-        svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
-        svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate1),
-          svg.yOutput.invert(actTranslate1)]);
-
-        svg.newYInput.domain([svg.yInput.invert(actTranslate1  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
-          svg.yInput.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
-
-
-        updateHisto2DStackDouble(svg);
-
-      }
-
-
-
-    });
-
-
-  });
-
-  trSelec.on("contextmenu",function(d) {
-
-    d3.event.preventDefault();
-
-    var totalSumIn = [];
-    var totalSumOut = [];
-    var clickedRow = d3.select(this);
-
-    svg.transition("hideshow").duration(duration).tween("",function(){
-
-
-      var x;
-      var sum;
-      var i;
-
-      if (svg.popup.pieChart !== null) {
-        return;
-      }
-
-      var index = hiddenValues.indexOf(d.item);
-
-
-      if ((index !== -1) || (trSelecSize - 1 !== hiddenValues.length )) {
-
-        //Hide all data except this one
-        hiddenValues = trSelec.data().map(function (elem) {
-          return elem.item;
-        });
-        hiddenValues.splice(hiddenValues.indexOf(d.item), 1);
-
-        trSelec.classed("strikedRow", true);
-        clickedRow.classed("strikedRow", false);
-
-
-
-        x=svg.valuesIn[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-          while(i <  newValuesIn.length && newValuesIn[i].x == x){
-            if(newValuesIn[i].item !== d.item){
-              newValuesIn[i].height = 0;
-            }else{
-              newValuesIn[i].height = svg.valuesIn[i].height;
-            }
-            newValuesIn[i].y = sum;
-            sum += newValuesIn[i].height;
-            i++;
-          }
-          totalSumIn.push(sum);
-          x++;
-        }
-
-        x = svg.valuesOut[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-
-          while(i <  newValuesOut.length && newValuesOut[i].x == x){
-            if(newValuesOut[i].item !== d.item){
-              newValuesOut[i].height = 0;
-            }else{
-              newValuesOut[i].height = svg.valuesOut[i].height;
-            }
-
-            sum += newValuesOut[i].height;
-            newValuesOut[i].y = sum;
-            i++;
-          }
-          totalSumOut.push(sum);
-          x++;
-        }
-
-
-      } else {
-        //index === -1 && hiddenValues.length == trSelec.size() -1
-        // ->show all data.
-        hiddenValues = [];
-        trSelec.classed("strikedRow", false);
-
-        x=svg.valuesIn[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-          while(i <  newValuesIn.length && newValuesIn[i].x == x){
-            newValuesIn[i].height = svg.valuesIn[i].height;
-            newValuesIn[i].y = sum;
-            sum += newValuesIn[i].height;
-            i++;
-          }
-          totalSumIn.push(sum);
-          x++;
-        }
-
-        x = svg.valuesOut[0].x;
-        i=0;
-
-        while(x < xlength){
-          sum=0;
-
-          while(i <  newValuesOut.length && newValuesOut[i].x == x){
-
-            newValuesOut[i].height = svg.valuesOut[i].height;
-            sum += newValuesOut[i].height;
-            newValuesOut[i].y = sum;
-            i++;
-          }
-          totalSumOut.push(sum);
-          x++;
-        }
-
-
-      }
-
-
-
-      var newTotalIn = Math.max(0.000000001,d3.max(totalSumIn));
-      var newTotalOut = Math.max(0.000000001,d3.max(totalSumOut));
-
-      var oldTotalIn = svg.yInput.domain()[1]/1.1;
-      var oldTotalOut = svg.yOutput.domain()[1]/1.1;
-
-      var valuesInStart = JSON.parse(JSON.stringify(valuesInTrans));
-      var valuesOutStart = JSON.parse(JSON.stringify(valuesOutTrans));
-
-      var t0,totalInTrans, totalOutTrans;
-
-      return function(t){
-
-        t=Math.min(1,Math.max(0,t));
-        t0 = (1-t);
-
-        valuesInTrans.forEach(function(elem,i){
-          elem.y = t0*valuesInStart[i].y + t*newValuesIn[i].y;
-          elem.height = t0*valuesInStart[i].height + t*newValuesIn[i].height;
-        });
-
-        valuesOutTrans.forEach(function(elem,i){
-          elem.y = t0*valuesOutStart[i].y + t*newValuesOut[i].y;
-          elem.height = t0*valuesOutStart[i].height + t*newValuesOut[i].height;
-        });
-
-
-        totalInTrans = oldTotalIn* t0 + newTotalIn*t;
-        totalOutTrans = oldTotalOut*t0 + newTotalOut*t;
-        var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
-        svg.heightOutput = (svg.height - svg.margin.zero)*totalOutTrans/(totalInTrans+totalOutTrans);
-
-        var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
-          svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
-
-        var marginViewBottom = marginViewTop + svg.margin.zero;
-
-        svg.yInput.range([svg.heightOutput+svg.margin.zero,svg.height]);
-        svg.yOutput.range([svg.heightOutput,0]);
-        svg.yInput.domain([0,totalInTrans*1.1]);
-        svg.yOutput.domain([0,totalOutTrans*1.1]);
-        svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
-        svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
-        svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate1),
-          svg.yOutput.invert(actTranslate1)]);
-
-        svg.newYInput.domain([svg.yInput.invert(actTranslate1  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
-          svg.yInput.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
-
-
-        updateHisto2DStackDouble(svg);
-
-      }
-
-
-
-    });
-
-
-  });
-
-
-}

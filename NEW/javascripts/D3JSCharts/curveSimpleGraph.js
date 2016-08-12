@@ -66,14 +66,28 @@ function createCurve(div, svg, mydiv, urlJson){
     svg.step = (urlJson.indexOf("pset=MINUTE") === -1)?((urlJson.indexOf("pset=DAILY") === - 1)?3600000:86400000):60000;
     svg.hourShift = getTimeShift(urlJson) * 3600000;
 
+    var jsonDataLength = jsonData.length;
+
 
     //Conversion date to elapsed time since 1st January 1970.
 
     if(svg.step === 60000){
 
+      if(jsonData[jsonDataLength - 1][0][0] === "current"){
+        jsonData[0].push(["current",jsonData[1][0].slice(1,jsonData[1][0].length)]);
+        jsonData = jsonData[0];
+        jsonDataLength = jsonData.length;
+      }
+
       jsonData.forEach(function(elem){
-        elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + svg.hourShift - 3600000;
+        if(elem[contentDateValue] !== "current"){
+          elem[contentDateValue] = (new Date(elem[contentDateValue])).getTime() + svg.hourShift - 3600000;
+        }else{
+          elem[contentDateValue] = getDateCurrent(urlJson).getTime();
+        }
       });
+
+      console.log(jsonData);
 
     }else{
 
@@ -85,9 +99,6 @@ function createCurve(div, svg, mydiv, urlJson){
 
     //sort, to make sure
     jsonData.sort(function(a,b){return a[contentDateValue] - b[contentDateValue];});
-
-
-    var jsonDataLength = jsonData.length;
 
 
     svg.timeMin = jsonData[0][contentDateValue];
@@ -113,12 +124,14 @@ function createCurve(div, svg, mydiv, urlJson){
 
         var amountArray = elemJson[contentAmountValue];
 
+        var amountArrayLength = amountArray.length;
 
-        for(var j = 0; j < 60; j++){
+        for(var j = 0; j < amountArrayLength; j++){
 
           svg.data.push(+amountArray[j]);
 
         }
+
 
       }else {
 

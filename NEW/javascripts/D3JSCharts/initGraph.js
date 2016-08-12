@@ -47,6 +47,7 @@ function drawChartFromInterface(urlJson, mydiv) {
 
 
     //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json?net=labo");
+    svg.urlJson = urlJson;
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
 }
@@ -89,10 +90,8 @@ function drawChart(urlJson, mydiv) {
 
     svg.margin = {top: 50, right: 50, bottom: 50, left: 60, zero:28};
 
+    svg.urlJson = urlJson;
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
-
-
-
 
 }
 
@@ -108,28 +107,19 @@ function whichCreationFunction(urlJson,svg){
 
     switch(typeGraph){
         case "netNbLocalHosts":
-
-
         case "netNbExternalHosts":
-        case "hostNbDiffHosts":
-
             return createCurve;
             break;
 
         case "netTopHostsTraffic":
-
         case "netTopServicesTraffic":
         case "hostTopServicesTraffic":
-
         case "netTopAsTraffic":
         case "hostTopAsTraffic":
-
         case "netTopAppTraffic":
         case "hostTopAppTraffic":
-
         case "netTopCountryTraffic":
         case "hostTopCountryTraffic":
-
             return createHisto2DStackDouble;
             break;
 
@@ -141,6 +131,8 @@ function whichCreationFunction(urlJson,svg){
 
         case "netProtocoleTraffic":
         case "hostProtocoleTraffic":
+        
+        case "hostNbDiffHosts":
 
             return createHisto2DStackDoubleFormatVariation;
             break;

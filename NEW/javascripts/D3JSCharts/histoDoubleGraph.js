@@ -14,7 +14,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     //test json conformity
     if (testJson(json) || error) {
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -85,7 +86,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     //if no item/date/amount/direction value found, the graph can't be done.
     if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv, "error no value found");
       return;
     }
 
@@ -548,7 +549,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     //test json conformity
     if (testJson(json) || error) {
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -609,7 +611,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     //if no date value found, the graph can't be done.
     if(contentDateValue === false){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv,"error no date found");
       return;
     }
     
@@ -1177,7 +1179,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     gridDoubleGraph(svg);
 
-    if(svg.typeGraph !== "netNbFlow") {
+    if(svg.typeGraph !== "netNbFlow" || svg.typeGraph !== "hostNbFlow") {
       addPopup(selection, div, svg, function (data) {
           desactivationElems();
           activationElemsAutoScrollPopup(data);

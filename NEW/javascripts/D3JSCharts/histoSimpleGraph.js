@@ -13,7 +13,8 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     //test json conformity
     if (testJson(json) || error) {
       console.log("incorrect url/data");
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -80,7 +81,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     //if no item/date/amount value found, the graph can't be done.
     if(contentItemValue === false || contentDateValue === false || contentAmountValue === false){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv, "error no value found");
       return;
     }
 

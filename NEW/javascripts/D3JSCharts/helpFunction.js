@@ -244,13 +244,10 @@ function quantityConvertUnit(qty, unitIsByte){
   if(unitIsByte === true) {
 
     base = 1024;
-    infMetric = "i";
 
   }else {
 
     base = 1000;
-    infMetric = "";
-
   }
 
   var rawExp = Math.log(qty)/Math.log(base);
@@ -263,44 +260,100 @@ function quantityConvertUnit(qty, unitIsByte){
 
   var pow = Math.pow(base,-exp);
 
-  switch (exp){
+  if(unitIsByte === true) {
 
-    case -8:
-      return ["y" + infMetric,pow];
-    case -7:
-      return ["z" + infMetric,pow];
-    case -6:
-      return ["a" + infMetric,pow];
-    case -5:
-      return ["f" + infMetric,pow];
-    case -4:
-      return ["p" + infMetric,pow];
-    case -3:
-      return ["n" + infMetric,pow];
-    case -2:
-      return ["µ" + infMetric,pow];
-    case -1:
-      return ["m" + infMetric,pow];
-    default:
-    case 0:
-      return ["",pow];
-    case 1 :
-      return ["K" + infMetric,pow];
-    case 2 :
-      return ["M" + infMetric,pow];
-    case 3 :
-      return ["G" + infMetric,pow];
-    case 4 :
-      return ["T" + infMetric,pow];
-    case 5 :
-      return ["P" + infMetric,pow];
-    case 6 :
-      return ["E" + infMetric,pow];
-    case 7 :
-      return ["Z" + infMetric,pow];
-    case 8 :
-      return ["Y" + infMetric,pow];
+    switch (exp) {
+
+      case -8:
+        infMetric = "y";
+        break;
+
+      case -7:
+        infMetric = "z";
+        break;
+
+      case -6:
+        infMetric = "a";
+        break;
+
+      case -5:
+        infMetric = "f";
+        break;
+
+      case -4:
+        infMetric = "p";
+        break;
+
+      case -3:
+        infMetric = "n";
+        break;
+
+      case -2:
+        infMetric = "µ";
+        break;
+
+      case -1:
+        infMetric = "m";
+        break;
+
+      default:
+      case 0:
+        infMetric = "";
+        break;
+
+      case 1 :
+        infMetric = "K";
+        break;
+
+      case 2 :
+        infMetric = "M";
+        break;
+
+      case 3 :
+        infMetric = "G";
+        break;
+
+      case 4 :
+        infMetric = "T";
+        break;
+
+      case 5 :
+        infMetric = "P";
+        break;
+
+      case 6 :
+        infMetric = "E";
+        break;
+
+      case 7 :
+        infMetric = "Z";
+        break;
+
+      case 8 :
+        infMetric = "Y";
+        break;
+
+    }
+
+  }else{
+
+    if(exp === 0){
+      infMetric = "";
+    }else{
+      infMetric = "10^" + (exp*3) + " ";
+    }
+
   }
+
+  return [infMetric, pow];
+
+
+
+
+
+
+
+
 
 }
 
@@ -746,6 +799,16 @@ function getServiceUrlJson(urlJson){
 
 /************************************************************************************************************/
 
+function getParamUrlJson(urlJson,param){
+
+  var urlArray = urlJson.split(/[\?&=]+/);
+  var index = urlArray.indexOf(param);
+  return index !== -1?urlArray[index + 1]:null;
+
+}
+
+/************************************************************************************************************/
+
 function protocolToId(protocol){
   switch(protocol){
 
@@ -931,11 +994,9 @@ function protocolToId(protocol){
 
     case "IPv6-Opts" :
       return 60;
-
-
+    
     case "CFTP" :
       return 62;
-
 
     case "SAT-EXPAK" :
       return 64;
@@ -948,8 +1009,7 @@ function protocolToId(protocol){
 
     case "IPPC" :
       return 67;
-
-
+    
     case "SAT-MON" :
       return 69;
 
@@ -1168,8 +1228,7 @@ function protocolToId(protocol){
 
     case "ROHC" :
       return 142;
-
-
+    
     case "Reserved" :
       return 255;
 

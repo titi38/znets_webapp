@@ -27,7 +27,7 @@ function getPieJsonQuery(svg, clickData) {
   console.log(svg.attr("data-pie-json"));
   console.log(svg.typeGraph);
 
-  var endStr, type, unit;
+  var endStr, type, unit, res;
 
 
   svg.arrayType.find(function(elem){
@@ -46,13 +46,30 @@ function getPieJsonQuery(svg, clickData) {
 
   });
 
+  svg.arrayRes.find(function(elem){
 
-  console.log(type + " " + unit);
+    var indexof = type.indexOf(elem);
 
+    if(indexof === 0 ){
+
+      type = type.slice(elem.length);
+      res = elem;
+
+      return true;
+    }
+
+    return false;
+
+  });
+
+
+  console.log(res + " " + type + " " + unit);
+
+  var strResponse;
 
   switch(type){
 
-    case "netTopServices":
+    case "TopServices":
       var arrayPortProtocol = clickData.item.split("/");
       endStr = "HostsService" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
@@ -64,12 +81,12 @@ function getPieJsonQuery(svg, clickData) {
         + (unit === "NbFlow"?(getServiceUrlJson(svg.urlJson)==="loc"?"&type=inc":"&type=out"):"&type=" + clickData.direction.toLowerCase())
         + "&service=" + getServiceUrlJson(svg.urlJson);
 
-      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+      return utilUrlPie(res,endStr, svg);
 
 
-    case "netProtocole":
+    case "Protocole":
 
-      endStr = "HostsProto" + unit + ".json" + "?"
+      endStr = (res==="host"?"HostsProtocole":"HostsProto") + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -77,11 +94,10 @@ function getPieJsonQuery(svg, clickData) {
         + "&proto="+ clickData.item.toLowerCase()
         + "&type=" + clickData.direction.toLowerCase();
 
-      return [proxyPass + "netLoc"  + endStr,
-        proxyPass + "netExt"  + endStr ];
+      return utilUrlPie(res,endStr, svg);
 
 
-    case "netTopHosts":
+    case "TopHosts":
 
       endStr = "HostsTopHosts" + unit + ".json?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
@@ -91,10 +107,10 @@ function getPieJsonQuery(svg, clickData) {
         + "&ip=" + clickData.item
         + "&type=" + clickData.direction.toLowerCase();
 
-      return [proxyPass + "netExt"  + endStr, "ext"];
+      return [proxyPass + res + "Ext"  + endStr, "ext"];
 
 
-    case "netTopAs":
+    case "TopAs":
 
       endStr = "HostsTopAs" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
@@ -104,10 +120,10 @@ function getPieJsonQuery(svg, clickData) {
         + "&as=" + clickData.item.split(" ")[1]
         + "&type=" + clickData.direction.toLowerCase();
 
-      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+      return utilUrlPie(res,endStr, svg);
 
 
-    case "netTopApp":
+    case "TopApp":
 
       endStr = "HostsTopApp" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
@@ -117,9 +133,9 @@ function getPieJsonQuery(svg, clickData) {
         + "&app=" + clickData.item
         + "&type=" + clickData.direction.toLowerCase();
 
-      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+      return utilUrlPie(res,endStr, svg);
 
-    case "netTopCountry":
+    case "TopCountry":
 
       endStr = "HostsTopCountry" + unit + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
@@ -129,7 +145,7 @@ function getPieJsonQuery(svg, clickData) {
         + "&c=" + clickData.item
         + "&type=" + clickData.direction.toLowerCase();
 
-      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+      return utilUrlPie(res,endStr, svg);
 
   }
 
@@ -178,6 +194,7 @@ function popupHasButton(svg){
 function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
   svg.arrayType  = ["Traffic", "Packets", "Hosts", "NbFlow"];
+  svg.arrayRes = ["net","host"]
 
   svg.pieside = 0.75 * Math.min(svg.height, svg.width);
   div.overlay = div.append("div").classed("overlay", true).style("display", "none").style("width", (svg.width + svg.margin.left + svg.margin.right) + "px");
@@ -371,7 +388,7 @@ function drawComplDataSimple(error, json, svg, pieside, dataInit, overlay,extloc
   drawPopupGraph(json, svg, total, pieside, f);
 
   //TODO for now...
-  svg.popup.button.text(extloc);
+  svg.popup.button.text(stateToText(extloc));
 
   interactionPopup(svg,overlay);
 
@@ -420,7 +437,7 @@ function drawComplDataButton(error, jsonLoc, jsonExt, svg, pieside, dataInit, ov
 
   drawPopupGraph(jsonExt, svg, total, pieside, f);
 
-  svg.popup.button.text("ext");
+  svg.popup.button.text(stateToText("ext"));
 
   svg.popup.extPieChart = svg.popup.pieChart;
 
@@ -435,7 +452,7 @@ function drawComplDataButton(error, jsonLoc, jsonExt, svg, pieside, dataInit, ov
 
     actualStateIndex = (actualStateIndex + 1)%2;
     currentState = statesArray[actualStateIndex];
-    svg.popup.button.text(currentState);
+    svg.popup.button.text(stateToText(currentState));
 
 
     svg.popup.pieChart.divTable.remove();
@@ -627,7 +644,7 @@ function drawPopupGraph(json, svg, total, pieside,f){
       item: elem[jsonItemValue],
       y: elem[jsonAmountValue],
       display:(elem[jsonDisplayValue] === ""?elem[jsonItemValue]:elem[jsonDisplayValue]),
-      amount: Math.round(ca[1] * elem[jsonAmountValue] * 100)/100 + ca[0] + units,
+      amount: Math.round(ca[1] * elem[jsonAmountValue] * 100)/100 + " " + ca[0] + units,
       add: jsonAddArrayValues.map(function(indexAdd){return elem[indexAdd];})
     });
 
@@ -740,7 +757,7 @@ function drawPopupGraph(json, svg, total, pieside,f){
   //Table
   svg.popup.pieChart.divTable = svg.popup.append("div").classed("popupTableDiv", true);
   svg.popup.pieChart.table = svg.popup.pieChart.divTable.append("table").classed("popupTableLegend",true)
-    .style("max-height",svg.pieside + "px");
+    .style("max-height",svg.pieside + "px").style("width",svg.tableWidth + "px");
 
 
   values.sort(sortAlphabet);
@@ -826,4 +843,37 @@ function popupInfoVolume(d, svg){
   var arrayConvert = quantityConvertUnit(d.height, svg.units === "Bytes");
 
   return "Volume: " + Math.round(100 * d.height * arrayConvert[1])/100 + " " + arrayConvert[0] + svg.units;
+}
+
+/**********************************************************************************************************************/
+
+function stateToText(state){
+
+  switch(state){
+    case "ext":
+      return "External Hosts";
+
+    case "loc":
+      return "Local Hosts";
+  }
+
+}
+
+/**********************************************************************************************************************/
+
+
+function utilUrlPie(res, endStr, svg){
+
+  switch(res){
+
+    case "net":
+      return [proxyPass + "netLoc" + endStr, proxyPass + "netExt" + endStr];
+
+    case "host":
+      endStr = endStr + "&ip=" + getParamUrlJson(svg.urlJson,"ip");
+      return [proxyPass + "hostExt" + endStr, "ext"];
+
+
+  }
+
 }

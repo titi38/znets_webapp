@@ -614,10 +614,7 @@ function addZoom2Histo(svg, svgChild, updateFunction){
           //Retrieve the cursor coordinates. Quick dirty fix to accept double click while trying to minimize side effects.
           calcCoord[0] = -(event.x -lastEvent.x*coefScale)/(coefScale -1);
           calcCoord[1] = -(event.y -lastEvent.y*coefScale)/(coefScale -1);
-
-          var mouse = d3.mouse(svgChild.node());
-          //console.log("x: " + (calcCoord[0] - mouse[0]).toFixed(5) + " y: " + (calcCoord[1] - mouse[1]).toFixed(5));
-
+          
           var lastScalex = svgChild.scalex;
           var lastScaley = svgChild.scaley;
 

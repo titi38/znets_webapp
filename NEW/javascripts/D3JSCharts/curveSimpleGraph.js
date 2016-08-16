@@ -13,7 +13,8 @@ function createCurve(div, svg, mydiv, urlJson){
     //test json conformity
     if (testJson(json) || error ) {
       console.log("incorrect url/data");
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -59,7 +60,7 @@ function createCurve(div, svg, mydiv, urlJson){
 
     //if no date/amount value found, the graph can't be done.
     if(contentAmountValue === false || contentDateValue === false){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv, "error no date/amount");
       return;
     }
 

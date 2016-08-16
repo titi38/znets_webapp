@@ -10,7 +10,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     //test json conformity
     if (testJson(json) || error) {
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -59,7 +60,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     //if no item/date/amount/direction value found, the graph can't be done.
     if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv, "error value not found");
       return;
     }
 
@@ -82,7 +83,7 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     svg.sumMap = new Map();
     var sumInMap = new Map();
     var sumOutMap = new Map();
-    var i, elemJson, elemToPush, elemSumMap;
+    var i, elemJson, elemToPush;
     svg.timeMin = Infinity;
     var timeMax = 0;
 

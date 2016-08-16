@@ -46,7 +46,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   svg.margin.bottom = 5;
 
   if(error || typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined"){
-    noData(div,svg,mydiv);
+    noData(div,svg,mydiv,"error json conformity");
     return;
   }
 
@@ -63,7 +63,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   svg.amountByCountryCodeOut = new Map();
 
   if(!(itemValue && amountValue && directionValue)){
-    noData(div,svg,mydiv);
+    noData(div,svg,mydiv,"error no value found");
     return;
   }
 
@@ -212,7 +212,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   //test json conformity
 
   if (typeof worldmap === "undefined" || error) {
-    noData(div, svg,mydiv);
+    noData(div, svg,mydiv, "error json conformity");
     return false;
   }
 

@@ -106,7 +106,7 @@ function createMap(div,svg,mydiv, urlJson){
     //test json conformity
 
     if (typeof worldmap === "undefined" || error) {
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv,"error json conformity");
       return false;
     }
 

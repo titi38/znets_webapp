@@ -87,16 +87,15 @@ function Logs(theWSEventNotifier) {
     for (var i = 0; i < jsonContent.content.length; i++)
       tableColumns.push({'title':jsonContent.content[i]});*/
 
-    $('#divLogs').append('<table id="tableLogs" class="display"></table>');
+    $('#divLogs').append('<table id="tableLogs" class="display table table-striped table-bordered dataTable no-footer"></table>');
     $('#tableLogs').DataTable( {
       data: jsonContent.data,
       //columns: tableColumns,
       scrollY: 1,
-      lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
-      pageLength: 50,
+      paging: false,
+      pageLength: -1,
       responsive: true,
       scrollCollapse: true,
-      sDom: '<"dataTable_Header"lf><"dataTable_Content"rt><"dataTable_Footer"ip><"clear">',
       fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
       columnDefs: [
         {

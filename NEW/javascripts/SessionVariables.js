@@ -28,7 +28,7 @@ function setRawdataShownColumnsSessionVariable(tableColumns) {
 
     for (var i = 0; i < tableColumns.length; i++) {
 
-        if (rawdataShownColumns[tableColumns[i].title] == 'undefined' || rawdataShownColumns[tableColumns[i].title] == null)
+        if (rawdataShownColumns[tableColumns[i].title] === 'undefined' || rawdataShownColumns[tableColumns[i].title] === null)
         {
             rawdataShownColumns[tableColumns[i].title] = true;
             $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '" onclick="switchShownColumnState($(this))"><div class="columnIcon glyphicon glyphicon-ok"></div>&nbsp;' + tableColumns[i].title + '</a></li>');

@@ -207,21 +207,42 @@ function Localhosts(theWSEventNotifier) {
         initializeRawDataLocalhostsIp();
 
 
-        $('#divLocalhosts').append('<table id="tableLocalhosts" class="display"></table>');
+        $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
         var table = $('#tableLocalhosts').DataTable( {
 
-            data: jsonContent.data,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        'copy',
+                        {
+                            extend: 'excel',
+                            filename: 'local_hosts_dataTable.xlsx'
+                        },
+                        {
+                            extend: 'csv',
+                            filename: 'local_hosts_dataTable.csv'
+                        },
+                        {
+                            extend: 'pdf',
+                            filename: 'local_hosts_dataTable.pdf'
+                        },
+                        'print'
+                    ]
+                }
+            ],
 
-            iDisplayLength: 25,
+            data: jsonContent.data,
             columns: tableColumns,
+            paging: false,
+            pageLength: -1,
             scrollY: 1,
-            lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
-            pageLength: 50,
             responsive: true,
             scrollCollapse: true,
-            sDom: '<"dataTable_Header"lf><"dataTable_Content"rt><"dataTable_Footer"ip><"clear">',
-            fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
+            fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
             columnDefs: [
 
                 /*{
@@ -230,6 +251,7 @@ function Localhosts(theWSEventNotifier) {
                     },
                     "targets": 3
                 },*/
+                { "targets": 0, "type": 'ip-address' },
                 {
                     "targets": 3,
                     "data": function ( row, type, val, meta ) {

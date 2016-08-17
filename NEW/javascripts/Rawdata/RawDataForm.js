@@ -195,18 +195,43 @@ function drawRawdataDatatable(jsonResponse, rawdataTabID) {
 
     var datatableColumnDefs = buildRawdatColumnRefs(jsonResponse);
 
-    $('#divRawdata'+rawdataTabID).append('<table id="tableRawdata'+rawdataTabID+'" class="display" cellspacing="0" width="100%"></table>');
+    $('#divRawdata'+rawdataTabID).append('<table id="tableRawdata'+rawdataTabID+'" class="display table table-striped table-bordered dataTable no-footer" cellspacing="0" width="100%"></table>');
     $('#tableRawdata'+rawdataTabID).DataTable( {
+
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'collection',
+                text: 'Export',
+                buttons: [
+                    'copy',
+                    {
+                        extend: 'excel',
+                        filename: 'local_hosts_dataTable.xlsx'
+                    },
+                    {
+                        extend: 'csv',
+                        filename: 'local_hosts_dataTable.csv'
+                    },
+                    {
+                        extend: 'pdf',
+                        filename: 'local_hosts_dataTable.pdf'
+                    },
+                    'print'
+                ]
+            }
+        ],
+
         data: jsonResponse.data,
+        paging: false,
+        pageLength: -1,
         scrollY: 1,
         scrollX: true,
-        lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
         pageLength: 50,
         responsive: true,
         scrollCollapse: true,
-        sDom: '<"dataTable_Header"lf><"dataTable_Content"rt><"dataTable_Footer"ip><"clear">',
         fnDrawCallback: function() { var _this = this; setTimeout(function(){_this.DataTable().columns.adjust();}, 150) },
-        fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ); },
+        fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
         columnDefs: datatableColumnDefs,
 
     } );
@@ -234,10 +259,10 @@ function buildRawdatColumnRefs(jsonResponse) {
                 colDefs.push({"targets": i, "title": "Cycle Date", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
                 break;
             case "iplocal":
-                colDefs.push({"targets": i, "title": "Local Ip", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                colDefs.push({"targets": i, "title": "Local Ip", "type": 'ip-address', "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
                 break;
             case "dir":
-                colDefs.push({"targets": i, "title": "Direction", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                colDefs.push({"targets": i, "title": "Direction", "type": 'ip-address', "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
                 break;
             case "ipextern":
                 colDefs.push({"targets": i, "title": "External Ip", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
@@ -287,7 +312,7 @@ function buildRawdatColumnRefs(jsonResponse) {
             case "duration":
                 colDefs.push({"targets": i, "title": "Duration", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
                 break;
-            case "appInfo":
+            case "appinfo":
                 colDefs.push({"targets": i, "title": "App. Info", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
                 break;
             default :
@@ -296,7 +321,7 @@ function buildRawdatColumnRefs(jsonResponse) {
         }
 
     }
-    
+
     return colDefs;
 }
 

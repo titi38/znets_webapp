@@ -33,7 +33,7 @@ function setASNumsName(jsonResponse){
 
     if(jsonResponse)
         if(jsonResponse.n)
-            $('#ASName').html("AS Name : "+jsonResponse.n);
+            $('#ASName').html(jsonResponse.n);
         else
             $('#ASName').html("AS selected (Name not found)");
     else

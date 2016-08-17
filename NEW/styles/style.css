@@ -289,6 +289,14 @@ iframe {
 
 
 
+.dataTables_scroll {
+    border-bottom : 2px solid #ddd;
+}
+
+.dt-buttons.btn-group {
+    display: block;
+}
+
 
 
 @media (max-device-aspect-ratio: 4/3){
@@ -303,6 +311,9 @@ iframe {
     }
     .dataTables_scrollBody{
         max-height:72vh !important;
+    }
+    div[id*='divRawdata'] .dataTables_scrollBody{
+        max-height:67vh !important;
     }
 }
 
@@ -321,6 +332,9 @@ iframe {
         }
         .dataTables_scrollBody{
             max-height:70vh !important;
+        }
+        div[id*='divRawdata'] .dataTables_scrollBody{
+            max-height:65vh !important;
         }
     }
 
@@ -341,6 +355,9 @@ iframe {
         .dataTables_scrollBody{
             max-height:72vh !important;
         }
+        div[id*='divRawdata'] .dataTables_scrollBody{
+            max-height:67vh !important;
+        }
     }
 
 }
@@ -359,6 +376,9 @@ iframe {
         }
         .dataTables_scrollBody{
             max-height:72vh !important;
+        }
+        div[id*='divRawdata'] .dataTables_scrollBody{
+            max-height:67vh !important;
         }
     }
 

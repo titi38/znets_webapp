@@ -85,19 +85,25 @@ function Alerts(theWSEventNotifier) {
     for (var i = 0; i < jsonContent.content.length; i++)
       tableColumns.push({'title':jsonContent.content[i]});
 
-    $('#divAlerts').append('<table id="tableAlerts" class="display"></table>');
+    $('#divAlerts').append('<table id="tableAlerts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
-    $('#tableAlerts').DataTable( {
+    table = $('#tableAlerts').DataTable( {
 
       data: jsonContent.data,
       columns: tableColumns,
       scrollY: 1,
-      lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
-      pageLength: 50,
+      //lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
+      pageLength: -1,
+      paging: false,
       responsive: true,
       scrollCollapse: true,
-      sDom: '<"dataTable_Header"lf><"dataTable_Content"rt><"dataTable_Footer"ip><"clear">',
-      fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
+      language: {
+        "sInfo": 'Showing _END_ Entries.',
+        "sInfoEmpty": 'No entries to show',
+        "sEmptyTable": "No Sources found currently, please add at least one.",
+      },
+      //fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
+      fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
       columnDefs: [
 
         // The `data` parameter refers to the data for the cell (defined by the
@@ -138,6 +144,7 @@ function Alerts(theWSEventNotifier) {
         },*/
         //{ "targets": 3, "visible": false, "searchable": false }
         { "targets": 0, "visible": false, "searchable": false },
+        { "targets": 2, "type": 'ip-address' },
         { "targets": 5, "visible": false, "searchable": false }
       ],
       "rowCallback": function( row, data ) {

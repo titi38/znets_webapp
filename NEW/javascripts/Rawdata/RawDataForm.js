@@ -265,10 +265,20 @@ function buildRawdatColumnRefs(jsonResponse) {
                 colDefs.push({"targets": i, "title": "Direction", "type": 'ip-address', "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
                 break;
             case "ipextern":
-                colDefs.push({"targets": i, "title": "External Ip", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                colDefs.push({"targets": i, "title": "External Ip", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center",
+                    "render": function ( data, type, row ) {
+                        if(row[4] == "" || row[4] == "--")
+                            return data;
+                        else
+                            return " <div style = 'padding-right: 20px; background-image: url(images/flags/"+row[4].toLowerCase()+".png); background-position: right 2px top 3px; background-repeat: no-repeat;'>"+data+"</div>";
+                            //return " <div style = 'padding-left: 30px; background-image: url(images/flags/af.png); background-position: 7px 7px; background-repeat: no-repeat;'>"+data+"</div>";
+                            //return "<div style = 'padding-right: 30px; display: inline-block;'>"+data+" </div><img class='pull-right' src='images/flags/"+row[4].toLowerCase()+".png'>";
+                    },
+                });
                 break;
             case "country":
-                colDefs.push({"targets": i, "title": "Country", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                //colDefs.push({"targets": i, "title": "Country", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});
+                colDefs.push({"targets": i, "title": "Country", "visible": false, "className": "dt-head-center dt-body-center"});
                 break;
             case "asnum":
                 colDefs.push({"targets": i, "title": "AS Num.", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center"});

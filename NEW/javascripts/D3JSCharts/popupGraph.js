@@ -30,7 +30,7 @@ function getPieJsonQuery(svg, clickData) {
   var endStr, type, unit, res;
 
 
-  svg.arrayType.find(function(elem){
+  svg.arrayUnit.find(function(elem){
 
     var indexof = svg.typeGraph.indexOf(elem);
 
@@ -86,7 +86,7 @@ function getPieJsonQuery(svg, clickData) {
 
     case "Protocole":
 
-      endStr = (res==="host"?"HostsProtocole":"HostsProto") + unit + ".json" + "?"
+      endStr = (res==="host"?"HostsProtocole":"HostsProto") + (unit === "Packet"?"NbPacket":unit) + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -157,7 +157,7 @@ function popupHasButton(svg){
 
   var type;
 
-  svg.arrayType.find(function(elem){
+  svg.arrayUnit.find(function(elem){
 
     var indexof = svg.typeGraph.indexOf(elem);
 
@@ -193,8 +193,8 @@ function popupHasButton(svg){
 
 function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
-  svg.arrayType  = ["Traffic", "Packets", "Hosts", "NbFlow"];
-  svg.arrayRes = ["net","host"]
+  svg.arrayUnit  = ["Traffic", "Packets", "Hosts", "NbFlow", "Packet"];
+  svg.arrayRes = ["net","host"];
 
   svg.pieside = 0.75 * Math.min(svg.height, svg.width);
   div.overlay = div.append("div").classed("overlay", true).style("display", "none").style("width", (svg.width + svg.margin.left + svg.margin.right) + "px");
@@ -282,6 +282,10 @@ function positionPopup(svg){
 
 
 function redrawPopup(overlay, svg){
+
+  if(!svg.hasPopup){
+    return;
+  }
 
   overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px");
   svg.pieside = 0.75*Math.min(svg.height,svg.width);
@@ -682,7 +686,7 @@ function drawPopupGraph(json, svg, total, pieside,f){
   if(total !== sum){
 
     var ca = quantityConvertUnit(total-sum,isBytes);
-    values.unshift({y: total -sum, item:" Remainder ",amount:Math.round(ca[1] * (total - sum) * 100)/100 + ca[0] + units,
+    values.unshift({y: total -sum, item:" Remainder ",amount:Math.round(ca[1] * (total - sum) * 100)/100 + " " + ca[0] + units,
       display:" Remainder ", add: []});
   }
 

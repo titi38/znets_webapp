@@ -11,10 +11,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     console.log(json);
-
     //test json conformity
     if (testJson(json) || error) {
-      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data.length === 0?
         "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
@@ -29,10 +28,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
       divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
 
-    
-
     svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
-
 
     svg.width = divWidth - 1.15 * svg.tableWidth - svg.margin.left - svg.margin.right;
     svg.height = divHeight - svg.margin.bottom - svg.margin.top;
@@ -165,7 +161,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var sumArrayIn = [];
     var sumArrayOut = [];
 
-    
+
 
     var f = colorEval();
 
@@ -376,7 +372,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       if (svg.popup.pieChart !== null) {
         return;
       }
-      
+
       svg.activeItem = {item: d.item, direction: d.direction};
 
 
@@ -394,7 +390,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
 
         selectionOut.filter(testitem).each(blink);
-        
+
       }else{
 
         elem = trSelecIn.filter(testitem).classed("outlined", true);
@@ -402,11 +398,11 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
         scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
 
         selectionIn.filter(testitem).each(blink);
-        
+
       }
 
     }
-    
+
     function activationElemsAutoScrollPopup(d) {
 
       svg.activeItem = {item: d.item, direction: d.direction};
@@ -516,14 +512,14 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     //zoom
 
-    
+
 
 
     addZoomDouble(svg, updateHisto2DStackDouble);
     d3.select(window).on("resize." + mydiv, function () {
       console.log("resize");
       redrawHisto2DStackDouble(div, svg);
-      
+
     });
 
   });
@@ -549,7 +545,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     //test json conformity
     if (testJson(json) || error) {
-      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data.length === 0 ?
         "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
@@ -614,7 +610,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       noData(div,svg,mydiv,"error no date found");
       return;
     }
-    
+
 
     if(json.units){
       svg.units = unitsStringProcessing(json.units);
@@ -632,9 +628,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     var dataLength = jsonData.length;
     var contentLength = jsonContent.length;
 
-    
-    
-    
+
+
+
     //More useful jsonContent. 0: item / 1: direction
     for(i = 0; i < contentLength; i++){
 
@@ -651,7 +647,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       var strName = tempArrayName[0];
 
       for(var w = 1; w < tempArrayName.length - 1; w++){
-      
+
           strName = strName + " " + tempArrayName[w];
 
       }
@@ -675,7 +671,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.sumMap = new Map();
     var sumMapIn = new Map();
     var sumMapOut = new Map();
-    
+
     var i,j,k, elemJson, elemToPush, elemSumMap,timeElem;
     svg.timeMin = Infinity;
     var timeMax = 0;
@@ -709,7 +705,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           }
 
           elemAmountMinuteArray = elemJson[j];
-          
+
           if(elemJson[contentDateValue] !== "current"){
             timeElem = (new Date(elemJson[contentDateValue])).getTime() - 3600000  + svg.hourShift;
           }
@@ -882,7 +878,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       i++;
     }
 
-    
+
 
     svg.valuesIn.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
@@ -1179,7 +1175,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     gridDoubleGraph(svg);
 
-    if(svg.typeGraph !== "netNbFlow" || svg.typeGraph !== "hostNbFlow") {
+
+
+    if(svg.hasPopup) {
       addPopup(selection, div, svg, function (data) {
           desactivationElems();
           activationElemsAutoScrollPopup(data);
@@ -1187,7 +1185,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         desactivationElems);
     }else{
       svg.popup = [];
-      svg.popup.pieChart =null;
+      svg.popup.pieChart = null;
     }
 
     selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);

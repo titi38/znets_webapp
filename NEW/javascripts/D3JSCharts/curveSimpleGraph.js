@@ -13,7 +13,7 @@ function createCurve(div, svg, mydiv, urlJson){
     //test json conformity
     if (testJson(json) || error ) {
       console.log("incorrect url/data");
-      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data === []?
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data.length === 0?
         "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }

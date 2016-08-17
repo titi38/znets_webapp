@@ -34,8 +34,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     svg.heightGraph = (svg.height - svg.margin.zero)/2;
 
-    svg.svgOutput = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
-    svg.svgInput = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top + svg.heightGraph + svg.margin.zero).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
+    svg.svgTop = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
+    svg.svgBottom = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top + svg.heightGraph + svg.margin.zero).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
 
 
     var divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
@@ -74,15 +74,15 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
 
 
-    svg.svgInput.values = [];
-    svg.svgOutput.values = [];
+    svg.svgBottom.values = [];
+    svg.svgTop.values = [];
 
     var dataLength = jsonData.length;
 
     svg.colorMap = new Map();
     svg.sumMap = new Map();
-    var sumInMap = new Map();
-    var sumOutMap = new Map();
+    var sumBottomMap = new Map();
+    var sumTopMap = new Map();
     var i, elemJson, elemToPush;
     svg.timeMin = Infinity;
     var timeMax = 0;
@@ -114,17 +114,17 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
       if(elemJson[contentDirectionValue] === "IN"){
 
-        mapElemToSum(sumInMap, elemToPush, elemJson, contentDisplayValue,itemType);
+        mapElemToSum(sumTopMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
 
         elemToPush.direction = "inc";
-        svg.svgInput.values.push(elemToPush);
+        svg.svgTop.values.push(elemToPush);
 
       }else{
 
-        mapElemToSum(sumOutMap, elemToPush, elemJson, contentDisplayValue,itemType);
+        mapElemToSum(sumBottomMap, elemToPush, elemJson, contentDisplayValue,itemType);
 
-        svg.svgOutput.values.push(elemToPush);
+        svg.svgBottom.values.push(elemToPush);
 
       }
 
@@ -136,8 +136,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
 
     svg.sumArrayTotal = [];
-    svg.svgInput.sumArray = [];
-    svg.svgOutput.sumArray = [];
+    svg.svgBottom.sumArray = [];
+    svg.svgTop.sumArray = [];
 
 
     var f = colorEval();
@@ -146,12 +146,12 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
 
     svg.sumMap.forEach(mapToArray(svg.sumArrayTotal));
-    sumInMap.forEach(mapToArray(svg.svgInput.sumArray));
-    sumOutMap.forEach(mapToArray(svg.svgOutput.sumArray));
+    sumBottomMap.forEach(mapToArray(svg.svgBottom.sumArray));
+    sumTopMap.forEach(mapToArray(svg.svgTop.sumArray));
 
     svg.sumArrayTotal.sort(sortAlphabet);
-    svg.svgInput.sumArray.sort(sortAlphabet);
-    svg.svgOutput.sumArray.sort(sortAlphabet);
+    svg.svgBottom.sumArray.sort(sortAlphabet);
+    svg.svgTop.sumArray.sort(sortAlphabet);
 
     i = 0;
     if (svg.sumArrayTotal[0].item == " Remainder " || svg.sumArrayTotal[0].item == "OTHERS") {
@@ -171,8 +171,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
-    createChildSvg(div, svg, svg.svgOutput,0, divLegend, mydiv);
-    createChildSvg(div, svg, svg.svgInput,1, divLegend, mydiv);
+    createChildSvg(div, svg, svg.svgTop,0, divLegend, mydiv);
+    createChildSvg(div, svg, svg.svgBottom,1, divLegend, mydiv);
 
     var selection = svg.selectAll(".data");
 
@@ -180,15 +180,15 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     createTooltipHisto(svg,selection,svg.sumMap);
 
     function desacAll(){
-      svg.svgInput.desactivationElems();
-      svg.svgOutput.desactivationElems();
+      svg.svgBottom.desactivationElems();
+      svg.svgTop.desactivationElems();
     }
 
     function activElemAllAutoScrollPopup(data){
-      if(data.direction === "out"){
-        svg.svgOutput.activationElemsAutoScrollPopup(data);
+      if(data.direction === "inc"){
+        svg.svgTop.activationElemsAutoScrollPopup(data);
       }else{
-        svg.svgInput.activationElemsAutoScrollPopup(data);
+        svg.svgBottom.activationElemsAutoScrollPopup(data);
       }
     }
 
@@ -218,17 +218,17 @@ function create2HistoStack(div,svg,mydiv,urlJson){
       svg.heightGraph = (svg.height - svg.margin.zero)/2;
 
 
-      svg.svgOutput
+      svg.svgTop
         .attr("width", svg.width)
         .attr("height", svg.heightGraph);
       
-      svg.svgInput
+      svg.svgBottom
         .attr("y", svg.margin.top + svg.heightGraph + svg.margin.zero)
         .attr("width", svg.width)
         .attr("height", svg.heightGraph);
 
-      redraw2HistoStack( svg,svg.svgOutput,0,oldsvgwidth,oldsvgheightgraph);
-      redraw2HistoStack( svg,svg.svgInput,1,oldsvgwidth,oldsvgheightgraph);
+      redraw2HistoStack( svg,svg.svgTop,0,oldsvgwidth,oldsvgheightgraph);
+      redraw2HistoStack( svg,svg.svgBottom,1,oldsvgwidth,oldsvgheightgraph);
       redrawPopup(div.overlay,svg);
 
     });

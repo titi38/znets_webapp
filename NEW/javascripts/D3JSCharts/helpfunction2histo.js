@@ -44,7 +44,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   svgChild.text = svgChild.chartBackground.append("text").classed("bckgr-txt", true)
     .style("fill",numSvg === 0?"#e6e6e6":"#fff")
-    .text(numSvg === 0?"Outgoing":"Ingoing");
+    .text(numSvg === 0?"Ingress":"Egress");
 
   svgChild.text.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightGraph/8 +
     parseFloat(getComputedStyle(svgChild.text.node()).fontSize)) + ")");

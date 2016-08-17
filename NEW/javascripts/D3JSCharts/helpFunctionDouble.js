@@ -8,30 +8,30 @@ function axesDoubleCreation(svg){
 
   var isBytes = svg.units === "Bytes";
 
-  var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+  var domainBottom = svg.newYBottom.domain(), domainTop = svg.newYTop.domain();
 
 
-  var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
-    domainOutput[1] - domainOutput[0]), isBytes);
+  var convert = quantityConvertUnit(Math.max(domainBottom[1] - domainBottom[0],
+    domainTop[1] - domainTop[0]), isBytes);
 
 
-  svg.yInputDisplay = d3.scaleLinear().clamp(true).range(svg.newYInput.range())
-    .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
+  svg.yBottomDisplay = d3.scaleLinear().clamp(true).range(svg.newYBottom.range())
+    .domain([domainBottom[0]*convert[1],domainBottom[1]*convert[1]]);
 
-  svg.yOutputDisplay = d3.scaleLinear().clamp(true).range(svg.newYOutput.range())
-    .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
+  svg.yTopDisplay = d3.scaleLinear().clamp(true).range(svg.newYTop.range())
+    .domain([domainTop[0]*convert[1],domainTop[1]*convert[1]]);
 
-  svg.axisyOutput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
+  svg.axisyTop = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')')
     .attr("class", "axisGraph");
 
-  svg.axisyInput = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
+  svg.axisyBottom = svg.append("g").attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')')
     .attr("class", "axisGraph");
 
-  svg.axisyInput.call(d3.axisLeft(svg.yInputDisplay));
-  svg.axisyOutput.call(d3.axisLeft(svg.yOutputDisplay));
+  svg.axisyBottom.call(d3.axisLeft(svg.yBottomDisplay));
+  svg.axisyTop.call(d3.axisLeft(svg.yTopDisplay));
 
-  niceTicks(svg.axisyInput);
-  niceTicks(svg.axisyOutput);
+  niceTicks(svg.axisyBottom);
+  niceTicks(svg.axisyTop);
 
   //Label of the y axis
   svg.ylabel = svg.append("text")
@@ -51,25 +51,25 @@ function axesDoubleUpdate(svg){
 
   var isBytes = svg.units === "Bytes";
 
-  var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+  var domainBottom = svg.newYBottom.domain(), domainTop = svg.newYTop.domain();
 
-  var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
-    domainOutput[1] - domainOutput[0]), isBytes);
+  var convert = quantityConvertUnit(Math.max(domainBottom[1] - domainBottom[0],
+    domainTop[1] - domainTop[0]), isBytes);
 
-  svg.yInputDisplay.range(svg.newYInput.range())
-    .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
+  svg.yBottomDisplay.range(svg.newYBottom.range())
+    .domain([domainBottom[0]*convert[1],domainBottom[1]*convert[1]]);
 
-  svg.yOutputDisplay.range(svg.newYOutput.range())
-    .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
+  svg.yTopDisplay.range(svg.newYTop.range())
+    .domain([domainTop[0]*convert[1],domainTop[1]*convert[1]]);
 
-  svg.axisyOutput.attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')');
-  svg.axisyInput.attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')');
+  svg.axisyTop.attr('transform', 'translate(' + [svg.margin.left, svg.margin.top] + ')');
+  svg.axisyBottom.attr('transform', 'translate(' + [svg.margin.left, svg.margin.top - 1] + ')');
 
-  svg.axisyInput.call(d3.axisLeft(svg.yInputDisplay));
-  svg.axisyOutput.call(d3.axisLeft(svg.yOutputDisplay));
+  svg.axisyBottom.call(d3.axisLeft(svg.yBottomDisplay));
+  svg.axisyTop.call(d3.axisLeft(svg.yTopDisplay));
 
-  niceTicks(svg.axisyInput);
-  niceTicks(svg.axisyOutput);
+  niceTicks(svg.axisyBottom);
+  niceTicks(svg.axisyTop);
 
   //Label of the y axis
   svg.ylabel
@@ -90,38 +90,36 @@ function optionalAxesDoubleCreation(svg){
 
   if(isBytes){
 
-
-
     var coef = 8000/svg.step;
 
-    var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+    var domainBottom = svg.newYBottom.domain(), domainTop = svg.newYTop.domain();
 
-    domainInput.forEach(function(elem,i){ domainInput[i] *= coef;});
-    domainOutput.forEach(function(elem,i){ domainOutput[i] *= coef;});
+    domainBottom.forEach(function(elem,i){ domainBottom[i] *= coef;});
+    domainTop.forEach(function(elem,i){ domainTop[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
-      domainOutput[1] - domainOutput[0]), false);
-
-
-    svg.yInputRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYInput.range())
-      .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
-    svg.yOutputRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYOutput.range())
-      .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
+    var convert = quantityConvertUnit(Math.max(domainBottom[1] - domainBottom[0],
+      domainTop[1] - domainTop[0]), false);
 
 
-    svg.axisyOutRight = svg.append("g")
+    svg.yBottomRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYBottom.range())
+      .domain([domainBottom[0]*convert[1],domainBottom[1]*convert[1]]);
+    svg.yTopRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYTop.range())
+      .domain([domainTop[0]*convert[1],domainTop[1]*convert[1]]);
+
+
+    svg.axisyTopRight = svg.append("g")
       .attr('transform', 'translate(' + [svg.margin.left + svg.width, svg.margin.top] + ')')
       .attr("class", "axisGraph");
-    svg.axisyInRight = svg.append("g").attr('transform', 'translate(' + [svg.margin.left + svg.width,
+    svg.axisyBottomRight = svg.append("g").attr('transform', 'translate(' + [svg.margin.left + svg.width,
         svg.margin.top - 1] + ')')
       .attr("class", "axisGraph");
 
 
-    svg.axisyOutRight.call(d3.axisRight(svg.yOutputRightDisplay));
-    svg.axisyInRight.call(d3.axisRight(svg.yInputRightDisplay));
+    svg.axisyTopRight.call(d3.axisRight(svg.yTopRightDisplay));
+    svg.axisyBottomRight.call(d3.axisRight(svg.yBottomRightDisplay));
 
-    niceTicks(svg.axisyInRight);
-    niceTicks(svg.axisyOutRight);
+    niceTicks(svg.axisyBottomRight);
+    niceTicks(svg.axisyTopRight);
 
     svg.ylabelRight = svg.append("text")
       .attr("class", "labelGraph")
@@ -148,33 +146,33 @@ function optionalAxesDoubleUpdate(svg){
 
     var coef = 8000/svg.step;
 
-    var domainInput = svg.newYInput.domain(), domainOutput = svg.newYOutput.domain();
+    var domainBottom = svg.newYBottom.domain(), domainTop = svg.newYTop.domain();
 
-    domainInput.forEach(function(elem,i){ domainInput[i] *= coef;});
-    domainOutput.forEach(function(elem,i){ domainOutput[i] *= coef;});
+    domainBottom.forEach(function(elem,i){ domainBottom[i] *= coef;});
+    domainTop.forEach(function(elem,i){ domainTop[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domainInput[1] - domainInput[0],
-      domainOutput[1] - domainOutput[0]), false);
-
-
-    svg.yInputRightDisplay.range(svg.newYInput.range())
-      .domain([domainInput[0]*convert[1],domainInput[1]*convert[1]]);
-    svg.yOutputRightDisplay.range(svg.newYOutput.range())
-      .domain([domainOutput[0]*convert[1],domainOutput[1]*convert[1]]);
+    var convert = quantityConvertUnit(Math.max(domainBottom[1] - domainBottom[0],
+      domainTop[1] - domainTop[0]), false);
 
 
-    svg.axisyOutRight
+    svg.yBottomRightDisplay.range(svg.newYBottom.range())
+      .domain([domainBottom[0]*convert[1],domainBottom[1]*convert[1]]);
+    svg.yTopRightDisplay.range(svg.newYTop.range())
+      .domain([domainTop[0]*convert[1],domainTop[1]*convert[1]]);
+
+
+    svg.axisyTopRight
       .attr('transform', 'translate(' + [svg.margin.left + svg.width, svg.margin.top] + ')');
-    svg.axisyInRight
+    svg.axisyBottomRight
       .attr('transform', 'translate(' + [svg.margin.left + svg.width,
           svg.margin.top - 1] + ')');
 
 
-    svg.axisyOutRight.call(d3.axisRight(svg.yOutputRightDisplay));
-    svg.axisyInRight.call(d3.axisRight(svg.yInputRightDisplay));
+    svg.axisyTopRight.call(d3.axisRight(svg.yTopRightDisplay));
+    svg.axisyBottomRight.call(d3.axisRight(svg.yBottomRightDisplay));
 
-    niceTicks(svg.axisyInRight);
-    niceTicks(svg.axisyOutRight);
+    niceTicks(svg.axisyBottomRight);
+    niceTicks(svg.axisyTopRight);
 
     svg.ylabelRight
       .attr('y', svg.margin.left + svg.width + svg.margin.right)
@@ -207,7 +205,7 @@ function axisXDoubleDraw(svg){
 /***********************************************************************************************************/
 
 
-function drawChartDouble(svg,newHeightOutput,newHOmarg){
+function drawChartDouble(svg,newHeightTop,newHOmarg){
 
 
 
@@ -217,22 +215,22 @@ function drawChartDouble(svg,newHeightOutput,newHOmarg){
 
   var adjust;
 
-  svg.chartInput.selectAll(".data").each(function(d){
+  svg.chartBottom.selectAll(".data").each(function(d){
     adjust = (d.y===0&&d.height !==0)?0.5:0;
 
     this.setAttribute("x",svg.newX(d.x - 0.375));
-    this.setAttribute("y", svg.newYInput(d.y) - adjust);
-    this.setAttribute("height",svg.newYInput(d.height) - newHOmarg + adjust);
+    this.setAttribute("y", svg.newYBottom(d.y) - adjust);
+    this.setAttribute("height",svg.newYBottom(d.height) - newHOmarg + adjust);
     this.setAttribute("width",dataWidth);
 
   });
 
 
 
-  svg.chartOutput.selectAll(".data")
+  svg.chartTop.selectAll(".data")
     .attr("x",function(d){return svg.newX(d.x - 0.375);})
-    .attr("y", function(d){return svg.newYOutput(d.y);})
-    .attr("height", function(d){return newHeightOutput - svg.newYOutput(d.height) + ((d.y===d.height&&d.height !==0)?0.5:0);})
+    .attr("y", function(d){return svg.newYTop(d.y);})
+    .attr("height", function(d){return newHeightTop - svg.newYTop(d.height) + ((d.y===d.height&&d.height !==0)?0.5:0);})
     .attr("width", dataWidth);
 
 }
@@ -253,7 +251,7 @@ function gridDoubleGraph(svg){
   svg.grid.selectAll("line").remove();
 
 
-  svg.axisyInput.selectAll(".tick").each(function(){
+  svg.axisyBottom.selectAll(".tick").each(function(){
     var transform = this.getAttribute("transform");
     svg.grid.append("line")
       .attr("y2",-0.5)
@@ -262,7 +260,7 @@ function gridDoubleGraph(svg){
       .attr("transform",transform);
   });
 
-  svg.axisyOutput.selectAll(".tick").each(function(){
+  svg.axisyTop.selectAll(".tick").each(function(){
     var transform = this.getAttribute("transform");
     svg.grid.append("line")
       .attr("y2",0.5)
@@ -280,11 +278,13 @@ function gridDoubleGraph(svg){
 
 function createTableLegendDouble(svg, direction, sumArrayDirection, colorMap,activFunct,desacFunct){
 
+  var position = (direction === "In"?"Top":"Bottom");
+
   var maxHeight = svg.height/2;
 
   console.log(svg.divLegend);
 
-  var divtableStr = "divtable" + direction;
+  var divtableStr = "divtable" + position;
   svg.divLegend[divtableStr] = svg.divLegend.append("div").classed("borderTable diagram",true)
     .style("top", svg.margin.top/2 +  "px")
     .style("position","relative");
@@ -325,6 +325,7 @@ function createTableLegendDouble(svg, direction, sumArrayDirection, colorMap,act
 
 function hideShowValuesDirection(svg,trSelec,direction){
 
+  direction = ("In"=== direction?"Top":"Bottom");
   var duration = 800;
   var trSelecSize = trSelec.size();
   var valuesDirectionBounded = svg["values" + direction];
@@ -388,7 +389,7 @@ function hideShowValuesDirection(svg,trSelec,direction){
         i = 0;
         var totalSumDirection = [];
   
-        if(direction === "Out"){
+        if(direction === "Top"){
 
           elemValues = valuesDirectionFinal[i];
 
@@ -552,7 +553,7 @@ function hideShowValuesDirection(svg,trSelec,direction){
         i = 0;
         var totalSumDirection = [];
 
-        if(direction === "Out"){
+        if(direction === "Top"){
 
           elemValues = valuesDirectionFinal[i];
 
@@ -661,23 +662,23 @@ function calculationsHideShowDirection(svg){
 
   var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
 
-  svg.heightOutput = (svg.height - svg.margin.zero)*svg.totalOut/(svg.totalIn+svg.totalOut);
+  svg.heightTop = (svg.height - svg.margin.zero)*svg.totalTop/(svg.totalBottom+svg.totalTop);
 
   var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
-    svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
+    svg.heightTop*svg.transform.k*svg.scaley+svg.transform.y));
   var marginViewBottom = marginViewTop + svg.margin.zero;
 
-  svg.yInput.range([svg.heightOutput+svg.margin.zero,svg.height]);
-  svg.yOutput.range([svg.heightOutput,0]);
-  svg.yInput.domain([0,svg.totalIn*1.1]);
-  svg.yOutput.domain([0,svg.totalOut*1.1]);
-  svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
-  svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
-  svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate1),
-    svg.yOutput.invert(actTranslate1)]);
+  svg.yBottom.range([svg.heightTop+svg.margin.zero,svg.height]);
+  svg.yTop.range([svg.heightTop,0]);
+  svg.yBottom.domain([0,svg.totalBottom*1.1]);
+  svg.yTop.domain([0,svg.totalTop*1.1]);
+  svg.newYTop.range([marginViewTop,Math.min(marginViewTop,0)]);
+  svg.newYBottom.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
+  svg.newYTop.domain([svg.yTop.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate1),
+    svg.yTop.invert(actTranslate1)]);
 
-  svg.newYInput.domain([svg.yInput.invert(actTranslate1  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
-    svg.yInput.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
+  svg.newYBottom.domain([svg.yBottom.invert(actTranslate1  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
+    svg.yBottom.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
 
 
   updateHisto2DStackDouble(svg);
@@ -703,8 +704,8 @@ function doubleZoomReset(svg, updateFunction){
     svg.scaley = 1;
 
     svg.newX.domain(svg.x.domain());
-    svg.newYOutput.domain(svg.yOutput.domain()).range(svg.yOutput.range());
-    svg.newYInput.domain(svg.yInput.domain()).range(svg.yInput.range());
+    svg.newYTop.domain(svg.yTop.domain()).range(svg.yTop.range());
+    svg.newYBottom.domain(svg.yBottom.domain()).range(svg.yBottom.range());
 
     updateFunction(svg);
   };

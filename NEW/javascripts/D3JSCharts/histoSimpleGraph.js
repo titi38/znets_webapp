@@ -13,7 +13,8 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     //test json conformity
     if (testJson(json) || error) {
       console.log("incorrect url/data");
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data.length === 0?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -80,7 +81,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     //if no item/date/amount value found, the graph can't be done.
     if(contentItemValue === false || contentDateValue === false || contentAmountValue === false){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv, "error no value found");
       return;
     }
 
@@ -378,10 +379,19 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     gridSimpleGraph(svg);
 
-    addPopup(selection,div,svg,function(data){
-        desactivationElems();
-        activationElemsAutoScrollPopup(data);},
-      desactivationElems);
+    if(svg.hasPopup){
+
+      addPopup(selection,div,svg,function(data){
+          desactivationElems();
+          activationElemsAutoScrollPopup(data);},
+        desactivationElems);
+
+    }else{
+
+      svg.popup = [];
+      svg.popup.pieChart = null;
+
+    }
 
     //Legend creation
     var trSelec = table.selectAll("tr").data(sumArray).enter().append("tr");

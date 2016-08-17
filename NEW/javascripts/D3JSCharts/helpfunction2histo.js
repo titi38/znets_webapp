@@ -44,7 +44,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   svgChild.text = svgChild.chartBackground.append("text").classed("bckgr-txt", true)
     .style("fill",numSvg === 0?"#e6e6e6":"#fff")
-    .text(numSvg === 0?"Outgoing":"Ingoing");
+    .text(numSvg === 0?"Ingress":"Egress");
 
   svgChild.text.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightGraph/8 +
     parseFloat(getComputedStyle(svgChild.text.node()).fontSize)) + ")");
@@ -374,7 +374,7 @@ function optionalAxes2HistoCreation(svg, svgChild, numSvg){
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), false);
+    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), true);
 
 
     svgChild.yRightDisplay = d3.scaleLinear().range(svgChild.newY.range())
@@ -417,7 +417,7 @@ function optionalAxes2HistoUpdate(svg, svgChild){
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), false);
+    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), true);
 
 
     svgChild.yRightDisplay.range(svgChild.newY.range())
@@ -614,10 +614,7 @@ function addZoom2Histo(svg, svgChild, updateFunction){
           //Retrieve the cursor coordinates. Quick dirty fix to accept double click while trying to minimize side effects.
           calcCoord[0] = -(event.x -lastEvent.x*coefScale)/(coefScale -1);
           calcCoord[1] = -(event.y -lastEvent.y*coefScale)/(coefScale -1);
-
-          var mouse = d3.mouse(svgChild.node());
-          //console.log("x: " + (calcCoord[0] - mouse[0]).toFixed(5) + " y: " + (calcCoord[1] - mouse[1]).toFixed(5));
-
+          
           var lastScalex = svgChild.scalex;
           var lastScaley = svgChild.scaley;
 

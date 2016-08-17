@@ -7,37 +7,37 @@ function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
 
   var convertArray = quantityConvertUnit(outMax,isBytes);
 
-  svg.scaleOutDisplay.domain([outMin * convertArray[1], outMax * convertArray[1]]).nice();
+  svg.scaleTopDisplay.domain([outMin * convertArray[1], outMax * convertArray[1]]).nice();
 
-  svg.axisOut.attr('transform', 'translate('
+  svg.axisTop.attr('transform', 'translate('
     + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
       svg.margin.top] + ')');
 
-  svg.axisOut.call(d3.axisRight(svg.scaleOutDisplay));
-  niceTicks(svg.axisOut);
+  svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay));
+  niceTicks(svg.axisTop);
 
-  svg.labelGradientOut.text(convertArray[0] + svg.units);
+  svg.labelGradientTop.text(convertArray[0] + svg.units);
 
-  var domain = svg.scaleOutDisplay.domain();
+  var domain = svg.scaleTopDisplay.domain();
 
-  svg.scaleLinearOut.domain([domain[0]/convertArray[1],domain[1]/convertArray[1]]);
+  svg.scaleLinearTop.domain([domain[0]/convertArray[1],domain[1]/convertArray[1]]);
 
   convertArray = quantityConvertUnit(inMax,isBytes);
 
-  svg.scaleInDisplay.domain([inMin * convertArray[1], inMax * convertArray[1]]).nice();
+  svg.scaleBottomDisplay.domain([inMin * convertArray[1], inMax * convertArray[1]]).nice();
 
-  svg.axisIn.attr('transform', 'translate('
+  svg.axisBottom.attr('transform', 'translate('
     + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
       svg.margin.top + svg.margin.zero + svg.mapHeight] + ')');
 
-  svg.axisIn.call(d3.axisRight(svg.scaleInDisplay));
-  niceTicks(svg.axisIn);
+  svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay));
+  niceTicks(svg.axisBottom);
 
-  svg.labelGradientIn.text(convertArray[0] + svg.units);
+  svg.labelGradientBottom.text(convertArray[0] + svg.units);
 
-  domain = svg.scaleInDisplay.domain();
+  domain = svg.scaleBottomDisplay.domain();
 
-  svg.scaleLinearIn.domain([domain[0]/convertArray[1],domain[1]/convertArray[1]]);
+  svg.scaleLinearBottom.domain([domain[0]/convertArray[1],domain[1]/convertArray[1]]);
 
 }
 
@@ -45,31 +45,31 @@ function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
 
 function resizeAxesMap(svg){
 
-  svg.scaleOutDisplay.range([svg.mapHeight,0]);
+  svg.scaleTopDisplay.range([svg.mapHeight,0]);
 
-  svg.axisOut.attr('transform', 'translate('
+  svg.axisTop.attr('transform', 'translate('
     + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
       svg.margin.top] + ')');
 
-  svg.axisOut.call(d3.axisRight(svg.scaleOutDisplay));
-  niceTicks(svg.axisOut);
+  svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay));
+  niceTicks(svg.axisTop);
 
-  svg.labelGradientOut
+  svg.labelGradientTop
     .attr("x",svg.margin.top + 0.5 * svg.mapHeight)
     .attr("y",-svg.margin.left - svg.width - svg.margin.right);
 
 
 
-  svg.scaleInDisplay.range([svg.mapHeight,0]);
+  svg.scaleBottomDisplay.range([svg.mapHeight,0]);
 
-  svg.axisIn.attr('transform', 'translate('
+  svg.axisBottom.attr('transform', 'translate('
     + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
       svg.margin.top + svg.margin.zero + svg.mapHeight] + ')');
 
-  svg.axisIn.call(d3.axisRight(svg.scaleInDisplay));
-  niceTicks(svg.axisIn);
+  svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay));
+  niceTicks(svg.axisBottom);
 
-  svg.labelGradientIn
+  svg.labelGradientBottom
     .attr("x",svg.margin.top + 1.5 * svg.mapHeight + svg.margin.zero)
     .attr("y",-svg.margin.left - svg.width - svg.margin.right);
 }
@@ -78,13 +78,13 @@ function resizeAxesMap(svg){
 
 /************************************************************************************************************/
 
-function mapCountryTitleOut(svg){
+function mapCountryTitleTop(svg){
 
   var isBytes = svg.units === "Bytes";
 
   return function(d){
 
-    var amount = (svg.amountByCountryCodeOut.has(d.id)?svg.amountByCountryCodeOut.get(d.id):0);
+    var amount = (svg.amountByCountryCodeTop.has(d.id)?svg.amountByCountryCodeTop.get(d.id):0);
 
     var cvA = quantityConvertUnit(amount, isBytes);
 
@@ -95,14 +95,14 @@ function mapCountryTitleOut(svg){
 
 /************************************************************************************************************/
 
-function mapCountryTitleIn(svg){
+function mapCountryTitleBottom(svg){
 
   var isBytes = svg.units === "Bytes";
 
 
   return function(d){
 
-    var amount = (svg.amountByCountryCodeIn.has(d.id)?svg.amountByCountryCodeIn.get(d.id):0);
+    var amount = (svg.amountByCountryCodeBottom.has(d.id)?svg.amountByCountryCodeBottom.get(d.id):0);
 
     var cvA = quantityConvertUnit(amount, true);
 

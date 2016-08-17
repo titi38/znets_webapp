@@ -11,10 +11,10 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     console.log(json);
-
     //test json conformity
     if (testJson(json) || error) {
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data.length === 0?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -28,10 +28,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
       divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
 
-    
-
     svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
-
 
     svg.width = divWidth - 1.15 * svg.tableWidth - svg.margin.left - svg.margin.right;
     svg.height = divHeight - svg.margin.bottom - svg.margin.top;
@@ -40,9 +37,9 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     svg.x = d3.scaleLinear()
       .range([0, svg.width]);
 
-    svg.yInput = d3.scaleLinear().clamp(true);
+    svg.yBottom = d3.scaleLinear().clamp(true);
 
-    svg.yOutput = d3.scaleLinear().clamp(true);
+    svg.yTop = d3.scaleLinear().clamp(true);
 
     svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.height).classed("crisp",true);
 
@@ -51,8 +48,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     svg.chartBackground = svg.svg.append("g");
 
 
-    svg.chartInput = svg.svg.append('g');
-    svg.chartOutput = svg.svg.append('g');
+    svg.chartBottom = svg.svg.append('g');
+    svg.chartTop = svg.svg.append('g');
 
 
     //Will contain the axis and the rectselec, for a better display of scaling
@@ -85,7 +82,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     //if no item/date/amount/direction value found, the graph can't be done.
     if(contentItemValue === false || contentDateValue === false || contentAmountValue === false || contentDirectionValue === false ){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv, "error no value found");
       return;
     }
 
@@ -99,15 +96,15 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
 
-    svg.valuesIn = [];
-    svg.valuesOut = [];
+    svg.valuesBottom = [];
+    svg.valuesTop = [];
 
     var dataLength = jsonData.length;
 
     var colorMap = new Map();
     svg.sumMap = new Map();
-    var sumMapIn = new Map();
-    var sumMapOut = new Map();
+    var sumMapBottom = new Map();
+    var sumMapTop = new Map();
 
     var i, elemJson, elemToPush, elemSumMap;
     svg.timeMin = Infinity;
@@ -142,14 +139,13 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       if(elemJson[contentDirectionValue] === "IN"){
         elemToPush.direction = "inc";
 
-        mapElemToSum(sumMapIn, elemToPush, elemJson, contentDisplayValue,itemType);
-        svg.valuesIn.push(elemToPush);
+        mapElemToSum(sumMapTop, elemToPush, elemJson, contentDisplayValue,itemType);
+        svg.valuesTop.push(elemToPush);
 
       }else{
 
-
-        mapElemToSum(sumMapOut, elemToPush, elemJson, contentDisplayValue,itemType);
-        svg.valuesOut.push(elemToPush)
+        mapElemToSum(sumMapBottom, elemToPush, elemJson, contentDisplayValue,itemType);
+        svg.valuesBottom.push(elemToPush)
 
       }
 
@@ -161,24 +157,24 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     var sumArray = [];
-    var sumArrayIn = [];
-    var sumArrayOut = [];
+    var sumArrayBottom = [];
+    var sumArrayTop = [];
 
-    
+
 
     var f = colorEval();
 
 
     svg.sumMap.forEach(mapToArray(sumArray));
-    sumMapIn.forEach(mapToArray(sumArrayIn));
-    sumMapOut.forEach(mapToArray(sumArrayOut));
+    sumMapBottom.forEach(mapToArray(sumArrayBottom));
+    sumMapTop.forEach(mapToArray(sumArrayTop));
 
 
 
     //sort alphabetically
     sumArray.sort(sortAlphabet);
-    sumArrayIn.sort(sortAlphabet);
-    sumArrayOut.sort(sortAlphabet);
+    sumArrayBottom.sort(sortAlphabet);
+    sumArrayTop.sort(sortAlphabet);
 
 
 
@@ -199,17 +195,17 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     //step = 1 hour by default
     svg.step = (urlJson.indexOf("pset=DAILY") === -1)?3600000:86400000;
 
-    svg.valuesIn.forEach(function(elem){
+    svg.valuesBottom.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
     });
 
-    svg.valuesOut.forEach(function(elem){
+    svg.valuesTop.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
     });
 
 
-    svg.valuesIn.sort(sortValues);
-    svg.valuesOut.sort(sortValues);
+    svg.valuesBottom.sort(sortValues);
+    svg.valuesTop.sort(sortValues);
 
     var xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
@@ -217,8 +213,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     //Evaluation of the abscissa domain
     svg.x.domain([-0.625, xMax - 0.375]);
 
-    var totalSumIn = [];
-    var totalSumOut = [];
+    var totalSumBottom = [];
+    var totalSumTop = [];
 
     var x = 0;
     var sum = 0;
@@ -226,12 +222,12 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     while (x < xMax) {
 
-      while (i < svg.valuesIn.length && svg.valuesIn[i].x == x) {
-        svg.valuesIn[i].y = sum;
-        sum += svg.valuesIn[i].height;
+      while (i < svg.valuesBottom.length && svg.valuesBottom[i].x == x) {
+        svg.valuesBottom[i].y = sum;
+        sum += svg.valuesBottom[i].height;
         i++;
       }
-      totalSumIn.push(sum);
+      totalSumBottom.push(sum);
       sum = 0;
       x++;
     }
@@ -241,51 +237,51 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     while (x < xMax) {
 
-      while (i < svg.valuesOut.length && svg.valuesOut[i].x == x) {
-        sum += svg.valuesOut[i].height;
-        svg.valuesOut[i].y = sum;
+      while (i < svg.valuesTop.length && svg.valuesTop[i].x == x) {
+        sum += svg.valuesTop[i].height;
+        svg.valuesTop[i].y = sum;
         i++;
       }
-      totalSumOut.push(sum);
+      totalSumTop.push(sum);
       sum = 0;
       x++;
     }
 
 
-    svg.totalIn = d3.max(totalSumIn);
-    svg.totalOut = d3.max(totalSumOut);
+    svg.totalBottom = d3.max(totalSumBottom);
+    svg.totalTop = d3.max(totalSumTop);
 
-    svg.heightOutput = (svg.height - svg.margin.zero) * svg.totalOut / (svg.totalIn + svg.totalOut);
+    svg.heightTop = (svg.height - svg.margin.zero) * svg.totalTop / (svg.totalBottom + svg.totalTop);
 
-    svg.yInput.range([svg.heightOutput + svg.margin.zero, svg.height]);
-    svg.yOutput.range([svg.heightOutput, 0]);
+    svg.yBottom.range([svg.heightTop + svg.margin.zero, svg.height]);
+    svg.yTop.range([svg.heightTop, 0]);
 
 
     //the *1.1 operation allow a little margin
-    svg.yInput.domain([0, svg.totalIn * 1.1]);
-    svg.yOutput.domain([0, svg.totalOut * 1.1]);
+    svg.yBottom.domain([0, svg.totalBottom * 1.1]);
+    svg.yTop.domain([0, svg.totalTop * 1.1]);
 
     //Text background
 
 
-    svg.rectInput = svg.chartBackground.append("rect").attr("x", 0).attr("y", svg.heightOutput + svg.margin.zero)
+    svg.rectBottom = svg.chartBackground.append("rect").attr("x", 0).attr("y", svg.heightTop + svg.margin.zero)
       .attr("width", svg.width)
-      .attr("height", svg.height - svg.heightOutput - svg.margin.zero)
+      .attr("height", svg.height - svg.heightTop - svg.margin.zero)
       .style("fill", "#e6e6e6");
 
 
-    svg.textOutput = svg.chartBackground.append("text").classed("bckgr-txt", true)
+    svg.textTop = svg.chartBackground.append("text").classed("bckgr-txt", true)
       .style("fill", "#e6e6e6")
-      .text("Outgoing");
+      .text("Ingress");
 
-    svg.textOutput.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightOutput / 8 +
-      parseFloat(getComputedStyle(svg.textOutput.node()).fontSize)) + ")");
+    svg.textTop.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightTop / 8 +
+      parseFloat(getComputedStyle(svg.textTop.node()).fontSize)) + ")");
 
 
-    svg.textInput = svg.chartBackground.append("text").attr("transform", "translate(" + (svg.width / 2) + "," +
-        ((svg.height + (svg.heightOutput + svg.margin.zero) / 3) * 0.75) + ")")
+    svg.textBottom = svg.chartBackground.append("text").attr("transform", "translate(" + (svg.width / 2) + "," +
+        ((svg.height + (svg.heightTop + svg.margin.zero) / 3) * 0.75) + ")")
       .classed("bckgr-txt", true)
-      .text("Ingoing")
+      .text("Egress")
       .style("fill", "#fff");
 
 
@@ -295,11 +291,11 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
-    svg.newYOutput = d3.scaleLinear().range(svg.yOutput.range()).domain(svg.yOutput.domain());
-    svg.newYInput = d3.scaleLinear().range(svg.yInput.range()).domain(svg.yInput.domain());
+    svg.newYTop = d3.scaleLinear().range(svg.yTop.range()).domain(svg.yTop.domain());
+    svg.newYBottom = d3.scaleLinear().range(svg.yBottom.range()).domain(svg.yBottom.domain());
 
-    var selectionIn = svg.chartInput.selectAll(".data")
-      .data(svg.valuesIn)
+    var selectionBottom = svg.chartBottom.selectAll(".data")
+      .data(svg.valuesBottom)
       .enter().append("rect")
       .classed("data", true)
       .attr("fill", function (d) {
@@ -307,8 +303,8 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       })
       .attr("stroke", "#000000");
 
-    var selectionOut = svg.chartOutput.selectAll(".data")
-      .data(svg.valuesOut)
+    var selectionTop = svg.chartTop.selectAll(".data")
+      .data(svg.valuesTop)
       .enter().append("rect")
       .classed("data", true)
       .attr("fill", function (d) {
@@ -317,7 +313,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       .attr("stroke", "#000000");
 
 
-    drawChartDouble(svg,svg.yOutput.range()[0],svg.yInput.range()[0]);
+    drawChartDouble(svg,svg.yTop.range()[0],svg.yBottom.range()[0]);
 
     var selection = svg.selectAll(".data");
 
@@ -331,21 +327,21 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-      if(direction === "Out"){
+      if(direction === "In"){
 
         return function(d){
           if (svg.popup.pieChart !== null) {
             return;
           }
 
-          svg.activeItem = {item: d.item, direction: "out"};
+          svg.activeItem = {item: d.item, direction: "inc"};
 
           function testitem(data) {
             return d.item === data.item;
           }
 
-          trSelecOut.filter(testitem).classed("outlined", true);
-          selectionOut.filter(testitem).each(blink);
+          trSelecTop.filter(testitem).classed("outlined", true);
+          selectionTop.filter(testitem).each(blink);
 
         };
 
@@ -356,15 +352,15 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
           return;
         }
 
-        svg.activeItem = {item: d.item, direction: "inc"};
+        svg.activeItem = {item: d.item, direction: "out"};
 
         function testitem(data) {
           return d.item === data.item;
 
         }
 
-        trSelecIn.filter(testitem).classed("outlined", true);
-        selectionIn.filter(testitem).each(blink);
+        trSelecBottom.filter(testitem).classed("outlined", true);
+        selectionBottom.filter(testitem).each(blink);
 
       };
 
@@ -375,7 +371,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       if (svg.popup.pieChart !== null) {
         return;
       }
-      
+
       svg.activeItem = {item: d.item, direction: d.direction};
 
 
@@ -386,26 +382,26 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
       var elem;
 
-      if(d.direction === "out"){
+      if(d.direction === "inc"){
 
-        elem = trSelecOut.filter(testitem).classed("outlined", true);
+        elem = trSelecTop.filter(testitem).classed("outlined", true);
 
-        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableTop.table);
 
-        selectionOut.filter(testitem).each(blink);
-        
+        selectionTop.filter(testitem).each(blink);
+
       }else{
 
-        elem = trSelecIn.filter(testitem).classed("outlined", true);
+        elem = trSelecBottom.filter(testitem).classed("outlined", true);
 
-        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableBottom.table);
 
-        selectionIn.filter(testitem).each(blink);
-        
+        selectionBottom.filter(testitem).each(blink);
+
       }
 
     }
-    
+
     function activationElemsAutoScrollPopup(d) {
 
       svg.activeItem = {item: d.item, direction: d.direction};
@@ -419,15 +415,15 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
       var elem;
 
-      if(d.direction === "out"){
+      if(d.direction === "inc"){
 
-        elem = trSelecOut.filter(testitem).classed("outlined", true);
-        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+        elem = trSelecTop.filter(testitem).classed("outlined", true);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableTop.table);
 
       }else{
 
-        elem = trSelecIn.filter(testitem).classed("outlined", true);
-        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+        elem = trSelecBottom.filter(testitem).classed("outlined", true);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableBottom.table);
 
       }
 
@@ -446,19 +442,19 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       }
 
 
-      if(svg.activeItem.direction === "out"){
+      if(svg.activeItem.direction === "inc"){
 
 
-        trSelecOut.filter(testitem).classed("outlined", false);
+        trSelecTop.filter(testitem).classed("outlined", false);
 
-        selectionOut.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionTop.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }else{
 
-        trSelecIn.filter(testitem).classed("outlined", false);
+        trSelecBottom.filter(testitem).classed("outlined", false);
 
-        selectionIn.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionBottom.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }
@@ -472,7 +468,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     svg.axisx = svg.append("g")
       .attr("class", "axisGraph")
-      .attr('transform', 'translate(' + [svg.margin.left, svg.heightOutput + svg.margin.top] + ")");
+      .attr('transform', 'translate(' + [svg.margin.left, svg.heightTop + svg.margin.top] + ")");
 
     svg.axisx.rect = svg.axisx.append("rect").classed("rectAxis", true).attr("height", svg.margin.zero - 1 ).attr("y",0.5);
     svg.axisx.path = svg.axisx.append("path");
@@ -510,19 +506,19 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
     //Now, no more nodata can happen,so we create the table
     svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
 
-    var trSelecOut = createTableLegendDouble(svg,"Out",sumArrayOut,colorMap, activationElemsFromTable,desactivationElems);
-    var trSelecIn = createTableLegendDouble(svg,"In",sumArrayIn,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecTop = createTableLegendDouble(svg,"In",sumArrayTop,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecBottom = createTableLegendDouble(svg,"Out",sumArrayBottom,colorMap, activationElemsFromTable,desactivationElems);
 
     //zoom
 
-    
+
 
 
     addZoomDouble(svg, updateHisto2DStackDouble);
     d3.select(window).on("resize." + mydiv, function () {
       console.log("resize");
       redrawHisto2DStackDouble(div, svg);
-      
+
     });
 
   });
@@ -548,7 +544,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     //test json conformity
     if (testJson(json) || error) {
-      noData(div, svg,mydiv);
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data.length === 0 ?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
       return false;
     }
 
@@ -575,9 +572,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.x = d3.scaleLinear()
       .range([0, svg.width]);
 
-    svg.yInput = d3.scaleLinear().clamp(true);
+    svg.yBottom = d3.scaleLinear().clamp(true);
 
-    svg.yOutput = d3.scaleLinear().clamp(true);
+    svg.yTop = d3.scaleLinear().clamp(true);
 
     svg.svg = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.height).classed("crisp",true);
 
@@ -586,8 +583,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.chartBackground = svg.svg.append("g");
 
 
-    svg.chartInput = svg.svg.append('g');
-    svg.chartOutput = svg.svg.append('g');
+    svg.chartBottom = svg.svg.append('g');
+    svg.chartTop = svg.svg.append('g');
 
 
     //Will contain the axis and the rectselec, for a better display of scaling
@@ -609,10 +606,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     //if no date value found, the graph can't be done.
     if(contentDateValue === false){
-      noData(div,svg,mydiv);
+      noData(div,svg,mydiv,"error no date found");
       return;
     }
-    
+
 
     if(json.units){
       svg.units = unitsStringProcessing(json.units);
@@ -624,15 +621,15 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
 
-    svg.valuesIn = [];
-    svg.valuesOut = [];
+    svg.valuesBottom = [];
+    svg.valuesTop = [];
 
     var dataLength = jsonData.length;
     var contentLength = jsonContent.length;
 
-    
-    
-    
+
+
+
     //More useful jsonContent. 0: item / 1: direction
     for(i = 0; i < contentLength; i++){
 
@@ -649,7 +646,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       var strName = tempArrayName[0];
 
       for(var w = 1; w < tempArrayName.length - 1; w++){
-      
+
           strName = strName + " " + tempArrayName[w];
 
       }
@@ -671,9 +668,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     var colorMap = new Map();
     svg.sumMap = new Map();
-    var sumMapIn = new Map();
-    var sumMapOut = new Map();
-    
+    var sumMapBottom = new Map();
+    var sumMapTop = new Map();
+
     var i,j,k, elemJson, elemToPush, elemSumMap,timeElem;
     svg.timeMin = Infinity;
     var timeMax = 0;
@@ -707,7 +704,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           }
 
           elemAmountMinuteArray = elemJson[j];
-          
+
           if(elemJson[contentDateValue] !== "current"){
             timeElem = (new Date(elemJson[contentDateValue])).getTime() - 3600000  + svg.hourShift;
           }
@@ -747,25 +744,28 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
             if (elemToPush.direction === "in" || elemToPush.direction === "inc") {
               elemToPush.direction = "inc";
 
-              if (!sumMapIn.has(elemToPush.item)) {
-                sumMapIn.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+
+              if (!sumMapTop.has(elemToPush.item)) {
+                sumMapTop.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
               } else {
-                elemSumMap = sumMapIn.get(elemToPush.item);
+                elemSumMap = sumMapTop.get(elemToPush.item);
                 elemSumMap.sum += elemToPush.height;
               }
 
-              svg.valuesIn.push(elemToPush);
+              svg.valuesTop.push(elemToPush);
 
             } else {
 
-              if (!sumMapOut.has(elemToPush.item)) {
-                sumMapOut.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+
+              if (!sumMapBottom.has(elemToPush.item)) {
+                sumMapBottom.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
               } else {
-                elemSumMap = sumMapOut.get(elemToPush.item);
+                elemSumMap = sumMapBottom.get(elemToPush.item);
                 elemSumMap.sum += elemToPush.height;
               }
 
-              svg.valuesOut.push(elemToPush)
+
+              svg.valuesBottom.push(elemToPush)
 
             }
 
@@ -813,25 +813,28 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           if(elemToPush.direction === "in"){
             elemToPush.direction = "inc";
 
-            if (!sumMapIn.has(elemToPush.item)) {
-              sumMapIn.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+
+            if (!sumMapTop.has(elemToPush.item)) {
+              sumMapTop.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
             } else {
-              elemSumMap = sumMapIn.get(elemToPush.item);
+              elemSumMap = sumMapTop.get(elemToPush.item);
               elemSumMap.sum += elemToPush.height;
             }
 
-            svg.valuesIn.push(elemToPush);
+            svg.valuesTop.push(elemToPush);
 
           }else{
 
-            if (!sumMapOut.has(elemToPush.item)) {
-              sumMapOut.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+
+            if (!sumMapBottom.has(elemToPush.item)) {
+              sumMapBottom.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
             } else {
-              elemSumMap = sumMapOut.get(elemToPush.item);
+              elemSumMap = sumMapBottom.get(elemToPush.item);
               elemSumMap.sum += elemToPush.height;
             }
 
-            svg.valuesOut.push(elemToPush)
+
+            svg.valuesBottom.push(elemToPush)
 
           }
 
@@ -848,8 +851,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
     var sumArray = [];
-    var sumArrayIn = [];
-    var sumArrayOut = [];
+    var sumArrayBottom = [];
+    var sumArrayTop = [];
 
 
 
@@ -857,16 +860,16 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
     svg.sumMap.forEach(mapToArray(sumArray));
-    sumMapIn.forEach(mapToArray(sumArrayIn));
-    sumMapOut.forEach(mapToArray(sumArrayOut));
+    sumMapBottom.forEach(mapToArray(sumArrayBottom));
+    sumMapTop.forEach(mapToArray(sumArrayTop));
 
 
 
     //sort alphabetically
 
     sumArray.sort(sortAlphabet);
-    sumArrayIn.sort(sortAlphabet);
-    sumArrayOut.sort(sortAlphabet);
+    sumArrayBottom.sort(sortAlphabet);
+    sumArrayTop.sort(sortAlphabet);
 
 
     i = 0;
@@ -880,20 +883,20 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       i++;
     }
 
-    
 
-    svg.valuesIn.forEach(function(elem){
+
+    svg.valuesBottom.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
     });
 
-    svg.valuesOut.forEach(function(elem){
+    svg.valuesTop.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
     });
 
 
 
-    svg.valuesIn.sort(sortValues);
-    svg.valuesOut.sort(sortValues);
+    svg.valuesBottom.sort(sortValues);
+    svg.valuesTop.sort(sortValues);
 
     var xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
@@ -901,8 +904,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     //Evaluation of the abscissa domain
     svg.x.domain([-0.625, xMax - 0.375]);
 
-    var totalSumIn = [];
-    var totalSumOut = [];
+    var totalSumBottom = [];
+    var totalSumTop = [];
 
     var x = 0;
     var sum = 0;
@@ -910,12 +913,12 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     while (x < xMax) {
 
-      while (i < svg.valuesIn.length && svg.valuesIn[i].x == x) {
-        svg.valuesIn[i].y = sum;
-        sum += svg.valuesIn[i].height;
+      while (i < svg.valuesBottom.length && svg.valuesBottom[i].x == x) {
+        svg.valuesBottom[i].y = sum;
+        sum += svg.valuesBottom[i].height;
         i++;
       }
-      totalSumIn.push(sum);
+      totalSumBottom.push(sum);
       sum = 0;
       x++;
     }
@@ -925,51 +928,51 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     while (x < xMax) {
 
-      while (i < svg.valuesOut.length && svg.valuesOut[i].x == x) {
-        sum += svg.valuesOut[i].height;
-        svg.valuesOut[i].y = sum;
+      while (i < svg.valuesTop.length && svg.valuesTop[i].x == x) {
+        sum += svg.valuesTop[i].height;
+        svg.valuesTop[i].y = sum;
         i++;
       }
-      totalSumOut.push(sum);
+      totalSumTop.push(sum);
       sum = 0;
       x++;
     }
 
 
-    svg.totalIn = Math.max(1,d3.max(totalSumIn));
-    svg.totalOut = Math.max(1,d3.max(totalSumOut));
+    svg.totalBottom = Math.max(1,d3.max(totalSumBottom));
+    svg.totalTop = Math.max(1,d3.max(totalSumTop));
 
-    svg.heightOutput = (svg.height - svg.margin.zero) * svg.totalOut / (svg.totalIn + svg.totalOut);
+    svg.heightTop = (svg.height - svg.margin.zero) * svg.totalTop / (svg.totalBottom + svg.totalTop);
 
-    svg.yInput.range([svg.heightOutput + svg.margin.zero, svg.height]);
-    svg.yOutput.range([svg.heightOutput, 0]);
+    svg.yBottom.range([svg.heightTop + svg.margin.zero, svg.height]);
+    svg.yTop.range([svg.heightTop, 0]);
 
 
     //the *1.1 operation allow a little margin
-    svg.yInput.domain([0, svg.totalIn * 1.1]);
-    svg.yOutput.domain([0, svg.totalOut * 1.1]);
+    svg.yBottom.domain([0, svg.totalBottom * 1.1]);
+    svg.yTop.domain([0, svg.totalTop * 1.1]);
 
     //Text background
 
 
-    svg.rectInput = svg.chartBackground.append("rect").attr("x", 0).attr("y", svg.heightOutput + svg.margin.zero)
+    svg.rectBottom = svg.chartBackground.append("rect").attr("x", 0).attr("y", svg.heightTop + svg.margin.zero)
       .attr("width", svg.width)
-      .attr("height", svg.height - svg.heightOutput - svg.margin.zero)
+      .attr("height", svg.height - svg.heightTop - svg.margin.zero)
       .style("fill", "#e6e6e6");
 
 
-    svg.textOutput = svg.chartBackground.append("text").classed("bckgr-txt", true)
+    svg.textTop = svg.chartBackground.append("text").classed("bckgr-txt", true)
       .style("fill", "#e6e6e6")
-      .text("Outgoing");
+      .text("Ingress");
 
-    svg.textOutput.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightOutput / 8 +
-      parseFloat(getComputedStyle(svg.textOutput.node()).fontSize)) + ")");
+    svg.textTop.attr("transform", "translate(" + (svg.width / 2) + "," + (svg.heightTop / 8 +
+      parseFloat(getComputedStyle(svg.textTop.node()).fontSize)) + ")");
 
 
-    svg.textInput = svg.chartBackground.append("text").attr("transform", "translate(" + (svg.width / 2) + "," +
-        ((svg.height + (svg.heightOutput + svg.margin.zero) / 3) * 0.75) + ")")
+    svg.textBottom = svg.chartBackground.append("text").attr("transform", "translate(" + (svg.width / 2) + "," +
+        ((svg.height + (svg.heightTop + svg.margin.zero) / 3) * 0.75) + ")")
       .classed("bckgr-txt", true)
-      .text("Ingoing")
+      .text("Egress")
       .style("fill", "#fff");
 
 
@@ -979,11 +982,11 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
     svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
-    svg.newYOutput = d3.scaleLinear().range(svg.yOutput.range()).domain(svg.yOutput.domain());
-    svg.newYInput = d3.scaleLinear().range(svg.yInput.range()).domain(svg.yInput.domain());
+    svg.newYTop = d3.scaleLinear().range(svg.yTop.range()).domain(svg.yTop.domain());
+    svg.newYBottom = d3.scaleLinear().range(svg.yBottom.range()).domain(svg.yBottom.domain());
 
-    var selectionIn = svg.chartInput.selectAll(".data")
-      .data(svg.valuesIn)
+    var selectionBottom = svg.chartBottom.selectAll(".data")
+      .data(svg.valuesBottom)
       .enter().append("rect")
       .classed("data", true)
       .attr("fill", function (d) {
@@ -991,8 +994,8 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       })
       .attr("stroke", "#000000");
 
-    var selectionOut = svg.chartOutput.selectAll(".data")
-      .data(svg.valuesOut)
+    var selectionTop = svg.chartTop.selectAll(".data")
+      .data(svg.valuesTop)
       .enter().append("rect")
       .classed("data", true)
       .attr("fill", function (d) {
@@ -1001,7 +1004,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       .attr("stroke", "#000000");
 
 
-    drawChartDouble(svg,svg.yOutput.range()[0],svg.yInput.range()[0]);
+    drawChartDouble(svg,svg.yTop.range()[0],svg.yBottom.range()[0]);
 
     var selection = svg.selectAll(".data");
 
@@ -1015,22 +1018,22 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.activeItem = null;
 
     function activationElemsFromTable(direction){
-      if(direction === "Out"){
+      if(direction === "In"){
 
         return function(d){
           if (svg.popup.pieChart !== null) {
             return;
           }
 
-          svg.activeItem = {item: d.item, direction: "out"};
+          svg.activeItem = {item: d.item, direction: "inc"};
 
           function testitem(data) {
             return d.item === data.item;
 
           }
 
-          trSelecOut.filter(testitem).classed("outlined", true);
-          selectionOut.filter(testitem).each(blink);
+          trSelecTop.filter(testitem).classed("outlined", true);
+          selectionTop.filter(testitem).each(blink);
 
         };
 
@@ -1041,15 +1044,15 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           return;
         }
 
-        svg.activeItem = {item: d.item, direction: "inc"};
+        svg.activeItem = {item: d.item, direction: "out"};
 
         function testitem(data) {
           return d.item === data.item;
 
         }
 
-        trSelecIn.filter(testitem).classed("outlined", true);
-        selectionIn.filter(testitem).each(blink);
+        trSelecBottom.filter(testitem).classed("outlined", true);
+        selectionBottom.filter(testitem).each(blink);
 
       };
 
@@ -1071,21 +1074,21 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
       var elem;
 
-      if(d.direction === "out"){
+      if(d.direction === "inc"){
 
-        elem = trSelecOut.filter(testitem).classed("outlined", true);
+        elem = trSelecTop.filter(testitem).classed("outlined", true);
 
-        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableTop.table);
 
-        selectionOut.filter(testitem).each(blink);
+        selectionTop.filter(testitem).each(blink);
 
       }else{
 
-        elem = trSelecIn.filter(testitem).classed("outlined", true);
+        elem = trSelecBottom.filter(testitem).classed("outlined", true);
 
-        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableBottom.table);
 
-        selectionIn.filter(testitem).each(blink);
+        selectionBottom.filter(testitem).each(blink);
 
       }
 
@@ -1104,17 +1107,17 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
       var elem;
 
-      if(d.direction === "out"){
+      if(d.direction === "inc"){
 
-        elem = trSelecOut.filter(testitem).classed("outlined", true);
+        elem = trSelecTop.filter(testitem).classed("outlined", true);
 
-        scrollToElementTableTransition(elem,svg.divLegend.divtableOut.table);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableTop.table);
 
       }else{
 
-        elem = trSelecIn.filter(testitem).classed("outlined", true);
+        elem = trSelecBottom.filter(testitem).classed("outlined", true);
 
-        scrollToElementTableTransition(elem,svg.divLegend.divtableIn.table);
+        scrollToElementTableTransition(elem,svg.divLegend.divtableBottom.table);
 
       }
 
@@ -1132,18 +1135,18 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
         return data.item == activeItem;
       }
 
-      if(svg.activeItem.direction === "out"){
+      if(svg.activeItem.direction === "inc"){
 
-        trSelecOut.filter(testitem).classed("outlined", false);
+        trSelecTop.filter(testitem).classed("outlined", false);
 
-        selectionOut.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionTop.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
 
       }else{
 
-        trSelecIn.filter(testitem).classed("outlined", false);
+        trSelecBottom.filter(testitem).classed("outlined", false);
 
-        selectionIn.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
+        selectionBottom.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", colorMap.get(activeItem));
 
       }
 
@@ -1156,7 +1159,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     svg.axisx = svg.append("g")
       .attr("class", "axisGraph")
-      .attr('transform', 'translate(' + [svg.margin.left, svg.heightOutput + svg.margin.top] + ")");
+      .attr('transform', 'translate(' + [svg.margin.left, svg.heightTop + svg.margin.top] + ")");
 
     svg.axisx.rect = svg.axisx.append("rect").classed("rectAxis", true).attr("height", svg.margin.zero - 1 ).attr("y",0.5);
     svg.axisx.path = svg.axisx.append("path");
@@ -1177,21 +1180,26 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     gridDoubleGraph(svg);
 
-    if(svg.typeGraph !== "netNbFlow") {
+
+
+    if(svg.hasPopup) {
       addPopup(selection, div, svg, function (data) {
           desactivationElems();
           activationElemsAutoScrollPopup(data);
         },
         desactivationElems);
+    }else{
+      svg.popup = [];
+      svg.popup.pieChart = null;
     }
-    
+
     selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
 
     //Now, no more nodata can happen,so we create the table
     svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
 
-    var trSelecOut = createTableLegendDouble(svg,"Out",sumArrayOut,colorMap, activationElemsFromTable,desactivationElems);
-    var trSelecIn = createTableLegendDouble(svg,"In",sumArrayIn,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecTop = createTableLegendDouble(svg,"In",sumArrayTop,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecBottom = createTableLegendDouble(svg,"Out",sumArrayBottom,colorMap, activationElemsFromTable,desactivationElems);
 
     //zoom
     addZoomDouble(svg, updateHisto2DStackDouble);
@@ -1216,21 +1224,21 @@ function updateHisto2DStackDouble(svg){
    */
 
 
-  var newHeightOutput = svg.newYOutput(svg.yOutput.domain()[0]);
-  var newHOmarg = svg.newYInput(svg.yInput.domain()[0]);
+  var newHeightTop = svg.newYTop(svg.yTop.domain()[0]);
+  var newHOmarg = svg.newYBottom(svg.yBottom.domain()[0]);
 
-  var effectiveNewHeightOutput = Math.min(newHeightOutput, svg.height);
-  svg.rectInput.attr("y", newHOmarg).attr("height",Math.max(0,svg.height-newHOmarg));
-  svg.textOutput.attr("transform", "translate(" + (svg.width/2) + "," +(effectiveNewHeightOutput/8 +
-    parseFloat(getComputedStyle(svg.textOutput.node()).fontSize)) + ")");
+  var effectiveNewHeightTop = Math.min(newHeightTop, svg.height);
+  svg.rectBottom.attr("y", newHOmarg).attr("height",Math.max(0,svg.height-newHOmarg));
+  svg.textTop.attr("transform", "translate(" + (svg.width/2) + "," +(effectiveNewHeightTop/8 +
+    parseFloat(getComputedStyle(svg.textTop.node()).fontSize)) + ")");
 
 
 
-  svg.textInput.attr("transform", "translate(" + (svg.width/2) + "," +
+  svg.textBottom.attr("transform", "translate(" + (svg.width/2) + "," +
     ((svg.height + Math.max(0,newHOmarg)/3) *0.75) + ")");
 
 
-  drawChartDouble(svg,newHeightOutput,newHOmarg);
+  drawChartDouble(svg,newHeightTop,newHOmarg);
 
   svg.axisx.call(d3.axisBottom(svg.newX));
 
@@ -1238,7 +1246,7 @@ function updateHisto2DStackDouble(svg){
 
   legendAxisX(svg);
 
-  svg.axisx.attr("transform","matrix(1, 0, 0, 1," + svg.margin.left+ "," + Math.min(svg.margin.top + svg.height,Math.max(svg.margin.top - svg.margin.zero,(svg.heightOutput)*svg.transform.k*svg.scaley +svg.margin.top + svg.transform.y)) + ")" );
+  svg.axisx.attr("transform","matrix(1, 0, 0, 1," + svg.margin.left+ "," + Math.min(svg.margin.top + svg.height,Math.max(svg.margin.top - svg.margin.zero,(svg.heightTop)*svg.transform.k*svg.scaley +svg.margin.top + svg.transform.y)) + ")" );
 
 
   axesDoubleUpdate(svg);
@@ -1268,20 +1276,20 @@ function redrawHisto2DStackDouble(div,svg){
   svg.height = divHeight - svg.margin.bottom - svg.margin.top;
 
   var maxHeight = svg.height/2, table;
-  table = svg.divLegend.divtableOut.table.style("max-height",maxHeight + "px");
-  svg.divLegend.divtableOut.style("margin-bottom",maxHeight - parseInt(table.style("height"),10) + "px");
-  table = svg.divLegend.divtableIn.table.style("max-height",maxHeight + "px");
-  svg.divLegend.divtableIn.style("margin-bottom",maxHeight - parseInt(table.style("height"),10) + "px");
+  table = svg.divLegend.divtableTop.table.style("max-height",maxHeight + "px");
+  svg.divLegend.divtableTop.style("margin-bottom",maxHeight - parseInt(table.style("height"),10) + "px");
+  table = svg.divLegend.divtableBottom.table.style("max-height",maxHeight + "px");
+  svg.divLegend.divtableBottom.style("margin-bottom",maxHeight - parseInt(table.style("height"),10) + "px");
 
-  var oldheightoutput = svg.heightOutput;
+  var oldheighttop = svg.heightTop;
 
 
-  var margIncTransl = Math.max(-svg.margin.zero,Math.min(svg.transform.y + (svg.transform.k*svg.scaley)*oldheightoutput,0));
-  var margInView = Math.max(-svg.margin.zero,Math.min((svg.transform.y-oldsvgheight) + (svg.transform.k*svg.scaley)*oldheightoutput,0)) - margIncTransl;
+  var margIncTransl = Math.max(-svg.margin.zero,Math.min(svg.transform.y + (svg.transform.k*svg.scaley)*oldheighttop,0));
+  var margInView = Math.max(-svg.margin.zero,Math.min((svg.transform.y-oldsvgheight) + (svg.transform.k*svg.scaley)*oldheighttop,0)) - margIncTransl;
 
   var oldheightData = svg.heightData;
   svg.heightData = svg.height - svg.margin.zero;
-  svg.heightOutput = svg.heightOutput*svg.heightData/oldheightData;
+  svg.heightTop = svg.heightTop*svg.heightData/oldheightData;
 
 
   //console.log("marginview " + margInView);
@@ -1291,20 +1299,18 @@ function redrawHisto2DStackDouble(div,svg){
 
   svg.x.range([0, svg.width]);
 
-  svg.yInput.range([svg.heightOutput+svg.margin.zero,svg.height]);
-  svg.yOutput.range([svg.heightOutput,0]);
+  svg.yBottom.range([svg.heightTop+svg.margin.zero,svg.height]);
+  svg.yTop.range([svg.heightTop,0]);
 
   svg.svg.attr("width",svg.width).attr("height",svg.height);
 
 
 
-  svg.rectInput.attr("width",svg.width);
+  svg.rectBottom.attr("width",svg.width);
 
   axisXDoubleDraw(svg);
 
   svg.frame.select(".rectOverlay").attr("height",svg.height);
-
-
 
   //console.log("marincltransl " + margIncTransl);
   svg.transform.y = (svg.transform.y - margIncTransl) * (svg.height + margInView)/(oldsvgheight + margInView) + margIncTransl;
@@ -1323,12 +1329,12 @@ function redrawHisto2DStackDouble(div,svg){
   svg.newX.range([0,svg.width]);
 
   var marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
-    svg.heightOutput*scaleytot+svg.transform.y));
+    svg.heightTop*scaleytot+svg.transform.y));
 
   var marginViewBottom = marginViewTop + svg.margin.zero;
 
-  svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
-  svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
+  svg.newYTop.range([marginViewTop,Math.min(marginViewTop,0)]);
+  svg.newYBottom.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
 
 
   svg._groups[0][0].__zoom.k =svg.transform.k;
@@ -1356,12 +1362,12 @@ function addZoomDouble(svg,updateFunction){
   if(svg.newX == undefined){
     svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
   }
-  if(svg.newYOutput == undefined) {
-    svg.newYOutput = d3.scaleLinear().range(svg.yOutput.range()).domain(svg.yOutput.domain());
+  if(svg.newYTop == undefined) {
+    svg.newYTop = d3.scaleLinear().range(svg.yTop.range()).domain(svg.yTop.domain());
   }
 
-  if(svg.newYInput == undefined) {
-    svg.newYInput = d3.scaleLinear().range(svg.yInput.range()).domain(svg.yInput.domain());
+  if(svg.newYBottom == undefined) {
+    svg.newYBottom = d3.scaleLinear().range(svg.yBottom.range()).domain(svg.yBottom.domain());
   }
 
   //Selection rectangle for zooming (if not already implemented for better display control)
@@ -1459,7 +1465,7 @@ function addZoomDouble(svg,updateFunction){
 
           var oldMouse = calcCoord[1] - svg.transform.y;
 
-          var newMouse = oldMouse* yrel + Math.min(svg.margin.zero, Math.max(0,oldMouse - svg.heightOutput*svg.transform.k*lastScaley))*(1 - yrel);
+          var newMouse = oldMouse* yrel + Math.min(svg.margin.zero, Math.max(0,oldMouse - svg.heightTop*svg.transform.k*lastScaley))*(1 - yrel);
           svg.transform.y = oldMouse - newMouse + svg.transform.y;
           svg.transform.y = Math.min(0, Math.max(svg.transform.y,svg.height - event.k*svg.scaley*svg.heightData - svg.margin.zero));
 
@@ -1476,21 +1482,21 @@ function addZoomDouble(svg,updateFunction){
         actTranslate[1] = -svg.transform.y/(svg.scaley*event.k);
 
         marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
-          svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
+          svg.heightTop*svg.transform.k*svg.scaley+svg.transform.y));
 
         marginViewBottom = marginViewTop + svg.margin.zero;
 
         //actualization of the current (newX&Y) scales domains
         svg.newX.domain([ svg.x.invert(actTranslate[0]), svg.x.invert(actTranslate[0] + svg.width/(svg.transform.k*svg.scalex)) ]);
 
-        svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
-        svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
+        svg.newYTop.range([marginViewTop,Math.min(marginViewTop,0)]);
+        svg.newYBottom.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
 
-        svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate[1]),
-          svg.yOutput.invert(actTranslate[1])]);
+        svg.newYTop.domain([svg.yTop.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate[1]),
+          svg.yTop.invert(actTranslate[1])]);
 
-        svg.newYInput.domain([svg.yInput.invert(actTranslate[1]  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
-          svg.yInput.invert(actTranslate[1] + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
+        svg.newYBottom.domain([svg.yBottom.invert(actTranslate[1]  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
+          svg.yBottom.invert(actTranslate[1] + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
 
 
 
@@ -1551,8 +1557,8 @@ function addZoomDouble(svg,updateFunction){
 
 
         var marginIncl = Math.max(0,ymax - ymin + svg.margin.zero -
-          Math.max(svg.heightOutput*svg.transform.k*svg.scaley + svg.transform.y + svg.margin.zero,ymax)
-          + Math.min(ymin,svg.heightOutput*svg.transform.k*svg.scaley + svg.transform.y));
+          Math.max(svg.heightTop*svg.transform.k*svg.scaley + svg.transform.y + svg.margin.zero,ymax)
+          + Math.min(ymin,svg.heightTop*svg.transform.k*svg.scaley + svg.transform.y));
 
         var sqheight = ymax - ymin - marginIncl;
 
@@ -1592,26 +1598,26 @@ function addZoomDouble(svg,updateFunction){
 
           //Actualization of the translate vector
           svg.transform.x*= xrel;
-          svg.transform.y = svg.transform.y*yrel + Math.max(-svg.margin.zero,Math.min(svg.transform.y + lastScaley*lastScale*svg.heightOutput,0))*(1-yrel);
+          svg.transform.y = svg.transform.y*yrel + Math.max(-svg.margin.zero,Math.min(svg.transform.y + lastScaley*lastScale*svg.heightTop,0))*(1-yrel);
 
 
           actTranslate[1] = -svg.transform.y/(svg.scaley*svg.transform.k);
           marginViewTop = Math.min(svg.height,Math.max(-svg.margin.zero,
-            svg.heightOutput*svg.transform.k*svg.scaley+svg.transform.y));
+            svg.heightTop*svg.transform.k*svg.scaley+svg.transform.y));
           marginViewBottom = marginViewTop + svg.margin.zero;
 
 
           //actualization of the current (newX&Y) scales domains
           svg.newX.domain([ svg.newX.invert(xmin), svg.newX.invert(xmin + sqwidth)]);
 
-          svg.newYOutput.range([marginViewTop,Math.min(marginViewTop,0)]);
-          svg.newYInput.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
+          svg.newYTop.range([marginViewTop,Math.min(marginViewTop,0)]);
+          svg.newYBottom.range([marginViewBottom, Math.max(marginViewBottom,svg.height)]);
 
-          svg.newYOutput.domain([svg.yOutput.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate[1]),
-            svg.yOutput.invert(actTranslate[1])]);
+          svg.newYTop.domain([svg.yTop.invert(svg.height/(svg.transform.k*svg.scaley) + actTranslate[1]),
+            svg.yTop.invert(actTranslate[1])]);
 
-          svg.newYInput.domain([svg.yInput.invert(actTranslate[1]  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
-            svg.yInput.invert(actTranslate[1] + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
+          svg.newYBottom.domain([svg.yBottom.invert(actTranslate[1]  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
+            svg.yBottom.invert(actTranslate[1] + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
 
 
           updateFunction(svg);

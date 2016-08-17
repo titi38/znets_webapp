@@ -35,8 +35,8 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
   svg.style("margin", "auto").classed("diagram",false).style("display","block");
 
-  var colorInStart = "#ffff00", colorInEnd = "#ff0000";
-  var colorOutStart = "#66ffcc", colorOutEnd = "#0066ff";
+  var colorBottomStart = "#ffff00", colorBottomEnd = "#ff0000";
+  var colorTopStart = "#66ffcc", colorTopEnd = "#0066ff";
 
   svg.margin.offsetLegend = 5;
   svg.margin.legendWidth = 10;
@@ -46,7 +46,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   svg.margin.bottom = 5;
 
   if(error || typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined"){
-    noData(div,svg,mydiv);
+    noData(div,svg,mydiv,"error json conformity");
     return;
   }
 
@@ -59,19 +59,19 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   var amountValue = searchAmountValue(jsonContent);
   var directionValue = searchDirectionValue(jsonContent);
 
-  svg.amountByCountryCodeIn = new Map();
-  svg.amountByCountryCodeOut = new Map();
+  svg.amountByCountryCodeBottom = new Map();
+  svg.amountByCountryCodeTop = new Map();
 
   if(!(itemValue && amountValue && directionValue)){
-    noData(div,svg,mydiv);
+    noData(div,svg,mydiv,"error no value found");
     return;
   }
 
-  var inMax = 0;
-  var inMin = Infinity;
+  var bottomMax = 0;
+  var bottomMin = Infinity;
 
-  var outMax = 0;
-  var outMin = Infinity;
+  var topMax = 0;
+  var topMin = Infinity;
 
   var elemAmount;
   var elemItem;
@@ -86,16 +86,16 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
     switch(elem[directionValue]){
 
-      case "IN":
-        svg.amountByCountryCodeIn.set(elem[itemValue], elemAmount);
-        inMax = Math.max(inMax, elemAmount);
-        inMin = Math.min(inMin, elemAmount);
+      case "OUT":
+        svg.amountByCountryCodeBottom.set(elem[itemValue], elemAmount);
+        bottomMax = Math.max(bottomMax, elemAmount);
+        bottomMin = Math.min(bottomMin, elemAmount);
         break;
 
-      case "OUT":
-        svg.amountByCountryCodeOut.set(elem[itemValue], elemAmount);
-        outMax = Math.max(outMax, elemAmount);
-        outMin = Math.min(outMin, elemAmount);
+      case "IN":
+        svg.amountByCountryCodeTop.set(elem[itemValue], elemAmount);
+        topMax = Math.max(topMax, elemAmount);
+        topMin = Math.min(topMin, elemAmount);
         break;
 
       default:
@@ -106,15 +106,15 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
   });
 
-  if(svg.amountByCountryCodeIn.size === 0){
-    inMin = 0;
-    inMax = 1;
+  if(svg.amountByCountryCodeBottom.size === 0){
+    bottomMin = 0;
+    bottomMax = 1;
   }
 
 
-  if(svg.amountByCountryCodeOut.size === 0){
-    outMin = 0;
-    outMax = 1;
+  if(svg.amountByCountryCodeTop.size === 0){
+    topMin = 0;
+    topMax = 1;
   }
 
 
@@ -212,7 +212,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   //test json conformity
 
   if (typeof worldmap === "undefined" || error) {
-    noData(div, svg,mydiv);
+    noData(div, svg,mydiv, "error json conformity");
     return false;
   }
 
@@ -220,20 +220,20 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
 
 
-  svg.scaleLinearIn = d3.scaleLinear().range([0,1]);
-  var colorInterpolatorIn = d3.interpolateRgb(colorInStart,colorInEnd);
+  svg.scaleLinearBottom = d3.scaleLinear().range([0,1]);
+  var colorInterpolatorBottom = d3.interpolateRgb(colorBottomStart,colorBottomEnd);
 
-  svg.scaleLinearOut = d3.scaleLinear().range([0,1]);
-  var colorInterpolatorOut = d3.interpolateRgb(colorOutStart,colorOutEnd);
+  svg.scaleLinearTop = d3.scaleLinear().range([0,1]);
+  var colorInterpolatorTop = d3.interpolateRgb(colorTopStart,colorTopEnd);
 
   //Axes
 
-  svg.scaleInDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
+  svg.scaleBottomDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
 
-  svg.axisIn = svg.append("g")
+  svg.axisBottom = svg.append("g")
     .attr("class", "axisGraph");
 
-  svg.labelGradientIn = svg.append("text")
+  svg.labelGradientBottom = svg.append("text")
     .classed("labelChoropleth",true)
     .attr("x",svg.margin.top + 1.5 * svg.mapHeight + svg.margin.zero)
     .attr("y",-svg.margin.left - svg.width - svg.margin.right)
@@ -241,18 +241,18 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
     .attr("transform", "rotate(90)");
 
 
-  svg.scaleOutDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
+  svg.scaleTopDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
 
-  svg.axisOut = svg.append("g").attr("class", "axisGraph");
+  svg.axisTop = svg.append("g").attr("class", "axisGraph");
 
-  svg.labelGradientOut = svg.append("text")
+  svg.labelGradientTop = svg.append("text")
     .classed("labelChoropleth",true)
     .attr("x",svg.margin.top + 0.5 * svg.mapHeight)
     .attr("y",-svg.margin.left - svg.width - svg.margin.right)
     .attr("dy","1.3em")
     .attr("transform", "rotate(90)");
 
-  updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
+  updateDataAxesMap(svg,bottomMin,bottomMax,topMin,topMax);
 
 
 
@@ -262,27 +262,27 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
 
 
-  svg.scaleColorIn = function(countryCode){
+  svg.scaleColorBottom = function(countryCode){
 
-    var value = svg.amountByCountryCodeIn.get(countryCode);
+    var value = svg.amountByCountryCodeBottom.get(countryCode);
 
     if(!value){
       return "#ffffff";
     }
 
-    return colorInterpolatorIn(svg.scaleLinearIn(value));
+    return colorInterpolatorBottom(svg.scaleLinearBottom(value));
 
   };
 
-  svg.scaleColorOut = function(countryCode){
+  svg.scaleColorTop = function(countryCode){
 
-    var value = svg.amountByCountryCodeOut.get(countryCode);
+    var value = svg.amountByCountryCodeTop.get(countryCode);
 
     if(!value){
       return "#ffffff";
     }
 
-    return colorInterpolatorOut(svg.scaleLinearOut(value));
+    return colorInterpolatorTop(svg.scaleLinearTop(value));
 
   };
 
@@ -296,15 +296,15 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
   console.log(data);
 
-  svg.titleOut = mapCountryTitleOut(svg);
+  svg.titleTop = mapCountryTitleTop(svg);
   //Creation of the countries
   svg.map.selectAll(".countries")
     .data(data)
     .enter().append("path")
-    .style("fill",function(d){return svg.scaleColorOut(d.id)})
+    .style("fill",function(d){return svg.scaleColorTop(d.id)})
     .attr("d",path)
     .classed("countries",true)
-    .append("svg:title").text(svg.titleOut);
+    .append("svg:title").text(svg.titleTop);
 
 
   //stroke-dasharray controlled by javascript to adapt it to the current scale
@@ -360,14 +360,14 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
   svg.svg2.maps = svg.svg2.select("g");
 
-  svg.titleIn = mapCountryTitleIn(svg);
+  svg.titleBottom = mapCountryTitleBottom(svg);
 
-  svg.countriesIn = svg.svg2.maps.selectAll(".gMap").selectAll(".countries");
-  svg.countriesIn.data(data)
-    .style("fill",function(d){return svg.scaleColorIn(d.id)})
-    .select("title").text(svg.titleIn);
+  svg.countriesBottom = svg.svg2.maps.selectAll(".gMap").selectAll(".countries");
+  svg.countriesBottom.data(data)
+    .style("fill",function(d){return svg.scaleColorBottom(d.id)})
+    .select("title").text(svg.titleBottom);
 
-  svg.countriesOut = svg.svg.maps.selectAll(".gMap").selectAll(".countries");
+  svg.countriesTop = svg.svg.maps.selectAll(".gMap").selectAll(".countries");
 
 
   //titles
@@ -377,35 +377,35 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
     .attr("x", svg.margin.left + svg.width/2)
     .attr("dy", "-0.5em")
     .attr("y",svg.margin.top)
-    .text("Outgoing");
+    .text("Ingress");
 
   svg.label2 = svg.append("text")
     .classed("labelChoropleth",true)
     .attr("x", svg.margin.left + svg.width/2)
     .attr("dy", "-0.5em")
     .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero)
-    .text("Ingoing");
+    .text("Egress");
 
 
   //legend
   //Definition of the colors gradient
 
-  appendVerticalLinearGradientDefs(svg,"linearOut",colorOutStart,colorOutEnd);
+  appendVerticalLinearGradientDefs(svg,"linearTop",colorTopStart,colorTopEnd);
 
-  svg.legendOut = svg.append("rect").attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
+  svg.legendTop = svg.append("rect").attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
     .attr("y",svg.margin.top)
     .attr("width",svg.margin.legendWidth)
     .attr("height",svg.mapHeight)
-    .attr("fill", "url(#linearOut)");
+    .attr("fill", "url(#linearTop)");
 
 
-  appendVerticalLinearGradientDefs(svg,"linearIn",colorInStart,colorInEnd);
+  appendVerticalLinearGradientDefs(svg,"linearBottom",colorBottomStart,colorBottomEnd);
 
-  svg.legendIn = svg.append("rect").attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
+  svg.legendBottom = svg.append("rect").attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
     .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero)
     .attr("width",svg.margin.legendWidth)
     .attr("height",svg.mapHeight)
-    .attr("fill", "url(#linearIn)");
+    .attr("fill", "url(#linearBottom)");
 
 
 
@@ -450,18 +450,18 @@ function autoUpdateMapDirection(svg,urlJson){
     var amountValue = searchAmountValue(jsonContent);
     var directionValue = searchDirectionValue(jsonContent);
 
-    svg.amountByCountryCodeIn = new Map();
-    svg.amountByCountryCodeOut = new Map();
+    svg.amountByCountryCodeBottom = new Map();
+    svg.amountByCountryCodeTop = new Map();
 
     if(!(itemValue && amountValue && directionValue)){
       return;
     }
 
-    var inMax = 0;
-    var inMin = Infinity;
+    var bottomMax = 0;
+    var bottomMin = Infinity;
 
-    var outMax = 0;
-    var outMin = Infinity;
+    var topMax = 0;
+    var topMin = Infinity;
 
     var elemAmount;
     var elemItem;
@@ -478,16 +478,16 @@ function autoUpdateMapDirection(svg,urlJson){
 
       switch(elem[directionValue]){
 
-        case "IN":
-          svg.amountByCountryCodeIn.set(elem[itemValue], elemAmount);
-          inMax = Math.max(inMax, elemAmount);
-          inMin = Math.min(inMin, elemAmount);
+        case "OUT":
+          svg.amountByCountryCodeBottom.set(elem[itemValue], elemAmount);
+          bottomMax = Math.max(bottomMax, elemAmount);
+          bottomMin = Math.min(bottomMin, elemAmount);
           break;
 
-        case "OUT":
-          svg.amountByCountryCodeOut.set(elem[itemValue], elemAmount);
-          outMax = Math.max(outMax, elemAmount);
-          outMin = Math.min(outMin, elemAmount);
+        case "IN":
+          svg.amountByCountryCodeTop.set(elem[itemValue], elemAmount);
+          topMax = Math.max(topMax, elemAmount);
+          topMin = Math.min(topMin, elemAmount);
           break;
 
         default:
@@ -498,28 +498,28 @@ function autoUpdateMapDirection(svg,urlJson){
 
     });
 
-    if(svg.amountByCountryCodeIn.size === 0){
-      inMin = 0;
-      inMax = 1;
+    if(svg.amountByCountryCodeBottom.size === 0){
+      bottomMin = 0;
+      bottomMax = 1;
     }
 
 
-    if(svg.amountByCountryCodeOut.size === 0){
-      outMin = 0;
-      outMax = 1;
+    if(svg.amountByCountryCodeTop.size === 0){
+      topMin = 0;
+      topMax = 1;
     }
-    console.log(svg.amountByCountryCodeOut);
-    console.log(svg.amountByCountryCodeIn);
+    console.log(svg.amountByCountryCodeTop);
+    console.log(svg.amountByCountryCodeBottom);
 
 
-    updateDataAxesMap(svg,inMin,inMax,outMin,outMax);
+    updateDataAxesMap(svg,bottomMin,bottomMax,topMin,topMax);
 
-    svg.countriesIn.style("fill",function(d){return svg.scaleColorIn(d.id)})
-      .select("title").text(svg.titleIn);
+    svg.countriesBottom.style("fill",function(d){return svg.scaleColorBottom(d.id)})
+      .select("title").text(svg.titleBottom);
 
-    svg.countriesOut.style("fill",function(d){
-        return svg.scaleColorOut(d.id)})
-      .select("title").text(svg.titleOut);
+    svg.countriesTop.style("fill",function(d){
+        return svg.scaleColorTop(d.id)})
+      .select("title").text(svg.titleTop);
 
   },-1);
 
@@ -624,12 +624,12 @@ function addResizeMapDirection(div,svg,mydiv){
     svg.label2.attr("x", svg.margin.left + svg.width/2)
       .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero);
 
-    svg.legendIn
+    svg.legendBottom
       .attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
       .attr("y",svg.margin.top + svg.mapHeight + svg.margin.zero)
       .attr("height",svg.mapHeight);
 
-    svg.legendOut
+    svg.legendTop
       .attr("x",svg.width + svg.margin.left + svg.margin.offsetLegend)
       .attr("height",svg.mapHeight);
 

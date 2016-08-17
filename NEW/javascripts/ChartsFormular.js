@@ -13,7 +13,7 @@ function updateChartsTimeslice(element ){
         case "lastWeek" :
         case "lastMonth" :
             $("#toDate_ChartsForm").data("DateTimePicker").date(moment('1900-01-01 00:01'));
-            $("#toDate_ChartsForm").data("DateTimePicker").date(moment(serverDate).format('YYYY-MM-DD HH:mm'));
+            $("#toDate_ChartsForm").data("DateTimePicker").date(moment(serverDate).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'));
             $("#fromDate_ChartsForm").data("DateTimePicker").disable();
             $("#toDate_ChartsForm").data("DateTimePicker").disable();
             break;
@@ -112,14 +112,10 @@ function initializeChartsTimestepForm() {
 
     $("#toDate_ChartsForm").on("dp.change", function (e) {
 
-        console.warn(e);
-
         $(this).find("input").trigger("change");
 
         if(e.date)
         {
-            console.warn(e.date);
-            console.warn($("#timesliceCharts").val());
 
             $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(e.date);
 
@@ -147,13 +143,9 @@ function initializeChartsTimestepForm() {
         }
         else
         {
-            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment());
-            $(this).data("DateTimePicker").date(moment(serverDate).format('YYYY-MM-DD HH:mm'));
+            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment(serverDate).add(parseInt(moment().format("Z")), "hours"));
+            $(this).data("DateTimePicker").date(moment(serverDate).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'));
         }
-    });
-
-    $("#toDate_ChartsForm").on("dp.show", function (e) {
-        $(this).data("DateTimePicker").maxDate(moment());
     });
 
 }

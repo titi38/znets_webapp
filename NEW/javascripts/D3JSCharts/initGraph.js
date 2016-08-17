@@ -46,7 +46,7 @@ function drawChartFromInterface(urlJson, mydiv) {
     svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
 
 
-    //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json?net=labo");
+    //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
     svg.urlJson = urlJson;
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
@@ -104,7 +104,10 @@ function whichCreationFunction(urlJson,svg){
     //For test & real use, can be simplified later
     typeGraph = typeGraph[typeGraph.length - 2];
     svg.typeGraph = typeGraph;
-
+    var GraphsWithoutPopup = ["netNbFlow","hostNbFlow","hostNbDiffHosts","netNbDiffHosts","netTopNbExtHosts","hostTopNbExtHosts"];
+    
+    svg.hasPopup = GraphsWithoutPopup.indexOf(typeGraph) === -1;
+    
     switch(typeGraph){
         case "netNbLocalHosts":
         case "netNbExternalHosts":
@@ -125,13 +128,10 @@ function whichCreationFunction(urlJson,svg){
 
         case "netNbFlow":
         case "hostNbFlow":
-
         case "netProtocolePackets":
         case "hostProtocolePacket":
-
         case "netProtocoleTraffic":
         case "hostProtocoleTraffic":
-        
         case "hostNbDiffHosts":
 
             return createHisto2DStackDoubleFormatVariation;
@@ -139,18 +139,16 @@ function whichCreationFunction(urlJson,svg){
 
         case "netTopServicesNbFlow":
         case "hostTopServicesNbFlow":
-
         case "netTopNbExtHosts":
             return createHisto2DStackSimple;
             break;
+
         //for now
         case "worldmap":
-
             return createMap;
             break;
 
         case "netTopCurrentCountryTraffic":
-
             return createChoroplethDirection;
             break;
 
@@ -176,8 +174,12 @@ function whichCreationFunction(urlJson,svg){
 
 
 /***********************************************************************************************************/
-function noData(div,svg,mydiv){
+function noData(div,svg,mydiv, msg){
     console.log("incorrect url/data");
+
+    if(!msg){
+        msg = "No Data";
+    }
 
     var clientRect = div.node().getBoundingClientRect();
     var divWidth = clientRect.width,
@@ -188,7 +190,7 @@ function noData(div,svg,mydiv){
     svg.nodata = svg.append("text").attr("transform", "translate(" + (divWidth/2) + "," +
         (divHeight/2 ) + ")")
       .classed("bckgr-txt",true)
-      .text("No data")
+      .text(msg)
       .style("fill", "#000");
 
     d3.select(window).on("resize." + mydiv, function(){

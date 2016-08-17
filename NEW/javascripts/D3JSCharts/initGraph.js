@@ -46,7 +46,7 @@ function drawChartFromInterface(urlJson, mydiv) {
     svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
 
 
-    //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json?net=labo");
+    //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
     svg.urlJson = urlJson;
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 

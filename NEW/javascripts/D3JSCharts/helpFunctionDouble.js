@@ -98,7 +98,7 @@ function optionalAxesDoubleCreation(svg){
     domainTop.forEach(function(elem,i){ domainTop[i] *= coef;});
 
     var convert = quantityConvertUnit(Math.max(domainBottom[1] - domainBottom[0],
-      domainTop[1] - domainTop[0]), false);
+      domainTop[1] - domainTop[0]), true);
 
 
     svg.yBottomRightDisplay = d3.scaleLinear().clamp(true).range(svg.newYBottom.range())
@@ -152,7 +152,7 @@ function optionalAxesDoubleUpdate(svg){
     domainTop.forEach(function(elem,i){ domainTop[i] *= coef;});
 
     var convert = quantityConvertUnit(Math.max(domainBottom[1] - domainBottom[0],
-      domainTop[1] - domainTop[0]), false);
+      domainTop[1] - domainTop[0]), true);
 
 
     svg.yBottomRightDisplay.range(svg.newYBottom.range())

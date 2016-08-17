@@ -374,7 +374,7 @@ function optionalAxes2HistoCreation(svg, svgChild, numSvg){
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), false);
+    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), true);
 
 
     svgChild.yRightDisplay = d3.scaleLinear().range(svgChild.newY.range())
@@ -417,7 +417,7 @@ function optionalAxes2HistoUpdate(svg, svgChild){
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), false);
+    var convert = quantityConvertUnit(Math.max(domain[1] - domain[0]), true);
 
 
     svgChild.yRightDisplay.range(svgChild.newY.range())

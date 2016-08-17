@@ -397,7 +397,7 @@ function createTooltipHisto(svg, selection, sumMap){
       .text(function (d) {
         heightPerSec = d.height * coef;
         convertArray = quantityConvertUnit(d.height,isBytes);
-        cAOptionel = quantityConvertUnit(heightPerSec,false);
+        cAOptionel = quantityConvertUnit(heightPerSec,true);
         valDisplay = sumMap.get(d.item).display;
         return ((d.item === valDisplay)?"":(valDisplay + "\n"))
           + d.item + "\n"

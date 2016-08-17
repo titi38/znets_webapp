@@ -204,7 +204,7 @@ function optionalYAxeSimpleCreation(svg) {
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(domain[1] - domain[0], false);
+    var convert = quantityConvertUnit(domain[1] - domain[0], true);
 
 
     svg.yDisplayRight = d3.scaleLinear().clamp(true).range(svg.newY.range())
@@ -247,7 +247,7 @@ function optionalYAxeSimpleUpdate(svg) {
 
     domain.forEach(function(elem,i){ domain[i] *= coef;});
 
-    var convert = quantityConvertUnit(domain[1] - domain[0], false);
+    var convert = quantityConvertUnit(domain[1] - domain[0], true);
 
 
     svg.yDisplayRight.range(svg.newY.range())

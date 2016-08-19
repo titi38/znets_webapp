@@ -183,13 +183,40 @@ function Localhosts(theWSEventNotifier) {
         var lh_nameIndex = 0;
 
         for (var i = 0; i < jsonContent.content.length; i++) {
-            tableColumns.push({'title': jsonContent.content[i]});
-
-            if(jsonContent.content[i] === "ip")
-                lh_ipIndex = i;
-
-            if(jsonContent.content[i] === "name")
-                lh_nameIndex = i;
+            switch (jsonContent.content[i]) {
+                case "ip":
+                    tableColumns.push({'targets': i, "type": 'ip-address', 'title': "Ip", "className": "dt-head-center dt-body-center"});
+                    lh_ipIndex = i;
+                    break;
+                case "name":
+                    tableColumns.push({'targets': i, 'title': "Name", "className": "dt-head-center dt-body-center"});
+                    lh_nameIndex = i;
+                    break;
+                case "network":
+                    tableColumns.push({'targets': i, 'title': "Network", "className": "dt-head-center dt-body-center"});
+                    break;
+                case "lastSeen":
+                    tableColumns.push({'targets': i, 'title': "Last seen", "className": "dt-head-center dt-body-center"});
+                    break;
+                case "mac":
+                    tableColumns.push({'targets': i, 'title': "Mac Adress", "className": "dt-head-center dt-body-center"});
+                    break;
+                case "osName":
+                    tableColumns.push({'targets': i, 'title': "OS Name", "className": "dt-head-center dt-body-center"});
+                    break;
+                case "arch64":
+                    tableColumns.push({'targets': i, 'title': "Architecture", "className": "dt-head-center dt-body-center", "visible": false, "searchable": false});
+                    break;
+                case "mobile":
+                    tableColumns.push({'targets': i, 'title': "Mobile", "className": "dt-head-center dt-body-center", "visible": false, "searchable": false});
+                    break;
+                case "locServices":
+                    tableColumns.push({'targets': i, 'title': "Local Services", "className": "dt-head-center dt-body-center"});
+                    break;
+                case "extServices":
+                    tableColumns.push({'targets': i, 'title': "External Services", "className": "dt-head-center dt-body-center"});
+                    break;
+            }
         }
 
 
@@ -242,35 +269,21 @@ function Localhosts(theWSEventNotifier) {
             scrollY: 1,
             responsive: true,
             scrollCollapse: true,
+            language: {
+                "sInfo": 'Showing _END_ Entries.',
+                "sInfoEmpty": 'No entries to show',
+            },
             fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
             columnDefs: [
-
-                /*{
-                    "render": function (data, type, row) {
-                        return moment.duration({'seconds': data}).humanize();
-                    },
-                    "targets": 3
-                },*/
-                { "targets": 0, "type": 'ip-address' },
                 {
                     "targets": 3,
                     "data": function ( row, type, val, meta ) {
-                        /*if (type === 'set') {
-                            console.error("setting");
-                            row.price = val;
-                            // Store the computed display and filter values for efficiency
-                            row.price_display = moment.duration({'seconds' : val}).humanize();
-                            row.price_filter  = moment.duration({'seconds' : val}).humanize();
-                            return;
-                        }
-                        else */
                         if (type === 'display') {
                             return moment.duration({'seconds' : row[3]}).humanize();
                         }
                         else if (type === 'filter') {
                             return moment.duration({'seconds' : row[3]}).humanize();
                         }
-                        // 'sort', 'type' and undefined all j
                         return row[3];
                     }
                 },
@@ -285,39 +298,6 @@ function Localhosts(theWSEventNotifier) {
                     },
                     "targets": 5
                 },
-                /*{
-                    "render": function ( data, type, row ) {
-                        switch (data){
-                            case "t":
-                                return "Yes";//"<div class='logWarningIcon' title='Warning'/>";
-                                break;
-                            case "f":
-                                return "No";//"<div class='logAlertIcon' title='Alert'/>";
-                                break;
-                            default:
-                                alert("localhosts datatable (Localhosts.js) : unexpected value found : "+ data+" ! (103)");
-                                break;
-                        }
-                    },
-                    "targets": 6
-                },*/
-                /*{
-                    "render": function ( data, type, row ) {
-                        switch (data){
-                            case "t":
-                                return "Yes";//"<div class='logWarningIcon' title='Warning'/>";
-                                break;
-                            case "f":
-                                return "No";//"<div class='logAlertIcon' title='Alert'/>";
-                                break;
-                            default:
-                                alert("localhosts datatable (Localhosts.js) : unexpected value found : "+ data+" ! (104)");
-                                break;
-                        }
-                    },
-                    "targets": [6, 7]
-                },*/
-                { "targets": [6, 7], "visible": false, "searchable": false },
                 { "targets": [8, 9],
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).attr("title",cellData);

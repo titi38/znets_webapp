@@ -81,16 +81,12 @@ function Alerts(theWSEventNotifier) {
     bufferSize = jsonContent.bufSize;
     nextAlertId = jsonContent.nextId;
 
-    var tableColumns = [];
-    for (var i = 0; i < jsonContent.content.length; i++)
-      tableColumns.push({'title':jsonContent.content[i]});
 
     $('#divAlerts').append('<table id="tableAlerts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
     table = $('#tableAlerts').DataTable( {
 
       data: jsonContent.data,
-      columns: tableColumns,
       scrollY: 1,
       //lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
       pageLength: -1,
@@ -100,51 +96,15 @@ function Alerts(theWSEventNotifier) {
       language: {
         "sInfo": 'Showing _END_ Entries.',
         "sInfoEmpty": 'No entries to show',
-        "sEmptyTable": "No Sources found currently, please add at least one.",
       },
       //fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
       fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
       columnDefs: [
-
-        // The `data` parameter refers to the data for the cell (defined by the
-        // `data` option, which defaults to the column being worked with, in
-        // this case `data: 0`.
-        /*{"render": function ( data, type, row ) {
-            switch (data){
-              case "WARNING":
-                return "<div class='logWarningIcon' title='Warning'/>";
-                break;
-              case "ALERT":
-                return "<div class='logAlertIcon' title='Alert'/>";
-                break;
-              case "INFO":
-                return "<div class='logInfoIcon' title='Info'/>";
-                break;
-              case "ERROR":
-                return "<div class='logErrorIcon' title='Error'/>";
-                break;
-              case "FATAL":
-                return "<div class='logFatalIcon' title='Fatal'/>";
-                break;
-              default:
-                alert("ChargerAlerts : new severity :"+ data);
-                break;
-            }
-          },
-          "targets": 0
-        },*/
-        /*{
-          "render": function ( data, type, row ) {
-            if(row[3] == "")
-              return data;
-            else
-              return data+ "<div class='alertDetailIcon' onclick='displayPopUp(\""+row[3]+"\")'  title='More info'></div>";
-          },
-          "targets": 2
-        },*/
-        //{ "targets": 3, "visible": false, "searchable": false }
         { "targets": 0, "visible": false, "searchable": false },
-        { "targets": 2, "type": 'ip-address' },
+        { "targets": 1, "className": "dt-head-center dt-body-center", "title": "Date"},
+        { "targets": 2, "type": 'ip-address', "className": "dt-head-center dt-body-center", "title": "Ip"},
+        { "targets": 3, "className": "dt-head-center dt-body-center", "title": "Host Name"},
+        { "targets": 4, "className": "dt-head-center dt-body-center", "title": "Message"},
         { "targets": 5, "visible": false, "searchable": false }
       ],
       "rowCallback": function( row, data ) {

@@ -231,6 +231,7 @@ function drawRawdataDatatable(jsonResponse, rawdataTabID) {
         scrollX: true,
         pageLength: 50,
         responsive: true,
+        orderFixed: [ 0, 'desc' ],
         scrollCollapse: true,
         language: {
             "sInfo": 'Showing _END_ Entries.',
@@ -263,18 +264,22 @@ function drawRawdataDatatable(jsonResponse, rawdataTabID) {
 
     } );
 
+    // DOESN'T WORK WHEN "ORDERFIXED" CYCLE
     // Order by the grouping
-    $('#tableRawdata' + rawdataTabID + ' tbody').on('click', 'tr.group', function () {
+    /*$('#tableRawdata' + rawdataTabID + ' tbody').on('click', 'tr.group', function () {
         var currentOrder = table.order()[0];
+        console.error(currentOrder);
         if (currentOrder[0] === 0 && currentOrder[1] === 'asc') {
             table.order([0, 'desc']).draw();
+            table.order.fixed([0, 'desc']).draw();
             $(this).parents("table").DataTable().order([[0, 'desc']]).draw();
         }
         else {
             table.order([0, 'asc']).draw();
+            table.order.fixed([0, 'asc']).draw();
             $(this).parents("table").DataTable().order([[0, 'asc']]).draw();
         }
-    });
+    });*/
 
     // Cheat : trigger draw to call drawCallback function in order to adjust column's width
     $('#tableRawdata'+rawdataTabID).DataTable().draw();

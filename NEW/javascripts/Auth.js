@@ -5,7 +5,7 @@
 
 
 /**
- * Executes interface modification once user is successful connected
+ * Executes interface modification once user is successful connected (login box modifications)
  *  - Sets User's Name
  *  - Show/Hide and Enable/Disable corresponding buttons
  *  - Set "view on connexion" to Localhost Table
@@ -36,7 +36,7 @@ function userLoggedIn(response)
 
 
 /**
- * Executes interface modification once user is successful disconnected
+ * Executes interface modification once user is successful disconnected (login box modifications)
  *  - Resets User's Name
  *  - Show/Hide and Enable/Disable corresponding buttons
  */
@@ -113,7 +113,7 @@ function tryRestoreConnectSession()
 
 
 /**
- * Function called on connection callAJAX true response (successfully logged in App)
+ * Function called on connection callAJAX true response (successfully logged in)
  * Trigger interface initialization
  * Trigger interface modification (user successful connected)
  * @param response : returned by callAjax
@@ -137,7 +137,7 @@ function connectCallback(response)
 
 /**
  * User's Disconnection Function
- * Ajax request to server
+ * Ajax request to server on user's disconnection
  * Execute "disconnectCallback" function on response
  */
 function disconnect()
@@ -148,6 +148,14 @@ function disconnect()
 
 
 
+
+
+
+/**
+ * Function called on disconnection callAJAX true response (successfully logged out)
+ * Trigger interface modification (user successfully disconnected)
+ * Reloads page
+ */
 function disconnectCallback() {
     /**
      * Update loggin box view
@@ -162,10 +170,10 @@ function disconnectCallback() {
 
 
 
+/**
+ * Reload current page
+ */
 function reloadPage() {
-    /**
-     * Reload current page
-     */
     location.reload();
 }
 

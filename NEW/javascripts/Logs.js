@@ -10,6 +10,7 @@
 /**
  * Logs Object (Constructor)
  * Involves a WebSocket Event Notifier in order to update automatically Logs for user's interface
+ * Displays Logs in a table (DataTable)
  * @param theWSEventNotifier
  * @constructor
  */

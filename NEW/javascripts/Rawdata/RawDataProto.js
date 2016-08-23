@@ -3,7 +3,10 @@
  */
 
 
-
+/**
+ * RawData Formular - Protocole Field Initialization Function
+ * 
+ */
 function initializeProtosId(){
 
     callAJAX("getProtoList.json", '', "json", setProtosId, null);

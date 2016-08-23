@@ -102,11 +102,14 @@ function addLocalhostTab(localhostIp, localhostName){
 /*********************************************************************************************************
  Localhosts Constructor
  ********************************************************************************************************/
-
+/**
+ * Localhosts Object Constructor. Involves a WebSocket Event Listener in order to refresh known localhosts list.
+ * @param theWSEventNotifier
+ * @constructor
+ */
 function Localhosts(theWSEventNotifier) {
 
     var table;
-
 
     this.onWSConnect = function(){
         var _this = this;
@@ -129,64 +132,6 @@ function Localhosts(theWSEventNotifier) {
 
         // Not Used !!!
         var tableColumns = [];
-
-        /*
-         var tableColumns = [];
-
-         var lh_ipIndex = 0;
-         var lh_nameIndex = 0;
-
-         for (var i = 0; i < jsonContent.content.length; i++) {
-         switch (jsonContent.content[i]) {
-         case "ip":
-         tableColumns.push({'targets': i, "type": 'ip-address', 'title': "Ip", "className": "dt-head-center dt-body-center"});
-         lh_ipIndex = i;
-         break;
-         case "name":
-         tableColumns.push({'targets': i, 'title': "Name", "className": "dt-head-center dt-body-center"});
-         lh_nameIndex = i;
-         break;
-         case "network":
-         tableColumns.push({'targets': i, 'title': "Network", "className": "dt-head-center dt-body-center"});
-         break;
-         case "lastSeen":
-         tableColumns.push({'targets': i, 'title': "Last seen", "className": "dt-head-center dt-body-center"});
-         break;
-         case "mac":
-         tableColumns.push({'targets': i, 'title': "Mac Adress", "className": "dt-head-center dt-body-center"});
-         break;
-         case "osName":
-         tableColumns.push({'targets': i, 'title': "OS Name", "className": "dt-head-center dt-body-center"});
-         break;
-         case "arch64":
-         tableColumns.push({'targets': i, 'title': "Architecture", "className": "dt-head-center dt-body-center", "visible": false, "searchable": false});
-         break;
-         case "mobile":
-         tableColumns.push({'targets': i, 'title': "Mobile", "className": "dt-head-center dt-body-center", "visible": false, "searchable": false});
-         break;
-         case "locServices":
-         tableColumns.push({'targets': i, 'title': "Local Services", "className": "dt-head-center dt-body-center"});
-         break;
-         case "extServices":
-         tableColumns.push({'targets': i, 'title': "External Services", "className": "dt-head-center dt-body-center"});
-         break;
-         }
-         }
-
-
-
-         // Set Localhost global variable
-         for (var i = 0; i < jsonContent.data.length; i++){
-
-         var lh_ip = jsonContent.data[i][lh_ipIndex];
-         var lh_name = jsonContent.data[i][lh_nameIndex];
-         localhosts_Ip_Name_Array.push({ ip : lh_ip, name : lh_name});
-
-         }
-
-         //initialize localhost list in rawdata form now that "localhosts_Ip_Name_Array" global variable is setted
-         initializeRawDataLocalhostsIp();
-         */
 
         $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
@@ -214,10 +159,6 @@ function Localhosts(theWSEventNotifier) {
 
             ajax: {
                 url: proxyPass+'getListLocalhosts.json',
-                /*data: function (d) {
-                 console.warn(d);
-                 d.extra_search = $('#extra').val();
-                 },*/
                 "dataSrc": function ( json ) {
 
                     for (var i = 0; i < json.response.content.length; i++) {
@@ -320,10 +261,6 @@ function Localhosts(theWSEventNotifier) {
                     console.warn( 'TODO: click on localhost ROW (show localhost details ???)' );
                     checkLocalhostTab(data[0], data[1]);
                 });
-
-                /*if ( $.inArray(data.DT_RowId, selected) !== -1 ) {
-                 $(row).addClass('selected');
-                 }*/
 
             }
 

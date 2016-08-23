@@ -30,7 +30,7 @@ $( document ).ready(function() {
 
     tryRestaureConnectSession();
 
-})
+});
 
 
 
@@ -198,51 +198,6 @@ function activateTabOfClass(tabClass)
         e.preventDefault();
         $(this).tab('show');
     });
-}
-
-
-
-
-
-
-function addNetworksTabs(networksNamesArrayObject) {
-
-    var networksNamesArray = networksNamesArrayObject.data;
-
-    if( !networksNamesArray.includes("Global") )
-        networksNamesArray.unshift("Global");
-
-    for(var i=0 ; i<networksNamesArray.length; i++){
-        addNetworkTab(networksNamesArray[i]);
-    }
-
-
-    initNetworksChartsNavTabs();
-
-}
-
-function initNetworksChartsNavTabs() {
-
-    $('ul.nav-nest a[data-toggle="tab"]').on('click', function (e) {
-        $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
-    });
-
-    $('ul.nav-nest a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-
-        loadChartJsonToDiv(e.target, true);
-
-    });
-
-
-
-    initChartsTabsNavAnimation("#network");
-
-
-    /*********************************************************************************************************
-     Initialize Chart Formular
-     ********************************************************************************************************/
-    applyChartsForm();
-
 }
 
 

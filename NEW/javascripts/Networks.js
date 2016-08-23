@@ -11,6 +11,57 @@ function initializeNetwork() {
 }
 
 
+
+
+
+function addNetworksTabs(networksNamesArrayObject) {
+
+    var networksNamesArray = networksNamesArrayObject.data;
+
+    if( !networksNamesArray.includes("Global") )
+        networksNamesArray.unshift("Global");
+
+    for(var i=0 ; i<networksNamesArray.length; i++){
+        addNetworkTab(networksNamesArray[i]);
+    }
+
+
+    initNetworksChartsNavTabs();
+
+}
+
+
+
+
+
+function initNetworksChartsNavTabs() {
+
+    $('ul.nav-nest a[data-toggle="tab"]').on('click', function (e) {
+        $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
+    });
+
+    $('ul.nav-nest a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+        loadChartJsonToDiv(e.target, true);
+
+    });
+
+
+
+    initChartsTabsNavAnimation("#network");
+
+
+    /*********************************************************************************************************
+     Initialize Chart Formular
+     ********************************************************************************************************/
+    applyChartsForm();
+
+}
+
+
+
+
+
 function addNetworkTab(networkName){
 
     var ai = (networkName === 'Global') ? 'active in' : '';
@@ -26,6 +77,9 @@ function addNetworkTab(networkName){
 
 
     element_tab.click(adjustOnTabClick);
+
+
+
 
 
     element_div.html(JST["networksTabsContent"]);
@@ -77,6 +131,10 @@ function addNetworkTab(networkName){
     });*/
 
 }
+
+
+
+
 
 rivets.formatters.prepend = function(value, prepend) {
     return prepend + value

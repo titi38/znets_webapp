@@ -7,6 +7,12 @@
  WSEventNotifier Constructor
  ********************************************************************************************************/
 
+
+/**
+ * WebSocket Event Notifier Object (Constructor)
+ * @param webSocketName
+ * @constructor
+ */
 function WSEventNotifier(webSocketName)
 {
 

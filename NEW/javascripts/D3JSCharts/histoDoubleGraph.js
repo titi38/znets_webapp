@@ -429,7 +429,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
     }
 
-    function desactivationElems() {
+    function deactivationElems() {
 
       if (svg.activeItem === null || svg.popup.pieChart !== null) {
         return;
@@ -488,14 +488,17 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     gridDoubleGraph(svg);
-
-
-
-    addPopup(selection, div, svg, function (data) {
-        deactivationElems();
-        activationElemsAutoScrollPopup(data);
-      },
-      deactivationElems);
+    
+    if(svg.hasPopup) {
+      addPopup(selection, div, svg, function (data) {
+          deactivationElems();
+          activationElemsAutoScrollPopup(data);
+        },
+        deactivationElems);
+    }else{
+      svg.popup = [];
+      svg.popup.pieChart = null;
+    }
 
 
 
@@ -1123,7 +1126,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     }
 
-    function desactivationElems() {
+    function deactivationElems() {
 
       if (svg.activeItem == null || svg.popup.pieChart !== null) {
         return;

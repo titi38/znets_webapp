@@ -177,7 +177,7 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
         return;
       }
 
-      var valuesDirectionBounded = svg[chartDirString].selectAll(".data").data();
+      var valuesDirectionBounded = svg[valuesDirectionString];
 
       var clickedRow = d3.select(this);
 
@@ -493,6 +493,77 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
     }); //trselec on contextmenu
 
 
+
+}
+
+/***********************************************************************************************************************/
+
+function transitionRefresh(svg, duration, direction, valuesDirBounded){
+
+  var mapDisplay = svg["mapPercentDisplayByItem" + direction];
+
+
+  svg.transition("refresh" + direction).duration(duration).tween("",function(){
+
+    //to be sure.
+    var firstX = -60;
+    var lengthX = 120;
+    
+
+    var x = firstX;
+    var i = 0;
+    var sum, elemValues, boundedValuesLength = valuesDirBounded.length;
+
+    if(direction === "Top"){
+
+      elemValues = valuesDirBounded[i];
+
+      while(x < lengthX){
+
+        sum = 0;
+
+        while(i < valuesDirBounded && elemValues.x === x){
+
+
+          elemValues.height = elemValues.heightRef * mapDisplay.get(elemValues.item);
+
+          sum += elemValues.height;
+          elemValues.y = sum;
+          i++;
+          elemValues = valuesDirectionFinal[i];
+        }
+        totalSumDirection.push(sum);
+        x++;
+      }
+
+    }else{
+
+      elemValues = valuesDirectionFinal[i];
+
+      while(x < lengthX){
+
+        sum = 0;
+
+
+        while(i < valuesFinalLength && elemValues.x === x){
+
+          if(elemValues.item === d.item){
+            elemValues.height = functionHeight();
+          }
+
+          elemValues.y = sum;
+          sum += elemValues.height;
+          i++;
+          elemValues = valuesDirectionFinal[i];
+        }
+        totalSumDirection.push(sum);
+        x++;
+      }
+
+    }
+
+
+  });
 
 }
 

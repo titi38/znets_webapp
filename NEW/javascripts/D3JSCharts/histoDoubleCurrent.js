@@ -180,8 +180,8 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
       elemToPush = {
         x: elemJson[svg.contentXPositionValue],
-        heightRef: +elemJson[svg.contentAmountValue],
         height: +elemJson[svg.contentAmountValue],
+        heightRef: +elemJson[svg.contentAmountValue],
         item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue],
         direction: elemJson[svg.contentDirectionValue].toLowerCase()
       };
@@ -340,6 +340,10 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
     svg.newYTop = d3.scaleLinear().range(svg.yTop.range()).domain(svg.yTop.domain());
     svg.newYBottom = d3.scaleLinear().range(svg.yBottom.range()).domain(svg.yBottom.domain());
+
+
+
+
 
     svg.selectionBottom = svg.chartBottom.selectAll(".data")
       .data(svg.valuesBottom)
@@ -802,6 +806,9 @@ function autoUpdateDoubleCurrent(svg,urlJson){
 
     svg.selectionTop = selecTopEnter.merge(svg.selectionTop);
 
+    svg.valuesBottom.sort(sortValues);
+    svg.valuesTop.sort(sortValues);
+
 
 
     svg.transition("updateX").duration(svg.updateTransitionDuration).tween("",function(){
@@ -848,6 +855,7 @@ function autoUpdateDoubleCurrent(svg,urlJson){
         });
 
         svg.selectionTop = svg.chartTop.selectAll(".data");
+
         svg.valuesTop = svg.selectionTop.data();
 
         selecTopEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
@@ -856,6 +864,9 @@ function autoUpdateDoubleCurrent(svg,urlJson){
 
         createTooltipHisto(svg,selecTopEnter,svg.sumMap);
         createTooltipHisto(svg,selecBottomEnter, svg.sumMap);
+
+        svg.valuesTop.sort(sortValues);
+        svg.valuesBottom.sort(sortValues);
 
         onUpdate = false;
 
@@ -925,17 +936,7 @@ function autoUpdateDoubleCurrent(svg,urlJson){
 
 }
 
-/***********************************************************************************************************************/
 
-function transitionRefresh(svg, duration, direction){
-
-  svg.transition("refresh" + direction).duration(duration).tween("",function(){
-
-
-    
-  });
-
-}
 
 
 

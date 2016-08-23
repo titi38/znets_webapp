@@ -4,96 +4,26 @@
 
 
 
-function checkLocalhostTab(localhostIp, localhostName){
+/**
+ * Localhosts Tab Initialisation Function
+ */
+function initializeLocalhosts() {
 
-    var localhostNum = localhostIp.replace(/\./g, "");
+    //$( "#charts_form" ).clone(true, true).appendTo( "#charts_form_container" );
 
-    if( $('.tab'+localhostNum).length > 0 )
-    {
-        $('.tab'+localhostNum).find("a").click()
-    }
-    else
-    {
-        addLocalhostTab(localhostIp, localhostName);
-    }
-
-}
-
-
-function addLocalhostTab(localhostIp, localhostName){
-
-    var localhostNum = localhostIp.replace(/\./g, "");
-
-    console.warn(localhostIp);
-
-    var element_tab = $('<li class="tab'+localhostNum+' tab" title="Ip Adress: '+localhostIp+'"><a data-toggle="tab" href="#divLocalhost'+localhostNum+'">'+( (localhostName) ? localhostName : localhostIp )+' <span class="closeTab close-icon" title="Remove this page">&#x2715</span></a></li>');
-    var element_div = $('<div class="tab-pane fade localhost" data-localhost-num="'+localhostNum+'" id="divLocalhost'+localhostNum+'">'+( (localhostName) ? localhostName : localhostIp )+'  Localhost Content</div>');
-
-    element_tab.click(adjustOnTabClick);
-
-    element_div.html(JST["localhostsTabsContent"]);
-
-    $(".list.localhost-tab-list").append(element_tab);
-    $(".tab-content.localhost-tab-content").append(element_div);
-
-    $( document ).ready(function() {
-        rivets.bind(
-            $(element_div),
-            {localhostNum: localhostNum,
-                localhostIp: localhostIp}
-        );
-    });
-
-    element_tab.find("a").click(function (e) {
-        e.preventDefault();
+    // Initialize localhosts "Inventory" tab
+    $('.localhost-tab-list').find("a[href='#localhostsInventory']").click(function (e) {
         $(this).tab('show');
 
-        // Show formular on localhost machine tab click
-        $(this).parents(".wrapper.localhosts").siblings("#charts_form_container").show();
-    });
-
-    element_tab.find("a").click();
-
-    element_tab.find(".closeTab").on('click', function(event){
-
-        var tab2Switch = null;
-        if($(this).parents('li').hasClass("active")) {
-            if ($(this).parents('li').prev().length > 0) {
-                tab2Switch = $(this).parents('li').prev().find("a");
-            }else {
-                tab2Switch = $(this).parents('li').next().find("a");
-            }
-        }
-
-        var tabID = $(this).parents('a').attr('href');
-
-        $(this).parents('li').remove();
-        $(tabID).remove();
-
-        if(tab2Switch)
-            tab2Switch.click();
-
-        event.stopPropagation();
-
+        // Hide formular on localhost machine tab click
+        $(this).parents(".wrapper.localhosts").siblings("#charts_form_container").hide();
     });
 
 
-
-    element_div.find('ul.nav-nest a[data-toggle="tab"]').each( function () {
-
-        $(this).on('click', function (e) {
-            $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
-        });
-
-        $(this).on('shown.bs.tab', function (e) {
-
-            loadChartJsonToDiv(e.target, false);
-
-        });
-
-    });
-
-    initChartsTabsNavAnimation("#localhosts");
+    /*********************************************************************************************************
+     Activate localhosts tab
+     ********************************************************************************************************/
+    activateTabOfClass("localhosts");
 
 }
 
@@ -286,4 +216,118 @@ function Localhosts(theWSEventNotifier) {
     }
 
 }
+
+
+
+
+
+/**
+ * Checks if a specific Localhost's (sub)Tab already exists
+ * If it exist, then Open this Localhost's Tab
+ * If not, create and add this Localhost's Tab
+ * @param localhostIp
+ * @param localhostName
+ */
+function checkLocalhostTab(localhostIp, localhostName){
+
+    var localhostNum = localhostIp.replace(/\./g, "");
+
+    if( $('.tab'+localhostNum).length > 0 )
+    {
+        $('.tab'+localhostNum).find("a").click()
+    }
+    else
+    {
+        addLocalhostTab(localhostIp, localhostName);
+    }
+
+}
+
+
+
+
+
+/**
+ * Creation of Localhost's (sub)Tab Function
+ * Creates and adds a specified Localhost's Tab (with interactions) in the user's interface
+ * @param localhostIp
+ * @param localhostName
+ */
+function addLocalhostTab(localhostIp, localhostName){
+
+    var localhostNum = localhostIp.replace(/\./g, "");
+
+    console.warn(localhostIp);
+
+    var element_tab = $('<li class="tab'+localhostNum+' tab" title="Ip Adress: '+localhostIp+'"><a data-toggle="tab" href="#divLocalhost'+localhostNum+'">'+( (localhostName) ? localhostName : localhostIp )+' <span class="closeTab close-icon" title="Remove this page">&#x2715</span></a></li>');
+    var element_div = $('<div class="tab-pane fade localhost" data-localhost-num="'+localhostNum+'" id="divLocalhost'+localhostNum+'">'+( (localhostName) ? localhostName : localhostIp )+'  Localhost Content</div>');
+
+    element_tab.click(adjustOnTabClick);
+
+    element_div.html(JST["localhostsTabsContent"]);
+
+    $(".list.localhost-tab-list").append(element_tab);
+    $(".tab-content.localhost-tab-content").append(element_div);
+
+    $( document ).ready(function() {
+        rivets.bind(
+            $(element_div),
+            {localhostNum: localhostNum,
+                localhostIp: localhostIp}
+        );
+    });
+
+    element_tab.find("a").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+
+        // Show formular on localhost machine tab click
+        $(this).parents(".wrapper.localhosts").siblings("#charts_form_container").show();
+    });
+
+    element_tab.find("a").click();
+
+    element_tab.find(".closeTab").on('click', function(event){
+
+        var tab2Switch = null;
+        if($(this).parents('li').hasClass("active")) {
+            if ($(this).parents('li').prev().length > 0) {
+                tab2Switch = $(this).parents('li').prev().find("a");
+            }else {
+                tab2Switch = $(this).parents('li').next().find("a");
+            }
+        }
+
+        var tabID = $(this).parents('a').attr('href');
+
+        $(this).parents('li').remove();
+        $(tabID).remove();
+
+        if(tab2Switch)
+            tab2Switch.click();
+
+        event.stopPropagation();
+
+    });
+
+
+
+    element_div.find('ul.nav-nest a[data-toggle="tab"]').each( function () {
+
+        $(this).on('click', function (e) {
+            $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
+        });
+
+        $(this).on('shown.bs.tab', function (e) {
+
+            loadChartJsonToDiv(e.target, false);
+
+        });
+
+    });
+
+    initChartsTabsNavAnimation("#localhosts");
+
+}
+
 

@@ -8,6 +8,13 @@
  ServerDate Constructor
  ********************************************************************************************************/
 
+
+/**
+ * Server Date Object (Constructor)
+ * Involves a WebSocket Event Notifier in order to update automatically server's date for user's interface
+ * @param theWSEventNotifier
+ * @constructor
+ */
 function ServerDate(theWSEventNotifier) {
 
     var serverDateEntries = new Array();

@@ -4,22 +4,25 @@
 
 
 
+// Proxypass variable
 var proxyPass = 'dynamic/';//'';
 
-// javascript templates variable
+
+// JavaScript Templates variable
 var JST = {};
 
-var chartsPreset = {
-    timeSlice : "lastDay",
-    timeStep : "HOURLY",
-    startDate : "HOURLY",
-    endDate : "HOURLY"
-};
 
+// Server's Date variable
 var serverDate = "";
 
+
+// Correspondence Array : (Localhost's) Ips - Names
 var localhosts_Ip_Name_Array = [];
 
+
+// Correspondence Array : (Country's) Ids - Names
 var countryTable = [];
 
+
+// Correspondence Array : (Protocole's) Ids - Names
 var protocoleTable = [];

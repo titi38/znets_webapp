@@ -3,7 +3,10 @@
  */
 
 
-
+/**
+ * Ajax Alert's Details Retrieval Function
+ * @param alertData : alert's data containing alert's Id
+ */
 function getAlertDetail(alertData) {
 
     var alertId = alertData[0];
@@ -13,8 +16,12 @@ function getAlertDetail(alertData) {
 }
 
 
-
-
+/**
+ * Setting and Showing Modal Function - Alert's Details
+ * This function is triggered once the user's Ajax request receive a "response"
+ * @param response
+ * @param alertData : data of checked alert's details
+ */
 function showAlertDetailsModal(response, alertData) {
 
     var alert_Date = alertData[1];
@@ -39,6 +46,13 @@ function showAlertDetailsModal(response, alertData) {
 
 
 
+
+
+/**
+ * Setting and Showing Modal Function - Log's Details
+ * This function is triggered once the user selects a log in Logs Datatable
+ * @param logData : data of checked log's details
+ */
 function showLogDetailsModal(logData) {
 
     var log_Type_Title = logData[0];
@@ -56,20 +70,12 @@ function showLogDetailsModal(logData) {
 }
 
 
-
+/**
+ * Setting Modal Function - Title and Content Message
+ * @param titleText : modal's title text
+ * @param contentText : modal's content text
+ */
 function setModal(titleText, contentText) {
-    setModalTitle(titleText);
-    setModalContent(contentText);
-}
-
-
-
-function setModalTitle(titleText) {
     $("#information_Details_Modal .modal-title").html(titleText);
-}
-
-
-
-function setModalContent(contentText) {
     $("#information_Details_Modal .modal-body").html(contentText);
 }

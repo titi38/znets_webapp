@@ -185,66 +185,6 @@ function initialisation(){
 
 
 
-
-/*********************************************************************************************************
- Activate a specified navigation tab
- ********************************************************************************************************/
-
-function activateTabOfClass(tabClass)
-{
-    $('#tabs').find("li."+tabClass).removeClass("disabled");
-
-    $("ul.navbar-nav li."+tabClass+" a").click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
-}
-
-
-
-function initChartsTabsNavAnimation(tabIDQuery){
-
-    $( document ).ready(function() {
-
-
-        // This initialization could used several times when opening localhosts (only once for networks, when all networks tabs are opened)
-        // First, drop all animation if they exist
-        $(document).off('click', tabIDQuery+' a.navtab');
-        $(document).off('click', tabIDQuery+' a.subnavtab[data-toggle="tab"]');
-        $(document).off('mouseenter', tabIDQuery+' button.chartNavDropdownButton');
-        $(document).off('mouseleave', tabIDQuery+' button.chartNavDropdownButton');
-
-        // (Re)Write animations
-        // ===================>
-
-        // Block default behavior : avoid click event propagation on chart navigation nodes which are not leaves
-        $(document).on('click', tabIDQuery+' a.navtab', function (e) {
-            e.stopPropagation();
-        });
-
-        // Set selected chart title next to "+" dropdown of chart selection
-        $(document).on('click', tabIDQuery+' a.subnavtab[data-toggle="tab"]', function (e) {
-            $(this).parents(".chartNavDropdownContainer").find("p.chartTitle").html($(this).data("chartTitle"));
-        });
-
-        // Set animation : show selected chart title on mouse enter "+" dropdown
-        $(document).on('mouseenter', tabIDQuery+' button.chartNavDropdownButton', function (e) {
-            $(this).find("p").removeClass("hidden");
-        });
-
-        // Set animation : hide selected chart title on mouse leave "+" dropdown
-        $(document).on('mouseleave', tabIDQuery+' button.chartNavDropdownButton', function (e) {
-            $(this).find("p").addClass("hidden");
-        });
-
-
-
-    });
-
-}
-
-
-
 function loadChartJsonToDiv(selectedNavChart, forNetworks) {
 
     var jsonData = selectedNavChart.dataset.chartJson;
@@ -255,27 +195,6 @@ function loadChartJsonToDiv(selectedNavChart, forNetworks) {
 
     var subNet_or_lhIp = (forNetworks) ? ( (selectedNavChart.dataset.network === "Global") ? "" : selectedNavChart.dataset.network ) : ( selectedNavChart.dataset.localhostIp );
     drawChartFromInterface(setChartJsonFUllURL(jsonData, ajaxParams, subNet_or_lhIp, forNetworks), jqueryTarget);
-
-}
-
-
-function initializeLocalhosts() {
-
-    //$( "#charts_form" ).clone(true, true).appendTo( "#charts_form_container" );
-
-    // Initialize localhosts "Inventory" tab
-    $('.localhost-tab-list').find("a[href='#localhostsInventory']").click(function (e) {
-        $(this).tab('show');
-
-        // Hide formular on localhost machine tab click
-        $(this).parents(".wrapper.localhosts").siblings("#charts_form_container").hide();
-    });
-
-
-    /*********************************************************************************************************
-     Activate localhosts tab
-     ********************************************************************************************************/
-    activateTabOfClass("localhosts");
 
 }
 

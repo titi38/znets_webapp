@@ -7,6 +7,12 @@
  Logs Constructor
  ********************************************************************************************************/
 
+/**
+ * Logs Object (Constructor)
+ * Involves a WebSocket Event Notifier in order to update automatically Logs for user's interface
+ * @param theWSEventNotifier
+ * @constructor
+ */
 function Logs(theWSEventNotifier) {
 
   var logEntries = new Array();
@@ -189,28 +195,4 @@ function Logs(theWSEventNotifier) {
 
 
 
-
-
-
-
-/*********************************************************************************************************
- Logs dataTable "Size Adjustement" functions
- ********************************************************************************************************/
-$( document ).on("dataTable_Loaded", function() {
-  var classe = "dataTables_scrollBody";
-  var adjustment = -55;
-  refreshElementDimensions(classe, adjustment);
-});
-
-$(window).bind('resize', function() {
-  var classe = "dataTables_scrollBody";
-  var adjustment = -55;
-  refreshElementDimensions(classe, adjustment);
-});
-
-function refreshElementDimensions(classe, adjustment) {
-  $('.'+classe).css("maxHeight", function() {
-    return window.innerHeight - $(this).offset().top + adjustment;
-  });
-}
 

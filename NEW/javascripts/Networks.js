@@ -3,7 +3,9 @@
  */
 
 
-
+/**
+ * Networks Tab Initialisation Function
+ */
 function initializeNetwork() {
 
     callAJAX("getNetworkList.json", "", "json", addNetworksTabs, null);
@@ -11,9 +13,11 @@ function initializeNetwork() {
 }
 
 
-
-
-
+/**
+ * All Networks (sub)Tabs Creation Function.
+ * Triggers the creation of all available networks defined in the software configuration (server side)
+ * @param networksNamesArrayObject
+ */
 function addNetworksTabs(networksNamesArrayObject) {
 
     var networksNamesArray = networksNamesArrayObject.data;
@@ -33,7 +37,48 @@ function addNetworksTabs(networksNamesArrayObject) {
 
 
 
+/**
+ * Specific Network (sub)Tab Creation Function.
+ * Triggers the creation of one network tab defined in the software configuration (server side)
+ * @param networkName
+ */
+function addNetworkTab(networkName){
 
+    var ai = (networkName === 'Global') ? 'active in' : '';
+    var a = (networkName === 'Global') ? 'active' : '';
+
+    var element_tab = $('<li class="tab'+networkName+' tab '+a+'"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+'</a></li>');
+    var element_div = $('<div class="tab-pane fade network '+ai+'" data-network="'+networkName+'" id="divNetwork'+networkName+'">'+networkName+'  Network Content</div>');
+
+    element_tab.click(adjustOnTabClick);
+
+    element_div.html(JST["networksTabsContent"]);
+
+    $(".list.network-tab-list").append(element_tab);
+    $(".tab-content.network-tab-content").append(element_div);
+
+
+    $( document ).ready(function() {
+        rivets.bind(
+            $(element_div),
+            {network: networkName}
+        );
+    });
+
+    element_tab.find("a").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+
+
+}
+
+
+
+/**
+ * Network's Charts Navigation Interactions Function.
+ * Initialize all Network's Charts Interactions and Selection Formular
+ */
 function initNetworksChartsNavTabs() {
 
     $('ul.nav-nest a[data-toggle="tab"]').on('click', function (e) {
@@ -52,7 +97,7 @@ function initNetworksChartsNavTabs() {
 
 
     /*********************************************************************************************************
-     Initialize Chart Formular
+     Initialize Charts Formular
      ********************************************************************************************************/
     applyChartsForm();
 
@@ -62,80 +107,3 @@ function initNetworksChartsNavTabs() {
 
 
 
-function addNetworkTab(networkName){
-
-    var ai = (networkName === 'Global') ? 'active in' : '';
-    var a = (networkName === 'Global') ? 'active' : '';
-
-    //var element_tab = $('<li class="tab'+networkName+' tab"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+' <span class="closeTab close-icon" title="Remove this page">&#x2715</span></a></li>');
-    var element_tab = $('<li class="tab'+networkName+' tab '+a+'"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+'</a></li>');
-    var element_div = $('<div class="tab-pane fade network '+ai+'" data-network="'+networkName+'" id="divNetwork'+networkName+'">'+networkName+'  Network Content</div>');
-
-    /*var element_tab = $('<li class="tab'+networkName+' tab"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+'</a></li>');
-    var element_div = $('<div class="tab-pane fade network" data-network="'+networkName+'" id="divNetwork'+networkName+'">'+networkName+'  Network Content</div>');
-    */
-
-
-    element_tab.click(adjustOnTabClick);
-
-
-
-
-
-    element_div.html(JST["networksTabsContent"]);
-
-    $(".list.network-tab-list").append(element_tab);
-    $(".tab-content.network-tab-content").append(element_div);
-
-
-    $( document ).ready(function() {
-        rivets.bind(
-            $(element_div),
-            {network: networkName}
-        );
-    });
-
-
-    //reAdjust();
-
-    element_tab.find("a").click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
-
-    //element_tab.find("a").click();
-
-
-
-    /*element_tab.find(".closeTab").on('click', function(event){
-
-        var tab2Switch = null;
-        if($(this).parents('li').hasClass("active")) {
-            if ($(this).parents('li').prev().length > 0) {
-                tab2Switch = $(this).parents('li').prev().find("a");
-            }else {
-                tab2Switch = $(this).parents('li').next().find("a");
-            }
-        }
-
-        var tabID = $(this).parents('a').attr('href');
-
-        $(this).parents('li').remove();
-        $(tabID).remove();
-
-        if(tab2Switch)
-            tab2Switch.click();
-
-        event.stopPropagation();
-
-    });*/
-
-}
-
-
-
-
-
-rivets.formatters.prepend = function(value, prepend) {
-    return prepend + value
-}

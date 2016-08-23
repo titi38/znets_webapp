@@ -3,6 +3,17 @@
  */
 
 
+
+// TODO : function adaptation to ZNeTS's interface (current version is still for MIMAC)
+
+
+/**
+ * Notification Display Function.
+ * Display a notification message in the user's interface
+ * @param message
+ * @param alertType
+ * @param callBack : function triggered once message disappears
+ */
 function addNotification(message, alertType, callBack) {
 
     var alert = jQuery('<div/>', {
@@ -44,7 +55,13 @@ function addNotification(message, alertType, callBack) {
 
 }
 
-
+/**
+ * Websocket Event Notification Display Function.
+ * @param mesgType
+ * @param mesgName
+ * @param mesgParams
+ * @param callBack
+ */
 function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
 
     if(mesgType === "notify")
@@ -93,7 +110,11 @@ function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
 
 }
 
-
+/**
+ * Ajax Request Status Notification Display Function.
+ * @param mesg
+ * @param callBack
+ */
 function addAjaxNotification(mesg, callBack) {
 
     var alertType;

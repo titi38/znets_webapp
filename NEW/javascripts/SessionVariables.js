@@ -35,7 +35,7 @@ function initializeRawdataShownColumnsSessionVariable(tableColumns) {
 
 /**
  * Session variable modification function.
- * Sets a specific column's visibility (to true or false) for user's local browser session.
+ * Sets all rawdata column's visibility (to true or false) of user's local browser session.
  * @param tableColumns
  */
 function setRawdataShownColumnsSessionVariable(tableColumns) {
@@ -66,20 +66,12 @@ function setRawdataShownColumnsSessionVariable(tableColumns) {
 
     }
 
-    /*rawdataShownColumns[key] = value;
-
-     localStorage.setItem('rawdataShownColumns', JSON.stringify(rawdataShownColumns));*/
-
 }
 
-/**
- * Sets a specific column's visibility (to true or false) for user's local browser session.
- */
-
 
 /**
- *
- * @returns {*|string|string|string|string|null}
+ * Retrieves all rawdata column's visibility (true or false) of user's local browser session.
+ * @returns {*|string|string|string|string|null} (parsed JSON)
  */
 function getRawdataShownColumnsSessionVariable() {
 
@@ -90,7 +82,10 @@ function getRawdataShownColumnsSessionVariable() {
 }
 
 
-
+/**
+ * Sets a specific (identified by key in array) rawdata column's visibility (to true or false) of user's local browser session.
+ * @param key
+ */
 function changeRawdataShownColumnsSessionVariableKey(key) {
 
     var rawdataShownColumns = getRawdataShownColumnsSessionVariable();

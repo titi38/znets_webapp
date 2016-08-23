@@ -313,7 +313,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       .attr("stroke", "#000000");
 
 
-    drawChartDouble(svg,svg.yTop.range()[0],svg.yBottom.range()[0]);
+    drawChartDouble(svg,  svg.yTop.range()[0],svg.yBottom.range()[0]);
 
     var selection = svg.selectAll(".data");
 
@@ -492,22 +492,22 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     addPopup(selection, div, svg, function (data) {
-        desactivationElems();
+        deactivationElems();
         activationElemsAutoScrollPopup(data);
       },
-      desactivationElems);
+      deactivationElems);
 
 
 
 
-    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
+    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", deactivationElems);
 
 
     //Now, no more nodata can happen,so we create the table
     svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
 
-    var trSelecTop = createTableLegendDouble(svg,"In",sumArrayTop,colorMap, activationElemsFromTable,desactivationElems);
-    var trSelecBottom = createTableLegendDouble(svg,"Out",sumArrayBottom,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecTop = createTableLegendDouble(svg,"In",sumArrayTop,colorMap, activationElemsFromTable,deactivationElems);
+    var trSelecBottom = createTableLegendDouble(svg,"Out",sumArrayBottom,colorMap, activationElemsFromTable,deactivationElems);
 
     //zoom
 
@@ -1184,22 +1184,22 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     if(svg.hasPopup) {
       addPopup(selection, div, svg, function (data) {
-          desactivationElems();
+          deactivationElems();
           activationElemsAutoScrollPopup(data);
         },
-        desactivationElems);
+        deactivationElems);
     }else{
       svg.popup = [];
       svg.popup.pieChart = null;
     }
 
-    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
+    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", deactivationElems);
 
     //Now, no more nodata can happen,so we create the table
     svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
 
-    var trSelecTop = createTableLegendDouble(svg,"In",sumArrayTop,colorMap, activationElemsFromTable,desactivationElems);
-    var trSelecBottom = createTableLegendDouble(svg,"Out",sumArrayBottom,colorMap, activationElemsFromTable,desactivationElems);
+    var trSelecTop = createTableLegendDouble(svg,"In",sumArrayTop,colorMap, activationElemsFromTable,deactivationElems);
+    var trSelecBottom = createTableLegendDouble(svg,"Out",sumArrayBottom,colorMap, activationElemsFromTable,deactivationElems);
 
     //zoom
     addZoomDouble(svg, updateHisto2DStackDouble);

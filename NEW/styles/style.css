@@ -298,6 +298,11 @@ iframe {
 }
 
 
+.tooltip {
+    position : fixed;
+}
+
+
 
 @media (max-device-aspect-ratio: 4/3){
     .toBottomContainer {
@@ -455,6 +460,13 @@ hr.myhr{
 
 table.dataTable.display tbody tr:hover, table.dataTable.display tbody tr:hover .sorting_1, table.dataTable.display tbody tr:hover .sorting_2{
     background-color: #dff0d8;
+}
+
+
+
+table.dataTable.display tbody tr.group.cyclerow{
+    background-color: #ecf6ff;
+    cursor: pointer;
 }
 
 /*************************************************

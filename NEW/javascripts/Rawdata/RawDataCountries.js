@@ -16,7 +16,8 @@ function setCountriesId(jsonResponse) {
     var countryNameIndex = jsonResponse.content.indexOf("n");
 
     for (var i = 0; i < jsonResponse.data.length; i++) {
-        $("#countryId").append('<option value="' + jsonResponse.data[i][countryIdIndex] + '">' + jsonResponse.data[i][countryNameIndex] + '</option>')
+        $("#countryId").append('<option value="' + jsonResponse.data[i][countryIdIndex] + '">' + jsonResponse.data[i][countryNameIndex] + '</option>');
+        countryTable[jsonResponse.data[i][countryIdIndex]] = jsonResponse.data[i][countryNameIndex];
     }
 
     // Process JQuery-UI combobox drawing

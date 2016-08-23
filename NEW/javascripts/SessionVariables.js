@@ -3,7 +3,11 @@
  */
 
 
-
+/**
+ * Session variable initialization function.
+ * Initialize all rawdata column's visibility (to true) for user's local browser session.
+ * @param tableColumns
+ */
 function initializeRawdataShownColumnsSessionVariable(tableColumns) {
 
     var rawdataShownColumns = {};
@@ -26,6 +30,14 @@ function initializeRawdataShownColumnsSessionVariable(tableColumns) {
 }
 
 
+
+
+
+/**
+ * Session variable modification function.
+ * Sets a specific column's visibility (to true or false) for user's local browser session.
+ * @param tableColumns
+ */
 function setRawdataShownColumnsSessionVariable(tableColumns) {
 
     var rawdataShownColumns = getRawdataShownColumnsSessionVariable();
@@ -60,7 +72,15 @@ function setRawdataShownColumnsSessionVariable(tableColumns) {
 
 }
 
+/**
+ * Sets a specific column's visibility (to true or false) for user's local browser session.
+ */
 
+
+/**
+ *
+ * @returns {*|string|string|string|string|null}
+ */
 function getRawdataShownColumnsSessionVariable() {
 
     var rawdataShownColumns = localStorage.getItem('rawdataShownColumns');

@@ -96,6 +96,10 @@ function Logs(theWSEventNotifier) {
       pageLength: -1,
       responsive: true,
       scrollCollapse: true,
+      language: {
+        "sInfo": 'Showing _END_ Entries.',
+        "sInfoEmpty": 'No entries to show',
+      },
       fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
       columnDefs: [
         {
@@ -136,7 +140,7 @@ function Logs(theWSEventNotifier) {
             else
               return "<div class='logDetailIcon' onclick='displayPopUp(\""+row[3]+"\")'  title='More info'></div>";
           },
-          "targets": 2, "title": ""
+          "targets": 2, "title": "Details"
         },
         {
           "render": function ( data, type, row ) {
@@ -156,8 +160,6 @@ function Logs(theWSEventNotifier) {
         $(row).on("click", function () {
           // TODO : click on logs (show log details)
           if(data[3]) {
-            console.warn('TODO: click on logs (show log details)');
-            console.warn(data);
             showLogDetailsModal(data);
           }
           else

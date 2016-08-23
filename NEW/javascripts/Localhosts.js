@@ -1,5 +1,5 @@
 /**
- * Created by smile on 30/06/16.
+ * Created by smile on 22/08/16.
  */
 
 
@@ -102,114 +102,40 @@ function addLocalhostTab(localhostIp, localhostName){
 /*********************************************************************************************************
  Localhosts Constructor
  ********************************************************************************************************/
-
+/**
+ * Localhosts Object Constructor. Involves a WebSocket Event Listener in order to refresh known localhosts list.
+ * @param theWSEventNotifier
+ * @constructor
+ */
 function Localhosts(theWSEventNotifier) {
 
-    var localhostEntries = new Array();
-    var loadingAJAX = true;
-    var bufferSize = 0;
-    var nextLocalhostId = 0;
-    var firstSignificativeLocalhostReached = false;
-    //var localhostId = -1;
-
-    /*
-     Display a new localhost entry into the Localhosts datatable
-     Parameter : localhostEntry
-     return : nothing
-     */
-    this.insertLocalhostDisplay = function(localhostEntry)
-    {
-        // TODO write D3JS update table function
-        console.log("NEW ALERT ENTRY :");
-        console.log(localhostEntry);
-
-        var t = $('#tableLocalhosts').DataTable();
-
-        t.row.add( [
-            localhostEntry.severity,
-            localhostEntry.date,
-            localhostEntry.message,
-            localhostEntry.detail
-        ] ).draw( false );
-
-
-    }
-
-
-    this.addLocalhostEntry = function (id, severity, date, message, detail)
-    {
-        localhostEntries.push({"id": id, "severity" : severity, "date" : date, "message" : message, "detail" : detail});
-        if (!loadingAJAX)
-            this.unstackFIFO();
-    }
-
+    var table;
 
     this.onWSConnect = function(){
         var _this = this;
-        theWSEventNotifier.addCallback("notify", "localhosts", function (param_json) {
-            _this.addLocalhostEntry(param_json.id, param_json.severity, param_json.date, param_json.message, param_json.detail);
+        theWSEventNotifier.addCallback("notify", "date_processing", function () {
+            console.error("UPDATING LOCALHOST TaBLE !!!!");
+            _this.update();
         });
-        // TODO CallAJAX to get Localhosts (getLocalhost.json)
-        callAJAX('getListLocalhosts.json', '', 'json', _this.displayLocalhosts, _this);
+
+        _this.displayLocalhosts();
 
     };
 
 
-    this.unstackFIFO = function (){
-        while (localhostEntries.length != 0)
-        {
-            var i = localhostEntries.shift();
 
-            if(!firstSignificativeLocalhostReached && i.id == nextLocalhostId)
-                firstSignificativeLocalhostReached = true;
-
-            if(firstSignificativeLocalhostReached){
-                this.insertLocalhostDisplay(i);
-            }
-        }
-    };
-
-
-
-    this.displayLocalhosts = function(jsonContent, _this)
+    this.displayLocalhosts = function()
     {
-
-        bufferSize = jsonContent.bufSize;
-        nextLocalhostId = jsonContent.nextId;
-
-        var tableColumns = [];
 
         var lh_ipIndex = 0;
         var lh_nameIndex = 0;
 
-        for (var i = 0; i < jsonContent.content.length; i++) {
-            tableColumns.push({'title': jsonContent.content[i]});
-
-            if(jsonContent.content[i] === "ip")
-                lh_ipIndex = i;
-
-            if(jsonContent.content[i] === "name")
-                lh_nameIndex = i;
-        }
-
-
-
-        // Set Localhost global variable
-        for (var i = 0; i < jsonContent.data.length; i++){
-
-            var lh_ip = jsonContent.data[i][lh_ipIndex];
-            var lh_name = jsonContent.data[i][lh_nameIndex];
-            localhosts_Ip_Name_Array.push({ ip : lh_ip, name : lh_name});
-
-        }
-
-        //initialize localhost list in rawdata form now that "localhosts_Ip_Name_Array" global variable is setted
-        initializeRawDataLocalhostsIp();
-
+        // Not Used !!!
+        var tableColumns = [];
 
         $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
-        var table = $('#tableLocalhosts').DataTable( {
+        table = $('#tableLocalhosts').DataTable( {
 
             dom: 'Bfrtip',
             buttons: [
@@ -226,54 +152,75 @@ function Localhosts(theWSEventNotifier) {
                             extend: 'csv',
                             filename: 'local_hosts_dataTable.csv'
                         },
-                        {
-                            extend: 'pdf',
-                            filename: 'local_hosts_dataTable.pdf'
-                        },
                         'print'
                     ]
                 }
             ],
 
-            data: jsonContent.data,
+            ajax: {
+                url: proxyPass+'getListLocalhosts.json',
+                "dataSrc": function ( json ) {
+
+                    for (var i = 0; i < json.response.content.length; i++) {
+                        switch (json.response.content[i]) {
+                            case "ip":
+                                tableColumns.push({'targets': i, "type": 'ip-address', 'title': "Ip", "className": "dt-head-center dt-body-center"});
+                                lh_ipIndex = i;
+                                break;
+                            case "name":
+                                tableColumns.push({'targets': i, 'title': "Name", "className": "dt-head-center dt-body-center"});
+                                lh_nameIndex = i;
+                                break;
+                            default :
+                                // DO NOTHING
+                                break;
+                        }
+                    }
+
+                    // Set Localhost global variable
+                    for (var i = 0; i < json.response.data.length; i++){
+
+                        var lh_ip = json.response.data[i][lh_ipIndex];
+                        var lh_name = json.response.data[i][lh_nameIndex];
+                        localhosts_Ip_Name_Array.push({ ip : lh_ip, name : lh_name});
+
+                    }
+
+                    //initialize localhost list in rawdata form now that "localhosts_Ip_Name_Array" global variable is setted
+                    initializeRawDataLocalhostsIp();
+
+
+                    return json.response.data;
+                }
+            },
             columns: tableColumns,
             paging: false,
             pageLength: -1,
             scrollY: 1,
             responsive: true,
             scrollCollapse: true,
+            language: {
+                "sInfo": 'Showing _END_ Entries.',
+                "sInfoEmpty": 'No entries to show',
+            },
             fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
             columnDefs: [
-
-                /*{
-                    "render": function (data, type, row) {
-                        return moment.duration({'seconds': data}).humanize();
-                    },
-                    "targets": 3
-                },*/
-                { "targets": 0, "type": 'ip-address' },
+                {'targets': 0, "type": 'ip-address', 'title': "Ip", "className": "dt-head-center dt-body-center"},
+                {'targets': 1, 'title': "Name", "className": "dt-head-center dt-body-center"},
+                {'targets': 2, 'title': "Network", "className": "dt-head-center dt-body-center"},
                 {
-                    "targets": 3,
+                    "targets": 3, 'title': "Last seen", "className": "dt-head-center dt-body-center",
                     "data": function ( row, type, val, meta ) {
-                        /*if (type === 'set') {
-                            console.error("setting");
-                            row.price = val;
-                            // Store the computed display and filter values for efficiency
-                            row.price_display = moment.duration({'seconds' : val}).humanize();
-                            row.price_filter  = moment.duration({'seconds' : val}).humanize();
-                            return;
-                        }
-                        else */
                         if (type === 'display') {
                             return moment.duration({'seconds' : row[3]}).humanize();
                         }
                         else if (type === 'filter') {
                             return moment.duration({'seconds' : row[3]}).humanize();
                         }
-                        // 'sort', 'type' and undefined all j
                         return row[3];
                     }
                 },
+                {'targets': 4, 'title': "Mac Adress", "className": "dt-head-center dt-body-center"},
                 {
                     // The `data` parameter refers to the data for the cell (defined by the
                     // `data` option, which defaults to the column being worked with, in
@@ -285,40 +232,17 @@ function Localhosts(theWSEventNotifier) {
                     },
                     "targets": 5
                 },
-                /*{
-                    "render": function ( data, type, row ) {
-                        switch (data){
-                            case "t":
-                                return "Yes";//"<div class='logWarningIcon' title='Warning'/>";
-                                break;
-                            case "f":
-                                return "No";//"<div class='logAlertIcon' title='Alert'/>";
-                                break;
-                            default:
-                                alert("localhosts datatable (Localhosts.js) : unexpected value found : "+ data+" ! (103)");
-                                break;
-                        }
+                {'targets': [6, 7], "visible": false, "searchable": false},
+                { "targets": 8, 'title': "Local Services", "className": "dt-head-center dt-body-center",
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).attr("title",cellData);
                     },
-                    "targets": 6
-                },*/
-                /*{
                     "render": function ( data, type, row ) {
-                        switch (data){
-                            case "t":
-                                return "Yes";//"<div class='logWarningIcon' title='Warning'/>";
-                                break;
-                            case "f":
-                                return "No";//"<div class='logAlertIcon' title='Alert'/>";
-                                break;
-                            default:
-                                alert("localhosts datatable (Localhosts.js) : unexpected value found : "+ data+" ! (104)");
-                                break;
-                        }
-                    },
-                    "targets": [6, 7]
-                },*/
-                { "targets": [6, 7], "visible": false, "searchable": false },
-                { "targets": [8, 9],
+                        var renderedString = data.toString().substring(0, 30);
+                        return renderedString+ ( (data.toString() != renderedString) ? "..." : "" );
+                    }
+                },
+                { "targets": 9, 'title': "External Services", "className": "dt-head-center dt-body-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).attr("title",cellData);
                     },
@@ -338,16 +262,9 @@ function Localhosts(theWSEventNotifier) {
                     checkLocalhostTab(data[0], data[1]);
                 });
 
-                /*if ( $.inArray(data.DT_RowId, selected) !== -1 ) {
-                 $(row).addClass('selected');
-                 }*/
-
             }
 
         } );
-
-        _this.unstackFIFO();
-        loadingAJAX = false;
 
     };
 
@@ -361,34 +278,12 @@ function Localhosts(theWSEventNotifier) {
         );
     };
 
+
+
+    this.update = function()
+    {
+        table.ajax.reload();
+    }
+
 }
-
-
-/**
- * Function to be used as search function in Array.prototype.find() function
- * in order to find element (localhost) whose ip is past as second attribute of find function ( attribute as 'this' inside findIp function)
- * @param element
- * @param index
- * @param array
- * @returns {boolean} true if
- */
-function findIp(element, index, array) {
-    return element.ip == this.toString();
-}
-
-
-
-/**
- * Function to be used as search function in Array.prototype.find(function, thisArgument) function
- * in order to find element (localhost) whose name is past as second attribute 'thisArgument' of find function ( attribute as 'this' inside findName function)
- * @param element
- * @param index
- * @param array
- * @returns {boolean}
- */
-function findName(element, index, array) {
-    return element.name == this.toString();
-}
-
-
 

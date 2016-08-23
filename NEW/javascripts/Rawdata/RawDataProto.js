@@ -24,6 +24,7 @@ function setProtosId(jsonResponse) {
     for (var i = 0; i < data.length; i++) {
         if( data[i][protoIdIndex] != 1 && data[i][protoIdIndex] != 6 && data[i][protoIdIndex] != 17  && data[i][protoNameIndex] != "" )
             $("#proto").append('<option value="' + data[i][protoIdIndex] + '">' + data[i][protoNameIndex] + '</option>')
+            protocoleTable[jsonResponse.data[i][protoIdIndex]] = jsonResponse.data[i][protoNameIndex];
     }
 
 

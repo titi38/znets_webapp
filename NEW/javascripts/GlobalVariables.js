@@ -19,3 +19,7 @@ var chartsPreset = {
 var serverDate = "";
 
 var localhosts_Ip_Name_Array = [];
+
+var countryTable = [];
+
+var protocoleTable = [];

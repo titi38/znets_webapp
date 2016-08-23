@@ -345,7 +345,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     }
 
-    function desactivationElems() {
+    function deactivationElems() {
       if (svg.activeItem == null || svg.popup.pieChart !== null) {  
         return;
       }

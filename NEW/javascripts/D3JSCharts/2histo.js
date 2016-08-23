@@ -192,11 +192,16 @@ function create2HistoStack(div,svg,mydiv,urlJson){
       }
     }
 
-    addPopup(selection,div,svg,function(data){
-        desacAll();
-        activElemAllAutoScrollPopup(data);},
-      desacAll);
-    
+    if(svg.hasPopup) {
+      addPopup(selection,div,svg,function(data){
+          desacAll();
+          activElemAllAutoScrollPopup(data);},
+        desacAll);
+    }else{
+      svg.popup = [];
+      svg.popup.pieChart = null;
+    }
+
     d3.select(window).on("resize." + mydiv, function () {
       console.log("resize");
 

@@ -195,7 +195,6 @@ function whichCreationFunction(urlJson,svg){
 
         case "netTopServicesNbFlow":
         case "hostTopServicesNbFlow":
-        case "netTopNbExtHosts":
             return createHisto2DStackSimple;
             break;
 
@@ -218,6 +217,9 @@ function whichCreationFunction(urlJson,svg){
 
         case "netTopAppNbFlow":
         case "hostTopAppNbFlow":
+
+        case "netTopNbExtHosts":
+
 
             return create2HistoStack;
             break;

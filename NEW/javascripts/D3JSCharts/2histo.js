@@ -180,8 +180,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     createTooltipHisto(svg,selection,svg.sumMap);
 
     function desacAll(){
-      svg.svgBottom.desactivationElems();
-      svg.svgTop.desactivationElems();
+      svg.svgBottom.deactivationElems();
+      svg.svgTop.deactivationElems();
     }
 
     function activElemAllAutoScrollPopup(data){

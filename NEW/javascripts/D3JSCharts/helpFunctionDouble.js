@@ -333,6 +333,8 @@ function hideShowValuesDirection(svg,trSelec,direction){
   var valuesDirectionImmutable = JSON.parse(stringifiedDirection);
   var valuesDirectionFinal = JSON.parse(stringifiedDirection);
 
+  svg["values" + direction + "Immutable"] = valuesDirectionImmutable;
+
   var hiddenValuesDirection = [];
 
   var firstX = 0;

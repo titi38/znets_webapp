@@ -170,9 +170,10 @@ function LastHourHistory(theWSEventNotifier) {
           callbackObj.lastMinute = (lastMinute === -1)?-1:jsonCurrentMinute;
 
           try {
-            callbackObj.callback(response);
+            callbackObj.callback(response, new Date(param.date));
           }catch(e){
-            console.warn("callback error: " + e);
+            console.warn("callback error");
+            console.warn(e);
           }
 
         });

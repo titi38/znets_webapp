@@ -363,7 +363,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     }
 
-    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
+    selection.on("mouseover", activationElemsAutoScroll).on("mouseout", deactivationElems);
 
 
     svg.axisx = svg.append("g")
@@ -382,9 +382,9 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     if(svg.hasPopup){
 
       addPopup(selection,div,svg,function(data){
-          desactivationElems();
+          deactivationElems();
           activationElemsAutoScrollPopup(data);},
-        desactivationElems);
+        deactivationElems);
 
     }else{
 
@@ -404,7 +404,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     trSelec.append("td").text(function (d) {
       return d.display;
     });
-    trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
+    trSelec.on("mouseover", activationElems).on("mouseout", deactivationElems);
 
 
     //zoom

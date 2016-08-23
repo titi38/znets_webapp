@@ -137,7 +137,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   }
 
-  function desactivationElems() {
+  function deactivationElems() {
 
     if (svgChild.activeItem == null || svg.popup.pieChart !== null) {
       return;
@@ -156,12 +156,12 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   }
 
-  svgChild.desactivationElems = desactivationElems;
+  svgChild.deactivationElems = deactivationElems;
   svgChild.activationElemsAutoScrollPopup = activationElemsAutoScrollPopup;
   svgChild.activationElemsAutoScroll = activationElemsAutoScroll;
   svgChild.activationElems = activationElems;
 
-  selection.on("mouseover", activationElemsAutoScroll).on("mouseout", desactivationElems);
+  selection.on("mouseover", activationElemsAutoScroll).on("mouseout", deactivationElems);
 
   svgChild.axisx = svg.append("g")
     .attr("class", "axisGraph")
@@ -195,7 +195,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   trSelec.append("td").text(function (d) {
     return d.display;
   });
-  trSelec.on("mouseover", activationElems).on("mouseout", desactivationElems);
+  trSelec.on("mouseover", activationElems).on("mouseout", deactivationElems);
 
   svgChild.divtable.style("margin-bottom",maxHeight - parseInt(svgChild.table.style("height"),10) + "px");
   

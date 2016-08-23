@@ -454,7 +454,9 @@ function trueModulo(n,d){
 
 
 function blinkCreate(colorMap) {
+  
   var duration = 500;
+  
   return function(){
 
     this.parentNode.appendChild(this);

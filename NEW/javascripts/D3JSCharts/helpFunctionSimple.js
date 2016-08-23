@@ -32,7 +32,7 @@ function legendAxisX(svg){
 
       dround = Math.round(d);
 
-      //if the ticks isn't at "x" o'clock
+      //if the ticks aren't at "x" o'clock
       if(Math.abs(dround - d) >= 1e-7){
         this.parentNode.remove();
         return;

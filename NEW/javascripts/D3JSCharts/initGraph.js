@@ -45,9 +45,10 @@ function drawChartFromInterface(urlJson, mydiv) {
 
     svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
 
+    svg.urlJson = urlJson;
 
     //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    svg.urlJson = urlJson;
+    //createHistoDoubleCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
 }
@@ -104,6 +105,7 @@ function whichCreationFunction(urlJson,svg){
     //For test & real use, can be simplified later
     typeGraph = typeGraph[typeGraph.length - 2];
     svg.typeGraph = typeGraph;
+    
     var GraphsWithoutPopup = ["netNbFlow","hostNbFlow","hostNbDiffHosts","netNbDiffHosts","netTopNbExtHosts","hostTopNbExtHosts"];
     
     svg.hasPopup = GraphsWithoutPopup.indexOf(typeGraph) === -1;

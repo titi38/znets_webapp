@@ -182,7 +182,7 @@ function popupHasButton(svg){
 
       return true;
 
-    case "netTopHosts":
+    default:
       return false;
 
   }

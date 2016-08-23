@@ -5,7 +5,8 @@
 
 /**
  * RawData Formular - Protocole Field Initialization Function
- * 
+ * Call Ajax to retrieve known protocoles list
+ * Triggers Protocole Setting Function "setProtosId"
  */
 function initializeProtosId(){
 
@@ -13,6 +14,16 @@ function initializeProtosId(){
 
 }
 
+
+
+
+
+/**
+ * Protocoles Setting Function
+ * Initialize Protocoles array "protocoleTable"
+ * Initialize RawData Formular - Protocoles ComboBox (special select field)
+ * @param jsonResponse
+ */
 function setProtosId(jsonResponse) {
 
     var protoIdIndex = jsonResponse.content.indexOf("ipnum");

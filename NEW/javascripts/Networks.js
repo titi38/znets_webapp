@@ -4,6 +4,13 @@
 
 
 
+function initializeNetwork() {
+
+    callAJAX("getNetworkList.json", "", "json", addNetworksTabs, null);
+
+}
+
+
 function addNetworkTab(networkName){
 
     var ai = (networkName === 'Global') ? 'active in' : '';

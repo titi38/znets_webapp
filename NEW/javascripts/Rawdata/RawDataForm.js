@@ -213,10 +213,6 @@ function drawRawdataDatatable(jsonResponse, rawdataTabID) {
                         extend: 'csv',
                         filename: 'local_hosts_dataTable.csv'
                     },
-                    {
-                        extend: 'pdf',
-                        filename: 'local_hosts_dataTable.pdf'
-                    },
                     'print'
                 ]
             }

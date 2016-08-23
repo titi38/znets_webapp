@@ -2,6 +2,45 @@
  * Created by smile on 11/03/16.
  */
 
+
+
+
+
+/*********************************************************************************************************
+ Try to connect on page loading (connection made if a valid session still exist. Example: on page refresh)
+ ********************************************************************************************************/
+/**
+ * First templates loading and first attempt of connexion (in case there is already a valid session)
+ * Executed on page load/refresh
+ */
+$( document ).ready(function() {
+
+
+    $("ul.navbar-nav > li > a").click(function (e) {
+        e.preventDefault();
+    });
+
+    getHtmlTemplate("#home", "NEW/templates/home.html", null, null);
+
+    activateTabOfClass("home");
+
+    getHtmlTemplate("#charts_form_container", "NEW/templates/chartsFormular.html", null, null);
+
+    getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null, null);
+
+    tryRestaureConnectSession();
+
+})
+
+
+
+
+/**
+ * Interface initialisation function. Launched once user is successful logged in.
+ *  - Retrieve useful templates (network and localhost views)
+ *  - Creating and initializing interface objects
+ *  - Initialize and activates interaction items (tabs)
+ */
 function initialisation(){
 
     /*********************************************************************************************************
@@ -40,10 +79,13 @@ function initialisation(){
     myAlerts.init();
 
     /*********************************************************************************************************
-     New Localhosts Object
-     Will used on localhost Tab initialisation. Check further
+     New Localhosts Object - without websocket
      ********************************************************************************************************/
     var myLocalhosts = new Localhosts(myWSEventNotifier);
+    //var myLocalhosts = new Localhosts();
+    myLocalhosts.init();
+
+
 
     /*********************************************************************************************************
      New LastHourHistory Object
@@ -126,7 +168,7 @@ function initialisation(){
     /*********************************************************************************************************
      Initialize LocalhostsTab
      ********************************************************************************************************/
-    initializeLocalhosts(myLocalhosts);
+    initializeLocalhosts();
 
 
 
@@ -139,15 +181,6 @@ function initialisation(){
 
 
 
-}
-
-
-function getTemplate(templateUrl) {
-    return $.ajax({
-        type: "GET",
-        url: templateUrl,
-        async: false
-    }).responseText;
 }
 
 
@@ -164,18 +197,6 @@ function activateTabOfClass(tabClass)
     $("ul.navbar-nav li."+tabClass+" a").click(function (e) {
         e.preventDefault();
         $(this).tab('show');
-    });
-}
-
-
-function getHtmlTemplate( elementJQuery, url, callBack, callBackParams)
-{
-    $(elementJQuery).html(getTemplate(url)).promise().done(function(){
-        if(callBack)
-            if(callBackParams)
-                callBack(callBackParams);
-            else
-                callBack();
     });
 }
 
@@ -282,27 +303,8 @@ function loadChartJsonToDiv(selectedNavChart, forNetworks) {
 
 }
 
-function initializeNetworkCallback() {
 
-    callAJAX("getNetworkList.json", "", "json", addNetworksTabs, null);
-
-}
-
-
-function initializeNetwork() {
-
-// TODO START : embed this
-    //getHtmlTemplate("#network", "NEW/templates/networkContent.html", initializeNetworkCallback, null);
-    initializeNetworkCallback();
-
-// TODO END
-
-}
-
-function initializeLocalhostCallback(myLocalhosts) {
-
-    myLocalhosts.init();
-
+function initializeLocalhosts() {
 
     //$( "#charts_form" ).clone(true, true).appendTo( "#charts_form_container" );
 
@@ -323,42 +325,6 @@ function initializeLocalhostCallback(myLocalhosts) {
 }
 
 
-function initializeLocalhosts(myLocalhosts) {
-
-// TODO START : embed this
-    //getHtmlTemplate("#localhosts", "NEW/templates/localhostContent.html", initializeLocalhostCallback, myLocalhosts);
-    initializeLocalhostCallback(myLocalhosts);
-
-// TODO END
-
-}
-
-
-
-
-
-
-/*********************************************************************************************************
- Try to connect on page loading (connection made if a valid session still exist. Example: on page refresh)
- ********************************************************************************************************/
-$( document ).ready(function() {
-
-
-    $("ul.navbar-nav > li > a").click(function (e) {
-        e.preventDefault();
-    });
-
-    getHtmlTemplate("#home", "NEW/templates/home.html", null, null);
-
-    activateTabOfClass("home");
-
-    getHtmlTemplate("#charts_form_container", "NEW/templates/chartsFormular.html", null, null);
-
-    getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null, null);
-
-    tryRestaureConnectSession();
-
-})
 
 
 

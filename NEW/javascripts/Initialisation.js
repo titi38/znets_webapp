@@ -28,7 +28,7 @@ $( document ).ready(function() {
 
     getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null, null);
 
-    tryRestaureConnectSession();
+    tryRestoreConnectSession();
 
 });
 
@@ -180,21 +180,6 @@ function initialisation(){
 
 
 
-
-}
-
-
-
-function loadChartJsonToDiv(selectedNavChart, forNetworks) {
-
-    var jsonData = selectedNavChart.dataset.chartJson;
-    var ajaxParams = selectedNavChart.dataset.ajaxParams;
-    var jqueryTarget = selectedNavChart.hash;
-
-    emptyChartContainer(jqueryTarget);
-
-    var subNet_or_lhIp = (forNetworks) ? ( (selectedNavChart.dataset.network === "Global") ? "" : selectedNavChart.dataset.network ) : ( selectedNavChart.dataset.localhostIp );
-    drawChartFromInterface(setChartJsonFUllURL(jsonData, ajaxParams, subNet_or_lhIp, forNetworks), jqueryTarget);
 
 }
 

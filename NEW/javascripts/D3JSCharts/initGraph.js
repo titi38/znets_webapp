@@ -1,5 +1,59 @@
+/**
+ * Chart drawing Function from JSON's Url.
+ * Evaluate JSON's Url from "selectedNavChart" (the selected chart)
+ * @param selectedNavChart : contains all necessary data about JSON's Url and interface target element receiving the chart
+ * @param forNetworks : boolean - true if charts concerns a network, false if it concerns a loaclhost
+ */
+function loadChartJsonToDiv(selectedNavChart, forNetworks) {
+
+    var jsonData = selectedNavChart.dataset.chartJson;
+    var ajaxParams = selectedNavChart.dataset.ajaxParams;
+    var jqueryTarget = selectedNavChart.hash;
+
+    emptyChartContainer(jqueryTarget);
+
+    var subNet_or_lhIp = (forNetworks) ? ( (selectedNavChart.dataset.network === "Global") ? "" : selectedNavChart.dataset.network ) : ( selectedNavChart.dataset.localhostIp );
+    drawChartFromInterface(setChartJsonFUllURL(jsonData, ajaxParams, subNet_or_lhIp, forNetworks), jqueryTarget);
+
+}
 
 
+/**
+ * JSON Url evaluation Function
+ * Evaluate JSON's Url from parameters
+ * @param jsonData : Ajax called JSON Url
+ * @param ajaxParams : parameters of the ajax called JSON Url
+ * @param subNet_or_lhIp : (sub)Network Name , or, Localhost Ip
+ * @param forNetworks : boolean - true if charts concerns a network, false if it concerns a loaclhost
+ * @returns {string} - JSON Url
+ */
+function setChartJsonFUllURL (jsonData, ajaxParams, subNet_or_lhIp, forNetworks){
+
+    var myform = $('#charts_form');
+
+    // Find disabled inputs, and remove the "disabled" attribute
+    var disabled = myform.find(':input:disabled').prop('disabled', false);
+
+    // serialize the form
+    var serializedTimestepForm = myform.serialize();
+
+    // re-disabled the set of inputs that you previously enabled
+    disabled.prop('disabled',true);
+
+    var serialized_subNet_or_lhIp = (forNetworks) ? ( (subNet_or_lhIp === "") ? "" : "&net="+subNet_or_lhIp ) : ( "&ip="+subNet_or_lhIp );
+
+    console.warn(proxyPass+jsonData+"?"+ajaxParams+serialized_subNet_or_lhIp+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z")));
+
+
+    return proxyPass+jsonData+"?"+ajaxParams+serialized_subNet_or_lhIp+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z"));
+
+}
+
+
+/**
+ * Empties Chart Container
+ * @param jqueryElement : jQuery selector of element containing chart to delete (chart + legend)
+ */
 function emptyChartContainer(jqueryElement) {
 
     d3.select(jqueryElement).select(".diagram").selectAll("*").remove();

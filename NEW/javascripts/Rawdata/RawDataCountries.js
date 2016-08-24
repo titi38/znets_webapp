@@ -3,13 +3,27 @@
  */
 
 
-
+/**
+ * RawData Formular - Country Field Initialization Function
+ * Call Ajax to retrieve known countries list
+ * Triggers Country Setting Function "setCountriesId"
+ */
 function initializeCountriesId(){
 
     callAJAX("getCountryList.json", '', "json", setCountriesId, null);
 
 }
 
+
+
+
+
+/**
+ * Countries Setting Function
+ * Initialize Countries array "countryTable"
+ * Initialize RawData Formular - Countries ComboBox (special select field)
+ * @param jsonResponse
+ */
 function setCountriesId(jsonResponse) {
 
     var countryIdIndex = jsonResponse.content.indexOf("c");

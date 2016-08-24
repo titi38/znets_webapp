@@ -2,6 +2,12 @@
  * Created by smile on 29/07/16.
  */
 
+
+
+/**
+ * RawData Formular - Localhost's Names Setting Function
+ * Initialize RawData Formular - Localhost's Names ComboBox (special select field), using localhosts array "localhosts_Ip_Name_Array"
+ */
 function initializeRawDataLocalhostsIp() {
 
     var data = localhosts_Ip_Name_Array.sort(function(a, b){

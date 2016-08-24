@@ -8,7 +8,7 @@
  * Add prefix (prepend) to value
  * @param value
  * @param prependString
- * @returns {*}
+ * @returns {string|*}
  */
 rivets.formatters.prepend = function(value, prependString) {
     return prependString + value

@@ -1,8 +1,16 @@
 /**
  * Created by smile on 10/05/16.
+ *
  */
 
 
+/**
+ * Executes interface modification once user is successful connected (login box modifications)
+ *  - Sets User's Name
+ *  - Show/Hide and Enable/Disable corresponding buttons
+ *  - Set "view on connexion" to Localhost Table
+ * @param response : connexion request response
+ */
 function userLoggedIn(response)
 {
     // Set login input value to response.username value
@@ -21,9 +29,17 @@ function userLoggedIn(response)
 
     // Show login inside upper navbar
     $("#loginform").removeClass("hidden");
-    $("#localhostTab").click();
+    $("#localhostTab").click()
 }
 
+
+
+
+/**
+ * Executes interface modification once user is successful disconnected (login box modifications)
+ *  - Resets User's Name
+ *  - Show/Hide and Enable/Disable corresponding buttons
+ */
 function userDisconnect()
 {
     //console.warn("TODO : Auth.js : userDisconnect function (what happend on user disconnection)");
@@ -38,13 +54,30 @@ function userDisconnect()
     $("#loginform").addClass("hidden");
 }
 
+
+
+
+
+/**
+ * User's Connection Function
+ * Ajax request to server with filled "login" and "password" fields
+ * Execute "connectCallback" function on response
+ */
 function connect()
 {
     callAJAX("connect.json", "login="+$("#login-username").val()+"&pass="+$("#login-password").val(), "json", connectCallback, '');
 }
 
 
-function tryRestaureConnectSession()
+
+
+
+/**
+ * Executes a connection attempt without "login/password"
+ * If there is a session (valid cookie id), server will respond successfully. If not, nothing to do and wait for user's connection attempt
+ * @returns {false} - in order to avoid default page behaviour (redirection or reload)
+ */
+function tryRestoreConnectSession()
 {
     // Try to log with current session (success if valid session)
     // Try login
@@ -80,7 +113,10 @@ function tryRestaureConnectSession()
 
 
 /**
- * Function called on connection callAJAX true response of Daq App (successfully logged in Daq App)
+ * Function called on connection callAJAX true response (successfully logged in)
+ * Trigger interface initialization
+ * Trigger interface modification (user successful connected)
+ * @param response : returned by callAjax
  */
 function connectCallback(response)
 {
@@ -97,6 +133,13 @@ function connectCallback(response)
 
 
 
+
+
+/**
+ * User's Disconnection Function
+ * Ajax request to server on user's disconnection
+ * Execute "disconnectCallback" function on response
+ */
 function disconnect()
 {
     callAJAX("disconnect.json", '', "json", disconnectCallback, '');
@@ -105,6 +148,14 @@ function disconnect()
 
 
 
+
+
+
+/**
+ * Function called on disconnection callAJAX true response (successfully logged out)
+ * Trigger interface modification (user successfully disconnected)
+ * Reloads page
+ */
 function disconnectCallback() {
     /**
      * Update loggin box view
@@ -119,10 +170,10 @@ function disconnectCallback() {
 
 
 
+/**
+ * Reload current page
+ */
 function reloadPage() {
-    /**
-     * Reload current page
-     */
     location.reload();
 }
 

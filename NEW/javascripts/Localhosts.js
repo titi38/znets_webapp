@@ -34,6 +34,7 @@ function initializeLocalhosts() {
  ********************************************************************************************************/
 /**
  * Localhosts Object Constructor. Involves a WebSocket Event Listener in order to refresh known localhosts list.
+ * Displays Localhosts in a table (DataTable)
  * @param theWSEventNotifier
  * @constructor
  */

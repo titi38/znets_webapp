@@ -7,6 +7,13 @@
  Alerts Constructor
  ********************************************************************************************************/
 
+/**
+ * Alerts Object Constructor. 
+ * Involves a WebSocket Event Notifier in order to update automatically Alerts for user's interface
+ * Displays Alerts in a table (DataTable)
+ * @param theWSEventNotifier
+ * @constructor
+ */
 function Alerts(theWSEventNotifier) {
 
   var alertEntries = new Array();

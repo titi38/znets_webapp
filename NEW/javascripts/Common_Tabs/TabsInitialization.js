@@ -10,7 +10,7 @@
  Activate a specified navigation tab
  ********************************************************************************************************/
 /**
- *  Specific navigation tab Activation Function
+ * Specific navigation tab Activation Function
  * @param tabClass
  */
 function activateTabOfClass(tabClass)

@@ -7,6 +7,15 @@
  callAjax Function
  ********************************************************************************************************/
 
+/**
+ * Executes Ajax request (to "url" with paramaters "params") and Executes "callback" function with parameters "callbackParams"
+ * @param url
+ * @param params
+ * @param outputType
+ * @param callback
+ * @param callbackParams
+ * @returns {False} to avoid default page behavior (redirection or reload)
+ */
 function callAJAX(url, params, outputType, callback, callbackParams)
 {
 
@@ -108,30 +117,4 @@ function callAJAX(url, params, outputType, callback, callbackParams)
      Use "return callAJAX(...)" in HTML to return false to HTML
      */
     return false;
-}
-
-/**********************************************************************************/
-
-
-
-function setChartJsonFUllURL (jsonData, ajaxParams, subNet_or_lhIp, forNetworks){
-
-    var myform = $('#charts_form');
-
-    // Find disabled inputs, and remove the "disabled" attribute
-    var disabled = myform.find(':input:disabled').prop('disabled', false);
-
-    // serialize the form
-    var serializedTimestepForm = myform.serialize();
-
-    // re-disabled the set of inputs that you previously enabled
-    disabled.prop('disabled',true);
-
-    var serialized_subNet_or_lhIp = (forNetworks) ? ( (subNet_or_lhIp === "") ? "" : "&net="+subNet_or_lhIp ) : ( "&ip="+subNet_or_lhIp );
-
-    console.warn(proxyPass+jsonData+"?"+ajaxParams+serialized_subNet_or_lhIp+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z")));
-
-
-    return proxyPass+jsonData+"?"+ajaxParams+serialized_subNet_or_lhIp+"&"+serializedTimestepForm+"&dh="+parseInt(moment().format("Z"));
-
 }

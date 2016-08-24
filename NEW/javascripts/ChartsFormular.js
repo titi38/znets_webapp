@@ -3,7 +3,11 @@
  */
 
 
-function updateChartsTimeslice(element ){
+/**
+ * Updates Charts Formular/Bar Visible Values on Timeslice value change
+ * @param element : Visible Timeslice Value
+ */
+function updateChartsTimeslice( element ){
 
     var timesliceValue = $(element).val();
 
@@ -31,6 +35,12 @@ function updateChartsTimeslice(element ){
 
 
 
+
+
+/**
+ * Enable Charts Formular/Bar Buttons
+ * Triggered once a Formular/Bar Visible Value is changed/set
+ */
 function onChangeChartsForm() {
 
     $("#applyBtn_charts_form").prop("disabled", false);
@@ -40,6 +50,12 @@ function onChangeChartsForm() {
 
 
 
+
+
+/**
+ * Applies Formular/Bar Visible Fields Values to Hidden Fields Values (these ones are those actually used as "presets" for charts server's requests)
+ * Copies Visible Fields Values to each equivalent Hidden Fields Values
+ */
 function applyChartsForm(){
 
     $("#timeslice_ChartsForm").val($("#timesliceCharts").val());
@@ -62,6 +78,13 @@ function applyChartsForm(){
 }
 
 
+
+
+
+/**
+ * Resets Formular/Bar Visible Fields Values to Hidden Fields Values
+ * Copies Hidden Fields Values to each equivalent Visible Fields Values
+ */
 function resetChartsForm(){
 
     $("#timestepCharts").val($("#preset_ChartsForm").val());
@@ -82,6 +105,11 @@ function resetChartsForm(){
 
 
 
+/**
+ * Formular/Bar Visible and Hidden Fields initialization
+ * Initialize visible fields using DateTimePicker library
+ * Initialize fields interactions
+ */
 function initializeChartsTimestepForm() {
 
     $('#fromDate_ChartsForm').datetimepicker({

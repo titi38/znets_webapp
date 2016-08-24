@@ -187,17 +187,17 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
       };
 
 
-      mapElemToSum(svg.sumMap, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+      mapElemToSumCurrent(svg.sumMap, elemToPush, elemJson, svg.contentDisplayValue,itemType);
       
       if(elemJson[svg.contentDirectionValue] === "IN"){
         elemToPush.direction = "inc";
 
-        mapElemToSum(sumMapTop, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+        mapElemToSumCurrent(sumMapTop, elemToPush, elemJson, svg.contentDisplayValue,itemType);
         svg.valuesTop.push(elemToPush);
 
       }else{
 
-        mapElemToSum(sumMapBottom, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+        mapElemToSumCurrent(sumMapBottom, elemToPush, elemJson, svg.contentDisplayValue,itemType);
         svg.valuesBottom.push(elemToPush)
 
       }
@@ -225,7 +225,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
 
     //sort alphabetically
-    svg.sumArray.sort(sortAlphabet);
+    svg.sumArray.sort(sortArrayVolume);
     svg.sumArrayBottom.sort(sortAlphabet);
     svg.sumArrayTop.sort(sortAlphabet);
 
@@ -250,8 +250,14 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     svg.step = 60000;
     
 
-    svg.valuesBottom.sort(sortValues);
-    svg.valuesTop.sort(sortValues);
+    svg.valuesBottom.sort(sortValuesCurrent);
+    svg.valuesTop.sort(sortValuesCurrent);
+
+    svg.valuesBottomSCAlphabetSort = svg.valuesBottom.concat();
+    svg.valuesBottomSCAlphabetSort.sort(sortAlphabetItemOnly);
+
+    svg.valuesTopSCAlphabetSort = svg.valuesTop.concat();
+    svg.valuesTopSCAlphabetSort.sort(sortAlphabetItemOnly);
 
     
     var xMax = 60;
@@ -370,7 +376,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
     //Tooltip creation
 
-    createTooltipHisto(svg,selection,svg.sumMap);
+    createTooltipHistoCurrent(svg,selection,svg.sumMap);
 
 
     var blink = blinkCreate(svg.colorMap);
@@ -543,7 +549,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     });
 
 
-    autoUpdateDoubleCurrent(svg,urlJson);
+    autoUpdateDoubleCurrent(svg,urlJson, div);
 
   }); //d3.json end
 
@@ -552,9 +558,11 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
 /***********************************************************************************************************************/
 
-function autoUpdateDoubleCurrent(svg,urlJson){
+function autoUpdateDoubleCurrent(svg,urlJson, div){
 
-  svg.updateTransitionDuration = 1000;
+
+
+  svg.updateTransitionDuration = 2000;
 
   var onUpdate = false;
 
@@ -570,6 +578,12 @@ function autoUpdateDoubleCurrent(svg,urlJson){
     ,svg.lastMinute);
 
   function timeoutUpdate(){
+
+    if(unsubscribeGraphIfInactive(id, urlJson, div)){
+      console.log("unsubscribe");
+      return;
+    }
+
     if(onUpdate){
       setTimeout(timeoutUpdate,500)
     }else{
@@ -637,8 +651,7 @@ function autoUpdateDoubleCurrent(svg,urlJson){
 
       elemToPush = {
         x: elemJson[svg.contentXPositionValue],
-        //heightRef: +elemJson[svg.contentAmountValue],
-        height: +elemJson[svg.contentAmountValue],
+        heightRef: +elemJson[svg.contentAmountValue],
         item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue],
         direction: elemJson[svg.contentDirectionValue].toLowerCase()
       };
@@ -648,35 +661,34 @@ function autoUpdateDoubleCurrent(svg,urlJson){
       if(elemJson[svg.contentDirectionValue] === "IN"){
         elemToPush.direction = "inc";
 
-        //TODO virer comms
-        /*
-        if(!svg.mapDisplayPercentByItemTop.has(elemToPush.item)){
-          svg.mapDisplayPercentByItemTop.set(elemToPush.item,{percentDisplay:1});
+
+        if(!svg.mapPercentDisplayByItemTop.has(elemToPush.item)){
+          svg.mapPercentDisplayByItemTop.set(elemToPush.item,{percentDisplay:1});
         }
 
-        elemToPush.height = elemToPush.heightRef*svg.mapDisplayPercentByItemTop.get(elemToPush.item).percentDisplay;
-        */
+        elemToPush.height = elemToPush.heightRef*svg.mapPercentDisplayByItemTop.get(elemToPush.item).percentDisplay;
 
-        mapElemToSum(sumMapTopUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+
+        mapElemToSumCurrent(sumMapTopUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
         valuesTopNew.push(elemToPush);
 
       }else{
 
-        /*
-        if(!svg.mapDisplayPercentByItemBottom.has(elemToPush.item)){
-          svg.mapDisplayPercentByItemBottom.set(elemToPush.item,{percentDisplay:1});
+
+        if(!svg.mapPercentDisplayByItemBottom.has(elemToPush.item)){
+          svg.mapPercentDisplayByItemBottom.set(elemToPush.item,{percentDisplay:1});
         }
 
-        elemToPush.height = elemToPush.heightRef*svg.mapDisplayPercentByItemBottom.get(elemToPush.item).percentDisplay;
+        elemToPush.height = elemToPush.heightRef*svg.mapPercentDisplayByItemBottom.get(elemToPush.item).percentDisplay;
 
-        */
 
-        mapElemToSum(sumMapBottomUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+
+        mapElemToSumCurrent(sumMapBottomUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
         valuesBottomNew.push(elemToPush)
 
       }
 
-      mapElemToSum(sumMapUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+      mapElemToSumCurrent(sumMapUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
 
     }
 
@@ -696,8 +708,8 @@ function autoUpdateDoubleCurrent(svg,urlJson){
     });
 
 
-    valuesTopNew.sort(sortValues);
-    valuesBottomNew.sort(sortValues);
+    valuesTopNew.sort(sortValuesCurrent);
+    valuesBottomNew.sort(sortValuesCurrent);
 
 
 
@@ -744,8 +756,8 @@ function autoUpdateDoubleCurrent(svg,urlJson){
 
 
 
-    var totalBottomUpdate = d3.max(totalSumBottomUpdate);
-    var totalTopUpdate = d3.max(totalSumTopUpdate);
+    svg.totalBottom = Math.max(svg.totalBottom,d3.max(totalSumBottomUpdate));
+    svg.totalTop = Math.max(svg.totalTop,d3.max(totalSumTopUpdate));
 
 
 
@@ -806,22 +818,39 @@ function autoUpdateDoubleCurrent(svg,urlJson){
 
     svg.selectionTop = selecTopEnter.merge(svg.selectionTop);
 
-    svg.valuesBottom.sort(sortValues);
-    svg.valuesTop.sort(sortValues);
+    svg.valuesBottom.sort(sortValuesCurrent);
+    svg.valuesTop.sort(sortValuesCurrent);
+
+    svg.valuesBottomSCAlphabetSort = svg.valuesBottom.concat();
+    svg.valuesBottomSCAlphabetSort.sort(sortAlphabetItemOnly);
+
+    svg.valuesTopSCAlphabetSort = svg.valuesTop.concat();
+    svg.valuesTopSCAlphabetSort.sort(sortAlphabetItemOnly);
+
+
+
+
+
+    calculationsHideShowDirection(svg);
+
+
 
 
 
     svg.transition("updateX").duration(svg.updateTransitionDuration).tween("",function(){
 
         var lastT = 0;
-
+        var coef;
         return function(t){
+
+          coef = lastT - t;
+
           svg.valuesBottom.forEach(function(elem){
-            elem.x = elem.x + (lastT - t)*gapMinute;
+            elem.x = elem.x + coef*gapMinute;
           });
 
           svg.valuesTop.forEach(function(elem){
-            elem.x = elem.x + (lastT - t)*gapMinute;
+            elem.x = elem.x + coef*gapMinute;
           });
 
           lastT = t;
@@ -832,27 +861,40 @@ function autoUpdateDoubleCurrent(svg,urlJson){
       })
       .on("end",function(){
 
+        var maxTotal = 1;
+
         svg.chartBottom.selectAll(".data").each(function(d){
 
           d.x = Math.round(d.x);
           if(d.x < 0){
             this.remove();
+          }else{
+            maxTotal = Math.max(maxTotal,d.y + d.height);
           }
 
         });
+
+        svg.totalBottom = maxTotal;
+
 
 
         svg.selectionBottom = svg.chartBottom.selectAll(".data");
         svg.valuesBottom = svg.selectionBottom.data();
 
+        maxTotal = 1;
         svg.chartTop.selectAll(".data").each(function(d){
 
           d.x = Math.round(d.x);
           if(d.x < 0){
             this.remove();
+          }else{
+          maxTotal = Math.max(maxTotal,d.y);
           }
 
         });
+
+        svg.totalTop = maxTotal;
+
 
         svg.selectionTop = svg.chartTop.selectAll(".data");
 
@@ -862,13 +904,32 @@ function autoUpdateDoubleCurrent(svg,urlJson){
         selecBottomEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
 
 
-        createTooltipHisto(svg,selecTopEnter,svg.sumMap);
-        createTooltipHisto(svg,selecBottomEnter, svg.sumMap);
+        createTooltipHistoCurrent(svg,selecTopEnter,svg.sumMap);
+        createTooltipHistoCurrent(svg,selecBottomEnter, svg.sumMap);
 
-        svg.valuesTop.sort(sortValues);
-        svg.valuesBottom.sort(sortValues);
+        svg.valuesTop.sort(sortValuesCurrent);
+        svg.valuesBottom.sort(sortValuesCurrent);
+
+        svg.valuesBottomSCAlphabetSort = svg.valuesBottom.concat();
+        svg.valuesBottomSCAlphabetSort.sort(sortAlphabetItemOnly);
+
+        svg.valuesTopSCAlphabetSort = svg.valuesTop.concat();
+        svg.valuesTopSCAlphabetSort.sort(sortAlphabetItemOnly);
+
+        updateSumArray(svg.sumArrayTop, sumMapTopUpdate,svg.hiddenValuesTopArray,svg.mapPercentDisplayByItemTop);
+        updateSumArray(svg.sumArrayBottom, sumMapBottomUpdate,svg.hiddenValuesBottomArray,svg.mapPercentDisplayByItemBottom);
+
+        svg.sumArrayBottom.sort(sortAlphabet);
+        svg.sumArrayTop.sort(sortAlphabet);
+
+        updateTrSelec(svg,"In");
+        updateTrSelec(svg,"Out");
+
+
+        calculationsHideShowDirection(svg);
 
         onUpdate = false;
+
 
       });
 
@@ -877,60 +938,20 @@ function autoUpdateDoubleCurrent(svg,urlJson){
 
 
 
-    updateSumArray(svg.sumArrayTop, sumMapTopUpdate);
-    updateSumArray(svg.sumArrayBottom, sumMapBottomUpdate);
-
-    svg.sumArrayBottom.sort(sortAlphabet);
-    svg.sumArrayTop.sort(sortAlphabet);
-
-
-    updateTrSelec(svg,"In");
-    updateTrSelec(svg,"Out");
 
 
 
 
 
-    updateHisto2DStackDouble(svg);
-
-    /*
-     removeValuesOnUpdate(svg,valuesTopData,sumMapTopUpdate,gapMinute, sumMapUpdate);
-     removeValuesOnUpdate(svg,valuesBottomData,sumMapBottomUpdate,gapMinute, sumMapUpdate);
-     */
-
-
-
-
-
-
-
-    /*
-     sumMapBottomUpdate.forEach(mapToArray(svg.sumArrayBottom));
-     sumMapTopUpdate.forEach(mapToArray(svg.sumArrayTop));
-     */
-
-    /*
-     //sort alphabetically
-     svg.sumArray.sort(sortAlphabet);
-     svg.sumArrayBottom.sort(sortAlphabet);
-     svg.sumArrayTop.sort(sortAlphabet);
-
-
-
-
-     i = 0;
-     if (svg.sumArray[0].item == " Remainder " || svg.sumArray[0].item == "OTHERS") {
-     svg.colorMap.set(svg.sumArray[0].item, "#f2f2f2");
-     i = 1;
-     }
-
-     while (i < svg.sumArray.length) {
-     svg.colorMap.set(svg.sumArray[i].item, svg.colorGenerator());
-     i++;
-     }
-     */
   }
 
+  /*
+
+  if(typeof arrayAutoUpdate === "undefined"){
+    arrayAutoUpdate =[[id, urlJson]]
+  }else{
+    arrayAutoUpdate.push([id, urlJson]);
+  }*/
 
   console.log(id);
 

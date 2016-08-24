@@ -745,6 +745,24 @@ function sortAlphabet(a,b){
 
 }
 
+
+/************************************************************************************************************/
+
+function sortAlphabetItemOnly(a,b){
+
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return -1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return 1;
+  }
+
+  return a.item.localeCompare(b.item,"en");
+
+}
+
+
+
 /************************************************************************************************************/
 
 function mapToArray(array){
@@ -773,6 +791,20 @@ function sortValues(a, b) {
     return -1;
   }
   return a.height - b.height;
+}
+
+/************************************************************************************************************/
+
+
+function sortArrayVolume(a, b) {
+
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return -1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return 1;
+  }
+  return b.sum - a.sum;
 }
 
 

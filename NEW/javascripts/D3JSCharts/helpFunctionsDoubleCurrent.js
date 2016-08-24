@@ -9,11 +9,11 @@ function removeValuesOnUpdate(svg, valuesData,sumMapUpdate,gapMinute){
 
       if(sumMapUpdate.has(valueI.item)){
         
-        sumMapUpdate.get(valueI.item).sum -= valueI.height;
+        sumMapUpdate.get(valueI.item).sum -= valueI.heightRef;
 
       }else{
         
-        sumMapUpdate.set(valueI.item, {sum:- valueI.height,display:svg.sumMap.get(valueI.item).display});
+        sumMapUpdate.set(valueI.item, {sum:- valueI.heightRef,display:svg.sumMap.get(valueI.item).display});
         
       }
       
@@ -28,28 +28,37 @@ function removeValuesOnUpdate(svg, valuesData,sumMapUpdate,gapMinute){
 
 /***********************************************************************************************************/
 
-function updateSumArray( sumArray, sumMapUpdate){
+function updateSumArray( sumArray, sumMapUpdate,hiddenValuesArray,mapPercentDisplay) {
 
-  sumMapUpdate.forEach(function(value, key){
+  sumMapUpdate.forEach(function (value, key) {
 
-    var arrayElem = sumArray.find(function(elem){return elem.item === key;});
+    var arrayElem = sumArray.find(function (elem) {
+      return elem.item === key;
+    });
 
-    if(arrayElem){
+    if (arrayElem) {
       arrayElem.sum += value.sum;
-    }else{
+    } else {
       sumArray.push({item: key, sum: value.sum, display: value.display})
     }
 
   });
 
 
-  for(var i = sumArray.length - 1; i >= 0; i--){
-    if(sumArray[i].sum <= 0){
-      sumArray.splice(i,1);
+  for (var i = sumArray.length - 1; i >= 0; i--) {
+    if (sumArray[i].sum <= 0) {
+
+      var index = hiddenValuesArray.indexOf(sumArray[i].item);
+      if (index !== -1) {
+        hiddenValuesArray.splice(index, 1);
+      }
+      mapPercentDisplay.delete(sumArray[i].item);
+      sumArray.splice(i, 1);
+
+
     }
 
   }
-  
 }
 
 
@@ -63,10 +72,14 @@ function updateTrSelec(svg, direction){
   var trSelecPositionStr = "trSelec" + position;
   var divtablePositionStr = "divtable" + position;
   var sumArrayPositionStr = "sumArray" + position;
+  var hiddenValuesPositionStr = "hiddenValues" + position + "Array";
   console.log(svg[sumArrayPositionStr]);
 
 
   svg[trSelecPositionStr] = svg.divLegend[divtablePositionStr].table.selectAll("tr").data(svg[sumArrayPositionStr]);
+
+  svg[trSelecPositionStr].classed("strikedRow",function(d){return svg[hiddenValuesPositionStr].indexOf(d.item) !== -1; });
+
   svg[trSelecPositionStr].select("div").style("background-color", function (d) {
     return svg.colorMap.get(d.item);
   });
@@ -75,7 +88,9 @@ function updateTrSelec(svg, direction){
     return d.display;
   });
 
-  var trselecEnter = svg[trSelecPositionStr].enter().append("tr");
+
+  var trselecEnter = svg[trSelecPositionStr].enter().append("tr")
+    .classed("strikedRow",function(d){return svg[hiddenValuesPositionStr].indexOf(d.item) !== -1; });
 
   trselecEnter.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
     return svg.colorMap.get(d.item);
@@ -85,7 +100,10 @@ function updateTrSelec(svg, direction){
     return d.display;
   });
 
+  trselecEnter.on("click",svg["hideShowOnClickTr" + position]).on("contextmenu", svg["hideShowOnContextMenuTr" + position]);
+
   svg[trSelecPositionStr].exit().remove();
+
   svg[trSelecPositionStr] = svg.divLegend[divtablePositionStr].table.selectAll("tr");
 
   svg[trSelecPositionStr].on("mouseover",svg.activationElemsFromTable(direction)).on("mouseout", svg.deactivationElems);
@@ -136,7 +154,7 @@ function createTableLegendDoubleCurrent(svg, direction, sumArrayDirection, color
 
   trSelec.on("mouseover",activFunct(direction)).on("mouseout", desacFunct);
 
-  hideShowValuesDirection(svg,trSelec,direction);
+  hideShowValuesDirectionCurrent(svg,trSelec,direction);
 
 
   return trSelec;
@@ -150,12 +168,16 @@ function createTableLegendDoubleCurrent(svg, direction, sumArrayDirection, color
 function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
   direction = ("In"=== direction?"Top":"Bottom");
+  var trSelecDirectionStr = "trSelec" + direction;
   var valuesDirectionString = "values" + direction;
+  var clickFunctionStr = "hideShowOnClickTr" + direction;
+  var contextMenuFctStr = "hideShowOnContextMenuTr" + direction;
   var mapDisplayString = "mapPercentDisplayByItem" + direction;
   var chartDirString = "chart" + direction;
+  var hiddenValuesStr = "hiddenValues" + direction + "Array";
   var duration = 800;
 
-  var hiddenValuesDirectionArray = [];
+  svg[hiddenValuesStr] = [];
 
   svg[mapDisplayString] = new Map();
 
@@ -169,328 +191,123 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
   var totalDirectionString = "total" + direction;
 
 
+  svg[clickFunctionStr] = function(d){
+
+    if(svg.popup.pieChart !==null){
+      return;
+    }
+
+    var clickedRow = d3.select(this);
+
+    var index = svg[hiddenValuesStr].indexOf(d.item);
 
 
-  trSelec.on("click", function(d){
+    if(index === -1){
+      //hide the data
 
-      if(svg.popup.pieChart !==null){
-        return;
-      }
-
-      var valuesDirectionBounded = svg[valuesDirectionString];
-
-      var clickedRow = d3.select(this);
-
-      var index = hiddenValuesDirectionArray.indexOf(d.item);
+      svg[hiddenValuesStr].push(d.item);
+      clickedRow.classed("strikedRow",true);
 
 
-      if(index === -1){
-        //hide the data
+    }else{
+      //show the data
 
-        hiddenValuesDirectionArray.push(d.item);
-        clickedRow.classed("strikedRow",true);
-
-
-      }else{
-        //show the data
-
-        hiddenValuesDirectionArray.splice(index,1);
-        clickedRow.classed("strikedRow",false);
+      svg[hiddenValuesStr].splice(index,1);
+      clickedRow.classed("strikedRow",false);
 
 
-      }
+    }
 
 
-      var clickedItemPercent = svg[mapDisplayString].get(d.item);
+    var clickedItemPercent = svg[mapDisplayString].get(d.item);
 
-      clickedRow.transition("hideshow").duration(duration * (1 - clickedItemPercent.percentDisplay))
+    svg.transition("hideshow" + d.item + direction).duration(duration)
+      .tween("",function(){
+
+        var initPercent = clickedItemPercent.percentDisplay;
+        var finalPercent = (index === -1)?0:1;
+        var finmininitPercent = finalPercent-initPercent;
+
+        return function(t){
+          clickedItemPercent.percentDisplay = initPercent + t*finmininitPercent;
+        }
+
+      })
+      .on("end",function(){
+        clickedItemPercent.percentDisplay = (index === -1)?0:1;
+        });
+
+    transitionRefresh(svg, duration + 500, direction);
+
+
+  };
+
+  svg[contextMenuFctStr] = function(d){
+    d3.event.preventDefault();
+
+    if(svg.popup.pieChart !==null){
+      return;
+    }
+
+    var clickedRow = d3.select(this);
+
+    var index = svg[hiddenValuesStr].indexOf(d.item);
+
+
+    if ((index !== -1) || (svg[mapDisplayString].size - 1 !== svg[hiddenValuesStr].length )) {
+      //Hide all data except this one
+
+      svg[hiddenValuesStr] = [];
+      svg[mapDisplayString].forEach(function(value, key){
+        svg[hiddenValuesStr].push(key);
+      });
+
+
+      svg[hiddenValuesStr].splice(svg[hiddenValuesStr].indexOf(d.item), 1);
+
+      svg[trSelecDirectionStr].classed("strikedRow",true);
+      clickedRow.classed("strikedRow",false);
+
+
+    }else{
+
+
+      //index === -1 && hiddenValues.length == trSelec.size() -1
+      // ->show all data.
+      svg[hiddenValuesStr] = [];
+      svg[trSelecDirectionStr].classed("strikedRow", false);
+
+
+    }
+
+    svg[mapDisplayString].forEach(function(value,key){
+
+      svg.transition("hideshow" + key + direction).duration(duration)
         .tween("",function(){
 
-          var initPercent = clickedItemPercent.percentDisplay;
-          var finalPercent = (index === -1)?0:1;
+          var index = svg[hiddenValuesStr].indexOf(key);
+          var initPercent = value.percentDisplay;
+          var finalPercent = (index === -1)?1:0;
           var finmininitPercent = finalPercent-initPercent;
 
           return function(t){
-            clickedItemPercent.percentDisplay = initPercent + t*finmininitPercent;
+            value.percentDisplay = initPercent + t*finmininitPercent;
           }
-          
+
+        }).on("end",function(){
+
+          var index = svg[hiddenValuesStr].indexOf(key);
+          value.percentDisplay = (index === -1)?1:0;
+
         });
 
+    });
 
+    transitionRefresh(svg, duration + 500, direction);
 
+  };
 
-
-      svg.transition("hideshow" + direction).duration(duration).tween("",function(){
-
-        var x, sum, i, index, elemValues;
-
-
-
-        x = firstX;
-        i = 0;
-        var totalSumDirection = [];
-
-        if(direction === "Top"){
-
-          elemValues = valuesDirectionFinal[i];
-
-          while(x < lengthX){
-
-            sum = 0;
-
-            while(i < valuesFinalLength && elemValues.x === x){
-
-
-              if(elemValues.item === d.item){
-                elemValues.height = functionHeight();
-              }
-
-              sum += elemValues.height;
-              elemValues.y = sum;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }else{
-
-          elemValues = valuesDirectionFinal[i];
-
-          while(x < lengthX){
-
-            sum = 0;
-
-
-            while(i < valuesFinalLength && elemValues.x === x){
-
-              if(elemValues.item === d.item){
-                elemValues.height = functionHeight();
-              }
-
-              elemValues.y = sum;
-              sum += elemValues.height;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }
-
-
-
-        var finalTotalDirection;
-
-        if(hiddenValuesDirectionArray.length === trSelecSize){
-
-          finalTotalDirection = 1;
-
-        }else{
-
-          finalTotalDirection = d3.max(totalSumDirection);
-
-        }
-
-
-
-        var startTotalDirection = svg[totalDirectionString];
-
-        var valuesDirectionStart = JSON.parse(JSON.stringify(valuesDirectionBounded));
-
-        var t0;
-
-        return function(t){
-
-          t0 = (1-t);
-
-          var valueStart, valueFinal;
-
-          valuesDirectionBounded.forEach(function(valueBounded,i){
-
-            valueStart = valuesDirectionStart[i];
-            valueFinal = valuesDirectionFinal[i];
-            valueBounded.y = t0 * valueStart.y + t * valueFinal.y;
-            valueBounded.height = t0 * valueStart.height + t * valueFinal.height;
-
-          });
-
-          svg[totalDirectionString] = t0 * startTotalDirection + t * finalTotalDirection;
-
-          calculationsHideShowDirection(svg);
-
-        }; //function t
-
-
-
-      }); //svg tween transition on click
-
-
-
-
-    }) //trselec on click
-
-    .on("contextmenu",function(d){
-      d3.event.preventDefault();
-
-      var clickedRow = d3.select(this);
-
-      svg.transition("hideshow" + direction).duration(duration).tween("",function() {
-
-        var x, sum, i, index, elemValues;
-
-
-        if(svg.popup.pieChart !==null){
-          return;
-        }
-
-        index = hiddenValuesDirectionArray.indexOf(d.item);
-
-        var functionHeight;
-
-        if ((index !== -1) || (trSelecSize - 1 !== hiddenValuesDirectionArray.length )) {
-          //Hide all data except this one
-
-          hiddenValuesDirectionArray = trSelec.data().map(function (elem) {
-            return elem.item;
-          });
-
-          hiddenValuesDirectionArray.splice(hiddenValuesDirectionArray.indexOf(d.item), 1);
-
-          trSelec.classed("strikedRow", true);
-          clickedRow.classed("strikedRow", false);
-
-          functionHeight = function(){
-
-            if(elemValues.item !== d.item){
-              return 0;
-            }
-
-            return valuesDirectionImmutable[i].height;
-
-          };
-
-        }else{
-
-
-          //index === -1 && hiddenValues.length == trSelec.size() -1
-          // ->show all data.
-          hiddenValuesDirectionArray = [];
-          trSelec.classed("strikedRow", false);
-
-          functionHeight = function(){
-            return valuesDirectionImmutable[i].height;
-          };
-
-
-        }
-
-
-
-
-        x = firstX;
-        i = 0;
-        var totalSumDirection = [];
-
-        if(direction === "Top"){
-
-          elemValues = valuesDirectionFinal[i];
-
-          while(x < lengthX){
-
-            sum = 0;
-
-
-            while(i < valuesFinalLength && elemValues.x === x){
-
-
-              elemValues.height = functionHeight();
-
-              sum += elemValues.height;
-              elemValues.y = sum;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }else{
-
-          elemValues = valuesDirectionFinal[i];
-
-          while(x < lengthX){
-
-            sum = 0;
-
-
-            while(i < valuesFinalLength && elemValues.x === x){
-
-              elemValues.height = functionHeight();
-
-
-              elemValues.y = sum;
-              sum += elemValues.height;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }
-
-
-        var finalTotalDirection;
-
-        if(hiddenValuesDirectionArray.length === trSelecSize){
-
-          finalTotalDirection = 1;
-
-        }else{
-
-          finalTotalDirection = d3.max(totalSumDirection);
-
-        }
-
-
-
-        var startTotalDirection = svg[totalDirectionString];
-
-        var valuesDirectionStart = JSON.parse(JSON.stringify(valuesDirectionBounded));
-
-        var t0;
-
-        return function(t){
-
-          t0 = (1-t);
-
-          var valueStart, valueFinal;
-
-          valuesDirectionBounded.forEach(function(valueBounded,i){
-
-            valueStart = valuesDirectionStart[i];
-            valueFinal = valuesDirectionFinal[i];
-            valueBounded.y = t0 * valueStart.y + t * valueFinal.y;
-            valueBounded.height = t0 * valueStart.height + t * valueFinal.height;
-
-          });
-
-          svg[totalDirectionString] = t0 * startTotalDirection + t * finalTotalDirection;
-
-          calculationsHideShowDirection(svg);
-
-        }; //function t
-
-
-
-
-      }); //svg tween transition on contextmenu
-
-
-    }); //trselec on contextmenu
+  trSelec.on("click", svg[clickFunctionStr]).on("contextmenu",svg[contextMenuFctStr]);
 
 
 
@@ -498,72 +315,185 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
 /***********************************************************************************************************************/
 
-function transitionRefresh(svg, duration, direction, valuesDirBounded){
+function transitionRefresh(svg, duration, direction){
 
-  var mapDisplay = svg["mapPercentDisplayByItem" + direction];
+
+
+
+  var totalDirString = "total" + direction;
+
 
 
   svg.transition("refresh" + direction).duration(duration).tween("",function(){
 
-    //to be sure.
-    var firstX = -60;
-    var lengthX = 120;
-    
+    var i, currentX;
+    var sum, elemValues, currentPercent;
 
-    var x = firstX;
-    var i = 0;
-    var sum, elemValues, boundedValuesLength = valuesDirBounded.length;
+    return function() {
+      var mapDisplay = svg["mapPercentDisplayByItem" + direction];
+      var valuesDirSortAlphabet = svg["values" + direction + "SCAlphabetSort"];
+      var valuesDirUsualSort = svg["values" + direction];
+      var valuesLength = valuesDirUsualSort.length;
 
-    if(direction === "Top"){
+      var totalSumDirection = [], currentItem = null;
 
-      elemValues = valuesDirBounded[i];
 
-      while(x < lengthX){
+      //height actualization
+      for (i = 0; i < valuesLength; i++) {
 
+        elemValues = valuesDirSortAlphabet[i];
+
+        if (elemValues.item !== currentItem) {
+          currentItem = elemValues.item;
+          currentPercent = mapDisplay.get(currentItem).percentDisplay;
+        }
+
+        elemValues.height = elemValues.heightRef * currentPercent;
+
+      }
+
+      if (direction === "Top") {
+
+        currentX = null;
         sum = 0;
 
-        while(i < valuesDirBounded && elemValues.x === x){
+        for (i = 0; i < valuesLength; i++) {
+          elemValues = valuesDirUsualSort[i];
 
-
-          elemValues.height = elemValues.heightRef * mapDisplay.get(elemValues.item);
+          if (currentX !== elemValues.x) {
+            currentX = elemValues.x;
+            totalSumDirection.push(sum);
+            sum = 0;
+          }
 
           sum += elemValues.height;
           elemValues.y = sum;
-          i++;
-          elemValues = valuesDirectionFinal[i];
+
         }
-        totalSumDirection.push(sum);
-        x++;
-      }
 
-    }else{
 
-      elemValues = valuesDirectionFinal[i];
+      } else {
 
-      while(x < lengthX){
-
+        currentX = null;
         sum = 0;
 
+        for (i = 0; i < valuesLength; i++) {
+          elemValues = valuesDirUsualSort[i];
 
-        while(i < valuesFinalLength && elemValues.x === x){
-
-          if(elemValues.item === d.item){
-            elemValues.height = functionHeight();
+          if (currentX !== elemValues.x) {
+            currentX = elemValues.x;
+            totalSumDirection.push(sum);
+            sum = 0;
           }
 
           elemValues.y = sum;
           sum += elemValues.height;
-          i++;
-          elemValues = valuesDirectionFinal[i];
+
         }
-        totalSumDirection.push(sum);
-        x++;
+
       }
 
-    }
+      totalSumDirection.push(sum);
 
+      svg[totalDirString] = Math.max(1,d3.max(totalSumDirection));
 
+      calculationsHideShowDirection(svg);
+
+    }; //function t
   });
 
 }
 
+
+
+
+/************************************************************************************************************/
+
+function mapElemToSumCurrent(sumMap, elemToPush, elemJson, contentDisplayValue,itemType){
+
+  if (!sumMap.has(elemToPush.item)) {
+    sumMap.set(elemToPush.item, {sum: elemToPush.heightRef,display:
+      (elemToPush.item === " Remainder ")?" Remainder ":
+        (elemJson[contentDisplayValue] === "")?elemToPush.item:
+          (itemType === "portproto")?elemToPush.item + " (" +  elemJson[contentDisplayValue] + ")":
+            elemJson[contentDisplayValue]});
+  } else {
+    sumMap.get(elemToPush.item).sum += elemToPush.heightRef;
+  }
+
+}
+
+/************************************************************************************************************/
+
+
+function sortValuesCurrent(a, b) {
+
+  if (a.x - b.x != 0) {
+    return a.x - b.x;
+  }
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return 1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return -1;
+  }
+  return a.heightRef - b.heightRef;
+}
+
+
+
+/************************************************************************************************************/
+
+function createTooltipHistoCurrent(svg, selection, sumMap){
+
+  var isBytes = svg.units === "Bytes",coef = 8000/svg.step;
+
+  var convertArray, valDisplay;
+
+  if(isBytes){
+
+    var heightPerSec, cAOptionel;
+
+    selection.append("svg:title")
+      .text(function (d) {
+        heightPerSec = d.heightRef * coef;
+        convertArray = quantityConvertUnit(d.heightRef,isBytes);
+        cAOptionel = quantityConvertUnit(heightPerSec,true);
+        valDisplay = sumMap.get(d.item).display;
+        return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+          + d.item + "\n"
+          + getDateFromAbscissa(svg,d.x).toString() + "\n"
+          + ((Math.round(100 * heightPerSec * cAOptionel[1])/100) + " " + cAOptionel[0] + "bits/s") + "\n"
+          + ((Math.round(100 * d.heightRef * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+          + "(" +  d.heightRef + " " + svg.units + ")";
+      });
+
+  }else{
+
+    selection.append("svg:title")
+      .text(function (d) {
+        convertArray = quantityConvertUnit(d.heightRef,isBytes);
+        valDisplay = sumMap.get(d.item).display;
+        return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+          + d.item + "\n"
+          + getDateFromAbscissa(svg,d.x).toString() + "\n"
+          + ((Math.round(100 * d.heightRef * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+          + "(" +  d.heightRef + " " + svg.units + ")";
+      });
+
+  }
+
+
+
+}
+
+/**********************************************************************************************************************/
+
+function unsubscribeGraphIfInactive(id, urljson, div){
+  if(!(div.classed("active") && div.classed("in"))){
+    console.log(myLastHourHistory.unsubscribe(urljson, id));
+    console.log(id);
+    return true;
+  }
+  return false;
+}

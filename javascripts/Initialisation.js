@@ -20,13 +20,13 @@ $( document ).ready(function() {
         e.preventDefault();
     });
 
-    getHtmlTemplate("#home", "NEW/templates/home.html", null, null);
+    getHtmlTemplate("#home", "templates/home.html", null, null);
 
     activateTabOfClass("home");
 
-    getHtmlTemplate("#charts_form_container", "NEW/templates/chartsFormular.html", null, null);
+    getHtmlTemplate("#charts_form_container", "templates/chartsFormular.html", null, null);
 
-    getHtmlTemplate("#rawdata", "NEW/templates/rawData.html", null, null);
+    getHtmlTemplate("#rawdata", "templates/rawData.html", null, null);
 
     tryRestoreConnectSession();
 
@@ -46,9 +46,9 @@ function initialisation(){
     /*********************************************************************************************************
      Load all templates inside the JST global variable
      ********************************************************************************************************/
-    JST["networksTabsContent"] = doT.template(getTemplate("NEW/templates/networksTabsContent.html"));
-    JST["localhostsTabsContent"] = doT.template(getTemplate("NEW/templates/localhostsTabsContent.html"));
-    //JST["rawDataDropdownMenu"] = doT.template(getTemplate("NEW/templates/rawDataDropdownMenu.html"));
+    JST["networksTabsContent"] = doT.template(getTemplate("templates/networksTabsContent.html"));
+    JST["localhostsTabsContent"] = doT.template(getTemplate("templates/localhostsTabsContent.html"));
+    //JST["rawDataDropdownMenu"] = doT.template(getTemplate("templates/rawDataDropdownMenu.html"));
     /*JST["planView"] = doT.template(getTemplate("Templates/Views/planView.html"));
      JST["configPopup"] = doT.template(getTemplate("Templates/config_sensor-popup_content.html"));
      JST["debugPopup"] = doT.template(getTemplate("Templates/debug_sensor-popup_content.html"));

@@ -8,7 +8,7 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
 
 
   d3.queue()
-    .defer(d3.json,"NEW/javascripts/D3JSCharts/worldmap.json")
+    .defer(d3.json,"javascripts/D3JSCharts/worldmap.json")
 //    .defer(d3.json, "worldmap.json")
     .defer(d3.json, urlJson)
     .await(function(error,worldmap,json){

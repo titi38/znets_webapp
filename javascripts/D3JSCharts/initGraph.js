@@ -170,7 +170,7 @@ function whichCreationFunction(urlJson,svg){
             return createCurve;
             break;
 
-        case "netTopHostsTraffic":
+        case "netTopLHostsTraffic":
         case "netTopServicesTraffic":
         case "hostTopServicesTraffic":
         case "netTopAsTraffic":
@@ -207,7 +207,7 @@ function whichCreationFunction(urlJson,svg){
             return createChoroplethDirection;
             break;
 
-        case "netTopHostsNbFlow":
+        case "netTopLHostsNbFlow":
 
         case "netTopCountryNbFlow":
         case "hostTopCountryNbFlow":

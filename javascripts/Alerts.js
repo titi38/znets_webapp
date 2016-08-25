@@ -11,11 +11,15 @@
  * Alerts Object Constructor. 
  * Involves a WebSocket Event Notifier in order to update automatically Alerts for user's interface
  * Displays Alerts in a table (DataTable)
- * @param theWSEventNotifier
+ * @param theWSEventNotifier {WSEventNotifier} WSEventNotifier object name
  * @constructor
  */
 function Alerts(theWSEventNotifier) {
 
+  /**
+   * 
+   * @type {Array}
+     */
   var alertEntries = new Array();
   var loadingAJAX = true;
   var bufferSize = 0;
@@ -46,7 +50,16 @@ function Alerts(theWSEventNotifier) {
 
   }
 
-
+  /**
+   * Deals with received Alerts on WebSocket
+   *  - If Alerts are still initiating, then stacks received Alert temporary
+   *  - If not, triggers temporary stacked Alerts unstack
+   * @param id  {number} Alert's id
+   * @param severity {string} Alert's severity
+   * @param date {string} Alert's date
+   * @param message {string} Alert's message
+   * @param detail {string} Alert's detail
+   */
   this.addAlertEntry = function (id, severity, date, message, detail)
   {
     alertEntries.push({"id": id, "severity" : severity, "date" : date, "message" : message, "detail" : detail});
@@ -54,7 +67,9 @@ function Alerts(theWSEventNotifier) {
       this.unstackFIFO();
   }
 
-
+  /**
+   * Triggered on WebSocket Connection
+   */
   this.onWSConnect = function(){
     var _this = this;
     theWSEventNotifier.addCallback("notify", "alerts", function (param_json) {
@@ -65,7 +80,9 @@ function Alerts(theWSEventNotifier) {
 
   };
 
-
+  /**
+   * Unstack alerts received on WebSocket while initialing Alerts object
+   */
   this.unstackFIFO = function (){
     while (alertEntries.length != 0)
     {
@@ -81,7 +98,11 @@ function Alerts(theWSEventNotifier) {
   };
 
 
-
+  /**
+   * Displays (in a DataTable) alerts list received from server after ajac query
+   * @param jsonContent {JSON} Request's Response JSON
+   * @param _this {Alerts} Self
+   */
   this.displayAlerts = function(jsonContent, _this)
   {
 
@@ -137,7 +158,9 @@ function Alerts(theWSEventNotifier) {
   };
 
 
-
+  /**
+   * Initialisation function
+   */
   this.init = function()
   {
     var _this = this;

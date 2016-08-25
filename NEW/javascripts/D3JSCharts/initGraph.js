@@ -102,8 +102,8 @@ function drawChartFromInterface(urlJson, mydiv) {
     svg.urlJson = urlJson;
 
     //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    //createHistoDoubleCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
+    createHistoDoubleCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
+    //whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
 }
 
@@ -222,6 +222,16 @@ function whichCreationFunction(urlJson,svg){
 
 
             return create2HistoStack;
+            break;
+
+        case "netTopCurrentLhostsTraffic" :
+        case "netTopCurrentExtServiceTraffic" :
+        case "netTopCurrentLocServiceTraffic" :
+       //Choropleth ?
+        //case "netTopCurrentCountryTraffic" :
+        case "netTopCurrentAsTraffic" :
+        case "netTopCurrentAppTraffic" :
+            return;
             break;
 
         default:

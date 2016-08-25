@@ -169,11 +169,9 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
   direction = ("In"=== direction?"Top":"Bottom");
   var trSelecDirectionStr = "trSelec" + direction;
-  var valuesDirectionString = "values" + direction;
   var clickFunctionStr = "hideShowOnClickTr" + direction;
   var contextMenuFctStr = "hideShowOnContextMenuTr" + direction;
   var mapDisplayString = "mapPercentDisplayByItem" + direction;
-  var chartDirString = "chart" + direction;
   var hiddenValuesStr = "hiddenValues" + direction + "Array";
   var duration = 800;
 
@@ -187,8 +185,6 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
   });
 
-
-  var totalDirectionString = "total" + direction;
 
 
   svg[clickFunctionStr] = function(d){
@@ -219,25 +215,7 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
     }
 
 
-    var clickedItemPercent = svg[mapDisplayString].get(d.item);
-
-    svg.transition("hideshow" + d.item + direction).duration(duration)
-      .tween("",function(){
-
-        var initPercent = clickedItemPercent.percentDisplay;
-        var finalPercent = (index === -1)?0:1;
-        var finmininitPercent = finalPercent-initPercent;
-
-        return function(t){
-          clickedItemPercent.percentDisplay = initPercent + t*finmininitPercent;
-        }
-
-      })
-      .on("end",function(){
-        clickedItemPercent.percentDisplay = (index === -1)?0:1;
-        });
-
-    transitionRefresh(svg, duration + 500, direction);
+    createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr);
 
 
   };
@@ -254,7 +232,7 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
     var index = svg[hiddenValuesStr].indexOf(d.item);
 
 
-    if ((index !== -1) || (svg[mapDisplayString].size - 1 !== svg[hiddenValuesStr].length )) {
+    if ((index !== -1) || (svg[trSelecDirectionStr].size() - 1 !== svg[hiddenValuesStr].length )) {
       //Hide all data except this one
 
       svg[hiddenValuesStr] = [];
@@ -280,30 +258,9 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
     }
 
-    svg[mapDisplayString].forEach(function(value,key){
+    createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr);
 
-      svg.transition("hideshow" + key + direction).duration(duration)
-        .tween("",function(){
 
-          var index = svg[hiddenValuesStr].indexOf(key);
-          var initPercent = value.percentDisplay;
-          var finalPercent = (index === -1)?1:0;
-          var finmininitPercent = finalPercent-initPercent;
-
-          return function(t){
-            value.percentDisplay = initPercent + t*finmininitPercent;
-          }
-
-        }).on("end",function(){
-
-          var index = svg[hiddenValuesStr].indexOf(key);
-          value.percentDisplay = (index === -1)?1:0;
-
-        });
-
-    });
-
-    transitionRefresh(svg, duration + 500, direction);
 
   };
 
@@ -324,83 +281,79 @@ function transitionRefresh(svg, duration, direction){
 
 
 
-  svg.transition("refresh" + direction).duration(duration).tween("",function(){
 
     var i, currentX;
     var sum, elemValues, currentPercent;
 
-    return function() {
-      var mapDisplay = svg["mapPercentDisplayByItem" + direction];
-      var valuesDirSortAlphabet = svg["values" + direction + "SCAlphabetSort"];
-      var valuesDirUsualSort = svg["values" + direction];
-      var valuesLength = valuesDirUsualSort.length;
+    var mapDisplay = svg["mapPercentDisplayByItem" + direction];
+    var valuesDirSortAlphabet = svg["values" + direction + "SCAlphabetSort"];
+    var valuesDirUsualSort = svg["values" + direction];
+    var valuesLength = valuesDirUsualSort.length;
 
-      var totalSumDirection = [], currentItem = null;
+    var totalSumDirection = [], currentItem = null;
 
 
-      //height actualization
+    //height actualization
+    for (i = 0; i < valuesLength; i++) {
+
+      elemValues = valuesDirSortAlphabet[i];
+
+      if (elemValues.item !== currentItem) {
+        currentItem = elemValues.item;
+        currentPercent = mapDisplay.get(currentItem).percentDisplay;
+      }
+
+      elemValues.height = elemValues.heightRef * currentPercent;
+
+    }
+
+    if (direction === "Top") {
+
+      currentX = null;
+      sum = 0;
+
       for (i = 0; i < valuesLength; i++) {
+        elemValues = valuesDirUsualSort[i];
 
-        elemValues = valuesDirSortAlphabet[i];
-
-        if (elemValues.item !== currentItem) {
-          currentItem = elemValues.item;
-          currentPercent = mapDisplay.get(currentItem).percentDisplay;
+        if (currentX !== elemValues.x) {
+          currentX = elemValues.x;
+          totalSumDirection.push(sum);
+          sum = 0;
         }
 
-        elemValues.height = elemValues.heightRef * currentPercent;
+        sum += elemValues.height;
+        elemValues.y = sum;
 
       }
 
-      if (direction === "Top") {
 
-        currentX = null;
-        sum = 0;
+    } else {
 
-        for (i = 0; i < valuesLength; i++) {
-          elemValues = valuesDirUsualSort[i];
+      currentX = null;
+      sum = 0;
 
-          if (currentX !== elemValues.x) {
-            currentX = elemValues.x;
-            totalSumDirection.push(sum);
-            sum = 0;
-          }
+      for (i = 0; i < valuesLength; i++) {
+        elemValues = valuesDirUsualSort[i];
 
-          sum += elemValues.height;
-          elemValues.y = sum;
-
+        if (currentX !== elemValues.x) {
+          currentX = elemValues.x;
+          totalSumDirection.push(sum);
+          sum = 0;
         }
 
-
-      } else {
-
-        currentX = null;
-        sum = 0;
-
-        for (i = 0; i < valuesLength; i++) {
-          elemValues = valuesDirUsualSort[i];
-
-          if (currentX !== elemValues.x) {
-            currentX = elemValues.x;
-            totalSumDirection.push(sum);
-            sum = 0;
-          }
-
-          elemValues.y = sum;
-          sum += elemValues.height;
-
-        }
+        elemValues.y = sum;
+        sum += elemValues.height;
 
       }
 
-      totalSumDirection.push(sum);
+    }
 
-      svg[totalDirString] = Math.max(1,d3.max(totalSumDirection));
+    totalSumDirection.push(sum);
 
-      calculationsHideShowDirection(svg);
+    svg[totalDirString] = Math.max(1,d3.max(totalSumDirection));
 
-    }; //function t
-  });
+    calculationsHideShowDirection(svg);
+
 
 }
 
@@ -496,4 +449,32 @@ function unsubscribeGraphIfInactive(id, urljson, div){
     return true;
   }
   return false;
+}
+
+/**********************************************************************************************************************/
+
+
+function createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr){
+  svg.transition("hideshow" + direction).duration(duration)
+    .tween("",function(){
+      var arrayUpdate = [];
+
+      svg[mapDisplayString].forEach(function(value, key){
+        var coef = (svg[hiddenValuesStr].indexOf(key) === -1?1:0) - value.percentDisplay;
+        if(coef !== 0){
+          arrayUpdate.push([value,value.percentDisplay,coef]);
+        }
+      });
+
+
+      return function(t){
+
+        arrayUpdate.forEach(function(elem){
+          elem[0].percentDisplay = elem[1] + t * elem[2];
+        });
+
+        transitionRefresh(svg, duration, direction);
+      }
+
+    });
 }

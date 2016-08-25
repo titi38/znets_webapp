@@ -272,7 +272,7 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
 /***********************************************************************************************************************/
 
-function transitionRefresh(svg, duration, direction){
+function transitionRefresh(svg, direction){
 
 
 
@@ -473,7 +473,7 @@ function createTransitionDirection(svg, direction, duration, mapDisplayString,hi
           elem[0].percentDisplay = elem[1] + t * elem[2];
         });
 
-        transitionRefresh(svg, duration, direction);
+        transitionRefresh(svg, direction);
       }
 
     });

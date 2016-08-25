@@ -15,7 +15,7 @@ html, body {
 }
 
 .brand.logo {
-    background-image: url("../../images/ZNeTS_3.gif");
+    background-image: url("../images/ZNeTS_3.gif");
     background-repeat: no-repeat;
     height: 100%;
     width: 120px;
@@ -105,7 +105,7 @@ html, body {
 }
 
 .bannerImg{
-    background-image: url("../../images/imageFrame.png");
+    background-image: url("../images/imageFrame.png");
     background-position: 0px -66px;
 }
 
@@ -139,32 +139,32 @@ html, body {
 
 
 div.logDetailIcon, div.alertDetailIcon {
-    content:url('../../images/more.png');
+    content:url('../images/more.png');
     float: left;
 }
 
 div.logWarningIcon{
-    content:url('../../images/warnIcon.gif');
+    content:url('../images/warnIcon.gif');
     margin: auto;
 }
 
 div.logAlertIcon{
-    content:url('../../images/alertIcon.gif');
+    content:url('../images/alertIcon.gif');
     margin: auto;
 }
 
 div.logInfoIcon{
-    content:url('../../images/InfoIcon.gif');
+    content:url('../images/InfoIcon.gif');
     margin: auto;
 }
 
 div.logErrorIcon{
-    content:url('../../images/errorIcon.gif');
+    content:url('../images/errorIcon.gif');
     margin: auto;
 }
 
 div.logFatalIcon{
-    content:url('../../images/fatalIcon.gif');
+    content:url('../images/fatalIcon.gif');
     margin: auto;
 }
 
@@ -312,7 +312,7 @@ iframe {
         height:85vh;
     }
     .toBottomChartsContainer {
-        height:77vh;
+        height:75vh;
     }
     .dataTables_scrollBody{
         max-height:72vh !important;
@@ -333,7 +333,7 @@ iframe {
             height:85vh;
         }
         .toBottomChartsContainer {
-            height:77vh;
+            height:75vh;
         }
         .dataTables_scrollBody{
             max-height:70vh !important;
@@ -355,7 +355,7 @@ iframe {
             height:85vh;
         }
         .toBottomChartsContainer {
-            height:77vh;
+            height:75vh;
         }
         .dataTables_scrollBody{
             max-height:72vh !important;
@@ -377,7 +377,7 @@ iframe {
             height:85vh;
         }
         .toBottomChartsContainer {
-            height:77vh;
+            height:75vh;
         }
         .dataTables_scrollBody{
             max-height:72vh !important;
@@ -392,7 +392,7 @@ iframe {
 .banner_holderImage{
     width: 100%;
     position: absolute;
-    background: url("../../images/logoMIMAC.png")no-repeat;
+    background: url("../images/logoMIMAC.png")no-repeat;
     background-position: left;
     background-size: initial;
 }
@@ -405,6 +405,13 @@ iframe {
 hr.myhr{
     margin-top:10px;
     margin-bottom:15px;
+    border-top: 1px solid #e5e5e5;
+}
+
+
+hr.charts_preset_hr{
+    margin-top:0px;
+    margin-bottom:5px;
     border-top: 1px solid #e5e5e5;
 }
 

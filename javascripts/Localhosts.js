@@ -327,6 +327,11 @@ function addLocalhostTab(localhostIp, localhostName){
 
     });
 
+console.error(element_div);
+
+    // Set charts preset view
+    element_div.find(".chartTimePreset").html("Timeslice: "+$("#timeslice_ChartsForm").val() + " | Timestep: " + $("#preset_ChartsForm").val() + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
+
     initChartsTabsNavAnimation("#localhosts");
 
 }

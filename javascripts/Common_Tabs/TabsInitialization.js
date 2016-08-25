@@ -41,8 +41,8 @@ function initChartsTabsNavAnimation(tabIDQuery){
         // First, drop all animation if they exist
         $(document).off('click', tabIDQuery+' a.navtab');
         $(document).off('click', tabIDQuery+' a.subnavtab[data-toggle="tab"]');
-        $(document).off('mouseenter', tabIDQuery+' button.chartNavDropdownButton');
-        $(document).off('mouseleave', tabIDQuery+' button.chartNavDropdownButton');
+        //$(document).off('mouseenter', tabIDQuery+' button.chartNavDropdownButton');
+        //$(document).off('mouseleave', tabIDQuery+' button.chartNavDropdownButton');
 
         // (Re)Write animations
         // ===================>
@@ -58,14 +58,14 @@ function initChartsTabsNavAnimation(tabIDQuery){
         });
 
         // Set animation : show selected chart title on mouse enter "+" dropdown
-        $(document).on('mouseenter', tabIDQuery+' button.chartNavDropdownButton', function (e) {
+       /* $(document).on('mouseenter', tabIDQuery+' button.chartNavDropdownButton', function (e) {
             $(this).find("p").removeClass("hidden");
         });
 
         // Set animation : hide selected chart title on mouse leave "+" dropdown
         $(document).on('mouseleave', tabIDQuery+' button.chartNavDropdownButton', function (e) {
             $(this).find("p").addClass("hidden");
-        });
+        });*/
 
 
 

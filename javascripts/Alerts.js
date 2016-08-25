@@ -17,7 +17,7 @@
 function Alerts(theWSEventNotifier) {
 
   /**
-   * 
+   *
    * @type {Array}
      */
   var alertEntries = new Array();
@@ -42,7 +42,7 @@ function Alerts(theWSEventNotifier) {
 
         t.row.add( [
           alertEntry.severity,
-          alertEntry.date,
+          moment(alertEntry.date).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'),
           alertEntry.message,
           alertEntry.detail
         ] ).draw( false );

@@ -75,6 +75,11 @@ function applyChartsForm(){
     // Redraw all active charts
     $("li.active > a.subnavtab").click();
 
+    // Set charts preset view
+    $(".chartTimePreset").each(function() {
+        $(this).html("Timeslice: "+$("#timeslice_ChartsForm").val() + " | Timestep: " + $("#preset_ChartsForm").val() + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
+    });
+
 }
 
 

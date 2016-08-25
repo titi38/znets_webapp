@@ -77,5 +77,5 @@ function showLogDetailsModal(logData) {
  */
 function setModal(titleText, contentText) {
     $("#information_Details_Modal .modal-title").html(titleText);
-    $("#information_Details_Modal .modal-body").html(contentText);
+    $("#information_Details_Modal .modal-body").find("p").html(contentText.replace(/\n/g, "<br>"));
 }

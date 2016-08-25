@@ -1,5 +1,3 @@
-
-
 /***********************************************************************************************************/
 //remove some ticks to avoid superimposition, for vertical axis
 
@@ -60,22 +58,22 @@ function testJson(json){
  ***********************************************************************************************************/
 
 function searchItemValue(jsonContent){
-  
-    var length = jsonContent.length;
 
-    var itemArray = ["code","host","localhostip","appid","portproto","asnum","ip", "?column?"];
+  var length = jsonContent.length;
 
-    for(var i = 0;i < length; i++ ){
+  var itemArray = ["code","host","localhostip","appid","portproto","asnum","ip", "appName", "?column?"];
 
-        if(itemArray.indexOf(jsonContent[i]) !== -1){
+  for(var i = 0;i < length; i++ ){
 
-                  return i;
+    if(itemArray.indexOf(jsonContent[i]) !== -1){
 
-        }
+      return i;
+
     }
+  }
 
-    console.error("no item value found");
-    return false;
+  console.error("no item value found");
+  return false;
 
 }
 
@@ -187,7 +185,7 @@ function searchDisplayValue(jsonContent){
 
 /************************************************************************************************************
  *
- *  Search inside a content array for other values of interest. 
+ *  Search inside a content array for other values of interest.
  *
  ***********************************************************************************************************/
 
@@ -196,7 +194,7 @@ function searchAdditionalValues(jsonContent){
   var length = jsonContent.length;
 
   var addArray = ["c"];
-  
+
   var resultArray = [];
 
   for(var i = 0;i < length; i++ ){
@@ -207,7 +205,7 @@ function searchAdditionalValues(jsonContent){
 
     }
   }
-  
+
   return resultArray;
 
 }
@@ -361,9 +359,9 @@ function quantityConvertUnit(qty, unitIsByte){
 /************************************************************************************************************/
 
 function unitsStringProcessing(unitsString){
-  
+
   return unitsString.indexOf("nb") === 0 ? unitsString.slice(2) : unitsString;
-  
+
 }
 
 
@@ -454,9 +452,9 @@ function trueModulo(n,d){
 
 
 function blinkCreate(colorMap) {
-  
+
   var duration = 500;
-  
+
   return function(){
 
     this.parentNode.appendChild(this);
@@ -745,6 +743,24 @@ function sortAlphabet(a,b){
 
 }
 
+
+/************************************************************************************************************/
+
+function sortAlphabetItemOnly(a,b){
+
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return -1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return 1;
+  }
+
+  return a.item.localeCompare(b.item,"en");
+
+}
+
+
+
 /************************************************************************************************************/
 
 function mapToArray(array){
@@ -775,6 +791,20 @@ function sortValues(a, b) {
   return a.height - b.height;
 }
 
+/************************************************************************************************************/
+
+
+function sortArrayVolume(a, b) {
+
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return -1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return 1;
+  }
+  return b.sum - a.sum;
+}
+
 
 /************************************************************************************************************/
 
@@ -785,7 +815,7 @@ function getDateCurrent(urlJson){
   var dateEndStr = urlArray[indexdf + 1];
   var dEArray = dateEndStr.split(/[-+%:]+/);
   return new Date(+dEArray[0],+dEArray[1] - 1,+dEArray[2],+dEArray[3]);
-  
+
 }
 
 /************************************************************************************************************/
@@ -996,7 +1026,7 @@ function protocolToId(protocol){
 
     case "IPv6-Opts" :
       return 60;
-    
+
     case "CFTP" :
       return 62;
 
@@ -1011,7 +1041,7 @@ function protocolToId(protocol){
 
     case "IPPC" :
       return 67;
-    
+
     case "SAT-MON" :
       return 69;
 
@@ -1230,7 +1260,7 @@ function protocolToId(protocol){
 
     case "ROHC" :
       return 142;
-    
+
     case "Reserved" :
       return 255;
 

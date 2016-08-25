@@ -224,6 +224,16 @@ function whichCreationFunction(urlJson,svg){
             return create2HistoStack;
             break;
 
+        case "netTopCurrentLhostsTraffic" :
+        case "netTopCurrentExtServiceTraffic" :
+        case "netTopCurrentLocServiceTraffic" :
+       //Choropleth ?
+        //case "netTopCurrentCountryTraffic" :
+        case "netTopCurrentAsTraffic" :
+        case "netTopCurrentAppTraffic" :
+            return;
+            break;
+
         default:
             return noData;
     }

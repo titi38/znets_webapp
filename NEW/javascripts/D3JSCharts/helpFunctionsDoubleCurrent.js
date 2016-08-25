@@ -9,11 +9,11 @@ function removeValuesOnUpdate(svg, valuesData,sumMapUpdate,gapMinute){
 
       if(sumMapUpdate.has(valueI.item)){
         
-        sumMapUpdate.get(valueI.item).sum -= valueI.height;
+        sumMapUpdate.get(valueI.item).sum -= valueI.heightRef;
 
       }else{
         
-        sumMapUpdate.set(valueI.item, {sum:- valueI.height,display:svg.sumMap.get(valueI.item).display});
+        sumMapUpdate.set(valueI.item, {sum:- valueI.heightRef,display:svg.sumMap.get(valueI.item).display});
         
       }
       
@@ -28,28 +28,37 @@ function removeValuesOnUpdate(svg, valuesData,sumMapUpdate,gapMinute){
 
 /***********************************************************************************************************/
 
-function updateSumArray( sumArray, sumMapUpdate){
+function updateSumArray( sumArray, sumMapUpdate,hiddenValuesArray,mapPercentDisplay) {
 
-  sumMapUpdate.forEach(function(value, key){
+  sumMapUpdate.forEach(function (value, key) {
 
-    var arrayElem = sumArray.find(function(elem){return elem.item === key;});
+    var arrayElem = sumArray.find(function (elem) {
+      return elem.item === key;
+    });
 
-    if(arrayElem){
+    if (arrayElem) {
       arrayElem.sum += value.sum;
-    }else{
+    } else {
       sumArray.push({item: key, sum: value.sum, display: value.display})
     }
 
   });
 
 
-  for(var i = sumArray.length - 1; i >= 0; i--){
-    if(sumArray[i].sum <= 0){
-      sumArray.splice(i,1);
+  for (var i = sumArray.length - 1; i >= 0; i--) {
+    if (sumArray[i].sum <= 0) {
+
+      var index = hiddenValuesArray.indexOf(sumArray[i].item);
+      if (index !== -1) {
+        hiddenValuesArray.splice(index, 1);
+      }
+      mapPercentDisplay.delete(sumArray[i].item);
+      sumArray.splice(i, 1);
+
+
     }
 
   }
-  
 }
 
 
@@ -63,10 +72,14 @@ function updateTrSelec(svg, direction){
   var trSelecPositionStr = "trSelec" + position;
   var divtablePositionStr = "divtable" + position;
   var sumArrayPositionStr = "sumArray" + position;
+  var hiddenValuesPositionStr = "hiddenValues" + position + "Array";
   console.log(svg[sumArrayPositionStr]);
 
 
   svg[trSelecPositionStr] = svg.divLegend[divtablePositionStr].table.selectAll("tr").data(svg[sumArrayPositionStr]);
+
+  svg[trSelecPositionStr].classed("strikedRow",function(d){return svg[hiddenValuesPositionStr].indexOf(d.item) !== -1; });
+
   svg[trSelecPositionStr].select("div").style("background-color", function (d) {
     return svg.colorMap.get(d.item);
   });
@@ -75,7 +88,9 @@ function updateTrSelec(svg, direction){
     return d.display;
   });
 
-  var trselecEnter = svg[trSelecPositionStr].enter().append("tr");
+
+  var trselecEnter = svg[trSelecPositionStr].enter().append("tr")
+    .classed("strikedRow",function(d){return svg[hiddenValuesPositionStr].indexOf(d.item) !== -1; });
 
   trselecEnter.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
     return svg.colorMap.get(d.item);
@@ -85,7 +100,10 @@ function updateTrSelec(svg, direction){
     return d.display;
   });
 
+  trselecEnter.on("click",svg["hideShowOnClickTr" + position]).on("contextmenu", svg["hideShowOnContextMenuTr" + position]);
+
   svg[trSelecPositionStr].exit().remove();
+
   svg[trSelecPositionStr] = svg.divLegend[divtablePositionStr].table.selectAll("tr");
 
   svg[trSelecPositionStr].on("mouseover",svg.activationElemsFromTable(direction)).on("mouseout", svg.deactivationElems);
@@ -136,7 +154,7 @@ function createTableLegendDoubleCurrent(svg, direction, sumArrayDirection, color
 
   trSelec.on("mouseover",activFunct(direction)).on("mouseout", desacFunct);
 
-  hideShowValuesDirection(svg,trSelec,direction);
+  hideShowValuesDirectionCurrent(svg,trSelec,direction);
 
 
   return trSelec;
@@ -150,12 +168,14 @@ function createTableLegendDoubleCurrent(svg, direction, sumArrayDirection, color
 function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
   direction = ("In"=== direction?"Top":"Bottom");
-  var valuesDirectionString = "values" + direction;
+  var trSelecDirectionStr = "trSelec" + direction;
+  var clickFunctionStr = "hideShowOnClickTr" + direction;
+  var contextMenuFctStr = "hideShowOnContextMenuTr" + direction;
   var mapDisplayString = "mapPercentDisplayByItem" + direction;
-  var chartDirString = "chart" + direction;
+  var hiddenValuesStr = "hiddenValues" + direction + "Array";
   var duration = 800;
 
-  var hiddenValuesDirectionArray = [];
+  svg[hiddenValuesStr] = [];
 
   svg[mapDisplayString] = new Map();
 
@@ -166,331 +186,85 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
   });
 
 
-  var totalDirectionString = "total" + direction;
 
+  svg[clickFunctionStr] = function(d){
 
+    if(svg.popup.pieChart !==null){
+      return;
+    }
 
+    var clickedRow = d3.select(this);
 
-  trSelec.on("click", function(d){
+    var index = svg[hiddenValuesStr].indexOf(d.item);
 
-      if(svg.popup.pieChart !==null){
-        return;
-      }
 
-      var valuesDirectionBounded = svg[valuesDirectionString];
+    if(index === -1){
+      //hide the data
 
-      var clickedRow = d3.select(this);
+      svg[hiddenValuesStr].push(d.item);
+      clickedRow.classed("strikedRow",true);
 
-      var index = hiddenValuesDirectionArray.indexOf(d.item);
 
+    }else{
+      //show the data
 
-      if(index === -1){
-        //hide the data
+      svg[hiddenValuesStr].splice(index,1);
+      clickedRow.classed("strikedRow",false);
 
-        hiddenValuesDirectionArray.push(d.item);
-        clickedRow.classed("strikedRow",true);
 
+    }
 
-      }else{
-        //show the data
 
-        hiddenValuesDirectionArray.splice(index,1);
-        clickedRow.classed("strikedRow",false);
+    createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr);
 
 
-      }
+  };
 
+  svg[contextMenuFctStr] = function(d){
+    d3.event.preventDefault();
 
-      var clickedItemPercent = svg[mapDisplayString].get(d.item);
+    if(svg.popup.pieChart !==null){
+      return;
+    }
 
-      clickedRow.transition("hideshow").duration(duration * (1 - clickedItemPercent.percentDisplay))
-        .tween("",function(){
+    var clickedRow = d3.select(this);
 
-          var initPercent = clickedItemPercent.percentDisplay;
-          var finalPercent = (index === -1)?0:1;
-          var finmininitPercent = finalPercent-initPercent;
+    var index = svg[hiddenValuesStr].indexOf(d.item);
 
-          return function(t){
-            clickedItemPercent.percentDisplay = initPercent + t*finmininitPercent;
-          }
-          
-        });
 
+    if ((index !== -1) || (svg[trSelecDirectionStr].size() - 1 !== svg[hiddenValuesStr].length )) {
+      //Hide all data except this one
 
+      svg[hiddenValuesStr] = [];
+      svg[mapDisplayString].forEach(function(value, key){
+        svg[hiddenValuesStr].push(key);
+      });
 
 
+      svg[hiddenValuesStr].splice(svg[hiddenValuesStr].indexOf(d.item), 1);
 
-      svg.transition("hideshow" + direction).duration(duration).tween("",function(){
+      svg[trSelecDirectionStr].classed("strikedRow",true);
+      clickedRow.classed("strikedRow",false);
 
-        var x, sum, i, index, elemValues;
 
+    }else{
 
 
-        x = firstX;
-        i = 0;
-        var totalSumDirection = [];
+      //index === -1 && hiddenValues.length == trSelec.size() -1
+      // ->show all data.
+      svg[hiddenValuesStr] = [];
+      svg[trSelecDirectionStr].classed("strikedRow", false);
 
-        if(direction === "Top"){
 
-          elemValues = valuesDirectionFinal[i];
+    }
 
-          while(x < lengthX){
+    createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr);
 
-            sum = 0;
 
-            while(i < valuesFinalLength && elemValues.x === x){
 
+  };
 
-              if(elemValues.item === d.item){
-                elemValues.height = functionHeight();
-              }
-
-              sum += elemValues.height;
-              elemValues.y = sum;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }else{
-
-          elemValues = valuesDirectionFinal[i];
-
-          while(x < lengthX){
-
-            sum = 0;
-
-
-            while(i < valuesFinalLength && elemValues.x === x){
-
-              if(elemValues.item === d.item){
-                elemValues.height = functionHeight();
-              }
-
-              elemValues.y = sum;
-              sum += elemValues.height;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }
-
-
-
-        var finalTotalDirection;
-
-        if(hiddenValuesDirectionArray.length === trSelecSize){
-
-          finalTotalDirection = 1;
-
-        }else{
-
-          finalTotalDirection = d3.max(totalSumDirection);
-
-        }
-
-
-
-        var startTotalDirection = svg[totalDirectionString];
-
-        var valuesDirectionStart = JSON.parse(JSON.stringify(valuesDirectionBounded));
-
-        var t0;
-
-        return function(t){
-
-          t0 = (1-t);
-
-          var valueStart, valueFinal;
-
-          valuesDirectionBounded.forEach(function(valueBounded,i){
-
-            valueStart = valuesDirectionStart[i];
-            valueFinal = valuesDirectionFinal[i];
-            valueBounded.y = t0 * valueStart.y + t * valueFinal.y;
-            valueBounded.height = t0 * valueStart.height + t * valueFinal.height;
-
-          });
-
-          svg[totalDirectionString] = t0 * startTotalDirection + t * finalTotalDirection;
-
-          calculationsHideShowDirection(svg);
-
-        }; //function t
-
-
-
-      }); //svg tween transition on click
-
-
-
-
-    }) //trselec on click
-
-    .on("contextmenu",function(d){
-      d3.event.preventDefault();
-
-      var clickedRow = d3.select(this);
-
-      svg.transition("hideshow" + direction).duration(duration).tween("",function() {
-
-        var x, sum, i, index, elemValues;
-
-
-        if(svg.popup.pieChart !==null){
-          return;
-        }
-
-        index = hiddenValuesDirectionArray.indexOf(d.item);
-
-        var functionHeight;
-
-        if ((index !== -1) || (trSelecSize - 1 !== hiddenValuesDirectionArray.length )) {
-          //Hide all data except this one
-
-          hiddenValuesDirectionArray = trSelec.data().map(function (elem) {
-            return elem.item;
-          });
-
-          hiddenValuesDirectionArray.splice(hiddenValuesDirectionArray.indexOf(d.item), 1);
-
-          trSelec.classed("strikedRow", true);
-          clickedRow.classed("strikedRow", false);
-
-          functionHeight = function(){
-
-            if(elemValues.item !== d.item){
-              return 0;
-            }
-
-            return valuesDirectionImmutable[i].height;
-
-          };
-
-        }else{
-
-
-          //index === -1 && hiddenValues.length == trSelec.size() -1
-          // ->show all data.
-          hiddenValuesDirectionArray = [];
-          trSelec.classed("strikedRow", false);
-
-          functionHeight = function(){
-            return valuesDirectionImmutable[i].height;
-          };
-
-
-        }
-
-
-
-
-        x = firstX;
-        i = 0;
-        var totalSumDirection = [];
-
-        if(direction === "Top"){
-
-          elemValues = valuesDirectionFinal[i];
-
-          while(x < lengthX){
-
-            sum = 0;
-
-
-            while(i < valuesFinalLength && elemValues.x === x){
-
-
-              elemValues.height = functionHeight();
-
-              sum += elemValues.height;
-              elemValues.y = sum;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }else{
-
-          elemValues = valuesDirectionFinal[i];
-
-          while(x < lengthX){
-
-            sum = 0;
-
-
-            while(i < valuesFinalLength && elemValues.x === x){
-
-              elemValues.height = functionHeight();
-
-
-              elemValues.y = sum;
-              sum += elemValues.height;
-              i++;
-              elemValues = valuesDirectionFinal[i];
-            }
-            totalSumDirection.push(sum);
-            x++;
-          }
-
-        }
-
-
-        var finalTotalDirection;
-
-        if(hiddenValuesDirectionArray.length === trSelecSize){
-
-          finalTotalDirection = 1;
-
-        }else{
-
-          finalTotalDirection = d3.max(totalSumDirection);
-
-        }
-
-
-
-        var startTotalDirection = svg[totalDirectionString];
-
-        var valuesDirectionStart = JSON.parse(JSON.stringify(valuesDirectionBounded));
-
-        var t0;
-
-        return function(t){
-
-          t0 = (1-t);
-
-          var valueStart, valueFinal;
-
-          valuesDirectionBounded.forEach(function(valueBounded,i){
-
-            valueStart = valuesDirectionStart[i];
-            valueFinal = valuesDirectionFinal[i];
-            valueBounded.y = t0 * valueStart.y + t * valueFinal.y;
-            valueBounded.height = t0 * valueStart.height + t * valueFinal.height;
-
-          });
-
-          svg[totalDirectionString] = t0 * startTotalDirection + t * finalTotalDirection;
-
-          calculationsHideShowDirection(svg);
-
-        }; //function t
-
-
-
-
-      }); //svg tween transition on contextmenu
-
-
-    }); //trselec on contextmenu
+  trSelec.on("click", svg[clickFunctionStr]).on("contextmenu",svg[contextMenuFctStr]);
 
 
 
@@ -498,72 +272,209 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
 /***********************************************************************************************************************/
 
-function transitionRefresh(svg, duration, direction, valuesDirBounded){
-
-  var mapDisplay = svg["mapPercentDisplayByItem" + direction];
+function transitionRefresh(svg, direction){
 
 
-  svg.transition("refresh" + direction).duration(duration).tween("",function(){
-
-    //to be sure.
-    var firstX = -60;
-    var lengthX = 120;
-    
-
-    var x = firstX;
-    var i = 0;
-    var sum, elemValues, boundedValuesLength = valuesDirBounded.length;
-
-    if(direction === "Top"){
-
-      elemValues = valuesDirBounded[i];
-
-      while(x < lengthX){
-
-        sum = 0;
-
-        while(i < valuesDirBounded && elemValues.x === x){
 
 
-          elemValues.height = elemValues.heightRef * mapDisplay.get(elemValues.item);
+  var totalDirString = "total" + direction;
 
-          sum += elemValues.height;
-          elemValues.y = sum;
-          i++;
-          elemValues = valuesDirectionFinal[i];
-        }
-        totalSumDirection.push(sum);
-        x++;
+
+
+
+    var i, currentX;
+    var sum, elemValues, currentPercent;
+
+    var mapDisplay = svg["mapPercentDisplayByItem" + direction];
+    var valuesDirSortAlphabet = svg["values" + direction + "SCAlphabetSort"];
+    var valuesDirUsualSort = svg["values" + direction];
+    var valuesLength = valuesDirUsualSort.length;
+
+    var totalSumDirection = [], currentItem = null;
+
+
+    //height actualization
+    for (i = 0; i < valuesLength; i++) {
+
+      elemValues = valuesDirSortAlphabet[i];
+
+      if (elemValues.item !== currentItem) {
+        currentItem = elemValues.item;
+        currentPercent = mapDisplay.get(currentItem).percentDisplay;
       }
 
-    }else{
+      elemValues.height = elemValues.heightRef * currentPercent;
 
-      elemValues = valuesDirectionFinal[i];
+    }
 
-      while(x < lengthX){
+    if (direction === "Top") {
 
-        sum = 0;
+      currentX = null;
+      sum = 0;
 
+      for (i = 0; i < valuesLength; i++) {
+        elemValues = valuesDirUsualSort[i];
 
-        while(i < valuesFinalLength && elemValues.x === x){
-
-          if(elemValues.item === d.item){
-            elemValues.height = functionHeight();
-          }
-
-          elemValues.y = sum;
-          sum += elemValues.height;
-          i++;
-          elemValues = valuesDirectionFinal[i];
+        if (currentX !== elemValues.x) {
+          currentX = elemValues.x;
+          totalSumDirection.push(sum);
+          sum = 0;
         }
-        totalSumDirection.push(sum);
-        x++;
+
+        sum += elemValues.height;
+        elemValues.y = sum;
+
+      }
+
+
+    } else {
+
+      currentX = null;
+      sum = 0;
+
+      for (i = 0; i < valuesLength; i++) {
+        elemValues = valuesDirUsualSort[i];
+
+        if (currentX !== elemValues.x) {
+          currentX = elemValues.x;
+          totalSumDirection.push(sum);
+          sum = 0;
+        }
+
+        elemValues.y = sum;
+        sum += elemValues.height;
+
       }
 
     }
 
+    totalSumDirection.push(sum);
 
-  });
+    svg[totalDirString] = Math.max(1,d3.max(totalSumDirection));
+
+    calculationsHideShowDirection(svg);
+
 
 }
 
+
+
+
+/************************************************************************************************************/
+
+function mapElemToSumCurrent(sumMap, elemToPush, elemJson, contentDisplayValue,itemType){
+
+  if (!sumMap.has(elemToPush.item)) {
+    sumMap.set(elemToPush.item, {sum: elemToPush.heightRef,display:
+      (elemToPush.item === " Remainder ")?" Remainder ":
+        (elemJson[contentDisplayValue] === "")?elemToPush.item:
+          (itemType === "portproto")?elemToPush.item + " (" +  elemJson[contentDisplayValue] + ")":
+            elemJson[contentDisplayValue]});
+  } else {
+    sumMap.get(elemToPush.item).sum += elemToPush.heightRef;
+  }
+
+}
+
+/************************************************************************************************************/
+
+
+function sortValuesCurrent(a, b) {
+
+  if (a.x - b.x != 0) {
+    return a.x - b.x;
+  }
+  if (a.item == " Remainder " || a.item == "OTHERS") {
+    return 1;
+  }
+  if (b.item == " Remainder " || b.item == "OTHERS") {
+    return -1;
+  }
+  return a.heightRef - b.heightRef;
+}
+
+
+
+/************************************************************************************************************/
+
+function createTooltipHistoCurrent(svg, selection, sumMap){
+
+  var isBytes = svg.units === "Bytes",coef = 8000/svg.step;
+
+  var convertArray, valDisplay;
+
+  if(isBytes){
+
+    var heightPerSec, cAOptionel;
+
+    selection.append("svg:title")
+      .text(function (d) {
+        heightPerSec = d.heightRef * coef;
+        convertArray = quantityConvertUnit(d.heightRef,isBytes);
+        cAOptionel = quantityConvertUnit(heightPerSec,true);
+        valDisplay = sumMap.get(d.item).display;
+        return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+          + d.item + "\n"
+          + getDateFromAbscissa(svg,d.x).toString() + "\n"
+          + ((Math.round(100 * heightPerSec * cAOptionel[1])/100) + " " + cAOptionel[0] + "bits/s") + "\n"
+          + ((Math.round(100 * d.heightRef * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+          + "(" +  d.heightRef + " " + svg.units + ")";
+      });
+
+  }else{
+
+    selection.append("svg:title")
+      .text(function (d) {
+        convertArray = quantityConvertUnit(d.heightRef,isBytes);
+        valDisplay = sumMap.get(d.item).display;
+        return ((d.item === valDisplay)?"":(valDisplay + "\n"))
+          + d.item + "\n"
+          + getDateFromAbscissa(svg,d.x).toString() + "\n"
+          + ((Math.round(100 * d.heightRef * convertArray[1])/100) + " " + convertArray[0] + svg.units) + "\n"
+          + "(" +  d.heightRef + " " + svg.units + ")";
+      });
+
+  }
+
+
+
+}
+
+/**********************************************************************************************************************/
+
+function unsubscribeGraphIfInactive(id, urljson, div){
+  if(!(div.classed("active") && div.classed("in"))){
+    console.log(myLastHourHistory.unsubscribe(urljson, id));
+    console.log(id);
+    return true;
+  }
+  return false;
+}
+
+/**********************************************************************************************************************/
+
+
+function createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr){
+  svg.transition("hideshow" + direction).duration(duration)
+    .tween("",function(){
+      var arrayUpdate = [];
+
+      svg[mapDisplayString].forEach(function(value, key){
+        var coef = (svg[hiddenValuesStr].indexOf(key) === -1?1:0) - value.percentDisplay;
+        if(coef !== 0){
+          arrayUpdate.push([value,value.percentDisplay,coef]);
+        }
+      });
+
+
+      return function(t){
+
+        arrayUpdate.forEach(function(elem){
+          elem[0].percentDisplay = elem[1] + t * elem[2];
+        });
+
+        transitionRefresh(svg, direction);
+      }
+
+    });
+}

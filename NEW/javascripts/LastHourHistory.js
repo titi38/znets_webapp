@@ -139,7 +139,8 @@ function LastHourHistory(theWSEventNotifier) {
 
         var response = newResult;
         var processedLastMinute=60;
-        callbacks.forEach(function(callbackObj){
+        var callbacksShallowCopy = callbacks.concat();
+        callbacksShallowCopy.forEach(function(callbackObj){
 
           response = JSON.parse(JSON.stringify(response));
 
@@ -168,6 +169,10 @@ function LastHourHistory(theWSEventNotifier) {
           }
 
           callbackObj.lastMinute = (lastMinute === -1)?-1:jsonCurrentMinute;
+
+
+          //TODO virer
+          console.log("envoi callback id: " + callbackObj.id);
 
           try {
             callbackObj.callback(response, new Date(param.date));
@@ -207,14 +212,18 @@ function LastHourHistory(theWSEventNotifier) {
   this.unsubscribe = function(urlRequest, id){
     var r = mapRequestsOnNewMinute.get(urlRequest);
     if(r){
-      r.some(function(elem,i){
-        if(elem.id === id){
+
+      for(var i = r.length - 1; i >=0; i--){
+
+        if(r[i].id === id){
           r.splice(i,1);
+          console.log(mapRequestsOnNewMinute.get(urlRequest));
           return true;
         }
-        return false;
-      });
+      }
     }
+    return false;
+
   };
 
 

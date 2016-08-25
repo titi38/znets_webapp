@@ -466,7 +466,7 @@ table.dataTable.display tbody tr:hover, table.dataTable.display tbody tr:hover .
 
 table.dataTable.display tbody tr.group.cyclerow{
     background-color: #ecf6ff;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 /*************************************************

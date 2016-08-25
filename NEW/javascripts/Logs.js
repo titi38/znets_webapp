@@ -40,7 +40,7 @@ function Logs(theWSEventNotifier) {
 
     t.row.add( [
       logEntry.severity,
-      logEntry.date,
+      moment(logEntry.date).add(parseInt(moment().format("Z"))), // log Entry Date is at server time => conversion to client time
       logEntry.message,
       logEntry.detail
     ] ).draw( false );

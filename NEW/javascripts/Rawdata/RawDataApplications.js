@@ -3,12 +3,28 @@
  */
 
 
+
+
+/**
+ * RawData Formular - Application Field Initialization Function
+ * Call Ajax to retrieve known applications list
+ * Triggers Applications Setting Function "setApplicationsId"
+ */
 function initializeApplicationsId(){
 
     callAJAX("getAppList.json", '', "json", setApplicationsId, null);
 
 }
 
+
+
+
+
+/**
+ * Applications Setting Function
+ * Initialize RawData Formular - Applications ComboBox (special select field)
+ * @param jsonResponse
+ */
 function setApplicationsId(jsonResponse) {
 
     var appIdIndex = jsonResponse.content.indexOf("id");

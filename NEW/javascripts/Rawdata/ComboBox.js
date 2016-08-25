@@ -3,7 +3,9 @@
  */
 
 
-
+/**
+ * ComboBox Creation Function
+ */
 $( function() {
     $.widget( "custom.combobox", {
         _create: function() {

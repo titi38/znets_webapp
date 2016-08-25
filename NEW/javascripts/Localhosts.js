@@ -161,7 +161,7 @@ function Localhosts(theWSEventNotifier) {
                         return data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );
 
                     },
-                    "targets": 5
+                    "targets": 5, 'title': "OS Name", "className": "dt-head-center dt-body-center"
                 },
                 {'targets': [6, 7], "visible": false, "searchable": false},
                 { "targets": 8, 'title': "Local Services", "className": "dt-head-center dt-body-center",

@@ -4,6 +4,13 @@
 
 
 
+
+
+/**
+ * RawData Formular - ASNum Field Initialization Function
+ * - ASNum Field will check for corresponding AS Name if it exists (Ajax request to server)
+ * - Ajax request result will trigger AS Name view update
+ */
 function initializeASNumsId(){
 
     ///callAJAX("getAsList.json", '', "json", setASNumsId, null);
@@ -29,6 +36,14 @@ function initializeASNumsId(){
 
 
 
+
+
+
+/**
+ * RawData Formular - AS Name View Update Function
+ * Updates the selected AS Name retrieved in the server response "jsonResponse"
+ * @param jsonResponse : server response
+ */
 function setASNumsName(jsonResponse){
 
     if(jsonResponse)
@@ -44,6 +59,13 @@ function setASNumsName(jsonResponse){
 
 
 
+/**
+ * RawData Results DataTable - AS Name Retrieval Function
+ * THIS FUNCTION IS TRIGGERED ON ASNum TABLE CELL MOUSEOVER
+ * - Checks for cell's AS Name if it exists (Ajax request to server), once user's pointer stays over cell for 500ms
+ * - Ajax request result will trigger Cell's Tooltip definition
+ * @param el : cell element
+ */
 function retrieveASNum(el){
 
     ///callAJAX("getAsList.json", '', "json", setASNumsId, null);
@@ -71,8 +93,12 @@ function retrieveASNum(el){
 }
 
 
-
-
+/**
+ * RawData Results DataTable - AS Name Retrieval Abortion Function
+ * THIS FUNCTION IS TRIGGERED ON ASNum TABLE CELL MOUSEOUT
+ * - Abort cell's AS Name Retrieval
+ * @param el : cell element
+ */
 function abordASNumRetrieval(el){
 
     var element = $(el);
@@ -83,6 +109,15 @@ function abordASNumRetrieval(el){
 
 
 
+
+
+/**
+ * RawData Results DataTable - AS Cell's Tooltip Definition Function
+ * - Sets Cell's Tooltip definition
+ * - Trigger Cell Mouseover to show tooltip
+ * @param jsonResponse : server's response containing AS Name
+ * @param element : Cell Element
+ */
 function setASToElementTitle(jsonResponse, element){
 
     var title = "AS Name not found";

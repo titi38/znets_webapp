@@ -2,6 +2,15 @@
  * Created by smile on 14/06/16.
  */
 
+
+
+
+
+/**
+ * RawData Results - Tab Creation Function
+ * Triggers the creation of a rawData results tab
+ * @param rawdataTabID
+ */
 function addRawDataTab(rawdataTabID){
 
     var element_tab = $('<li class="tab'+rawdataTabID+' tab"><a data-toggle="tab" href="#divRawdata'+rawdataTabID+'">Flow Data <span class="closeTab close-icon" title="Remove this page">&#x2715</span></a></li>');
@@ -54,6 +63,15 @@ function addRawDataTab(rawdataTabID){
 }
 
 
+
+
+
+
+/**
+ * DataTable Column Adjustment Function
+ * Trigger the target Table redraw in order to adjust its columns size
+ * @param rawdataTabID : id suffix of DataTable element
+ */
 function adjustTableColumns(rawdataTabID) {
     // Cheat : trigger draw to call drawCallback function in order to adjust column's width
     $('#tableRawdata' + rawdataTabID).DataTable().draw();

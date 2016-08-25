@@ -5,7 +5,7 @@
 
 /**
  * Rivets Formatter Function
- * Add prefix (prepend) to value
+ * Add prefix (prependString) to value
  * @param value
  * @param prependString
  * @returns {string|*}

@@ -1,11 +1,16 @@
 /**
- *
- * @param div
- * @param svg
- * @param svgChild
- * @param numSvg
- * @param divLegend
- * @param mydiv
+ * Created by elie.
+ */
+
+/**
+ /**
+ * Generates one stacked histogram with auto-update and its legend inside the svg parameter which will have two of them.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter, which contains svgChild.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param numSvg {Number} Used to differentiate the different graphs from top to bottom.
+ * @param divLegend {Object} D3 selection of the div which contains the legend's table of the two graphs.
+ * @param mydiv {String} The parent div id.
  */
 
 function createChildSvgCurrent(div, svg, svgChild, numSvg, divLegend, mydiv){

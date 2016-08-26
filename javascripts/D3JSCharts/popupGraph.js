@@ -220,7 +220,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
       }
 
 
-      //TODO smile
+      getData(d);
 
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {
@@ -787,9 +787,6 @@ function drawPopupGraph(json, svg, total, pieside,f){
   svg.popup.pieChart.trSelec.on("click.data",getData);
   svg.popup.pieChart.pathSelec.on("click.data",getData);
   svg.popup.pieChart.textSelec.on("click.data",getData);
-  function getData(d){
-    //TODO smile
-  }
 
 
   return total;
@@ -891,4 +888,10 @@ function utilUrlPie(res, endStr, svg){
 
   }
 
+}
+
+/**********************************************************************************************************************/
+
+function getData(d){
+  //TODO smile
 }

@@ -1,5 +1,11 @@
-
-/************************************************************************************************************/
+/**
+ * Updates the legend's axes of the maps.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param inMin {Number} the least value (except 0) the ingoing data amount can take.
+ * @param inMax {Number} the greatest value the ingoing data amount can take.
+ * @param outMin {Number} the least value (except 0) the outgoing data amount can take.
+ * @param outMax {Number} the greatest value the outgoing data amount can take.
+ */
 
 function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
 
@@ -41,7 +47,10 @@ function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Dedicated function to redraws the axes when a resize event occurs.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function resizeAxesMap(svg){
 
@@ -75,8 +84,11 @@ function resizeAxesMap(svg){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Returns the function used to update the text of svg:title of top elements according their bound datum.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @returns {Function} The function used to update the text of svg:title elements according their bound datum.
+ */
 
 function mapCountryTitleTop(svg){
 
@@ -93,7 +105,11 @@ function mapCountryTitleTop(svg){
   }
 }
 
-/************************************************************************************************************/
+/**
+ * Returns the function used to update the text of svg:title of bottom elements according their bound datum.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @returns {Function} The function used to update the text of svg:title elements according their bound datum.
+ */
 
 function mapCountryTitleBottom(svg){
 
@@ -111,7 +127,13 @@ function mapCountryTitleBottom(svg){
   }
 }
 
-/************************************************************************************************************/
+/**
+ * Creates the definitions to instantiate a color gradient.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param nameId {String} Id of the gradient's definition.
+ * @param colorStart {String} Start color.
+ * @param colorEnd {String} End color.
+ */
 
 function appendVerticalLinearGradientDefs(svg,nameId,colorStart,colorEnd){
   var linearGradient;

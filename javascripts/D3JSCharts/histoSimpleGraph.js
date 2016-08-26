@@ -214,7 +214,7 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
     console.log(sumArray);
 
-    sumArray.sort(sortAlphabet);
+    sumArray.sort(sortArrayVolume);
 
     i = 0;
     if (sumArray[0].item == " Remainder " || sumArray[0].item == "OTHERS") {
@@ -228,6 +228,9 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
     }
 
     console.log(colorMap);
+
+    sumArray.sort(sortAlphabet);
+
 
     //Evaluation of the abscissa domain
     svg.x.domain([-0.625, xMax - 0.375]);

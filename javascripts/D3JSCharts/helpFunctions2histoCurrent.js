@@ -1,3 +1,13 @@
+/**
+ *
+ * @param div
+ * @param svg
+ * @param svgChild
+ * @param numSvg
+ * @param divLegend
+ * @param mydiv
+ */
+
 function createChildSvgCurrent(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   var maxHeight = svg.margin.top/2 + svg.margin.zero/4 + svg.heightGraph;

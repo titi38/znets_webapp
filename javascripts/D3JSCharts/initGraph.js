@@ -1,4 +1,9 @@
 /**
+ * Created by elie.
+ */
+
+
+/**
  * Chart drawing Function from JSON's Url.
  * Evaluate JSON's Url from "selectedNavChart" (the selected chart)
  * @param selectedNavChart : contains all necessary data about JSON's Url and interface target element receiving the chart
@@ -62,7 +67,11 @@ function emptyChartContainer(jqueryElement) {
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Instantiates the parent div and svg then call the function to create the correct graph.
+ * @param urlJson {String} The url to request data from the server.
+ * @param mydiv {String} The parent div id.
+ */
 
 function drawChartFromInterface(urlJson, mydiv) {
 
@@ -107,7 +116,11 @@ function drawChartFromInterface(urlJson, mydiv) {
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Instantiates the parent div and svg then call the function to create the correct graph.
+ * @param urlJson {String} The url to request data from the server.
+ * @param mydiv {String} The parent div id.
+ */
 
 
 function drawChart(urlJson, mydiv) {
@@ -150,7 +163,12 @@ function drawChart(urlJson, mydiv) {
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Returns the function to create the correct graph.
+ * @param urlJson {String} The url to request data from the server.
+ * @param svg {Object} D3 selection of the parent svg.
+ * @returns {Function} The function to create the correct graph
+ */
 
 function whichCreationFunction(urlJson,svg){
 
@@ -247,7 +265,13 @@ function whichCreationFunction(urlJson,svg){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Display a text if no graph can be draw.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param msg {String} The optional message which be displayed.
+ */
 
 function noData(div,svg,mydiv, msg){
     console.log("incorrect url/data");

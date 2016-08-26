@@ -1,5 +1,12 @@
-/***********************************************************************************************************/
-//remove some ticks to avoid superimposition, for vertical axis
+/**
+ * Created by elie.
+ */
+
+/**
+ * Remove some ticks to avoid text superimposition, for the D3 vertical axis in parameter.
+ * @param axis {Object} D3 vertical axis.
+ */
+
 
 function niceTicks(axis) {
   var selectick = axis.selectAll(".tick");
@@ -23,7 +30,11 @@ function niceTicks(axis) {
 }
 
 
-/************************************************************************************************************/
+/**
+ * Scrolls a table element until it displays a given tr element with a D3 transition.
+ * @param elem {Object} D3 selection of the tr element to be displayed.
+ * @param table {Object} D3 selection of the table to be displayed.
+ */
 
 function scrollToElementTableTransition(elem, table){
 
@@ -45,17 +56,22 @@ function scrollToElementTableTransition(elem, table){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Test the validity of a json object sent by the server according several criterions.
+ * Returns true if invalid, false if correct.
+ * @param json {Object} The json object sent by the server.
+ * @returns {boolean} True if the json has failed the test, false it has succeded.
+ */
 
 function testJson(json){
   return typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined" || json.response.data.length === 0;
 }
 
-/************************************************************************************************************
- *
- *  Search inside a content array for the "item" value, used as id.
- *
- ***********************************************************************************************************/
+/**
+ * Search inside a content array for the "item" value, used as id.
+ * @param jsonContent {Object} Content array of the json sent by a server (json.content).
+ * @returns {*} If a corresponding name has been found, returns its position in the jsonContent array, false otherwise.
+ */
 
 function searchItemValue(jsonContent){
 
@@ -77,11 +93,12 @@ function searchItemValue(jsonContent){
 
 }
 
-/************************************************************************************************************
- *
- *  Search inside a content array for the date value, used for abscissas
- *
- ***********************************************************************************************************/
+
+/**
+ * Search inside a content array for the date value, used for abscissas.
+ * @param jsonContent {Object} Content array of the json sent by a server (json.content).
+ * @returns {*} If a corresponding name has been found, returns its position in the jsonContent array, false otherwise.
+ */
 
 function searchDateValue(jsonContent){
 
@@ -104,11 +121,11 @@ function searchDateValue(jsonContent){
 }
 
 
-/************************************************************************************************************
- *
- *  Search inside a content array for the amount value, used for ordinates
- *
- ***********************************************************************************************************/
+/**
+ * Search inside a content array for the amount value, used for ordinates.
+ * @param jsonContent {Object} Content array of the json sent by a server (json.content).
+ * @returns {*} If a corresponding name has been found, returns its position in the jsonContent array, false otherwise.
+ */
 
 function searchAmountValue(jsonContent){
 
@@ -129,11 +146,12 @@ function searchAmountValue(jsonContent){
 
 }
 
-/************************************************************************************************************
- *
- *  Search inside a content array for the direction value
- *
- ***********************************************************************************************************/
+
+/**
+ * Search inside a content array for the direction value.
+ * @param jsonContent {Object} Content array of the json sent by a server (json.content).
+ * @returns {*} If a corresponding name has been found, returns its position in the jsonContent array, false otherwise.
+ */
 
 function searchDirectionValue(jsonContent){
 
@@ -155,12 +173,13 @@ function searchDirectionValue(jsonContent){
 
 }
 
-/************************************************************************************************************
- *
- *  Search inside a content array for a
- *  possible, non mandatory display value (replaced by item value later if no display value found)
- *
- ***********************************************************************************************************/
+
+/**
+ * Search inside a content array for a possible, non mandatory display value (replaced by item value later
+ * if no display value found).
+ * @param jsonContent {Object} Content array of the json sent by a server (json.content).
+ * @returns {*} If a corresponding name has been found, returns its position in the jsonContent array, false otherwise.
+ */
 
 function searchDisplayValue(jsonContent){
 
@@ -183,11 +202,11 @@ function searchDisplayValue(jsonContent){
 }
 
 
-/************************************************************************************************************
- *
- *  Search inside a content array for other values of interest.
- *
- ***********************************************************************************************************/
+/**
+ * Search inside a content array for other values of interest.
+ * @param jsonContent {Object} Content array of the json sent by a server (json.content).
+ * @returns {Array} An array containing all the names' positions found.
+ */
 
 function searchAdditionalValues(jsonContent){
 
@@ -211,11 +230,12 @@ function searchAdditionalValues(jsonContent){
 }
 
 
-/************************************************************************************************************
- *
- *  return a date javascript object from "x" abscissa value
- *
- ***********************************************************************************************************/
+/**
+ * Returns the corresponding javascript date object for a given graph from the x parameter of a data element.
+ * @param svg {Object} A D3 selected element having the svg.step and svg.timeMin values.
+ * @param x {Number} The abscissa of a given data.
+ * @returns {Date} The javascript date created from the x value.
+ */
 
 function getDateFromAbscissa(svg,x){
 
@@ -223,14 +243,16 @@ function getDateFromAbscissa(svg,x){
 
 }
 
+/**
+ * Converts the qty value to its SI notation.
+ * Returns an array with the metric unit infMetric and the pow coefficient which has to be multiplied with qty to obtain
+ *                                                                                                  the converted value.
+ * @param qty {Number} The reference quantity for the conversion.
+ * @param unitIsByte {Boolean} True if the qty parameter's unit is byte, false otherwise.
+ * @returns {*[]} An array containing two elements, the metric unit infMetric {String} and the pow coefficient {Number}
+ * which has to be multiplied with qty to obtain the converted value.
+ */
 
-/************************************************************************************************************
-
- convert quantity unit to nicer quantity unit for a specific quantity.
-
- return the computed metric prefix and according factor in a array.
-
- ************************************************************************************************************/
 
 function quantityConvertUnit(qty, unitIsByte){
 
@@ -345,18 +367,15 @@ function quantityConvertUnit(qty, unitIsByte){
 
   return [infMetric, pow];
 
-
-
-
-
-
-
-
-
 }
 
 
-/************************************************************************************************************/
+
+/**
+ * Utility function which removes a the "nb" string in front of the units' name.
+ * @param unitsString {String} The units' name.
+ * @returns {String} The processed units' name.
+ */
 
 function unitsStringProcessing(unitsString){
 
@@ -365,8 +384,11 @@ function unitsStringProcessing(unitsString){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Utility function which returns the hour shift from a graph's url.
+ * @param url {String} Url used to request data from the server.
+ * @returns {Number} The corresponding hour shift.
+ */
 
 function getTimeShift(url){
   url = url.split(/[?&=]+/);
@@ -379,7 +401,14 @@ function getTimeShift(url){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Utility function used to append svg:title element to each data from a stacked histogram displaying quantity, date,
+ * display name and item name.
+ * @param svg {Object} D3 encapsulated svg element having the svg.units, svg.timeMin and svg.step properties.
+ * @param selection {Object} A D3 selection of rect html elements bound to their datum.
+ * @param sumMap {Object} A Javascript Map used to retrieve the display value of requested elements from their item
+ *                                                                                                                value.
+ */
 
 function createTooltipHisto(svg, selection, sumMap){
 
@@ -424,8 +453,12 @@ function createTooltipHisto(svg, selection, sumMap){
 
 }
 
-
-/************************************************************************************************************/
+/**
+ * Utility function which generates the title attribute of a table rows D3 selection,
+ * displaying the name and overall volume of these corresponding items.
+ * @param svg {Object} The D3 selection of the svg containing the units' name (svg.units).
+ * @param trSelec {Object} D3 selection of the tr elements.
+ */
 
 function tableLegendTitle(svg,trSelec){
 
@@ -441,14 +474,22 @@ function tableLegendTitle(svg,trSelec){
 
 }
 
-/************************************************************************************************************/
+/**
+ * The default Javascript's modulo function (%) isn't mathematically correct. This function is.
+ * @param n {Number} Dividend.
+ * @param d {Number} Divisor.
+ * @returns {Number} Remainder.
+ */
 
 function trueModulo(n,d){
   return ((n%d) +d)%d;
 }
 
-/************************************************************************************************************/
-
+/**
+ * Returns a function which generates a chained transition making data's rect element blink.
+ * @param colorMap {Object} A Javascript's Map linking the item's names with their color.
+ * @returns {Function} The function used to make data's rect blinking.
+ */
 
 
 function blinkCreate(colorMap) {
@@ -475,130 +516,13 @@ function blinkCreate(colorMap) {
 
 }
 
-
-
-
-/************************************************************************************************************
-
- convert bytes to NiB string
-
- ************************************************************************************************************/
-
-function bytesConvert(nbBytes){
-
-  var exp = Math.min(8,Math.max(0,Math.floor(Math.log(nbBytes)/Math.log(1024))));
-
-  var value = Math.round(nbBytes*Math.pow(1024,-exp) * 100)/100;
-
-
-  switch (exp){
-
-    default:
-    case 0:
-      return value + " B";
-    case 1 :
-      return value + " KiB";
-    case 2 :
-      return value + " MiB";
-    case 3 :
-      return value + " GiB";
-    case 4 :
-      return value + " TiB";
-    case 5 :
-      return value + " PiB";
-    case 6 :
-      return value + " EiB";
-    case 7 :
-      return value + " ZiB";
-    case 8 :
-      return value + " YiB";
-  }
-
-}
-
-
-/************************************************************************************************************
-
- Return a function that should give a new color each, two successive colors should be different enough.
-
-
- ************************************************************************************************************/
-
-/*
-
- function colorEval(){
-
- var lim = 5;
- var threshold = 360/Math.pow(2,lim);
-
- var val = 0;
- var extent = 360;
- var color;
-
- var j = -1;
- var ylim = 5;
- var ystart = ylim, zstart = 3;
- var ythresh = ystart;
- var y = ystart;
- var z = zstart;
-
- var start = 0.4;
- var segm = (0.8 - start)/6;
-
-
- var s = start + segm*y;
- var l = start + segm*z;
-
-
- return function(){
-
- color = d3.hsl(val,s,l);
- val = val + j*180 + extent * (1+j)/2;
- j = -1 * j;
-
-
- y = (y+4)%7;
- if(y==ythresh){
- y++;
- ythresh++;
- }
- z = (z+4)%7;
- s = y*segm +start;
- l= z*segm+start;
-
-
- if(val >= 360){
-
- extent = extent/2;
-
- if(extent <= threshold){
- val = 0;
- extent = 360;
- ystart = (ystart+4)%7;
- if(ystart==ylim){
- ylim++;
- ystart++;
- }
- zstart = (zstart+4)%7;
- y=ystart;
- z=zstart;
- ythresh = ystart;
- s = start + segm*y;
- l = start + segm*z;
- }else{
- val = extent/2 + 180;
- }
- }
-
- return color;
- }
- }
-
+/**
+ * Returns a function which returns a color different from the formers at each call.
+ * If my maths are correct, the colors' hue will be nicely spread across a HSL circle at any function call to avoid an
+ * overrepresentation of similar colors.
+ * @param firstValue {Number} optional, 0 if not defined, is the angle of the first color hue on the HSL circle.
+ * @returns {Function} A function which returns a color different from the formers at each call.
  */
-/************************************************************************************************************/
-
-
-
 
 function colorEval(firstValue){
 
@@ -607,7 +531,7 @@ function colorEval(firstValue){
   var calcexpmin;
   var added;
   var idecal;
-  var val = typeof firstValue !== "undefined" ? firstValue%360 : 0;
+  var val = typeof firstValue !== "undefined" ? trueModulo(firstValue,360) : 0;
   var exp;
   var i = 0;
 
@@ -615,9 +539,8 @@ function colorEval(firstValue){
   var color;
 
 
-  //non homogeneous repartition circle hsl. (optional: to test usefulness maybe sometimes)
-
-  //specify the repartition. should be comprised between 0 & 60/Math.PI (env. 19.09), function not injective if greater.
+  //non homogeneous repartition circle hsl. (not essential maybe but it has to be done to know that and shouldn't harm)
+  //specify the repartition. should be comprised between 0 & 60/Math.PI (env. 19.09), function non injective if greater.
   var coef = 15;
 
   //specify the period, do not tweak
@@ -654,7 +577,6 @@ function colorEval(firstValue){
     }
     while(idecal == Math.floor(idecal) && calcexpmin > -exp);
 
-    //console.log("i " + i + "  exp " + exp + " idecal "+ idecal + " calcexpmin " + calcexpmin + " 1/4 " + Math.floor(((i-1)%4)/3));
     added = (Math.pow(2,calcexpmin) + Math.floor(((i-1)%4)/3)*0.5)*180;
     val =(val + added)%360;
     //console.log("val " + val);
@@ -672,7 +594,11 @@ function colorEval(firstValue){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Returns an In-Out polynomial function with the exp parameter value as degree used by D3 for easing.
+ * @param exp {Number} Degree of the function.
+ * @returns {Function} The easing function for D3.
+ */
 
 function easeFct(exp){
   var a = Math.pow(2,exp-1);
@@ -685,13 +611,12 @@ function easeFct(exp){
 
 }
 
-
-
-
-
-/************************************************************************************************************
- *
- ***********************************************************************************************************/
+/**
+ * Updates the internal variables of a D3 zoom contained in a D3 selection of an html element.
+ * @param selection {Object} D3 selection containing the D3 zoom's internal variables.
+ * @param transform {Object} Javascript object, has three properties. k, the scale; x, the first coordinate of the
+ * translation vector; y, the second coordinate of the translation vector.
+ */
 
 function updateTransform(selection,transform){
 
@@ -703,7 +628,16 @@ function updateTransform(selection,transform){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Calculates the display text value and sum of the javascript object elemToPush's height according to elemToPush.item
+ * and stores them into the sumMap parameter.
+ * @param sumMap {Object} Javascript Map, stores height's sums and display text by item.
+ * @param elemToPush {Object} The object corresponding to the data that will be used to create a stacked histogram.
+ * @param elemJson {Array} The array returned by the server used to represent a given datum.
+ * @param contentDisplayValue {Number} The position of the display text inside the elemJson parameter.
+ * @param itemType {String} The reference name for item values by the json returned by the server into
+ * json.response.content, used to detect non-generic cases.
+ */
 
 function mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue,itemType){
 
@@ -719,7 +653,13 @@ function mapElemToSum(sumMap, elemToPush, elemJson, contentDisplayValue,itemType
 
 }
 
-/************************************************************************************************************/
+/**
+ * Utility function for sorting elements in an array according their display value (string).
+ * @param a {Object} Javascript object with item and display properties set as strings.
+ * @param b {Object} Javascript object with item and display properties set as strings
+ * @returns {Number} If less than 0, a will have a lower index than b in the sorting array, if greater,
+ * b will have a lower index than a in the sorting array.
+ */
 
 function sortAlphabet(a,b){
 
@@ -744,7 +684,13 @@ function sortAlphabet(a,b){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Utility function for sorting elements in an array according their item value (strings).
+ * @param a {Object} Javascript object with item property set as string.
+ * @param b {Object} Javascript object with item property set as string.
+ * @returns {Number} If less than 0, a will have a lower index than b in the sorting array, if greater,
+ * b will have a lower index than a in the sorting array.
+ */
 
 function sortAlphabetItemOnly(a,b){
 
@@ -760,8 +706,12 @@ function sortAlphabetItemOnly(a,b){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Utility function for mapping Javascript data object into the array parameter inside a Javascript Map forEach
+ * function.
+ * @param array {Array} The array where the data will be stored.
+ * @returns {Function} The function used by the forEach function.
+ */
 
 function mapToArray(array){
   return function (value, key) {
@@ -771,10 +721,14 @@ function mapToArray(array){
 }
 
 
-
-
-
-/************************************************************************************************************/
+/**
+ * Utility function for sorting elements in an array according their height and abscissa (numbers), before being processed to be
+ * displayed.
+ * @param a {Object} Javascript object with item property set as string, x and height properties set as numbers.
+ * @param b {Object} Javascript object with item property set as string, x and height properties set as numbers.
+ * @returns {Number} If less than 0, a will have a lower index than b in the sorting array, if greater,
+ * b will have a lower index than a in the sorting array.
+ */
 
 
 function sortValues(a, b) {
@@ -791,7 +745,13 @@ function sortValues(a, b) {
   return a.height - b.height;
 }
 
-/************************************************************************************************************/
+/**
+ * Utility function for sorting elements in an array according their item name (string) and sum (number).
+ * @param a {Object} Javascript object with item property set as string, sum property set as number.
+ * @param b {Object} Javascript object with item property set as string, sum property set as number.
+ * @returns {Number} If less than 0, a will have a lower index than b in the sorting array, if greater,
+ * b will have a lower index than a in the sorting array.
+ */
 
 
 function sortArrayVolume(a, b) {
@@ -806,7 +766,12 @@ function sortArrayVolume(a, b) {
 }
 
 
-/************************************************************************************************************/
+/**
+ * Workaround function that gives the returns the Javascript Date corresponding to the df parameter of the urlJson
+ *                                                                                                           url string.
+ * @param urlJson {String} The url used to resquest the data from the server.
+ * @returns {Date} the Javascript Date corresponding to the df parameter of the urlJson url string.
+ */
 
 function getDateCurrent(urlJson){
 
@@ -818,7 +783,11 @@ function getDateCurrent(urlJson){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Utility function which returns the value of the service parameter inside the urlJson url string.
+ * @param urlJson {String} The url used to resquest the data from the server.
+ * @returns {String} The value of the service parameter.
+ */
 
 function getServiceUrlJson(urlJson){
 
@@ -829,7 +798,12 @@ function getServiceUrlJson(urlJson){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Utility function which returns the value of the param parameter (string) inside the urlJson url string.
+ * @param urlJson {String} The url used to resquest the data from the server.
+ * @param param {String} The parameter's name to retrieve its value.
+ * @returns {*} If found, a {String} being the value of the param parameter, null if not.
+ */
 
 function getParamUrlJson(urlJson,param){
 
@@ -839,7 +813,12 @@ function getParamUrlJson(urlJson,param){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Utility function to retrieve the number associated conventionally to each Internet protocol.
+ * Generated from the csv file available at http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+ * @param protocol {String} The protocol field.
+ * @returns {Number} The associated number.
+ */
 
 function protocolToId(protocol){
   switch(protocol){

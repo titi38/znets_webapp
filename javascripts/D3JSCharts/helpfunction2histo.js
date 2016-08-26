@@ -32,10 +32,10 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   }
 
 
-  var total = d3.max(totalSumValues);
+  svgChild.total = Math.max(1, d3.max(totalSumValues));
 
   svgChild.x = d3.scaleLinear().range([0,svg.width]).domain([-0.625, svg.xMax - 0.375]);
-  svgChild.y = d3.scaleLinear().range([svg.heightGraph,0]).domain([0,total * 1.1]);
+  svgChild.y = d3.scaleLinear().range([svg.heightGraph,0]).domain([0,svgChild.total * 1.1]);
 
 
   svgChild.chartBackground = svgChild.append("g");
@@ -62,7 +62,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   var dataWidth = 0.75*(svgChild.newX(svgChild.newX.domain()[0] + 1) - svgChild.newX.range()[0]);
 
 
-  var selection = svgChild.chart.selectAll(".data")
+  svgChild.selection = svgChild.chart.selectAll(".data")
     .data(svgChild.values)
     .enter().append("rect")
     .classed("data", true)
@@ -75,7 +75,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
     .attr("height", function(d){return svg.heightGraph - svgChild.newY(d.height);})
     .attr("width", dataWidth);
 
-  var trSelec = svgChild.table.selectAll("tr").data(svgChild.sumArray).enter().append("tr");
+  svgChild.trSelec = svgChild.table.selectAll("tr").data(svgChild.sumArray).enter().append("tr");
 
   var blink = blinkCreate(svg.colorMap);
 
@@ -94,9 +94,9 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
     }
 
-    trSelec.filter(testitem).classed("outlined", true);
+    svgChild.trSelec.filter(testitem).classed("outlined", true);
 
-    selection.filter(testitem).each(blink);
+    svgChild.selection.filter(testitem).each(blink);
 
   }
 
@@ -113,11 +113,11 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
     }
 
-    var elem = trSelec.filter(testitem).classed("outlined", true);
+    var elem = svgChild.trSelec.filter(testitem).classed("outlined", true);
 
     scrollToElementTableTransition(elem,svgChild.table);
 
-    selection.filter(testitem).each(blink);
+    svgChild.selection.filter(testitem).each(blink);
 
   }
 
@@ -131,7 +131,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
     }
 
-    var elem = trSelec.filter(testitem).classed("outlined", true);
+    var elem = svgChild.trSelec.filter(testitem).classed("outlined", true);
     scrollToElementTableTransition(elem,svgChild.table);
 
 
@@ -148,9 +148,9 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
       return data.item == svgChild.activeItem;
     }
 
-    trSelec.filter(testitem).classed("outlined", false);
+    svgChild.trSelec.filter(testitem).classed("outlined", false);
 
-    selection.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", svg.colorMap.get(svgChild.activeItem));
+    svgChild.selection.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", svg.colorMap.get(svgChild.activeItem));
 
     svgChild.activeItem = null;
 
@@ -161,7 +161,7 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   svgChild.activationElemsAutoScroll = activationElemsAutoScroll;
   svgChild.activationElems = activationElems;
 
-  selection.on("mouseover", activationElemsAutoScroll).on("mouseout", deactivationElems);
+  svgChild.selection.on("mouseover", activationElemsAutoScroll).on("mouseout", deactivationElems);
 
   svgChild.axisx = svg.append("g")
     .attr("class", "axisGraph")
@@ -169,7 +169,10 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   svgChild.axisx.call(d3.axisBottom(svgChild.x));
 
-  legendAxisX2Histo(svg, svgChild);
+  svgChild.step = svg.step;
+  svgChild.timeMin = svg.timeMin;
+
+  legendAxisX(svgChild);
 
   yAxe2HistoCreation(svg, svgChild, numSvg);
 
@@ -187,22 +190,22 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
   //Legend creation
   //(not svgChild, ok)
 
-  tableLegendTitle(svg,trSelec);
+  tableLegendTitle(svg,svgChild.trSelec);
 
-  trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
+  svgChild.trSelec.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
     return svg.colorMap.get(d.item);
   });
-  trSelec.append("td").text(function (d) {
+  svgChild.trSelec.append("td").text(function (d) {
     return d.display;
   });
-  trSelec.on("mouseover", activationElems).on("mouseout", deactivationElems);
+  svgChild.trSelec.on("mouseover", activationElems).on("mouseout", deactivationElems);
 
   svgChild.divtable.style("margin-bottom",maxHeight - parseInt(svgChild.table.style("height"),10) + "px");
   
 
   addZoom2Histo(svg, svgChild, update2HistoStack);
 
-  hideShowValues2Histo(svg,svgChild,trSelec,selection,svg.xMax);
+  hideShowValues2Histo(svg,svgChild,svgChild.trSelec,svgChild.selection,svg.xMax);
 /*
   addPopup2Histo(selection, div, svg , svgChild, numSvg, function(data){
       desactivationElems();
@@ -537,7 +540,7 @@ function update2HistoStack(svg, svgChild){
 
   svgChild.axisx.call(d3.axisBottom(svgChild.newX));
 
-  legendAxisX2Histo(svg,svgChild);
+  legendAxisX(svgChild);
 
   yAxe2HistoUpdate(svg,svgChild);
   optionalAxes2HistoUpdate(svg,svgChild);

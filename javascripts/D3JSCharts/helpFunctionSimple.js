@@ -6,8 +6,11 @@
 function legendAxisX(svg){
 
   var date,dround;
+  var lastDay = null, currentDay;
+
   //if graph hourly
   if(svg.step === 3600000){
+
 
     svg.axisx.selectAll(".tick").select("text").text(function (d) {
 
@@ -21,7 +24,14 @@ function legendAxisX(svg){
 
       date = getDateFromAbscissa(svg, dround);
 
-      return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
+      currentDay = (date.getMonth() + 1) + "/" + date.getDate();
+
+      if(currentDay === lastDay){
+        return date.getHours() + "h";
+      }
+
+      lastDay = currentDay;
+      return currentDay + " " + date.getHours() + "h";
 
     });
 
@@ -42,7 +52,13 @@ function legendAxisX(svg){
       mn = date.getMinutes();
       mn = (mn < 10)?("0" + mn):mn;
 
-      return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h" + mn;
+      currentDay = (date.getMonth() + 1) + "/" + date.getDate();
+
+      if(currentDay === lastDay){
+        return date.getHours() + "h" + mn;
+      }
+      lastDay = currentDay;
+      return currentDay + " " + date.getHours() + "h" + mn;
 
     });
 

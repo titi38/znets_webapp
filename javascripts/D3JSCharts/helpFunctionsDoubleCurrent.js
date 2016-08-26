@@ -478,3 +478,5 @@ function createTransitionDirection(svg, direction, duration, mapDisplayString,hi
 
     });
 }
+
+/**********************************************************************************************************************/

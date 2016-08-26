@@ -96,7 +96,7 @@ function getPieJsonQuery(svg, clickData) {
 
       return utilUrlPie(res,endStr, svg);
 
-
+    case "TopLHosts":
     case "TopHosts":
 
       endStr = "HostsTopHosts" + unit + ".json?"
@@ -855,10 +855,10 @@ function stateToText(state){
 
   switch(state){
     case "ext":
-      return "External Hosts";
+      return "Switch to Local Hosts";
 
     case "loc":
-      return "Local Hosts";
+      return "Switch to External Hosts";
   }
 
 }

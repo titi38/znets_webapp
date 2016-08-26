@@ -63,6 +63,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
     json = json.response;
+    
     var jsonData = json.data;
     var jsonContent = json.content;
 
@@ -598,6 +599,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
     json = json.response;
+    
     var jsonData = json.data;
     var jsonContent = json.content;
 

@@ -102,8 +102,8 @@ function drawChartFromInterface(urlJson, mydiv) {
     svg.urlJson = urlJson;
 
     //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    create2HistoStackCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    //whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
+    //create2HistoStackCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
+    whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
 }
 

@@ -73,6 +73,37 @@ function initializeRawDataForm_OtherFields(){
 }
 
 
+
+
+
+
+/**
+ * RawData Formular - Time Fields Initialization Function
+ * Initializes DatePicker (default values, max, behaviour, interactions)
+ */
+function resetRawDataForm(){
+
+    $('#rawData_form').find("input").each(function(){
+        $(this).val("");
+    });
+
+    $('#rawData_form').find("input.custom-combobox-input").each(function(){
+        EEE = $(this);
+        EEEE = $(this);
+        console.warn($(this));
+        $(this).change();
+    });
+
+    $('#rawData_form').find("input[type=checkbox]").each(function(){
+        $(this).prop("checked", false);
+    });
+
+}
+
+
+
+
+
 /**
  * RawData Formular - Date Consistency Function
  * Check if set dates are consistent (from_date < to_date ...)

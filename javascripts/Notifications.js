@@ -64,6 +64,10 @@ function addNotification(message, alertType, callBack) {
  */
 function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
 
+    if (mesgName === "logs")
+        addNotification("NEW LOG "+mesgParams.severity+ " : " + mesgParams.message, "alert-log alert-info", callBack);
+
+/*
     if(mesgType === "notify")
     {
         if (mesgName === "acquisitionMonitor")
@@ -104,7 +108,7 @@ function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
     else
         console.error(mesgType+":"+mesgName+":"+JSON.stringify(mesgParams))
         //console.error("addWebsocketNotification error (%i)", 102);
-
+*/
     //if(message)
     //addNotification(mesgType+":"+mesgName+":"+JSON.stringify(mesgParams), "alert-info", callBack);
 
@@ -133,7 +137,7 @@ function addAjaxNotification(mesg, callBack) {
         if (mesg.request === "Connect")
             addNotification("Successfully logged in!", alertType, callBack);
 
-        else if (mesg.request === "DoCommandGlobal")
+        /*else if (mesg.request === "DoCommandGlobal")
 
             if (mesg.command === "getStatus")
                 return; // DO NOT SHOW NOTIFICATION
@@ -182,7 +186,7 @@ function addAjaxNotification(mesg, callBack) {
                 return; // DO NOT SHOW NOTIFICATION
             else
                 console.error(JSON.stringify(mesg));
-
+*/
         else
             if(mesg.request != null)
                 console.error(mesg.request);
@@ -201,7 +205,7 @@ function addAjaxNotification(mesg, callBack) {
 
         if (mesg.request === "Connect")
             addNotification("Wrong login/password!", alertType, callBack);
-
+/*
         else if (mesg.request === "DoCommandGlobal")
 
             if (mesg.command === "getStatus")
@@ -251,7 +255,7 @@ function addAjaxNotification(mesg, callBack) {
                 addNotification("Chamber energy spectrum retrieval failed !"+errorMessage, alertType, callBack);
             else
                 console.error(JSON.stringify(mesg));
-
+*/
         else
             if(mesg.request != null)
                 console.error(mesg.request);

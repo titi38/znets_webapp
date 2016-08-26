@@ -44,11 +44,8 @@ function addNetworksTabs(networksNamesArrayObject) {
  */
 function addNetworkTab(networkName){
 
-    var ai = (networkName === 'Global') ? 'active in' : '';
-    var a = (networkName === 'Global') ? 'active' : '';
-
-    var element_tab = $('<li class="tab'+networkName+' tab '+a+'"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+'</a></li>');
-    var element_div = $('<div class="tab-pane fade network '+ai+'" data-network="'+networkName+'" id="divNetwork'+networkName+'">'+networkName+'  Network Content</div>');
+    var element_tab = $('<li class="tab'+networkName+' tab"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+'</a></li>');
+    var element_div = $('<div class="tab-pane fade network" data-network="'+networkName+'" id="divNetwork'+networkName+'">'+networkName+'  Network Content</div>');
 
     element_tab.click(adjustOnTabClick);
 
@@ -71,6 +68,33 @@ function addNetworkTab(networkName){
     });
 
 
+    element_tab.find("a").on('shown.bs.tab', function (e) {
+        if($(element_div).find(".graph.tab-pane.fade.active").length === 0) $(element_div).find("a[href*='#trafficByProtocoles']").click();
+    });
+
+
+    element_div.find(".chartNavDropdownButton").on("click", function() {
+        if($(this).hasClass("fa-plus-square"))
+            $(this).switchClass('fa-plus-square', 'fa-minus-square');
+        else
+            $(this).switchClass('fa-minus-square', 'fa-plus-square');
+    });
+
+
+
+    element_div.find(".chartNavDropdownContainer").on('hide.bs.dropdown', function (e) {
+
+        $(this).find(".chartNavDropdownButton").each( function() { $(this).switchClass('fa-minus-square', 'fa-plus-square'); } );
+
+    });
+
+    element_div.find(".chartNavContainer").find("li a.navtab").on("click", function() {
+        if($(this).find("i").hasClass("fa-plus-square"))
+            $(this).find("i").switchClass('fa-plus-square', 'fa-minus-square');
+        else
+            $(this).find("i").switchClass('fa-minus-square', 'fa-plus-square');
+    });
+
 }
 
 
@@ -82,7 +106,9 @@ function addNetworkTab(networkName){
 function initNetworksChartsNavTabs() {
 
     $('ul.nav-nest a[data-toggle="tab"]').on('click', function (e) {
+
         $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
+
     });
 
     $('ul.nav-nest a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

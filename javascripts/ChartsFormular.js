@@ -77,7 +77,7 @@ function applyChartsForm(){
 
     // Set charts preset view
     $(".chartTimePreset").each(function() {
-        $(this).html("Timeslice: "+$("#timeslice_ChartsForm").val() + " | Timestep: " + $("#preset_ChartsForm").val() + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
+        $(this).html("Timeslice: "+$("#timeslice_ChartsForm").val().replace(/last/g, 'Last ').replace(/custom/g, 'Custom') + " | Timestep: " + $("#preset_ChartsForm").val() + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
     });
 
 }

@@ -159,9 +159,6 @@ function Logs(theWSEventNotifier) {
       "rowCallback": function( row, data ) {
         $(row).attr("role", "button");
 
-        // Set cursor behavior (pointer if details, default if not)
-        $(row).css('cursor',data[3] ? 'pointer' : 'default')
-
         // Set click on row function
         $(row).off("click");
         $(row).on("click", function () {

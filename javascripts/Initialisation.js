@@ -141,7 +141,11 @@ function initialisation(){
 
 
     $('a.networkTab').on('shown.bs.tab', function (e) {
+
         reAdjustAll();
+
+        if($("#network.tab-pane.fade.tab-network.active").find("div.tab-pane.network.active").length === 0) $("li.tabGlobal.tab").find("a").click();
+        
     });
 
 

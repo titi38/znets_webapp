@@ -172,10 +172,7 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 
 
-    //sort alphabetically
-    sumArray.sort(sortAlphabet);
-    sumArrayBottom.sort(sortAlphabet);
-    sumArrayTop.sort(sortAlphabet);
+    sumArray.sort(sortArrayVolume);
 
 
 
@@ -190,6 +187,11 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
       i++;
     }
 
+    //sort alphabetically
+
+    sumArrayBottom.sort(sortAlphabet);
+    sumArrayTop.sort(sortAlphabet);
+    sumArray.sort(sortAlphabet);
 
 
 
@@ -815,7 +817,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
           svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
           timeMax = Math.max(timeMax,elemToPush.x);
 
-          if(elemToPush.direction === "in"){
+          if(elemToPush.direction === "in" || elemToPush.direction === "inc"){
             elemToPush.direction = "inc";
 
 
@@ -870,11 +872,9 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 
 
-    //sort alphabetically
 
-    sumArray.sort(sortAlphabet);
-    sumArrayBottom.sort(sortAlphabet);
-    sumArrayTop.sort(sortAlphabet);
+    sumArray.sort(sortArrayVolume);
+
 
 
     i = 0;
@@ -887,6 +887,13 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       colorMap.set(sumArray[i].item, f());
       i++;
     }
+
+
+    //sort alphabetically
+
+    sumArray.sort(sortAlphabet);
+    sumArrayBottom.sort(sortAlphabet);
+    sumArrayTop.sort(sortAlphabet);
 
 
 

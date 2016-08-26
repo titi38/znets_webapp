@@ -1,7 +1,10 @@
-
-
-
-/************************************************************************************************************/
+/**
+ * Requests two Json objects from the server, the world map and the data, then call the function to draw the map.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function createChoroplethDirection(div, svg, mydiv, urlJson){
 
@@ -30,6 +33,18 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
  * Create a map with resize and zoom functionality
  *
  ***********************************************************************************************************/
+
+/**
+ * Create a map with resize and zoom features.
+ * @param error {Object} A Javascript error returned by d3.json
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ * @param worldmap {Object} The Json object containing the information to create a map of the world.
+ * @param json {Object} The Json object containing the data sent by the server.
+ * @returns {boolean}
+ */
 
 function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 

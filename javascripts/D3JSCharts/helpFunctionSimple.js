@@ -1,7 +1,7 @@
-
-/************************************************************************************************************
- *
- ************************************************************************************************************/
+/**
+ * Updates the legend of the abscissa axe.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function legendAxisX(svg){
 
@@ -87,8 +87,11 @@ function legendAxisX(svg){
   axisXNiceLegend(svg);
 }
 
-/************************************************************************************************************/
 
+/**
+ * Removes ticks to avoid text overlap.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function axisXNiceLegend(svg){
 
@@ -132,12 +135,12 @@ function axisXNiceLegend(svg){
 
 }
 
-/************************************************************************************************************
- *
- *    Create a background grid exclusive for x & y axis
- *    need svg.grid, svg.axisx and svg.axisy to be set.
- *
- ***********************************************************************************************************/
+/**
+ * Creates a background grid for x & y axis.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param isCurve {Boolean} True if the graph is a curve, false otherwise.
+ */
+
 
 function gridSimpleGraph(svg, isCurve){
 
@@ -172,8 +175,10 @@ function gridSimpleGraph(svg, isCurve){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Creates a left vertical axe.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function yAxeSimpleCreation(svg){
 
@@ -205,7 +210,10 @@ function yAxeSimpleCreation(svg){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Creates a right vertical axe if needed.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function optionalYAxeSimpleCreation(svg) {
 
@@ -247,7 +255,10 @@ function optionalYAxeSimpleCreation(svg) {
 
 }
 
-/************************************************************************************************************/
+/**
+ * Updates the right vertical axe if needed.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 
 function optionalYAxeSimpleUpdate(svg) {
@@ -286,7 +297,10 @@ function optionalYAxeSimpleUpdate(svg) {
 
 }
 
-/************************************************************************************************************/
+/**
+ * Updates the left vertical axe.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function yAxeSimpleUpdate(svg){
 
@@ -312,7 +326,12 @@ function yAxeSimpleUpdate(svg){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Returns a function that set the internal zoom values of svg to their default then redraw the graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param updateFunction {Function} The function used to redraw the graph.
+ * @returns {Function} Sets the internal zoom values of svg to their default then redraw the graph.
+ */
 
 function simpleZoomReset(svg, updateFunction){
 

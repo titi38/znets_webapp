@@ -1,6 +1,17 @@
+/**
+ * Created by elie.
+ */
 
+/**
+ * Generates one stacked histogram and its legend inside the svg parameter which will have two of them.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter, which contains svgChild.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param numSvg {Number} Used to differentiate the different graphs from top to bottom.
+ * @param divLegend {Object} D3 selection of the div which contains the legend's table of the two graphs.
+ */
 
-function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
+function createChildSvg(div, svg, svgChild, numSvg, divLegend){
 
   var maxHeight = svg.margin.top/2 + svg.margin.zero/4 + svg.heightGraph;
 
@@ -216,9 +227,13 @@ function createChildSvg(div, svg, svgChild, numSvg, divLegend, mydiv){
 }
 
 
-
-
-/************************************************************************************************************/
+/**
+ * Utility function which returns a function used inside a forEach array function to normalize the x property of each
+ * element, the lower value possible being 0 and an increment of 1 corresponds to a date svg.step milliseconds later.
+ * @param svg {Object} D3 encapsulated svg element, contains the timeMin and step properties.
+ * @returns {Function} function used inside a forEach array function to normalize the x property of each element, the
+ * lower value possible being 0 and an increment of 1 corresponds to a date svg.step milliseconds later.
+ */
 
 
 
@@ -229,77 +244,12 @@ function xValues(svg) {
 }
 
 
-
-/************************************************************************************************************/
-
-
-function legendAxisX2Histo(svg, svgChild){
-
-  var date,dround;
-  //if graph hourly
-  if(svg.step === 3600000){
-
-    svgChild.axisx.selectAll(".tick").select("text").text(function (d) {
-
-      dround = Math.round(d);
-
-      //if the ticks isn't at "x" o'clock
-      if(Math.abs(dround - d) >= 1e-7){
-        this.parentNode.remove();
-        return;
-      }
-
-      date = getDateFromAbscissa(svg, dround);
-
-      return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h";
-
-    });
-
-  }else if(svg.step === 60000){
-    //graph minute
-    var mn;
-    svgChild.axisx.selectAll(".tick").select("text").text(function (d) {
-
-      dround = Math.round(d);
-
-      //if the ticks isn't at "x" o'clock
-      if(Math.abs(dround - d) >= 1e-7){
-        this.parentNode.remove();
-        return;
-      }
-
-      date = getDateFromAbscissa(svg, dround);
-      mn = date.getMinutes();
-      mn = (mn < 10)?("0" + mn):mn;
-
-      return (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + "h" + mn;
-
-    });
-
-  } else {
-    //graph daily
-    svgChild.axisx.selectAll(".tick").select("text").text(function (d) {
-
-      dround = Math.round(d);
-
-      //if the ticks isn't at "x" o'clock (some javascript weirdness here...)
-      if(Math.abs(dround - d) >= 1e-7){
-        this.parentNode.remove();
-        return;
-      }
-
-      date = getDateFromAbscissa(svg, dround);
-
-      return (date.getMonth() + 1) + "/" + date.getDate();
-
-    });
-
-  }
-
-  axisXNiceLegend(svgChild);
-}
-
-/************************************************************************************************************/
+/**
+ * Creates the left vertical axis for one histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param numSvg {Number} Used to differentiate the different graphs from top to bottom.
+ */
 
 
 function yAxe2HistoCreation(svg, svgChild, numSvg){
@@ -333,7 +283,11 @@ function yAxe2HistoCreation(svg, svgChild, numSvg){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Updates the left vertical axes for one histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ */
 
 
 function yAxe2HistoUpdate(svg, svgChild){
@@ -358,9 +312,12 @@ function yAxe2HistoUpdate(svg, svgChild){
 }
 
 
-
-
-/************************************************************************************************************/
+/**
+ * Creates if needed the right vertical axis for one histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param numSvg {Number} Used to differentiate the different graphs from top to bottom.
+ */
 
 function optionalAxes2HistoCreation(svg, svgChild, numSvg){
 
@@ -404,8 +361,11 @@ function optionalAxes2HistoCreation(svg, svgChild, numSvg){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Updates if necessary the right vertical axis for one histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ */
 
 function optionalAxes2HistoUpdate(svg, svgChild){
 
@@ -436,7 +396,11 @@ function optionalAxes2HistoUpdate(svg, svgChild){
 }
 
 
-/***********************************************************************************************************/
+/***
+ * Generates a grid from the left axis' ticks.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ */
 
 function gridHisto2Graph(svg,svgChild){
 
@@ -458,63 +422,12 @@ function gridHisto2Graph(svg,svgChild){
 
 }
 
-/***********************************************************************************************************/
 
-function addPopup2Histo(selection, div, svg , svgChild, numSvg, onCreationFunct, onSupprFunct) {
-//TODO commencer et finir
-
-  svg.pieside = 0.75 * Math.min(svg.heightGraph, svg.width);
-  svgChild.overlay = div.append("div")
-    .classed("overlay2Histo", true)
-    .style("display", "none")
-    .style("width", (svg.width + svg.margin.left + svg.margin.right) + "px")
-    .style("top",(numSvg ===0?0:svg.margin.top + svg.height/2) + "px");
-
-  svgChild.popup = div.append("div").classed("popup2Histo", true).style("display", "none");
-
-
-  svgChild.popup.title = svgChild.popup.append("h3").classed("popupTitle",true);
-
-
-  svgChild.popup.pieChart = null;
-  svgChild.timer = null;
-
-
-  selection
-    .on("click", function (d) {
-
-      //console.log(getPieJsonQuery(svg, d));
-
-      clearTimeout(svgChild.timer);
-      svgChild.timer = setTimeout(function () {
-        svgChild.overlay.style("display", null);
-        onCreationFunct(d);
-        svgChild.popup.pieChart = svgChild.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
-        //drawComplData("/dynamic/netExtHostsTopHostsTraffic.json?dd=2016-07-18%2020:00&df=2016-07-18%2021:00&pset=HOURLY&type=out&ip=193.48.83.251", svg, svg.pieside, d,div.overlay);
-        //drawComplData(getPieJsonQuery(svg, d), svg, svg.pieside, d,svgChild.overlay);
-      }, 500);
-
-    });
-
-  svgChild.overlay.on("click", function () {
-    svgChild.overlay.style("display", "none");
-    svgChild.popup.style("display", "none");
-    if(svgChild.popup.pieChart.divTable) {
-      svgChild.popup.pieChart.divTable.remove();
-    }
-    svgChild.popup.pieChart.remove();
-    svgChild.popup.pieChart = null;
-
-    onSupprFunct();
-  });
-
-
-}
-
-
-
-
-/***********************************************************************************************************/
+/**
+ * Effectively redraw the stacked contained by svgChild.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ */
 
 
 
@@ -549,7 +462,13 @@ function update2HistoStack(svg, svgChild){
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Add a zoom feature to the graph contained inside svgChild.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param updateFunction {Function} The function that will be called to update the view of the graph contained by
+ *                                                                                                             svgChild.
+ */
 
 function addZoom2Histo(svg, svgChild, updateFunction){
 
@@ -782,7 +701,14 @@ function addZoom2Histo(svg, svgChild, updateFunction){
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Allows the possibility to hide/show data inside a stacked histogram according their item value.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param trSelec {Object} D3 selection of tr elements from the legend's table.
+ * @param selection {Object} D3 selection of the rect elements that may be masked/displayed.
+ * @param xlength {Number} The maximal value + 1 a x property from the bound data can take.
+ */
 
 
 function hideShowValues2Histo(svg, svgChild,trSelec,selection,xlength){
@@ -988,7 +914,13 @@ function hideShowValues2Histo(svg, svgChild,trSelec,selection,xlength){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Returns a function that set the internal zoom values of svgChild to their default then redraw the graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param updateFunction {Function} The function used to redraw the graph.
+ * @returns {Function} Sets the internal zoom values of svgChild to their default then redraw the graph.
+ */
 
 function graph2histoZoomReset(svg,svgChild, updateFunction){
 

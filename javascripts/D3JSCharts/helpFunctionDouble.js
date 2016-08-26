@@ -1,8 +1,11 @@
+/**
+ * Created by elie.
+ */
 
-
-
-
-/************************************************************************************************************/
+/**
+ * Creates the left axes of a stacked double histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function axesDoubleCreation(svg){
 
@@ -45,7 +48,10 @@ function axesDoubleCreation(svg){
 
 }
 
-/************************************************************************************************************/
+/**
+ * Updates the left axes of a stacked double histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function axesDoubleUpdate(svg){
 
@@ -80,8 +86,10 @@ function axesDoubleUpdate(svg){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Creates the right axes of a stacked double histogram if necessary.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function optionalAxesDoubleCreation(svg){
 
@@ -133,7 +141,10 @@ function optionalAxesDoubleCreation(svg){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Updates the right axes of a stacked double histogram if necessary.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function optionalAxesDoubleUpdate(svg){
 
@@ -183,9 +194,10 @@ function optionalAxesDoubleUpdate(svg){
 }
 
 
-
-
-/***********************************************************************************************************/
+/**
+ * Generates the ticks of the second abscissa axes by symmetry from the D3 generated one.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function ticksSecondAxisXDouble(svg){
 
@@ -197,14 +209,22 @@ function ticksSecondAxisXDouble(svg){
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Draws the main path to create a second axes symmetrical to the D3 generated one.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function axisXDoubleDraw(svg){
   svg.axisx.rect.attr("width", svg.width);
   svg.axisx.path.attr("d", "M0.5," + (svg.margin.zero - svg.heightTick) + "V" + (svg.margin.zero - 0.5) + "H" + (svg.width + 0.5)+ "V" + (svg.margin.zero - svg.heightTick));
 }
 
-/***********************************************************************************************************/
+/**
+ * Effectively draws or updates the data of a double stacked histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param newHeightTop {Number} The height of the top graph.
+ * @param newHOmarg {Number} The height of the top graph plus the center margin's width..
+ */
 
 
 function drawChartDouble(svg,newHeightTop,newHOmarg){
@@ -238,14 +258,10 @@ function drawChartDouble(svg,newHeightTop,newHOmarg){
 }
 
 
-
-
-/************************************************************************************************************
- *
- *    Create a background grid exclusive for x, yInput & yOutput axis
- *    need svg.grid, svg.axis, svg.axisyInput & svg.axisyOutput to be set.
- *
- ***********************************************************************************************************/
+/**
+ * Creates a background grid exclusive for left vertical axes.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function gridDoubleGraph(svg){
 
@@ -276,7 +292,16 @@ function gridDoubleGraph(svg){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Creates the legend's table for one set of data according their direction property and add the hide/show feature.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param direction {String} "In" or "Out", indicates the value of the data's direction property.
+ * @param sumArrayDirection {Array} The array which contains item and display values, and the overall volume by item.
+ * @param colorMap {Object} Javascript Map, links item value to the corresponding color.
+ * @param activFunct {Function} The function called when the mouse hovers the data or the table entries.
+ * @param desacFunct {Function} The function called when the mouse quits the data or the table entries.
+ * @returns {Object} D3 selection of created tr elements.
+ */
 
 function createTableLegendDouble(svg, direction, sumArrayDirection, colorMap,activFunct,desacFunct){
 
@@ -323,7 +348,12 @@ function createTableLegendDouble(svg, direction, sumArrayDirection, colorMap,act
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Allows the possibility to hide/show data inside the stacked double histogram according their item value.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param trSelec {Object} D3 selection of tr elements from the corresponding legend's table.
+ * @param direction {String} "In" or "Out", indicates the value of the data's direction property.
+ */
 
 function hideShowValuesDirection(svg,trSelec,direction){
 
@@ -660,7 +690,10 @@ function hideShowValuesDirection(svg,trSelec,direction){
 }
 
 
-/**********************************************************************************************************************/
+/**
+ * Performs internal variable updates then redraws the graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function calculationsHideShowDirection(svg){
 
@@ -671,7 +704,10 @@ function calculationsHideShowDirection(svg){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Updates the states of values related to the scales and the dimensions of the graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function updateScalesDouble(svg){
   
@@ -698,7 +734,12 @@ function updateScalesDouble(svg){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Returns a function that set the internal zoom values of svg to their default then redraw the graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param updateFunction {Function} The function used to redraw the graph.
+ * @returns {Function} Sets the internal zoom values of svg to their default then redraw the graph.
+ */
 
 
 

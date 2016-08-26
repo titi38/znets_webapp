@@ -1,6 +1,15 @@
+/**
+ * Created by elie.
+ */
 
 
-/************************************************************************************************************/
+/**
+ * Create a curve with zoom, resize and position highlight features.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function createCurve(div, svg, mydiv, urlJson){
 
@@ -257,7 +266,10 @@ function createCurve(div, svg, mydiv, urlJson){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Correctly redraws the curves after an internal state's modification caused by a zoom or a resize event.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function updateCurve(svg){
 
@@ -280,9 +292,12 @@ function updateCurve(svg){
 }
 
 
-
-
-/************************************************************************************************************/
+/**
+ * Called when a resize occurs on the parent div element for the svg parameter.
+ * Adjusts svg's internal variables before calling updateCurve which effectively redraw the curve.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ */
 
 function redrawCurve(div,svg){
 
@@ -345,7 +360,10 @@ function redrawCurve(div,svg){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Indicates the ordinate value of the nearest data and higlights the corresponding place on the curve.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function addCirclePosition(svg){
 
@@ -376,7 +394,12 @@ function addCirclePosition(svg){
     });
 }
 
-/************************************************************************************************************/
+/**
+ * Called when a mousemove event occurs.
+ * Repositions the circle used as highlight and updates the displayed value correctly.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param x {Number} The actual abscissa of the mouse's pointer in the svg.svg coordinates.
+ */
 
 function updateCirclePosition(svg,x){
   if(!x){

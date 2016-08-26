@@ -1,3 +1,16 @@
+/**
+ * Created by elie.
+ */
+
+
+
+/**
+ * Create two stacked histograms, one above the other, with zoom, resize, transition and popup features.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 function create2HistoStack(div,svg,mydiv,urlJson){
 
   svg.margin = {left: 60, right: 60, top: 40, zero: 40, bottom: 40};
@@ -149,9 +162,10 @@ function create2HistoStack(div,svg,mydiv,urlJson){
     sumBottomMap.forEach(mapToArray(svg.svgBottom.sumArray));
     sumTopMap.forEach(mapToArray(svg.svgTop.sumArray));
 
-    svg.sumArrayTotal.sort(sortAlphabet);
+    svg.sumArrayTotal.sort(sortArrayVolume);
     svg.svgBottom.sumArray.sort(sortAlphabet);
     svg.svgTop.sumArray.sort(sortAlphabet);
+
 
     i = 0;
     if (svg.sumArrayTotal[0].item == " Remainder " || svg.sumArrayTotal[0].item == "OTHERS") {
@@ -171,8 +185,8 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 
     svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
-    createChildSvg(div, svg, svg.svgTop,0, divLegend, mydiv);
-    createChildSvg(div, svg, svg.svgBottom,1, divLegend, mydiv);
+    createChildSvg(div, svg, svg.svgTop,0, divLegend);
+    createChildSvg(div, svg, svg.svgBottom,1, divLegend);
 
     var selection = svg.selectAll(".data");
 
@@ -256,8 +270,16 @@ function create2HistoStack(div,svg,mydiv,urlJson){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Called when a resize occurs on the parent div element for svgChild.
+ * Adjusts svgChild's internal variables before calling update2HistoStack which effectively redraw the graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param svgChild {Object} D3 encapsulated svg element, child of the svg parameter, contains one graph.
+ * @param numSvg {Number} Used to differentiate the different graphs from top to bottom.
+ * @param oldsvgwidth {Number} The width of svgChild (previously contained in svg.width) before the resize event occurs.
+ * @param oldsvgheightgraph {Number} The height of svgChild (previously contained in svg.heightGraph)
+ *                                                                                       before the resize event occurs.
+ */
 
 function redraw2HistoStack(svg, svgChild, numSvg,oldsvgwidth,oldsvgheightgraph){
 
@@ -327,7 +349,14 @@ function redraw2HistoStack(svg, svgChild, numSvg,oldsvgwidth,oldsvgheightgraph){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Create two stacked histograms, one above the other, with zoom, resize, transition and popup features.
+ * This function differs from create2HistoStack in the json's format it receives from the server.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 function create2HistoStackFormatVariation(div,svg,mydiv,urlJson){
 
   svg.margin = {left: 60, right: 60, top: 40, zero: 40, bottom: 40};
@@ -592,7 +621,7 @@ function create2HistoStackFormatVariation(div,svg,mydiv,urlJson){
           svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
           timeMax = Math.max(timeMax,elemToPush.x);
 
-          if(elemToPush.direction === "in"){
+          if(elemToPush.direction === "inc" || elemToPush.direction === "in"){
             elemToPush.direction = "inc";
 
 
@@ -645,7 +674,7 @@ function create2HistoStackFormatVariation(div,svg,mydiv,urlJson){
     sumBottomMap.forEach(mapToArray(svg.svgBottom.sumArray));
     sumTopMap.forEach(mapToArray(svg.svgTop.sumArray));
 
-    svg.sumArrayTotal.sort(sortAlphabet);
+    svg.sumArrayTotal.sort(sortArrayVolume);
     svg.svgBottom.sumArray.sort(sortAlphabet);
     svg.svgTop.sumArray.sort(sortAlphabet);
 
@@ -663,8 +692,8 @@ function create2HistoStackFormatVariation(div,svg,mydiv,urlJson){
 
     svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
-    createChildSvg(div, svg, svg.svgTop,0, divLegend, mydiv);
-    createChildSvg(div, svg, svg.svgBottom,1, divLegend, mydiv);
+    createChildSvg(div, svg, svg.svgTop,0, divLegend);
+    createChildSvg(div, svg, svg.svgBottom,1, divLegend);
 
     var selection = svg.selectAll(".data");
 

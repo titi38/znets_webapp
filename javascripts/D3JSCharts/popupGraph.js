@@ -219,6 +219,9 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         return;
       }
 
+
+      //TODO smile
+
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {
         div.overlay.style("display", null);
@@ -780,6 +783,14 @@ function drawPopupGraph(json, svg, total, pieside,f){
   svg.popup.pieChart.activeItem = null;
 
   console.log(sum + " " + total);
+
+  svg.popup.pieChart.trSelec.on("click.data",getData);
+  svg.popup.pieChart.pathSelec.on("click.data",getData);
+  svg.popup.pieChart.textSelec.on("click.data",getData);
+  function getData(d){
+    //TODO smile
+  }
+
 
   return total;
 

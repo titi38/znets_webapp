@@ -1,3 +1,7 @@
+/**
+ * Utility function to get the current date.
+ * @param svg {Object} D3 selection
+ */
 
 function setStartDate(svg){
 
@@ -7,4 +11,4 @@ function setStartDate(svg){
   
 }
 
-/**********************************************************************************************************************/
+

@@ -27,7 +27,7 @@ function Alerts(theWSEventNotifier) {
   var firstSignificativeAlertReached = false;
   //var alertId = -1;
 
-  /*
+  /**
   Display a new alert entry into the Alerts datatable
   Parameter : alertEntry
   return : nothing

@@ -102,7 +102,7 @@ function drawRawdataDataTable(jsonResponse, rawdataTabID) {
 
 
     // Set cursor style to 'default' status after datatable is created
-    $(document.body).css({'cursor' : 'default'});
+    //$(document.body).css({'cursor' : 'default'});
 
 }
 

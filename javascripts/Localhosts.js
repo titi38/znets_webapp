@@ -158,7 +158,20 @@ function Localhosts(theWSEventNotifier) {
                     // this case `data: 0`.
                     "render": function ( data, type, row ) {
 
-                        return data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );
+                        var os_icon = "";
+
+                        if(data.indexOf("Windows") > -1)
+                            os_icon = "<img src='../../images/win_icon.png' height='20px' title='Windows' alt='Windows'/> ";
+                        else if(data.indexOf("Linux") > -1)
+                            os_icon = "<img src='../../images/unix_icon.png' height='20px' title='Linux' alt='Linux'/> ";
+                        else if(data.indexOf("Android") > -1)
+                            os_icon = "<img src='../../images/android_icon.png' height='20px' title='Android' alt='Android'/> ";
+                        else if( data.indexOf("Mac") > -1 )
+                            os_icon = "<img src='../../images/mac_icon.png' height='20px' title='Mac' alt='Mac'/> ";
+                        else if( data.indexOf("Iphone") > -1 )
+                            os_icon = "<img src='../../images/mac_icon.png' height='20px' title='Iphone' alt='Iphone'/> ";
+
+                        return os_icon + data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );
 
                     },
                     "targets": 5, 'title': "OS Name", "className": "dt-head-center dt-body-center"
@@ -327,10 +340,41 @@ function addLocalhostTab(localhostIp, localhostName){
 
     });
 
-console.error(element_div);
-
     // Set charts preset view
     element_div.find(".chartTimePreset").html("Timeslice: "+$("#timeslice_ChartsForm").val() + " | Timestep: " + $("#preset_ChartsForm").val() + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
+
+
+
+
+
+
+    element_tab.find("a").on('shown.bs.tab', function (e) {
+        if($(element_div).find(".graph.tab-pane.fade.active").length === 0) $(element_div).find("a[href*='#trafficByProtocoles']").click();
+    });
+
+
+    element_div.find(".chartNavDropdownButton").on("click", function() {
+        if($(this).hasClass("fa-plus-square"))
+            $(this).switchClass('fa-plus-square', 'fa-minus-square');
+        else
+            $(this).switchClass('fa-minus-square', 'fa-plus-square');
+    });
+
+
+
+    element_div.find(".chartNavDropdownContainer").on('hide.bs.dropdown', function (e) {
+
+        $(this).find(".chartNavDropdownButton").each( function() { $(this).switchClass('fa-minus-square', 'fa-plus-square'); } );
+
+    });
+
+    element_div.find(".chartNavContainer").find("li a.navtab").on("click", function() {
+        if($(this).find("i").hasClass("fa-plus-square"))
+            $(this).find("i").switchClass('fa-plus-square', 'fa-minus-square');
+        else
+            $(this).find("i").switchClass('fa-minus-square', 'fa-plus-square');
+    });
+
 
     initChartsTabsNavAnimation("#localhosts");
 

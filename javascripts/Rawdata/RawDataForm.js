@@ -160,9 +160,6 @@ function getRawData(paramRawData){
  */
 function checkRawDataResults(jsonResponse, paramRawData){
 
-    // Set cursor style to 'load' status
-    $(document.body).css({'cursor' : 'wait'});
-
 
     var rawdataTabID = moment();
 
@@ -175,15 +172,11 @@ function checkRawDataResults(jsonResponse, paramRawData){
                 // Force callAjax execution on server side
                 callAJAX("rawDataFlow.json", paramRawData+"&force", "json", drawRawdataDataTable, rawdataTabID);
             } else {
-                // Set cursor style to 'default' status
-                $(document.body).css({'cursor' : 'default'});
+                // DO NOTHING
             }
         }
         else {
             console.error("TODO in RawDataForm.js : UNEXPECTED value (on callAjax response.result) of 'warnMsg' attribute ! (707)");
-
-            // Set cursor style to 'default' status
-            $(document.body).css({'cursor' : 'default'});
         }
     }
     else if(jsonResponse.content) {
@@ -193,9 +186,6 @@ function checkRawDataResults(jsonResponse, paramRawData){
     }
     else {
         console.error("TODO in RawDataForm.js : UNEXPECTED response on rawdata callAjax ! (708)");
-
-        // Set cursor style to 'default' status
-        $(document.body).css({'cursor': 'default'});
     }
 
 }

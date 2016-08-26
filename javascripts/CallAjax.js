@@ -28,7 +28,8 @@ function callAJAX(url, params, outputType, callback, callbackParams)
 
     var callURL = (url.indexOf("display/") > -1) ? (url) : (proxyPass + url);
 
-
+    // Lock screen
+    lockScreen(true);
 
     var request = $.ajax(
         {
@@ -85,6 +86,10 @@ function callAJAX(url, params, outputType, callback, callbackParams)
             console.warn("TODO in CallAjax.js : UNEXPECTED value on callAjax response.result nor true neither false (%i)", 777);
             addNotification("Server error. Unexpected result answered ! (777)", "alert-danger", null);
         }
+
+        // Unlock screen
+        lockScreen(false);
+
     });
 
     request.fail(function(jqXHR, textStatus)
@@ -110,11 +115,36 @@ function callAJAX(url, params, outputType, callback, callbackParams)
         }
         // TODO : uncomment ? (adding a page reload on request fail) addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
         addNotification("Connection lost. Server is down ! (666) Page will reload shortly ...", "alert-danger", null);
-});
+
+
+        // Unlock screen
+        lockScreen(false);
+
+    });
 
     /**
        Returning false to prevent from page reloading on http request
      Use "return callAJAX(...)" in HTML to return false to HTML
      */
     return false;
+}
+
+
+
+
+
+function lockScreen(lock)
+{
+
+    if(lock)
+    {
+        $("body").prepend("<div id=\"overlay\" class=\"overlay\"></div>");
+        $("body").addClass("wait");
+    }
+    else
+    {
+        $("#overlay.overlay").remove();
+        $("body").removeClass("wait");
+    }
+
 }

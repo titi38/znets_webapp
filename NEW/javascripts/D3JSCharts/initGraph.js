@@ -62,7 +62,7 @@ function emptyChartContainer(jqueryElement) {
 
 }
 
-
+/***********************************************************************************************************/
 
 function drawChartFromInterface(urlJson, mydiv) {
 
@@ -102,12 +102,12 @@ function drawChartFromInterface(urlJson, mydiv) {
     svg.urlJson = urlJson;
 
     //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    //createHistoDoubleCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
+    create2HistoStackCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
+    //whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
 }
 
-
+/***********************************************************************************************************/
 
 
 function drawChart(urlJson, mydiv) {
@@ -170,6 +170,7 @@ function whichCreationFunction(urlJson,svg){
             return createCurve;
             break;
 
+        case "netTopLHostsTraffic":
         case "netTopHostsTraffic":
         case "netTopServicesTraffic":
         case "hostTopServicesTraffic":
@@ -182,15 +183,20 @@ function whichCreationFunction(urlJson,svg){
             return createHisto2DStackDouble;
             break;
 
+
+        case "netProtocoleTraffic":
+        case "hostProtocoleTraffic":
+
+            return createHisto2DStackDoubleFormatVariation;
+            break;
+
         case "netNbFlow":
         case "hostNbFlow":
         case "netProtocolePackets":
         case "hostProtocolePacket":
-        case "netProtocoleTraffic":
-        case "hostProtocoleTraffic":
         case "hostNbDiffHosts":
 
-            return createHisto2DStackDoubleFormatVariation;
+            return create2HistoStackFormatVariation;
             break;
 
         case "netTopServicesNbFlow":
@@ -207,6 +213,7 @@ function whichCreationFunction(urlJson,svg){
             return createChoroplethDirection;
             break;
 
+        case "netTopLHostsNbFlow":
         case "netTopHostsNbFlow":
 
         case "netTopCountryNbFlow":
@@ -242,6 +249,7 @@ function whichCreationFunction(urlJson,svg){
 
 
 /***********************************************************************************************************/
+
 function noData(div,svg,mydiv, msg){
     console.log("incorrect url/data");
 

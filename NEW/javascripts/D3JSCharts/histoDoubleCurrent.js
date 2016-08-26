@@ -11,10 +11,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
   d3.json(effectiveUrlJson, function (error, json) {
 
-
-    svg.startDate = (typeof serverDate === "string"?new Date(serverDate):serverDate);
-    svg.startDate = new Date(svg.startDate.getTime() - (svg.startDate.getTimezoneOffset() + 59 )*60000);
-    console.log(svg.startDate);
+    setStartDate(svg);
 
     svg.margin.left = 50;
     svg.margin.right = 50;
@@ -163,7 +160,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     var sumMapBottom = new Map();
     var sumMapTop = new Map();
 
-    var i, elemJson, elemToPush, elemSumMap;
+    var i, elemJson, elemToPush;
 
 
     svg.hourShift = getTimeShift(urlJson)  * 3600000;
@@ -301,8 +298,8 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     }
 
 
-    svg.totalBottom = d3.max(totalSumBottom);
-    svg.totalTop = d3.max(totalSumTop);
+    svg.totalBottom = Math.max(1,d3.max(totalSumBottom));
+    svg.totalTop = Math.max(d3.max(totalSumTop));
 
     svg.heightTop = (svg.height - svg.margin.zero) * svg.totalTop / (svg.totalBottom + svg.totalTop);
 
@@ -514,10 +511,8 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
     legendAxisX(svg);
 
-
     axesDoubleCreation(svg);
     optionalAxesDoubleCreation(svg);
-
 
 
     gridDoubleGraph(svg);
@@ -561,8 +556,9 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 function autoUpdateDoubleCurrent(svg,urlJson, div){
 
 
-
-  svg.updateTransitionDuration = 2000;
+  //The transition seems to really harm the performances of the computer when not 0 and tab inactive for too long.
+  //Maybe take a look at that someday to see if something can somehow be done...
+  svg.updateTransitionDuration = 0;
 
   var onUpdate = false;
 
@@ -572,26 +568,28 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
   var id = myLastHourHistory.addMinuteRequest(urlJson,
     function(json, notifdate){
+      
+      if(unsubscribeGraphIfInactive(id, urlJson, div)){
+        console.log("unsubscribe");
+        return;
+      }
+      
       responsesFIFOList.push([json, notifdate]);
-      timeoutUpdate();
+      console.log("update list responses");
+
+      if(onUpdate){
+        console.log("on Update");
+        return;
+      }
+
+      onUpdate = true;
+
+      var resp= responsesFIFOList.shift();
+      updateGraph(resp[0],resp[1]);
+
     }
     ,svg.lastMinute);
 
-  function timeoutUpdate(){
-
-    if(unsubscribeGraphIfInactive(id, urlJson, div)){
-      console.log("unsubscribe");
-      return;
-    }
-
-    if(onUpdate){
-      setTimeout(timeoutUpdate,500)
-    }else{
-      onUpdate = true;
-      var resp = responsesFIFOList.shift();
-      updateGraph(resp[0],resp[1]);
-    }
-  }
 
   function updateGraph(json, notificationDate){
 
@@ -621,10 +619,6 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
         processedDataArray.push(elem);
       });
     });
-
-
-
-
 
     jsonData = processedDataArray;
 
@@ -691,14 +685,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
       mapElemToSumCurrent(sumMapUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
 
     }
-
-
-
-
-
-
-
-
+    
     sumMapUpdate.forEach(function(value, key){
 
       if(!svg.colorMap.has(key)){
@@ -710,9 +697,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     valuesTopNew.sort(sortValuesCurrent);
     valuesBottomNew.sort(sortValuesCurrent);
-
-
-
+    
     var totalSumBottomUpdate = [];
     var totalSumTopUpdate = [];
 
@@ -734,10 +719,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
       sum = 0;
       x++;
     }
-
-
-
-
+    
     x = 60;
     i = 0;
 
@@ -753,15 +735,9 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
       x++;
     }
 
-
-
-
     svg.totalBottom = Math.max(svg.totalBottom,d3.max(totalSumBottomUpdate));
     svg.totalTop = Math.max(svg.totalTop,d3.max(totalSumTopUpdate));
-
-
-
-
+    
 
     console.log(valuesTopNew);
     console.log(valuesBottomNew);
@@ -801,10 +777,6 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     svg.selectionBottom = selecBottomEnter.merge(svg.selectionBottom);
 
-
-
-
-
     svg.selectionTop = svg.chartTop.selectAll(".data")
       .data(svg.valuesTop);
 
@@ -827,30 +799,22 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
     svg.valuesTopSCAlphabetSort = svg.valuesTop.concat();
     svg.valuesTopSCAlphabetSort.sort(sortAlphabetItemOnly);
 
+    updateScalesDouble(svg);
 
-
-
-
-    calculationsHideShowDirection(svg);
-
-
-
-
-
-    svg.transition("updateX").duration(svg.updateTransitionDuration).tween("",function(){
+    svg.transition("updateX").duration(svg.updateTransitionDuration).ease(d3.easeLinear).tween("",function(){
 
         var lastT = 0;
         var coef;
         return function(t){
 
-          coef = lastT - t;
+          coef = (lastT - t)*gapMinute;
 
           svg.valuesBottom.forEach(function(elem){
-            elem.x = elem.x + coef*gapMinute;
+            elem.x = elem.x + coef;
           });
 
           svg.valuesTop.forEach(function(elem){
-            elem.x = elem.x + coef*gapMinute;
+            elem.x = elem.x + coef;
           });
 
           lastT = t;
@@ -928,19 +892,14 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
         calculationsHideShowDirection(svg);
 
-        onUpdate = false;
-
+        if(responsesFIFOList.length > 0){
+          var resp= responsesFIFOList.shift();
+          updateGraph(resp[0],resp[1]);
+        }else{
+          onUpdate = false;
+        }
 
       });
-
-
-
-
-
-
-
-
-
 
 
   }
@@ -956,26 +915,3 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
   console.log(id);
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

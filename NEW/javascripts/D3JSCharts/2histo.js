@@ -328,49 +328,421 @@ function redraw2HistoStack(svg, svgChild, numSvg,oldsvgwidth,oldsvgheightgraph){
 
 
 /***********************************************************************************************************/
+function create2HistoStackFormatVariation(div,svg,mydiv,urlJson){
+
+  svg.margin = {left: 60, right: 60, top: 40, zero: 40, bottom: 40};
+  d3.json(urlJson, function (error, json) {
+
+    
 
 
-function redrawPopup2Histo(svg, svgChild, numSvg){
+    console.log(json);
 
-  svgChild.overlay.style("width",(svg.width+svg.margin.left + svg.margin.right) + "px")
-    .style("top",(numSvg ===0?0:svg.margin.top + svg.height/2) + "px");
+    //test json conformity
+    if (testJson(json) || error) {
+      noData(div, svg,mydiv, error?error:json&&json.response&&json.response.data&&json.response.data.length === 0?
+        "No data to display for the given interval":json&&json.response&&json.response.errMsg?json.response.errMsg:"error result conformity");
+      return false;
+    }
 
-  if(svgChild.popup.pieChart != null){
-    svgChild.popup.pieChart.attr("width", svg.pieside).attr("height", svg.pieside);
+    //json ok, graph creation
+
+
+    //table for legend
+    svg.tableWidth = 200;
+
+    var clientRect = div.node().getBoundingClientRect();
+    var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+      divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
+
+
+    svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
+
+
+    svg.width = divWidth - 1.15 * svg.tableWidth - svg.margin.left - svg.margin.right;
+    svg.height = divHeight - svg.margin.bottom - svg.margin.top;
+
+    svg.heightGraph = (svg.height - svg.margin.zero)/2;
+
+    svg.svgTop = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
+    svg.svgBottom = svg.append("svg").attr("x", svg.margin.left).attr("y", svg.margin.top + svg.heightGraph + svg.margin.zero).attr("width", svg.width).attr("height", svg.heightGraph).classed("crisp",true);
+
+
+    var divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
+
+    json = json.response;
+    var jsonData = json.data;
+    var jsonContent = json.content;
+
+
+
+
+
+    
+
+
+    //step = 1 hour by default
+    svg.step = (urlJson.indexOf("pset=MINUTE") === -1)?((urlJson.indexOf("pset=DAILY") === - 1)?3600000:86400000):60000;
+
+    var contentDateValue = searchDateValue(jsonContent);
+
+    //if no date value found, the graph can't be done.
+    if(contentDateValue === false){
+      noData(div,svg,mydiv,"error no date found");
+      return;
+    }
+
+
+    if(json.units){
+      svg.units = unitsStringProcessing(json.units);
+    }else{
+      svg.units = "";
+    }
+
+    console.log(json);
+
+
+
+    svg.svgBottom.values = [];
+    svg.svgTop.values = [];
+
+    var dataLength = jsonData.length;
+    var contentLength = jsonContent.length;
+
+
+
+
+    //More useful jsonContent. 0: item / 1: direction
+    for(i = 0; i < contentLength; i++){
+
+      if(i === contentDateValue){
+        continue;
+      }
+
+      var tempArrayName = jsonContent[i].split("_");
+
+      if(tempArrayName[tempArrayName.length - 1] === ""){
+        tempArrayName.splice(tempArrayName.length - 1, 1);
+      }
+
+      var strName = tempArrayName[0];
+
+      for(var w = 1; w < tempArrayName.length - 1; w++){
+
+        strName = strName + " " + tempArrayName[w];
+
+      }
+
+      jsonContent[i] = [strName, tempArrayName[tempArrayName.length-1]];
+
+      if(svg.units !== "hosts"){
+
+        jsonContent[i][0] = jsonContent[i][0].toUpperCase();
+
+      }
+
+
+    }
+
+    console.log(jsonContent);
+
+
+
+    svg.colorMap = new Map();
+    svg.sumMap = new Map();
+    var sumBottomMap = new Map();
+    var sumTopMap = new Map();
+
+    var i,j,k, elemJson, elemToPush, elemSumMap,timeElem;
+    svg.timeMin = Infinity;
+    var timeMax = 0;
+
+
+    svg.hourShift = getTimeShift(urlJson)  * 3600000;
+
+
+
+    // Data are processed and sorted according to their direction.
+
+    if(svg.step === 60000){
+
+      if(jsonData[dataLength - 1][0][0] === "current"){
+        jsonData[0].push(jsonData[1][0]);
+        jsonData = jsonData[0];
+        dataLength = jsonData.length;
+      }
+
+      var dateCurrent = getDateCurrent(urlJson);
+
+      var elemAmountMinuteArray, elemAmountMinuteArrayLength;
+
+      for(i = 0; i < dataLength; i++){
+        elemJson = jsonData[i];
+
+        for(j = 0; j < contentLength; j++){
+
+          if(j === contentDateValue){
+            continue;
+          }
+
+          elemAmountMinuteArray = elemJson[j];
+
+          if(elemJson[contentDateValue] !== "current"){
+            timeElem = (new Date(elemJson[contentDateValue])).getTime() - 3600000  + svg.hourShift;
+          }
+          else{
+            timeElem = dateCurrent.getTime();
+          }
+
+          console.log(elemAmountMinuteArray);
+          elemAmountMinuteArrayLength = elemAmountMinuteArray.length;
+
+          for(k = 0; k < elemAmountMinuteArrayLength; k++) {
+
+            if(+elemAmountMinuteArray[k] === 0 || !elemAmountMinuteArray[k]){
+              continue;
+            }
+
+            elemToPush = {
+              //we add the correct minutes according to the position k
+              //of the element in the array
+              x: timeElem + k*svg.step,
+              height: +elemAmountMinuteArray[k],
+              item: jsonContent[j][0],
+              direction: jsonContent[j][1]
+            };
+
+            // .display kept, can have an use someday
+            if (!svg.sumMap.has(elemToPush.item)) {
+              svg.sumMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+            } else {
+              elemSumMap = svg.sumMap.get(elemToPush.item);
+              elemSumMap.sum += elemToPush.height;
+            }
+
+            svg.timeMin = Math.min(svg.timeMin, elemToPush.x);
+            timeMax = Math.max(timeMax, elemToPush.x);
+
+            if (elemToPush.direction === "in" || elemToPush.direction === "inc") {
+              elemToPush.direction = "inc";
+
+
+              if (!sumTopMap.has(elemToPush.item)) {
+                sumTopMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+              } else {
+                elemSumMap = sumTopMap.get(elemToPush.item);
+                elemSumMap.sum += elemToPush.height;
+              }
+
+              svg.svgTop.values.push(elemToPush);
+
+            } else {
+
+
+              if (!sumBottomMap.has(elemToPush.item)) {
+                sumBottomMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+              } else {
+                elemSumMap = sumBottomMap.get(elemToPush.item);
+                elemSumMap.sum += elemToPush.height;
+              }
+
+
+              svg.svgBottom.values.push(elemToPush)
+
+            }
+
+          }
+
+
+        }
+
+
+      }
+
+
+
+
+    }else{
+
+
+      for(i = 0; i < dataLength; i++){
+        elemJson = jsonData[i];
+
+        for(j = 0; j < contentLength; j++){
+
+          if(j === contentDateValue || +elemJson[j] === 0){
+            continue;
+          }
+
+          elemToPush = {
+            x: (new Date(elemJson[contentDateValue])).getTime() + svg.hourShift,
+            height: +elemJson[j],
+            item: jsonContent[j][0],
+            direction: jsonContent[j][1]
+          };
+
+          // .display kept, can have an use someday
+          if (!svg.sumMap.has(elemToPush.item)) {
+            svg.sumMap.set(elemToPush.item, {sum: elemToPush.height,display: elemToPush.item});
+          } else {
+            elemSumMap = svg.sumMap.get(elemToPush.item);
+            elemSumMap.sum += elemToPush.height;
+          }
+
+          svg.timeMin = Math.min(svg.timeMin,elemToPush.x);
+          timeMax = Math.max(timeMax,elemToPush.x);
+
+          if(elemToPush.direction === "in"){
+            elemToPush.direction = "inc";
+
+
+            if (!sumTopMap.has(elemToPush.item)) {
+              sumTopMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+            } else {
+              elemSumMap = sumTopMap.get(elemToPush.item);
+              elemSumMap.sum += elemToPush.height;
+            }
+
+            svg.svgTop.values.push(elemToPush);
+
+          }else{
+
+
+            if (!sumBottomMap.has(elemToPush.item)) {
+              sumBottomMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+            } else {
+              elemSumMap = sumBottomMap.get(elemToPush.item);
+              elemSumMap.sum += elemToPush.height;
+            }
+
+
+            svg.svgBottom.values.push(elemToPush)
+
+          }
+
+
+        }
+
+
+      }
+
+    }
+    
+
+
+
+    svg.sumArrayTotal = [];
+    svg.svgBottom.sumArray = [];
+    svg.svgTop.sumArray = [];
+
+
+    var f = colorEval();
+
+
+
+
+    svg.sumMap.forEach(mapToArray(svg.sumArrayTotal));
+    sumBottomMap.forEach(mapToArray(svg.svgBottom.sumArray));
+    sumTopMap.forEach(mapToArray(svg.svgTop.sumArray));
+
+    svg.sumArrayTotal.sort(sortAlphabet);
+    svg.svgBottom.sumArray.sort(sortAlphabet);
+    svg.svgTop.sumArray.sort(sortAlphabet);
+
+    i = 0;
+    if (svg.sumArrayTotal[0].item == " Remainder " || svg.sumArrayTotal[0].item == "OTHERS") {
+      svg.colorMap.set(svg.sumArrayTotal[0].item, "#f2f2f2");
+      i = 1;
+    }
+
+    while (i < svg.sumArrayTotal.length) {
+      svg.colorMap.set(svg.sumArrayTotal[i].item, f());
+      i++;
+    }
+
+
+    svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
+
+    createChildSvg(div, svg, svg.svgTop,0, divLegend, mydiv);
+    createChildSvg(div, svg, svg.svgBottom,1, divLegend, mydiv);
+
+    var selection = svg.selectAll(".data");
+
+    //Tooltip creation
+    createTooltipHisto(svg,selection,svg.sumMap);
+
+    function desacAll(){
+      svg.svgBottom.deactivationElems();
+      svg.svgTop.deactivationElems();
+    }
+
+    function activElemAllAutoScrollPopup(data){
+      if(data.direction === "inc"){
+        svg.svgTop.activationElemsAutoScrollPopup(data);
+      }else{
+        svg.svgBottom.activationElemsAutoScrollPopup(data);
+      }
+    }
+
+    if(svg.hasPopup) {
+      addPopup(selection,div,svg,function(data){
+          desacAll();
+          activElemAllAutoScrollPopup(data);},
+        desacAll);
+    }else{
+      svg.popup = [];
+      svg.popup.pieChart = null;
+    }
+
+    d3.select(window).on("resize." + mydiv, function () {
+      console.log("resize");
+
+      var clientRect = div.node().getBoundingClientRect();
+      var divWidth = Math.max(1.15 * svg.tableWidth + svg.margin.left + svg.margin.right + 1, clientRect.width),
+        divHeight = Math.max(svg.margin.bottom + svg.margin.top + svg.margin.zero + 1, clientRect.height);
+
+
+      svg.attr("width", divWidth - 1.15 * svg.tableWidth).attr("height", divHeight);
+
+
+      var oldsvgheightgraph = svg.heightGraph;
+      var oldsvgwidth = svg.width;
+
+      svg.width = divWidth - 1.15 * svg.tableWidth - svg.margin.left - svg.margin.right;
+      svg.height = divHeight - svg.margin.bottom - svg.margin.top;
+
+
+      svg.heightGraph = (svg.height - svg.margin.zero)/2;
+
+
+      svg.svgTop
+        .attr("width", svg.width)
+        .attr("height", svg.heightGraph);
+
+      svg.svgBottom
+        .attr("y", svg.margin.top + svg.heightGraph + svg.margin.zero)
+        .attr("width", svg.width)
+        .attr("height", svg.heightGraph);
+
+      redraw2HistoStack( svg,svg.svgTop,0,oldsvgwidth,oldsvgheightgraph);
+      redraw2HistoStack( svg,svg.svgBottom,1,oldsvgwidth,oldsvgheightgraph);
+      redrawPopup(div.overlay,svg);
+
+    });
+
+
+
+
+    //zoom
     /*
-    var chartside = 0.75*svg.pieside;
-    svgChild.popup.innerRad = 0;
-    svgChild.popup.outerRad = chartside/2;
-    svgChild.popup.pieChart.g.attr("transform","translate(" + (svg.pieside/2) + "," + (svg.pieside/2) + ")");
 
 
-    var arc = d3.arc()
-      .innerRadius(svgChild.popup.innerRad)
-      .outerRadius(svgChild.popup.outerRad)
-      .startAngle(function(d){return d.startAngle})
-      .endAngle(function(d){return d.endAngle});
+     addZoomDouble(svg, updateHisto2DStackDouble);
 
 
-    svgChild.popup.pieChart.g.selectAll("path").attr("d",arc);
-    svgChild.popup.pieChart.g.selectAll("text").attr("transform",function(d){
-      var midAngle = (d.endAngle + d.startAngle)/2;
-      var dist = svgChild.popup.outerRad * 0.8;
-      return "translate(" + (Math.sin(midAngle)*dist) + "," +(-Math.cos(midAngle)*dist) +")";});
-
-
-
-    svgChild.popup.pieChart.table.style("max-height",svg.pieside + "px");
-
-
-    positionPopup(svg);
-
-    svgChild.popup.dist = Child.popup.outerRad * 0.8;
-    svgChild.popup.distTranslTemp = svgChild.popup.outerRad/4;
-    svgChild.popup.distTransl = svgChild.popup.outerRad/10;
-
-
-    */
-  }
+     hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, svg.xMax);
+     */
+  });
 
 
 }

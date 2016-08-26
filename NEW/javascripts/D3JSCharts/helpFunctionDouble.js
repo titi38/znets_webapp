@@ -197,6 +197,8 @@ function ticksSecondAxisXDouble(svg){
 
 }
 
+/***********************************************************************************************************/
+
 function axisXDoubleDraw(svg){
   svg.axisx.rect.attr("width", svg.width);
   svg.axisx.path.attr("d", "M0.5," + (svg.margin.zero - svg.heightTick) + "V" + (svg.margin.zero - 0.5) + "H" + (svg.width + 0.5)+ "V" + (svg.margin.zero - svg.heightTick));
@@ -662,6 +664,17 @@ function hideShowValuesDirection(svg,trSelec,direction){
 
 function calculationsHideShowDirection(svg){
 
+  updateScalesDouble(svg);
+
+  updateHisto2DStackDouble(svg);
+
+}
+
+
+/************************************************************************************************************/
+
+function updateScalesDouble(svg){
+  
   var actTranslate1 = -svg.transform.y/(svg.scaley*svg.transform.k);
 
   svg.heightTop = (svg.height - svg.margin.zero)*svg.totalTop/(svg.totalBottom+svg.totalTop);
@@ -682,13 +695,12 @@ function calculationsHideShowDirection(svg){
   svg.newYBottom.domain([svg.yBottom.invert(actTranslate1  + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero),
     svg.yBottom.invert(actTranslate1 + (1-1/(svg.transform.k*svg.scaley))*svg.margin.zero + svg.height/(svg.transform.k*svg.scaley))]);
 
-
-  updateHisto2DStackDouble(svg);
-
 }
 
 
 /************************************************************************************************************/
+
+
 
 function doubleZoomReset(svg, updateFunction){
 

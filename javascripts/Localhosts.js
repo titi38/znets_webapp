@@ -341,7 +341,7 @@ function addLocalhostTab(localhostIp, localhostName){
     });
 
     // Set charts preset view
-    element_div.find(".chartTimePreset").html("Timeslice: "+$("#timeslice_ChartsForm").val() + " | Timestep: " + $("#preset_ChartsForm").val() + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
+    element_div.find(".chartTimePreset").html("Timeslice: "+$("#timeslice_ChartsForm").val().replace(/last/g, 'Last ').replace(/custom/g, 'Custom') + " | Timestep: " + $("#preset_ChartsForm").val().replace(/HOURLY/g, 'Hourly ').replace(/MINUTE/g, 'Minute').replace(/DAILY/g, 'Daily') + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
 
 
 

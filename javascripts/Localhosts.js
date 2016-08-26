@@ -151,7 +151,11 @@ function Localhosts(theWSEventNotifier) {
                         return row[3];
                     }
                 },
-                {'targets': 4, 'title': "Mac Adress", "className": "dt-head-center dt-body-center"},
+                {'targets': 4, 'title': "Mac Adress", "className": "dt-head-center dt-body-center",
+                    "render": function ( data, type, row ) {
+                        return " <div class='asnumTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveASNum(this)' onmouseout='abordASNumRetrieval(this)' value="+data+">"+data+"</div>";
+                    }
+                },
                 {
                     // The `data` parameter refers to the data for the cell (defined by the
                     // `data` option, which defaults to the column being worked with, in
@@ -168,7 +172,7 @@ function Localhosts(theWSEventNotifier) {
                             os_icon = "<img src='../../images/android_icon.png' height='20px' title='Android' alt='Android'/> ";
                         else if( data.indexOf("Mac") > -1 )
                             os_icon = "<img src='../../images/mac_icon.png' height='20px' title='Mac' alt='Mac'/> ";
-                        else if( data.indexOf("Iphone") > -1 )
+                        else if( data.indexOf("iPhone") > -1 )
                             os_icon = "<img src='../../images/mac_icon.png' height='20px' title='Iphone' alt='Iphone'/> ";
 
                         return os_icon + data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );

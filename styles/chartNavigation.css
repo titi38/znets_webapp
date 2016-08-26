@@ -1,0 +1,88 @@
+.chartNavDropdownContainer{
+    /*position: absolute;*/
+    z-index: 1000;
+    width: 100%;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background-color: #eee;
+}
+
+.chartTimePreset{
+    float: right;
+}
+
+.chartNavContainer{
+    padding: 0px;
+    margin: 0px;
+    background-color: #fff;
+    /*-webkit-background-clip: padding-box;
+    background-clip: padding-box;*/
+    border: 0px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px;
+    box-shadow: 0px;
+}
+
+.chartTitle{
+    margin: 0 0 0 10px;
+    z-index: -10;
+}
+
+.nav-tabs.nav-stacked {
+    margin-bottom: 0px;
+    border-bottom: 0px;
+}
+.nav-tabs.nav-stacked > li {
+    margin: 0 0 1px 0;
+}
+.nav-tabs > li > a {
+    height: 36px;
+    padding: 0 17px;
+    line-height: 36px;
+    color: rgb(64, 64, 64);
+    background: rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.nav-tabs.nav-stacked > li > a {
+    border-radius: 2px;
+}
+.nav-tabs.nav-stacked:not(.nav-nest) > li > a * {
+    padding-left: 20px;
+}
+.nav-tabs.nav-nest > li:last-child > a {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+/*.nav-tabs.nav-nest > li:first-child > a {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}*/
+.nav-tabs.nav-stacked > li > a:hover, .nav-tabs.nav-stacked > li > a:focus {
+    border: none;
+    outline: none;
+    -moz-outline-style: none;
+}
+.nav-tabs.nav-stacked.nav-nest > li > a {
+    background: rgb(181, 181, 181);
+    color: rgb(242, 242, 242);
+}
+.nav-tabs.nav-stacked.nav-nest > li > a:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgb(64, 64, 64);
+}
+.nav-tabs.nav-stacked > li > a:hover {
+    background: rgb(181, 181, 181);
+    color: rgb(242, 242, 242);
+}
+.nav-tabs.nav-stacked > li > a {
+    border: none;
+}
+.nav-tabs.nav-stacked > li.active > a, .nav-tabs.nav-stacked > li.active > a:hover {
+    color: rgb(242, 242, 242);
+    background: rgb(50, 150, 50);
+}
+.subnavtab {
+    border-radius: 2px;
+}

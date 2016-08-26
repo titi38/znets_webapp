@@ -204,6 +204,21 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
   svg.popup.infoVolume = svg.popup.append("h5").classed("popupTitle",true);
   svg.popup.button = svg.popup.append("button").classed("buttonPopup", true);
 
+  svg.getData = function(data){
+    //TODO smile
+    console.log(data) //data
+    console.log(svg.units) // unit main graph
+    console.log(svg.step); //step in milliseconds
+    console.log(svg.urlJson)
+    if(svg.popup.pieChart){
+      console.log("pie chart")
+      console.log(svg.popup.pieChart.json.request)//name of the pie function
+    }else{
+      console.log(getDateFromAbscissa(svg,data.x)); //date start main graph
+    }
+
+  }
+
   if(!popupHasButton(svg)){
     svg.popup.button.attr("disabled",true);
   }
@@ -220,7 +235,7 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
       }
 
 
-      getData(d);
+      svg.getData(d);
 
       clearTimeout(svg.timer);
       svg.timer = setTimeout(function () {
@@ -612,9 +627,9 @@ function interactionPopup(svg,overlay){
 
 /*********************************************************************************************************************************************/
 
-function drawPopupGraph(json, svg, total, pieside,f){
+function drawPopupGraph(jsonObj, svg, total, pieside,f){
 
-  json = json.response;
+  var json = jsonObj.response;
 
   var units = json.units;
 
@@ -784,9 +799,11 @@ function drawPopupGraph(json, svg, total, pieside,f){
 
   console.log(sum + " " + total);
 
-  svg.popup.pieChart.trSelec.on("click.data",getData);
-  svg.popup.pieChart.pathSelec.on("click.data",getData);
-  svg.popup.pieChart.textSelec.on("click.data",getData);
+
+  svg.popup.pieChart.json = jsonObj;
+  svg.popup.pieChart.trSelec.on("click.data",svg.getData);
+  svg.popup.pieChart.pathSelec.on("click.data",svg.getData);
+  svg.popup.pieChart.textSelec.on("click.data",svg.getData);
 
 
   return total;
@@ -892,8 +909,3 @@ function utilUrlPie(res, endStr, svg){
 
 /**********************************************************************************************************************/
 
-function getData(d){
-  //TODO smile
-  console.error("DATA !!!!!");
-  console.error(d);
-}

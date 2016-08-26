@@ -153,7 +153,7 @@ function Localhosts(theWSEventNotifier) {
                 },
                 {'targets': 4, 'title': "Mac Adress", "className": "dt-head-center dt-body-center",
                     "render": function ( data, type, row ) {
-                        return " <div class='asnumTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveASNum(this)' onmouseout='abordASNumRetrieval(this)' value="+data+">"+data+"</div>";
+                        return " <div class='macadressTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveMacAdress(this)' onmouseout='abordMacAdressRetrieval(this)' value="+data+">"+data+"</div>";
                     }
                 },
                 {
@@ -384,4 +384,82 @@ function addLocalhostTab(localhostIp, localhostName){
 
 }
 
+
+
+/**
+ * RawData Results DataTable - Mac Organization Retrieval Function
+ * THIS FUNCTION IS TRIGGERED ON MacAdress TABLE CELL MOUSEOVER
+ * - Checks for cell's Mac Organization if it exists (Ajax request to server), once user's pointer stays over cell for 500ms
+ * - Ajax request result will trigger Cell's Tooltip definition
+ * @param el : cell element
+ */
+function retrieveMacAdress(el){
+
+    ///callAJAX("getMacList.json", '', "json", setMacAdresssId, null);
+    var element = $(el);
+    var delay = 500; // 0.5 seconds delay after last input
+
+    if($(element).attr('data-original-title') === "") {
+
+        clearTimeout(element.data('timer'));
+
+        if (element.html())
+            element.data('timer', setTimeout(function () {
+                element.removeData('timer');
+
+                // Do your stuff after 2 seconds of last user input
+                callAJAX("getMacOrganization.json", 'mac=' + element.html(), "json", setMacToElementTitle, element);
+            }, delay));
+        else{
+            $(element).attr('data-original-title', "No Mac Organization");
+            $(element).attr("title", "No Mac Organization");
+        }
+
+    }
+
+}
+
+
+/**
+ * RawData Results DataTable - Mac Organization Retrieval Abortion Function
+ * THIS FUNCTION IS TRIGGERED ON MacAdress TABLE CELL MOUSEOUT
+ * - Abort cell's Mac Organization Retrieval
+ * @param el : cell element
+ */
+function abordMacAdressRetrieval(el){
+
+    var element = $(el);
+
+    clearTimeout(element.data('timer'));
+
+}
+
+
+
+
+
+/**
+ * RawData Results DataTable - Mac Cell's Tooltip Definition Function
+ * - Sets Cell's Tooltip definition
+ * - Trigger Cell Mouseover to show tooltip
+ * @param jsonResponse : server's response containing Mac Organization
+ * @param element : Cell Element
+ */
+function setMacToElementTitle(jsonResponse, element){
+
+    var title = "Mac Organization not found";
+
+    if(jsonResponse)
+        if(jsonResponse.organization)
+            title = jsonResponse.organization;
+
+    element.parents("table").dataTable().find("div.macadressTooltip[data-toggle='tooltip'][value='"+element.attr("value")+"']").each(function() {
+        $(this).tooltip();
+        $(this).attr('data-original-title', title);
+        $(this).tooltip();
+    });
+
+    $(element).mouseover();
+
+}
 

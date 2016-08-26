@@ -153,7 +153,7 @@ function Localhosts(theWSEventNotifier) {
                 },
                 {'targets': 4, 'title': "Mac Adress", "className": "dt-head-center dt-body-center",
                     "render": function ( data, type, row ) {
-                        return " <div class='asnumTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveASNum(this)' onmouseout='abordASNumRetrieval(this)' value="+data+">"+data+"</div>";
+                        return " <div class='macadressTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveMacAdress(this)' onmouseout='abordMacAdressRetrieval(this)' value="+data+">"+data+"</div>";
                     }
                 },
                 {
@@ -387,15 +387,15 @@ function addLocalhostTab(localhostIp, localhostName){
 
 
 /**
- * RawData Results DataTable - AS Name Retrieval Function
- * THIS FUNCTION IS TRIGGERED ON ASNum TABLE CELL MOUSEOVER
- * - Checks for cell's AS Name if it exists (Ajax request to server), once user's pointer stays over cell for 500ms
+ * RawData Results DataTable - Mac Organization Retrieval Function
+ * THIS FUNCTION IS TRIGGERED ON MacAdress TABLE CELL MOUSEOVER
+ * - Checks for cell's Mac Organization if it exists (Ajax request to server), once user's pointer stays over cell for 500ms
  * - Ajax request result will trigger Cell's Tooltip definition
  * @param el : cell element
  */
-function retrieveASNum(el){
+function retrieveMacAdress(el){
 
-    ///callAJAX("getAsList.json", '', "json", setASNumsId, null);
+    ///callAJAX("getMacList.json", '', "json", setMacAdresssId, null);
     var element = $(el);
     var delay = 500; // 0.5 seconds delay after last input
 
@@ -408,11 +408,11 @@ function retrieveASNum(el){
                 element.removeData('timer');
 
                 // Do your stuff after 2 seconds of last user input
-                callAJAX("getAsName.json", 'as=' + element.html(), "json", setASToElementTitle, element);
+                callAJAX("getMacOrganization.json", 'mac=' + element.html(), "json", setMacToElementTitle, element);
             }, delay));
         else{
-            $(element).attr('data-original-title', "No AS");
-            $(element).attr("title", "No AS");
+            $(element).attr('data-original-title', "No Mac Organization");
+            $(element).attr("title", "No Mac Organization");
         }
 
     }
@@ -421,12 +421,12 @@ function retrieveASNum(el){
 
 
 /**
- * RawData Results DataTable - AS Name Retrieval Abortion Function
- * THIS FUNCTION IS TRIGGERED ON ASNum TABLE CELL MOUSEOUT
- * - Abort cell's AS Name Retrieval
+ * RawData Results DataTable - Mac Organization Retrieval Abortion Function
+ * THIS FUNCTION IS TRIGGERED ON MacAdress TABLE CELL MOUSEOUT
+ * - Abort cell's Mac Organization Retrieval
  * @param el : cell element
  */
-function abordASNumRetrieval(el){
+function abordMacAdressRetrieval(el){
 
     var element = $(el);
 
@@ -439,21 +439,21 @@ function abordASNumRetrieval(el){
 
 
 /**
- * RawData Results DataTable - AS Cell's Tooltip Definition Function
+ * RawData Results DataTable - Mac Cell's Tooltip Definition Function
  * - Sets Cell's Tooltip definition
  * - Trigger Cell Mouseover to show tooltip
- * @param jsonResponse : server's response containing AS Name
+ * @param jsonResponse : server's response containing Mac Organization
  * @param element : Cell Element
  */
-function setASToElementTitle(jsonResponse, element){
+function setMacToElementTitle(jsonResponse, element){
 
-    var title = "AS Name not found";
+    var title = "Mac Organization not found";
 
     if(jsonResponse)
-        if(jsonResponse.n)
-            title = jsonResponse.n;
+        if(jsonResponse.organization)
+            title = jsonResponse.organization;
 
-    element.parents("table").dataTable().find("div.asnumTooltip[data-toggle='tooltip'][value='"+element.attr("value")+"']").each(function() {
+    element.parents("table").dataTable().find("div.macadressTooltip[data-toggle='tooltip'][value='"+element.attr("value")+"']").each(function() {
         $(this).tooltip();
         $(this).attr('data-original-title', title);
         $(this).tooltip();

@@ -894,4 +894,6 @@ function utilUrlPie(res, endStr, svg){
 
 function getData(d){
   //TODO smile
+  console.error("DATA !!!!!");
+  console.error(d);
 }

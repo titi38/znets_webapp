@@ -281,7 +281,6 @@ function LastHourHistory(theWSEventNotifier) {
     }
   };
 
-
   function oldestMinute(a,b){
 
     if(trueModulo(currentTime - a, 60) >= trueModulo(currentTime - b, 60)){

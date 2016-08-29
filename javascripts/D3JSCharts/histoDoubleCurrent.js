@@ -1,3 +1,15 @@
+/**
+ * Created by elie.
+ */
+
+/**
+ * Creates a double stacked histogram with zoom, resize, transition and popup features which auto-updates its values on
+ *                                                                                               websocket notification.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
@@ -551,7 +563,14 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
 } //function end
 
-/***********************************************************************************************************************/
+
+
+/**
+ * Allows the graph to actualize its data on real-time by subscribing to a websocket.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param urlJson {String} Url to request the data to the server.
+ * @param div {Object} D3 encapsulated parent div element.
+ */
 
 function autoUpdateDoubleCurrent(svg,urlJson, div){
 

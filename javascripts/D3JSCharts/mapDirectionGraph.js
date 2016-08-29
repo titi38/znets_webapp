@@ -1,4 +1,9 @@
 /**
+ * Created by elie.
+ */
+
+
+/**
  * Requests two Json objects from the server, the world map and the data, then call the function to draw the map.
  * @param div {Object} D3 encapsulated parent div element.
  * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
@@ -20,19 +25,6 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
 
 }
 
-//temporary definitions
-/************************************************************************************************************
- *
- * createMap
- *
- * @param div: the container div
- * @param svg: the root svg
- * @param urlJson: the url to get the world
- * @param mydiv: div name (string)
- *
- * Create a map with resize and zoom functionality
- *
- ***********************************************************************************************************/
 
 /**
  * Create a map with resize and zoom features.
@@ -43,7 +35,6 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
  * @param urlJson {String} Url to request the data to the server.
  * @param worldmap {Object} The Json object containing the information to create a map of the world.
  * @param json {Object} The Json object containing the data sent by the server.
- * @returns {boolean}
  */
 
 function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
@@ -438,7 +429,11 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 }
 
 
-/********************************************************************************************************************/
+/**
+ * Updates the maps with new data on websocket's notification.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function autoUpdateMapDirection(svg,urlJson){
   var duration = 800;
@@ -542,9 +537,12 @@ function autoUpdateMapDirection(svg,urlJson){
 }
 
 
-
-
-/************************************************************************************************************/
+/**
+ * Updates internal variables and redraw the maps on resize event.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ */
 
 
 function addResizeMapDirection(div,svg,mydiv){
@@ -656,7 +654,11 @@ function addResizeMapDirection(div,svg,mydiv){
 }
 
 
-/*********************************************************************************************************************/
+/**
+ * Add zoom feature to one map.
+ * @param parentSvg {Object} D3 encapsulated parent svg element.
+ * @param svg {Object} D3 encapsulated svg element, which contains one map.
+ */
 
 function addZoomMapDirection(parentSvg,svg){
 

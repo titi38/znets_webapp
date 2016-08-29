@@ -1,11 +1,16 @@
+/**
+ * Created by elie.
+ */
 
 
-
-
-
-
-/***********************************************************************************************************/
-
+/**
+ * Returns the correct pie url(s) according the graph type.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param clickData {Object} The data of the selected element.
+ * @returns {String[]} Array with two strings, if the graph have two pie urls, contains the "local" url in position 0
+ * then the "external" one in position 1, if it has only one, the position 0 contains the pie url and the position 1
+ * indicates if it is an external or local one by the strings "ext" or "loc" resp.
+ */
 
 
 function getPieJsonQuery(svg, clickData) {
@@ -151,7 +156,11 @@ function getPieJsonQuery(svg, clickData) {
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Indicates if the graph has one or two different pie charts.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @returns {Boolean} True if the graph has two pie charts, false otherwise.
+ */
 
 function popupHasButton(svg){
 
@@ -189,7 +198,14 @@ function popupHasButton(svg){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Add a popup feature to the graph.
+ * @param selection {Object} D3 selection of all data elements.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param onCreationFunct {Function} Function called before the pie chart is drawn.
+ * @param onSupprFunct {Function} Function called after the pie chart is deleted.
+ */
 
 function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
@@ -285,7 +301,10 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
 
 }
 
-/***********************************************************************************************************/
+/**
+ * Position the popup and its legend for a nice display.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function positionPopup(svg){
 
@@ -296,7 +315,12 @@ function positionPopup(svg){
 
 }
 
-/***********************************************************************************************************/
+
+/**
+ * Called when a resize event occurs, computes internal variables for a correct display.
+ * @param overlay {Object} D3 selection of the overlay div.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 
 function redrawPopup(overlay, svg){
@@ -342,8 +366,15 @@ function redrawPopup(overlay, svg){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Requests two sets of data from the server to draw two pie chart.
+ * @param urlJsonLoc {String} The url for the local data.
+ * @param urlJsonExt {String} The url for the external data.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param pieside {Number} The dimension of a side of the pie.
+ * @param dataInit {Object} The data of the selected element.
+ * @param overlay {Object} D3 selection of the overlay div.
+ */
 
 function createPopupButton(urlJsonLoc, urlJsonExt, svg, pieside, dataInit, overlay){
 
@@ -361,7 +392,15 @@ function createPopupButton(urlJsonLoc, urlJsonExt, svg, pieside, dataInit, overl
 
 }
 
-/************************************************************************************************************/
+/**
+ * Requests one set of data from the server to draw the pie chart.
+ * @param urlJson {String} The url to request the data from the server.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param pieside {Number} The dimension of a side of the pie.
+ * @param dataInit {Object} The data of the selected element.
+ * @param overlay {Object} D3 selection of the overlay div.
+ * @param extloc {String} "ext" if the requested data is external, "loc" otherwise.
+ */
 
 function createPopupSimple(urlJson, svg, pieside, dataInit, overlay,extloc){
 
@@ -380,7 +419,16 @@ function createPopupSimple(urlJson, svg, pieside, dataInit, overlay,extloc){
 }
 
 
-/************************************************************************************************************/
+/**
+ * Instantiates some variables before drawing the pie chart.
+ * @param error {Error} Returned if an error occurred when data was requested to the server.
+ * @param json {Object} The Json object returned by the server.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param pieside {Number} The dimension of a side of the pie.
+ * @param dataInit {Object} The data of the selected element.
+ * @param overlay {Object} D3 selection of the overlay div.
+ * @param extloc {String} "ext" if the requested data is external, "loc" otherwise.
+ */
 
 
 function drawComplDataSimple(error, json, svg, pieside, dataInit, overlay,extloc){
@@ -409,7 +457,6 @@ function drawComplDataSimple(error, json, svg, pieside, dataInit, overlay,extloc
 
   drawPopupGraph(json, svg, total, pieside, f);
 
-  //TODO for now...
   svg.popup.button.text(stateToText(extloc));
 
   interactionPopup(svg,overlay);
@@ -422,8 +469,16 @@ function drawComplDataSimple(error, json, svg, pieside, dataInit, overlay,extloc
 }
 
 
-/************************************************************************************************************/
-
+/**
+ * Instantiates some variables before drawing the two pie charts.
+ * @param error {Error} Returned if an error occurred when data was requested to the server.
+ * @param jsonLoc {Object} The Json object returned by the server with the local data.
+ * @param jsonExt {Object} The Json object returned by the server with the external data.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param pieside {Number} The dimension of a side of the pie.
+ * @param dataInit {Object} The data of the selected element.
+ * @param overlay {Object} D3 selection of the overlay div.
+ */
 
 function drawComplDataButton(error, jsonLoc, jsonExt, svg, pieside, dataInit, overlay){
 
@@ -500,7 +555,11 @@ function drawComplDataButton(error, jsonLoc, jsonExt, svg, pieside, dataInit, ov
 }
 
 
-/**********************************************************************************************************************/
+/**
+ * Instantiates the different listener to allow user interaction with the pie chart.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param overlay {Object} D3 selection of the overlay div.
+ */
 
 function interactionPopup(svg,overlay){
 
@@ -625,7 +684,15 @@ function interactionPopup(svg,overlay){
 
 }
 
-/*********************************************************************************************************************************************/
+/**
+ * Draw the pie chart from the server returned Json.
+ * @param jsonObj {Object} The Json object requested from the server.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param total {Number} The height of the selected element, used to compute the remainder.
+ * @param pieside {Number} The dimension of a side of the pie.
+ * @param f {Function} The function used to generates the color of the different elements.
+ * @returns {Number} The sum of the quantity value of pie data elements.
+ */
 
 function drawPopupGraph(jsonObj, svg, total, pieside,f){
 
@@ -810,7 +877,11 @@ function drawPopupGraph(jsonObj, svg, total, pieside,f){
 
 }
 
-/**********************************************************************************************************************/
+/**
+ * Returns the function to generate the tooltip of the pie elements.
+ * @param total {Number} The sum of all pie elements.
+ * @returns {Function} The function to generate the tooltip of the pie elements.
+ */
 
 
 function titleElemPopup(total){
@@ -829,7 +900,11 @@ function titleElemPopup(total){
 
 }
 
-/**********************************************************************************************************************/
+/**
+ * Returns the function to generate the tooltip of the legend's table rows.
+ * @param total {Number} The sum of all pie elements.
+ * @returns {Function} The function to generate the tooltip of the legend's table rows.
+ */
 
 function titleTablePopup(total){
 
@@ -849,7 +924,12 @@ function titleTablePopup(total){
 
 }
 
-/**********************************************************************************************************************/
+/**
+ * Generates the text for the pie popup's title.
+ * @param d {Object} The user selected data.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @returns {String} The text for the pie popup's title.
+ */
 
 function popupTitleH(d, svg){
 
@@ -864,7 +944,12 @@ function popupTitleH(d, svg){
     + (dateEnd.getMonth() + 1) + "/" + dateEnd.getDate());
 }
 
-/**********************************************************************************************************************/
+/**
+ * Generates the text for the pie popup's volume information.
+ * @param d {Object} The user selected data.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @returns {String} The text for the pie popup's volume information.
+ */
 
 function popupInfoVolume(d, svg){
 
@@ -874,7 +959,11 @@ function popupInfoVolume(d, svg){
   return "Volume: " + Math.round(100 * d.height * arrayConvert[1])/100 + " " + arrayConvert[0] + svg.units;
 }
 
-/**********************************************************************************************************************/
+/**
+ * Returns the text of the button according the current display pie chart.
+ * @param state {String} "ext" if the current displayed pie chart is external, "loc" if local.
+ * @returns {String} The text of the popup's button.
+ */
 
 function stateToText(state){
 
@@ -888,7 +977,15 @@ function stateToText(state){
 
 }
 
-/**********************************************************************************************************************/
+/**
+ * Utility function which returns the correct pie url(s) according the given parameters.
+ * @param res {String} Indicates if one or two urls are needed.
+ * @param endStr {String} A part of the final pie url.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @returns {String[]} Array with two strings, if the graph have two pie urls, contains the "local" url in position 0
+ * then the "external" one in position 1, if it has only one, the position 0 contains the pie url and the position 1
+ * indicates if it is an external or local one by the strings "ext" or "loc" resp.
+ */
 
 
 function utilUrlPie(res, endStr, svg){
@@ -907,5 +1004,4 @@ function utilUrlPie(res, endStr, svg){
 
 }
 
-/**********************************************************************************************************************/
 

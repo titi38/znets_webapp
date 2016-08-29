@@ -1,3 +1,17 @@
+/**
+ * Created by elie.
+ */
+
+
+/**
+ * Function that updates the sum of elements'amount by item by subtraction of elements older than one hour when the
+ *                                                                                           graph's data is actualized.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param valuesData {Array} Array which contains the elements'data.
+ * @param sumMapUpdate {Object} Javascript Map object, associates elements'item with the numerical's variation of their
+ *                                                                                                  sum on an autoupdate.
+ * @param gapMinute {Number} Indicates how many minutes separate the new data from the old.
+ */
 
 function removeValuesOnUpdate(svg, valuesData,sumMapUpdate,gapMinute){
   
@@ -26,7 +40,15 @@ function removeValuesOnUpdate(svg, valuesData,sumMapUpdate,gapMinute){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Updates the sumArray map with the variations computed in sumMapUpdate to match the new data.
+ * @param sumArray {Object} Javascript Map object, contains the sum of elements' quantity by item.
+ * @param sumMapUpdate {Object} Javascript Map object, associates elements'item with the numerical's variation of their
+ *                                                                                                  sum on an autoupdate.
+ * @param hiddenValuesArray {Array} Keep track of masked items, updated if needed.
+ * @param mapPercentDisplay {Object} Javascript Map object, used to record how much of an element in function of its
+ * item value is displayed for the hide/show transitions.
+ */
 
 function updateSumArray( sumArray, sumMapUpdate,hiddenValuesArray,mapPercentDisplay) {
 
@@ -62,7 +84,11 @@ function updateSumArray( sumArray, sumMapUpdate,hiddenValuesArray,mapPercentDisp
 }
 
 
-/*******************************************************************************************************************/
+/**
+ * Updates the rows of one legend's table during an update.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param direction {String} Indicates which table is updated.
+ * */
 
 function updateTrSelec(svg, direction){
   
@@ -115,7 +141,17 @@ function updateTrSelec(svg, direction){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Creates the legend's table for one set of data according their direction property and add the hide/show feature for
+ *                                                                                             the auto-updating graphs.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param direction {String} "In" or "Out", indicates the value of the data's direction property.
+ * @param sumArrayDirection {Array} The array which contains item and display values, and the overall volume by item.
+ * @param colorMap {Object} Javascript Map, links item value to the corresponding color.
+ * @param activFunct {Function} The function called when the mouse hovers the data or the table entries.
+ * @param desacFunct {Function} The function called when the mouse quits the data or the table entries.
+ * @returns {Object} D3 selection of created tr elements.
+ */
 
 function createTableLegendDoubleCurrent(svg, direction, sumArrayDirection, colorMap,activFunct,desacFunct){
 
@@ -162,8 +198,12 @@ function createTableLegendDoubleCurrent(svg, direction, sumArrayDirection, color
 }
 
 
-
-/***********************************************************************************************************/
+/**
+ * Allows the possibility to hide/show data inside the auto-updating stacked double histogram according their item value.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param trSelec {Object} D3 selection of tr elements from the corresponding legend's table.
+ * @param direction {String} "In" or "Out", indicates the value of the data's direction property.
+ */
 
 function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
@@ -270,7 +310,12 @@ function hideShowValuesDirectionCurrent(svg,trSelec,direction){
 
 }
 
-/***********************************************************************************************************************/
+/**
+ * Computes the new heights and positions of element for a given direction, then updates internal variables and
+ *                                                                                                    redraws the graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param direction {String} "Top" or "Bottom", depends on the value of the data's direction property.
+ */
 
 function transitionRefresh(svg, direction){
 
@@ -358,9 +403,17 @@ function transitionRefresh(svg, direction){
 }
 
 
+/**
+ * Calculates the display text value and sum of the javascript object elemToPush's height according to elemToPush.item
+ * and stores them into the sumMap parameter, for the autoupdating graphs.
+ * @param sumMap {Object} Javascript Map, stores height's sums and display text by item.
+ * @param elemToPush {Object} The object corresponding to the data that will be used to create a stacked histogram.
+ * @param elemJson {Array} The array returned by the server used to represent a given datum.
+ * @param contentDisplayValue {Number} The position of the display text inside the elemJson parameter.
+ * @param itemType {String} The reference name for item values by the json returned by the server into
+ * json.response.content, used to detect non-generic cases.
+ */
 
-
-/************************************************************************************************************/
 
 function mapElemToSumCurrent(sumMap, elemToPush, elemJson, contentDisplayValue,itemType){
 
@@ -376,8 +429,15 @@ function mapElemToSumCurrent(sumMap, elemToPush, elemJson, contentDisplayValue,i
 
 }
 
-/************************************************************************************************************/
 
+/**
+ * Utility function for sorting elements in an array according their heightRef and abscissa (numbers), before being processed to be
+ * displayed, for auto-updating graphs.
+ * @param a {Object} Javascript object with item property set as string, x and height properties set as numbers.
+ * @param b {Object} Javascript object with item property set as string, x and height properties set as numbers.
+ * @returns {Number} If less than 0, a will have a lower index than b in the sorting array, if greater,
+ * b will have a lower index than a in the sorting array.
+ */
 
 function sortValuesCurrent(a, b) {
 
@@ -395,7 +455,16 @@ function sortValuesCurrent(a, b) {
 
 
 
-/************************************************************************************************************/
+
+
+/**
+ * Utility function used to append svg:title element to each data from a stacked histogram displaying quantity, date,
+ * display name and item name, for auto-updating graphs.
+ * @param svg {Object} D3 encapsulated svg element having the svg.units, svg.timeMin and svg.step properties.
+ * @param selection {Object} A D3 selection of rect html elements bound to their datum.
+ * @param sumMap {Object} A Javascript Map used to retrieve the display value of requested elements from their item
+ *                                                                                                                value.
+ */
 
 function createTooltipHistoCurrent(svg, selection, sumMap){
 
@@ -440,7 +509,14 @@ function createTooltipHistoCurrent(svg, selection, sumMap){
 
 }
 
-/**********************************************************************************************************************/
+/**
+ * End the auto-update behavior by unsubscribing from the websocket if the graph isn't displayed anymore.
+ * @param id {Number} Received id when subscribed to the websocket.
+ * @param urljson {String} Url sent as parameter when subscribed to the websocket.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @returns {Boolean} True if the graph wasn't displayed so the unsubscription has been made, false is the graph is
+ *                                                                                                        still active.
+ */
 
 function unsubscribeGraphIfInactive(id, urljson, div){
   if(!(div.classed("active") && div.classed("in"))){
@@ -451,7 +527,16 @@ function unsubscribeGraphIfInactive(id, urljson, div){
   return false;
 }
 
-/**********************************************************************************************************************/
+/**
+ * Instantiates the transition to mask or show data after a click or a contextmenu event on a table row.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param direction {String} "Top" or "Bottom", depends on the value of the data's direction property.
+ * @param duration {Number} The duration of the transition.
+ * @param mapDisplayString {String} The name of the svg property which references the mapPercentDisplay map according
+ *                                                                                                the correct direction.
+ * @param hiddenValuesStr {String} The name of the svg property which references the hiddenValues array according
+ *                                                                                                the correct direction
+ */
 
 
 function createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr){
@@ -479,4 +564,4 @@ function createTransitionDirection(svg, direction, duration, mapDisplayString,hi
     });
 }
 
-/**********************************************************************************************************************/
+

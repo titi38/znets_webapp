@@ -1,3 +1,17 @@
+/**
+ * Created by elie.
+ */
+
+
+/**
+ * Create two stacked histograms, one above the other, with zoom, resize, transition and popup features,
+ * which auto-updates to monitor all data in an one-hour window.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
+
 function create2HistoStackCurrent(div,svg,mydiv,urlJson){
 
 

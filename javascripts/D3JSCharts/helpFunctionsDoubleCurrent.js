@@ -419,10 +419,10 @@ function mapElemToSumCurrent(sumMap, elemToPush, elemJson, contentDisplayValue,i
 
   if (!sumMap.has(elemToPush.item)) {
     sumMap.set(elemToPush.item, {sum: elemToPush.heightRef,display:
-      (elemToPush.item === " Remainder ")?" Remainder ":
+      "" + ((elemToPush.item === " Remainder ")?" Remainder ":
         (elemJson[contentDisplayValue] === "")?elemToPush.item:
           (itemType === "portproto")?elemToPush.item + " (" +  elemJson[contentDisplayValue] + ")":
-            elemJson[contentDisplayValue]});
+            elemJson[contentDisplayValue])});
   } else {
     sumMap.get(elemToPush.item).sum += elemToPush.heightRef;
   }

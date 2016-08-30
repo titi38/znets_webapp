@@ -86,7 +86,9 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     json = json.response;
     var jsonData = json.data;
     var jsonContent = json.content;
-
+    
+    processServices(jsonData,jsonContent,svg);
+    console.log(jsonContent);
 
     svg.contentItemValue = searchItemValue(jsonContent);
     svg.contentAmountValue = searchAmountValue(jsonContent);
@@ -191,7 +193,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
         x: elemJson[svg.contentXPositionValue],
         height: +elemJson[svg.contentAmountValue],
         heightRef: +elemJson[svg.contentAmountValue],
-        item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue],
+        item: ((elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue]) + "",
         direction: elemJson[svg.contentDirectionValue].toLowerCase()
       };
 
@@ -628,6 +630,8 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     var jsonData = json.data;
 
+    processServices(jsonData,json.content,svg);
+
     jsonData.forEach(function(minuteAndElems){
 
       var position = trueModulo(minuteAndElems[0] - svg.lastMinute, 60)  + gapMinute + 59;
@@ -665,7 +669,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
       elemToPush = {
         x: elemJson[svg.contentXPositionValue],
         heightRef: +elemJson[svg.contentAmountValue],
-        item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue],
+        item: ((elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue]) + "",
         direction: elemJson[svg.contentDirectionValue].toLowerCase()
       };
 

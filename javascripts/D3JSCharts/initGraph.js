@@ -110,11 +110,16 @@ function drawChartFromInterface(urlJson, mydiv) {
 
     svg.urlJson = urlJson;
 
-    //createChoroplethDirection(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
-    //create2HistoStackCurrent(div,svg,mydiv,"/dynamic/netTopCurrentCountryTraffic.json");
+    //TODO suppr
+
+    //svg.typeGraph = "netTopServicesTraffic";
+
+    //createChoroplethDirection(div,svg,mydiv,"dynamic/netTopCountryTraffic.json?pset=MINUTE");
+    //createHistoDoubleCurrent(div,svg,mydiv,"dynamic/netTopAppTraffic.json?service=loc&pset=MINUTE");
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
 
 }
+
 
 /**
  * Instantiates the parent div and svg then call the function to create the correct graph.
@@ -181,12 +186,37 @@ function whichCreationFunction(urlJson,svg){
     var GraphsWithoutPopup = ["netNbFlow","hostNbFlow","hostNbDiffHosts","netNbDiffHosts","netTopNbExtHosts","hostTopNbExtHosts"];
     
     svg.hasPopup = GraphsWithoutPopup.indexOf(typeGraph) === -1;
+
+    if(getParamUrlJson(urlJson,"pset") === "MINUTE"){
+        switch(typeGraph){
+            case "netTopLHostsTraffic":
+            case "netTopLHostsNbFlow":
+            case "netTopHostsTraffic":
+            case "netTopServicesTraffic":
+            case "hostTopServicesTraffic":
+            case "netTopAsTraffic":
+            case "hostTopAsTraffic":
+            case "netTopAppTraffic":
+            case "hostTopAppTraffic":
+            case "netTopCountryTraffic":
+            case "hostTopCountryTraffic":
+            case "netTopHostsNbFlow":
+            case "netTopCountryNbFlow":
+            case "hostTopCountryNbFlow":
+            case "netTopAsNbFlow":
+            case "hostTopAsNbFlow":
+            case "netTopAppNbFlow":
+            case "hostTopAppNbFlow":
+            case "netTopServicesNbFlow":
+            case "hostTopServicesNbFlow":
+                return createHistoDoubleCurrent;
+        }
+    }
     
     switch(typeGraph){
         case "netNbLocalHosts":
         case "netNbExternalHosts":
             return createCurve;
-            break;
 
         case "netTopLHostsTraffic":
         case "netTopHostsTraffic":
@@ -199,14 +229,12 @@ function whichCreationFunction(urlJson,svg){
         case "netTopCountryTraffic":
         case "hostTopCountryTraffic":
             return createHisto2DStackDouble;
-            break;
 
 
         case "netProtocoleTraffic":
         case "hostProtocoleTraffic":
 
             return createHisto2DStackDoubleFormatVariation;
-            break;
 
         case "netNbFlow":
         case "hostNbFlow":
@@ -215,21 +243,17 @@ function whichCreationFunction(urlJson,svg){
         case "hostNbDiffHosts":
 
             return create2HistoStackFormatVariation;
-            break;
 
         case "netTopServicesNbFlow":
         case "hostTopServicesNbFlow":
             return createHisto2DStackSimple;
-            break;
 
         //for now
         case "worldmap":
             return createMap;
-            break;
 
         case "netTopCurrentCountryTraffic":
             return createChoroplethDirection;
-            break;
 
         case "netTopLHostsNbFlow":
         case "netTopHostsNbFlow":
@@ -246,7 +270,6 @@ function whichCreationFunction(urlJson,svg){
 
 
             return create2HistoStack;
-            break;
 
         case "netTopCurrentLhostsTraffic" :
         case "netTopCurrentExtServiceTraffic" :
@@ -256,7 +279,6 @@ function whichCreationFunction(urlJson,svg){
         case "netTopCurrentAsTraffic" :
         case "netTopCurrentAppTraffic" :
             return;
-            break;
 
         default:
             return noData;

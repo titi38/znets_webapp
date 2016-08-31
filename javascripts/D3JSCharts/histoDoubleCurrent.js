@@ -813,6 +813,10 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     svg.selectionTop = selecTopEnter.merge(svg.selectionTop);
 
+    selecTopEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
+    selecBottomEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
+
+
     svg.valuesBottom.sort(sortValuesCurrent);
     svg.valuesTop.sort(sortValuesCurrent);
 
@@ -886,10 +890,6 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
         svg.selectionTop = svg.chartTop.selectAll(".data");
 
         svg.valuesTop = svg.selectionTop.data();
-
-        selecTopEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
-        selecBottomEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
-
 
         createTooltipHistoCurrent(svg,selecTopEnter,svg.sumMap);
         createTooltipHistoCurrent(svg,selecBottomEnter, svg.sumMap);

@@ -217,7 +217,8 @@ function createChildSvgCurrent(div, svg, svgChild, numSvg, divLegend, mydiv){
 
   addZoom2Histo(svg, svgChild, update2HistoStack);
 
-  hideShowValues2Histo(svg,svgChild,svgChild.trSelec,svgChild.selection,svg.xMax);
+  hideShowValuesCurrent2Histo(svg, svgChild);
+
   /*
    addPopup2Histo(selection, div, svg , svgChild, numSvg, function(data){
    desactivationElems();
@@ -227,4 +228,361 @@ function createChildSvgCurrent(div, svg, svgChild, numSvg, divLegend, mydiv){
 
 }
 
+/**
+ *
+ * @param svg
+ * @param svgChild
+ */
 
+
+function hideShowValuesCurrent2Histo(svg, svgChild){
+
+  var duration = 800;
+
+  svgChild.hiddenValues  = [];
+
+  svgChild.mapPercentDisplay = new Map();
+
+  svgChild.trSelec.each(function(d){
+
+    svgChild.mapPercentDisplay.set(d.item,{percentDisplay:1});
+
+  });
+
+
+
+  svgChild.onClick = function(d){
+
+
+    var clickedRow = d3.select(this);
+
+    var index = svgChild.hiddenValues.indexOf(d.item);
+
+
+    if(index === -1){
+      //hide the data
+
+      svgChild.hiddenValues.push(d.item);
+      clickedRow.classed("strikedRow",true);
+
+
+    }else{
+      //show the data
+
+      svgChild.hiddenValues.splice(index,1);
+      clickedRow.classed("strikedRow",false);
+
+
+    }
+
+
+    createTransitionSimpleCurrent2Histo(svg,svgChild, duration);
+
+  };
+
+  svgChild.onContextMenu = function(d){
+    d3.event.preventDefault();
+
+    var clickedRow = d3.select(this);
+
+    var index = svgChild.hiddenValues.indexOf(d.item);
+
+
+    if ((index !== -1) || (svgChild.trSelec.size() - 1 !== svgChild.hiddenValues.length )) {
+      //Hide all data except this one
+
+      svgChild.hiddenValues = [];
+      svgChild.mapPercentDisplay.forEach(function(value, key){
+        svgChild.hiddenValues.push(key);
+      });
+
+
+      svgChild.hiddenValues.splice(svgChild.hiddenValues.indexOf(d.item), 1);
+
+      svgChild.trSelec.classed("strikedRow",true);
+      clickedRow.classed("strikedRow",false);
+
+
+    }else{
+
+
+      //index === -1 && hiddenValues.length == trSelec.size() -1
+      // ->show all data.
+      svgChild.hiddenValues = [];
+      svgChild.trSelec.classed("strikedRow", false);
+
+
+    }
+
+    createTransitionSimpleCurrent2Histo(svg,svgChild, duration);
+
+
+  };
+
+  svgChild.trSelec.on("click", svgChild.onClick).on("contextmenu",svgChild.onContextMenu);
+
+
+
+}
+
+
+/**
+ *
+ * @param svg
+ * @param svgChild
+ * @param duration
+ */
+
+function createTransitionSimpleCurrent2Histo(svg, svgChild, duration){
+
+  svgChild.transition("hideshow").duration(duration)
+    .tween("",function(){
+      var arrayUpdate = [];
+
+      svgChild.mapPercentDisplay.forEach(function(value, key){
+        var coef = (svgChild.hiddenValues.indexOf(key) === -1?1:0) - value.percentDisplay;
+        if(coef !== 0){
+          arrayUpdate.push([value,value.percentDisplay,coef]);
+        }
+      });
+
+
+      return function(t){
+
+        arrayUpdate.forEach(function(elem){
+          elem[0].percentDisplay = elem[1] + t * elem[2];
+        });
+
+        transitionRefreshSimpleCurrent2Histo(svg, svgChild);
+      }
+
+    });
+}
+
+
+function transitionRefreshSimpleCurrent2Histo(svg, svgChild){
+
+
+  var i, currentX;
+  var sum, elemValues, currentPercent;
+
+  var mapDisplay = svgChild.mapPercentDisplay;
+  var valuesSortAlphabet = svgChild.valuesSCAlphabetSort;
+  var valuesUsualSort = svgChild.values;
+  var valuesLength = valuesUsualSort.length;
+
+  var totalSum = [], currentItem = null;
+
+
+  //height actualization
+  for (i = 0; i < valuesLength; i++) {
+
+    elemValues = valuesSortAlphabet[i];
+
+    if (elemValues.item !== currentItem) {
+      currentItem = elemValues.item;
+      currentPercent = mapDisplay.get(currentItem).percentDisplay;
+    }
+
+    elemValues.height = elemValues.heightRef * currentPercent;
+
+  }
+
+
+  currentX = null;
+  sum = 0;
+
+  for (i = 0; i < valuesLength; i++) {
+    elemValues = valuesUsualSort[i];
+
+    if (currentX !== elemValues.x) {
+      currentX = elemValues.x;
+      totalSum.push(sum);
+      sum = 0;
+    }
+
+    sum += elemValues.height;
+    elemValues.y = sum;
+
+  }
+
+
+  totalSum.push(sum);
+
+  svgChild.total = Math.max(1,d3.max(totalSum));
+
+
+  updateScales2HistoCurrent(svg,svgChild);
+  update2HistoStack(svg, svgChild);
+
+
+}
+
+
+function updateScales2HistoCurrent(svg, svgChild){
+
+  var actTranslate1 = -svgChild.transform.y/(svgChild.scaley*svgChild.transform.k);
+  svgChild.y.domain([0,svgChild.total*1.1]);
+  svgChild.newY.domain([svgChild.y.invert(actTranslate1 + svg.heightGraph/(svgChild.transform.k*svgChild.scaley)), svgChild.y.invert(actTranslate1)]);
+
+
+}
+
+
+function onAutoUpdate(svg, svgChild, valuesNew, gapMinute, sumMapUpdate){
+
+  valuesNew.sort(sortValuesCurrent);
+  
+  var totalUpdate = [];
+
+  var x = 60;
+
+  var xMax = 60 + gapMinute;
+
+  var sum = 0;
+  var i = 0;
+
+
+  while (x < xMax) {
+
+    while (i < valuesNew.length && valuesNew[i].x === x) {
+      sum += valuesNew[i].height;
+      valuesNew[i].y = sum;
+      i++;
+    }
+    totalUpdate.push(sum);
+    sum = 0;
+    x++;
+  }
+
+  svgChild.total = Math.max(svgChild.total,d3.max(totalUpdate));
+
+  removeValuesOnUpdate(svgChild,svgChild.values,sumMapUpdate,gapMinute);
+
+  sumMapUpdate.forEach(function(value,key){
+
+    if(!svg.sumMap.has(key)){
+      svg.sumMap.set(key,{sum:value.sum, display:value.display})
+    }
+
+  });
+
+
+  svgChild.selection = svgChild.chart.selectAll(".data");
+  svgChild.values = svgChild.selection.data();
+  svgChild.values = svgChild.values.concat(valuesNew);
+
+
+  svgChild.selection = svgChild.chart.selectAll(".data")
+    .data(svgChild.values);
+
+  var selecEnter = svgChild.selection.enter()
+    .append("rect")
+    .classed("data", true)
+    .attr("fill", function (d) {
+      return svg.colorMap.get(d.item);
+    })
+    .attr("stroke", "#000000");
+
+  svgChild.selection = selecEnter.merge(svgChild.selection);
+
+  svgChild.values.sort(sortValuesCurrent);
+
+
+  svgChild.valuesSCAlphabetSort = svgChild.values.concat();
+  svgChild.valuesSCAlphabetSort.sort(sortAlphabetItemOnly);
+
+
+  selecEnter.on("mouseover", svgChild.activationElemsAutoScroll).on("mouseout", svgChild.deactivationElems);
+
+  svgChild.selecEnter = selecEnter;
+
+  updateScales2HistoCurrent(svg, svgChild);
+
+
+
+
+}
+
+
+/**
+ *
+ * @param svg
+ * @param svgChild
+ * @param sumMapUpdate
+ */
+function onEndAutoUpdate(svg,svgChild, sumMapUpdate){
+
+
+  createTooltipHistoCurrent(svg,svgChild.selecEnter,svg.sumMap);
+
+
+  var maxTotal = 1;
+
+  svgChild.chart.selectAll(".data").each(function(d){
+
+    d.x = Math.round(d.x);
+    if(d.x < 0){
+      this.remove();
+    }else{
+      maxTotal = Math.max(maxTotal,d.y);
+    }
+
+  });
+
+  svgChild.total = maxTotal;
+
+  svgChild.selection = svgChild.chart.selectAll(".data");
+
+  svgChild.values = svgChild.selection.data();
+
+
+  svgChild.values.sort(sortValuesCurrent);
+
+  svgChild.valuesSCAlphabetSort = svgChild.values.concat();
+  svgChild.valuesSCAlphabetSort.sort(sortAlphabetItemOnly);
+
+  updateSumArray(svgChild.sumArray, sumMapUpdate,svgChild.hiddenValues,svgChild.mapPercentDisplay);
+
+  svgChild.sumArray.sort(sortAlphabet);
+
+
+
+
+  svgChild.trSelec = svgChild.table.selectAll("tr").data(svgChild.sumArray);
+  svgChild.trSelec.classed("strikedRow",function(d){return svgChild.hiddenValues.indexOf(d.item) !== -1; });
+  svgChild.trSelec.select("div").style("background-color", function (d) {
+    return svg.colorMap.get(d.item);
+  });
+
+  svgChild.trSelec.select("td:nth-of-type(2)").text(function (d) {
+    return d.display;
+  });
+
+
+  var trselecEnter = svgChild.trSelec.enter().append("tr")
+    .classed("strikedRow",function(d){return svgChild.hiddenValues.indexOf(d.item) !== -1; });
+
+  trselecEnter.append("td").append("div").classed("lgd", true).style("background-color", function (d) {
+    return svg.colorMap.get(d.item);
+  });
+
+  trselecEnter.append("td").text(function (d) {
+    return d.display;
+  });
+
+
+  trselecEnter.on("click",svgChild.onClick).on("contextmenu", svgChild.onContextMenu);
+
+  svgChild.trSelec.exit().remove();
+
+  svgChild.trSelec = svgChild.table.selectAll("tr");
+
+  svgChild.trSelec.on("mouseover",svgChild.activationElems).on("mouseout", svgChild.deactivationElems);
+
+  tableLegendTitle(svg, svgChild.trSelec);
+
+  updateScales2HistoCurrent(svg, svgChild);
+  update2HistoStack(svg, svgChild);
+
+}

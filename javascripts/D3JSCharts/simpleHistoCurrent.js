@@ -592,6 +592,9 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
 
     svg.selection = selecEnter.merge(svg.selection);
 
+    selecEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
+
+
     svg.values.sort(sortValuesCurrent);
 
 
@@ -642,7 +645,6 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
 
         svg.values = svg.selection.data();
 
-        selecEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
 
         createTooltipHistoCurrent(svg,selecEnter,svg.sumMap);
 

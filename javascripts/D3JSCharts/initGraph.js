@@ -189,7 +189,7 @@ function whichCreationFunction(urlJson,svg){
 
     if(getParamUrlJson(urlJson,"pset") === "MINUTE"){
         svg.hasPopup = false;
-        
+
         switch(typeGraph){
             case "netTopLHostsTraffic":
             case "netTopLHostsNbFlow":
@@ -209,7 +209,7 @@ function whichCreationFunction(urlJson,svg){
             case "hostTopAsNbFlow":
             case "netTopAppNbFlow":
             case "hostTopAppNbFlow":
-                return createHistoDoubleCurrent;
+                return create2HistoStackCurrent;
 
             case "netTopServicesNbFlow":
             case "hostTopServicesNbFlow":

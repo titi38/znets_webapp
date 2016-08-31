@@ -20,9 +20,6 @@ function hideShowValuesCurrent(svg){
 
   svg.onClick = function(d){
 
-    if(svg.popup.pieChart !==null){
-      return;
-    }
 
     var clickedRow = d3.select(this);
 
@@ -52,10 +49,6 @@ function hideShowValuesCurrent(svg){
 
   svg.onContextMenu = function(d){
     d3.event.preventDefault();
-
-    if(svg.popup.pieChart !==null){
-      return;
-    }
 
     var clickedRow = d3.select(this);
 
@@ -176,8 +169,8 @@ function transitionRefreshSimpleCurrent(svg){
   totalSum.push(sum);
 
   svg.total = Math.max(1,d3.max(totalSum));
+  
   updateScalesSimpleCurrent(svg);
-
   updateHisto2DStackSimple(svg);
 
 

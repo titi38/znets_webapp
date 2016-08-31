@@ -188,6 +188,8 @@ function whichCreationFunction(urlJson,svg){
     svg.hasPopup = GraphsWithoutPopup.indexOf(typeGraph) === -1;
 
     if(getParamUrlJson(urlJson,"pset") === "MINUTE"){
+        svg.hasPopup = false;
+        
         switch(typeGraph){
             case "netTopLHostsTraffic":
             case "netTopLHostsNbFlow":
@@ -207,9 +209,11 @@ function whichCreationFunction(urlJson,svg){
             case "hostTopAsNbFlow":
             case "netTopAppNbFlow":
             case "hostTopAppNbFlow":
+                return createHistoDoubleCurrent;
+
             case "netTopServicesNbFlow":
             case "hostTopServicesNbFlow":
-                return createHistoDoubleCurrent;
+                return createHisto2DStackSimpleCurrent;
         }
     }
     

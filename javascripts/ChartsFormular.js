@@ -66,6 +66,27 @@ function applyChartsForm(){
     $("#timestepCharts").val() === "MINUTE" ? $(".minute_only").removeClass("hidden") : $(".minute_only").addClass("hidden") ;
     $("#timestepCharts").val() === "HOURLY" ? $(".hourly_only").removeClass("hidden") : $(".hourly_only").addClass("hidden") ;
 
+    // Change to default timeSlice
+
+    switch ( $("#timesliceCharts").val() )
+    {
+      case "lastHour":
+	$("#timestepCharts").val("MINUTE");
+        break;
+      case "lastDay":
+      case "lastWeek":
+        $("#timestepCharts").val("HOURLY");
+        break;
+      case "lastMonth"
+	$("#timestepCharts").val("DAILY");
+        break;
+      default:
+        $("#timestepCharts").val("HOURLY");
+    }
+
+
+    //
+
 
     $("#dateDebCharts").val($("#fromDate_ChartsForm").data("DateTimePicker").date().format('YYYY-MM-DD HH:mm'));
     $("#dateFinCharts").val($("#toDate_ChartsForm").data("DateTimePicker").date().format('YYYY-MM-DD HH:mm'));

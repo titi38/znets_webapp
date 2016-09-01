@@ -67,7 +67,7 @@ function applyChartsForm(){
     $("#timestepCharts").val() === "HOURLY" ? $(".hourly_only").removeClass("hidden") : $(".hourly_only").addClass("hidden") ;
 
     // Change to default timeSlice
-
+/*
     switch ( $("#timesliceCharts").val() )
     {
       case "lastHour":
@@ -83,7 +83,7 @@ function applyChartsForm(){
       default:
         $("#timestepCharts").val("HOURLY");
     }
-
+*/
 
     //
 

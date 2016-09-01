@@ -62,6 +62,7 @@ function applyChartsForm(){
 
     $("#preset_ChartsForm").val($("#timestepCharts").val());
 
+    $("#timestepCharts").val() === "MINUTE" ? $(".exceptFor_minute").addClass("hidden") : $(".minute_only").removeClass("hidden") ;
     $("#timestepCharts").val() === "MINUTE" ? $(".minute_only").removeClass("hidden") : $(".minute_only").addClass("hidden") ;
     $("#timestepCharts").val() === "HOURLY" ? $(".hourly_only").removeClass("hidden") : $(".hourly_only").addClass("hidden") ;
 

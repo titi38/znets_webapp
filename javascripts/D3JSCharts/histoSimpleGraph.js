@@ -565,10 +565,10 @@ function addZoomSimple(svg,updateFunction){
 
   //Scales to update the current view (if not already implemented for specific reasons)
   if(svg.newX == undefined){
-    svg.newX = d3.scale.linear().range(svg.x.range()).clamp(true).domain(svg.x.domain());
+    svg.newX = d3.scaleLinear().range(svg.x.range()).clamp(true).domain(svg.x.domain());
   }
   if(svg.newY == undefined) {
-    svg.newY = d3.scale.linear().range(svg.y.range()).clamp(true).domain(svg.y.domain());
+    svg.newY = d3.scaleLinear().range(svg.y.range()).clamp(true).domain(svg.y.domain());
   }
 
   //Selection rectangle for zooming (if not already implemented for better display control)

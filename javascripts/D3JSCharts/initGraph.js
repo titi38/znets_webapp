@@ -191,17 +191,20 @@ function whichCreationFunction(urlJson,svg){
         svg.hasPopup = false;
 
         switch(typeGraph){
-            case "netTopLHostsTraffic":
-            case "netTopLHostsNbFlow":
-            case "netTopHostsTraffic":
-            case "netTopServicesTraffic":
-            case "hostTopServicesTraffic":
+
             case "netTopAsTraffic":
             case "hostTopAsTraffic":
             case "netTopAppTraffic":
             case "hostTopAppTraffic":
             case "netTopCountryTraffic":
             case "hostTopCountryTraffic":
+            case "netTopHostsTraffic":
+            case "netTopServicesTraffic":
+            case "hostTopServicesTraffic":
+            case "netTopLHostsTraffic":
+                return createHistoDoubleCurrent;
+
+            case "netTopLHostsNbFlow":
             case "netTopHostsNbFlow":
             case "netTopCountryNbFlow":
             case "hostTopCountryNbFlow":

@@ -1,10 +1,19 @@
-
+/**
+ * Created by elie.
+ */
 
 
 
 /*********************************************************************************************************
- update Constructor
+ LastHourHistory Constructor
  ********************************************************************************************************/
+
+/**
+ * LastHourHistory Constructor. Keep automatically an one hour window of data from subscribed url to minimize traffic,
+ * then call designated function when new data from the server is available
+ * @param theWSEventNotifier
+ * @constructor
+ */
 
 function LastHourHistory(theWSEventNotifier) {
 
@@ -19,6 +28,7 @@ function LastHourHistory(theWSEventNotifier) {
     theWSEventNotifier.addCallback("notify", "date_processing", function (param) {onNotification(param)});
 
   };
+
 
   this.init = function()
   {
@@ -171,8 +181,6 @@ function LastHourHistory(theWSEventNotifier) {
           callbackObj.lastMinute = (lastMinute === -1)?-1:jsonCurrentMinute;
 
 
-          //TODO virer
-          console.log("envoi callback id: " + callbackObj.id);
 
           try {
             callbackObj.callback(response, new Date(param.date));
@@ -191,6 +199,15 @@ function LastHourHistory(theWSEventNotifier) {
 
   }
 
+  /**
+   * Subscribes to the websocket notifier to receive actualized data.
+   * @param urlRequest {String} The url string without the minute parameter.
+   * @param callback {Function} The function to call with new data. Should allow two parameters, the first one
+   * being the Json object wich contains the data, the second the Javascript Date being the date of the notification.
+   * @param lastMinute {Number} From 0 to 59, it's the minute of the last obtained data. -1 to request only the last
+   *                                                                        minute even if there is a gap between data.
+   * @returns {Number} The id of the subscription.
+   */
 
   this.addMinuteRequest = function(urlRequest, callback, lastMinute){
 
@@ -208,6 +225,13 @@ function LastHourHistory(theWSEventNotifier) {
     return id;
 
   };
+
+  /**
+   * Function to unsubscribe from a request.
+   * @param urlRequest {String} The subscribed request.
+   * @param id {Number} The id of the subscription.
+   * @returns {Boolean} True if it has the requested subscription, false otherwise.
+   */
 
   this.unsubscribe = function(urlRequest, id){
     var r = mapRequestsOnNewMinute.get(urlRequest);
@@ -227,6 +251,12 @@ function LastHourHistory(theWSEventNotifier) {
   };
 
 
+  /**
+   * To request the recorded last hour from the websocket.
+   * @param urlRequest {String} The url of the request.
+   * @param callback {Function} a function which is called with the result if the data has been received from the server,
+   * and with false otherwise if any error occurred.
+   */
 
   this.getLastHour = function(urlRequest, callback){
 
@@ -250,7 +280,6 @@ function LastHourHistory(theWSEventNotifier) {
       });
     }
   };
-
 
   function oldestMinute(a,b){
 

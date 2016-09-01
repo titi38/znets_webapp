@@ -1,3 +1,15 @@
+/**
+ * Created by elie.
+ */
+
+
+/**
+ * Create one stacked histogram, with zoom, resize, transition and popup features.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 
@@ -433,9 +445,10 @@ function createHisto2DStackSimple(div,svg,mydiv, urlJson){
 }
 
 
-
-
-/***********************************************************************************************************/
+/**
+ * Effectively redraws the stacked histogram on call.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 
 
@@ -471,8 +484,11 @@ function updateHisto2DStackSimple(svg){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Computes internal variables after a modification then redraws the stacked histogram accordingly.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ */
 
 function redrawHisto2DStackSimple(div,svg){
   var clientRect = div.node().getBoundingClientRect();
@@ -530,38 +546,11 @@ function redrawHisto2DStackSimple(div,svg){
 }
 
 
-
-
-
-/*****************************************************************************
-
- To be functional, the method addZoom has several requirements:
-
- -svg.svg refers to an svg element that contains all the chart elements (and possibly more),
- addZoom will listen to it.
-
- -svg.frame is used to capture the position of the mouse in the chart
- viewport without offset, if the transform translate/scale way is implemented,
- svg.frame should refers to a g element superposed on the g containing the chart
- itself.
-
- -svg.y & svg.x, the initial scales used for drawing the chart.
-
- Some other elements will be implemented with standard parameters unless
- they already exist.
-
- svg.newX and svg.newY, the scales about to define the current altered
- view, implemented by default with clamping behavior enabled.
-
- svg.selec, the selection rectangle. It may be interesting
- to decide where it should be placed priorily, if you use the css transform
- function for example.
-
-
- Should work whichever the way scaling and translating are handled.
-
- *****************************************************************************/
-
+/**
+ * Add a zoom feature to a simple 2D graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param updateFunction {Function} The function that will be called to update the graph's view.
+ */
 
 
 function addZoomSimple(svg,updateFunction){
@@ -576,10 +565,10 @@ function addZoomSimple(svg,updateFunction){
 
   //Scales to update the current view (if not already implemented for specific reasons)
   if(svg.newX == undefined){
-    svg.newX = d3.scale.linear().range(svg.x.range()).clamp(true).domain(svg.x.domain());
+    svg.newX = d3.scaleLinear().range(svg.x.range()).clamp(true).domain(svg.x.domain());
   }
   if(svg.newY == undefined) {
-    svg.newY = d3.scale.linear().range(svg.y.range()).clamp(true).domain(svg.y.domain());
+    svg.newY = d3.scaleLinear().range(svg.y.range()).clamp(true).domain(svg.y.domain());
   }
 
   //Selection rectangle for zooming (if not already implemented for better display control)
@@ -812,7 +801,13 @@ function addZoomSimple(svg,updateFunction){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Allows the possibility to hide/show data inside a simple stacked histogram according their item value.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param trSelec {Object} D3 selection of tr elements from the legend's table.
+ * @param selection {Object} D3 selection of the rect elements that may be masked/displayed.
+ * @param xlength {Number} The maximal value + 1 a x property from the bound data can take.
+ */
 
 
 function hideShowValuesSimple(svg,trSelec,selection,xlength){

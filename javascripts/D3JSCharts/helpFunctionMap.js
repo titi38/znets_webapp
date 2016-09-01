@@ -1,4 +1,10 @@
 /**
+ * Created by elie.
+ */
+
+
+
+/**
  * Updates the legend's axes of the maps.
  * @param svg {Object} D3 encapsulated parent svg element.
  * @param inMin {Number} the least value (except 0) the ingoing data amount can take.

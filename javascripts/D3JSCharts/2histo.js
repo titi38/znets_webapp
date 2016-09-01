@@ -11,6 +11,7 @@
  * @param mydiv {String} Div identifier.
  * @param urlJson {String} Url to request the data to the server.
  */
+
 function create2HistoStack(div,svg,mydiv,urlJson){
 
   svg.margin = {left: 60, right: 60, top: 40, zero: 40, bottom: 40};

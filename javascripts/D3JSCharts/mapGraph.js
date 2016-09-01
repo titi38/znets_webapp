@@ -1,19 +1,18 @@
 
+/**
+ * Created by elie.
+ */
 
 
-//temporary definitions
-/************************************************************************************************************
- *
- * createMap
- *
- * @param div: the container div
- * @param svg: the root svg
- * @param urlJson: the url to get the world
- * @param mydiv: div name (string)
- *
- * Create a map with resize and zoom functionality
- *
- ***********************************************************************************************************/
+
+
+/**
+ * Draws a map of the world with zoom and resize feature
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the world map representation to the server.
+ */
 
 function createMap(div,svg,mydiv, urlJson){
 
@@ -178,26 +177,14 @@ function createMap(div,svg,mydiv, urlJson){
 }
 
 
-/************************************************************************************************************
- *
- * addResizeMap
- *
- * @param div: the container div
- * @param svg: the root svg
- * @param mydiv: div name (string)
- *
- * Add a listener to resize the map
- *
- * Needed:
- * svg.svg, the map container
- * svg.width,svg.width, the dimensions of svg.svg
- * svg.maps, a g element child of svg.svg containing the maps
- * svg.translate, svg.zoom, zoom functionalities provided by addZoomMap
- * svg.backgroundRect, the rect providing the sea color
- * svg.mapDefaultWidth, svg.mapDefaultHeight, the map dimensions when scale projection = 1
- *
- ***********************************************************************************************************/
 
+
+/**
+ * Add a resize features to a map graph.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ */
 
 function addResizeMap(div,svg,mydiv){
 
@@ -276,22 +263,10 @@ function addResizeMap(div,svg,mydiv){
 
 
 
-/************************************************************************************************************
- *
- * addZoomMap
- *
- * @param svg: the root svg.
- *
- * Add a listener allowing to zoom and translate the map
- *
- * Needed:
- * svg.svg, the map container
- * svg.width,svg.width, the dimensions of svg.svg
- * svg.maps, a g element child of svg.svg containing the maps
- * svg.strokeDash, the size and spacing of internal's borders strokes when the zoom scale = 1
- * svg.strokeWidth, the width of strokes when zoom scale = 1
- *
- ************************************************************************************************************/
+/**
+ * Add a zoom feature to a map graph.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 function addZoomMap(svg){
 

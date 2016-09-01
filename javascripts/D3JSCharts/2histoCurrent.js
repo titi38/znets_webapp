@@ -1,3 +1,17 @@
+/**
+ * Created by elie.
+ */
+
+
+/**
+ * Create two stacked histograms, one above the other, with zoom, resize, transition and popup features,
+ * which auto-updates to monitor all data in an one-hour window.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
+
 function create2HistoStackCurrent(div,svg,mydiv,urlJson){
 
 
@@ -94,6 +108,7 @@ function create2HistoStackCurrent(div,svg,mydiv,urlJson){
 
 
     svg.timeMin = svg.startDate.getTime();
+
     console.log(svg.timeMin);
 
     var processedDataArray = [];
@@ -159,7 +174,7 @@ function create2HistoStackCurrent(div,svg,mydiv,urlJson){
         x: elemJson[svg.contentXPositionValue],
         height: +elemJson[svg.contentAmountValue],
         heightRef: +elemJson[svg.contentAmountValue],
-        item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue],
+        item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue]+ "",
         direction: elemJson[svg.contentDirectionValue].toLowerCase()
       };
 
@@ -251,7 +266,7 @@ function create2HistoStackCurrent(div,svg,mydiv,urlJson){
     var selection = svg.selectAll(".data");
 
     //Tooltip creation
-    createTooltipHisto(svg,selection,svg.sumMap);
+    createTooltipHistoCurrent(svg,selection,svg.sumMap);
 
     
 
@@ -289,6 +304,7 @@ function create2HistoStackCurrent(div,svg,mydiv,urlJson){
       redraw2HistoStack( svg,svg.svgBottom,1,oldsvgwidth,oldsvgheightgraph);
       redrawPopup(div.overlay,svg);
 
+
     });
 
 
@@ -303,8 +319,216 @@ function create2HistoStackCurrent(div,svg,mydiv,urlJson){
 
      hideShowValuesDouble(svg, trSelec, selectionIn, selectionOut, svg.xMax);
      */
+
+
+    autoUpdate2HistoCurrent(svg, urlJson, div);
+
   });
 
+
+}
+
+
+
+
+function autoUpdate2HistoCurrent(svg,urlJson, div){
+
+
+  //The transition seems to really harm the performances of the computer when not 0 and tab inactive for too long.
+  //Maybe take a look at that someday to see if something can somehow be done...
+  svg.updateTransitionDuration = 0;
+
+  var onUpdate = false;
+
+  var responsesFIFOList = [];
+
+  //We suppose that urljson doesn't contain a minute parameter
+
+  var id = myLastHourHistory.addMinuteRequest(urlJson,
+    function(json, notifdate){
+
+      if(unsubscribeGraphIfInactive(id, urlJson, div)){
+        console.log("unsubscribe");
+        return;
+      }
+
+      responsesFIFOList.push([json, notifdate]);
+      console.log("update list responses");
+
+      if(onUpdate){
+        console.log("on Update");
+        return;
+      }
+
+      onUpdate = true;
+
+      var resp= responsesFIFOList.shift();
+      updateGraph(resp[0],resp[1]);
+
+    }
+    ,svg.lastMinute);
+
+
+  function updateGraph(json, notificationDate){
+
+
+    svg.svgTop.deactivationElems();
+    svg.svgBottom.deactivationElems();
+
+    var gapMinute = (notificationDate.getTime() - notificationDate.getTimezoneOffset() * 60000 - svg.startDate.getTime() - 3540000)/60000;
+    console.log(json);
+
+    svg.lastMinute = notificationDate.getMinutes();
+
+    svg.timeMin += gapMinute * 60000;
+    svg.startDate = new Date(svg.timeMin);
+    svg.svgTop.timeMin = svg.timeMin;
+    svg.svgBottom.timeMin = svg.timeMin;
+
+    var processedDataArray = [];
+
+    var jsonData = json.data;
+
+    processServices(jsonData,json.content,svg);
+
+    jsonData.forEach(function(minuteAndElems){
+
+      var position = trueModulo(minuteAndElems[0] - svg.lastMinute, 60)  + gapMinute + 59;
+
+      minuteAndElems[1].forEach(function(elem){
+
+        elem.push(position);
+        processedDataArray.push(elem);
+      });
+    });
+
+    jsonData = processedDataArray;
+
+    var dataLength = jsonData.length;
+
+    var sumMapBottomUpdate = new Map();
+    var sumMapTopUpdate = new Map();
+    var sumMapUpdate = new Map();
+
+    var valuesTopNew = [];
+    var valuesBottomNew = [];
+
+    var i, elemJson, elemToPush;
+
+    var itemType = json.content[svg.contentItemValue];
+
+    // Data are processed and sorted according to their direction.
+    for(i = 0; i < dataLength; i++){
+      elemJson = jsonData[i];
+
+      if(+elemJson[svg.contentAmountValue] === 0){
+        continue;
+      }
+
+      elemToPush = {
+        x: elemJson[svg.contentXPositionValue],
+        heightRef: +elemJson[svg.contentAmountValue],
+        item: ((elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue]) + "",
+        direction: elemJson[svg.contentDirectionValue].toLowerCase()
+      };
+
+
+
+      if(elemJson[svg.contentDirectionValue] === "IN"){
+        elemToPush.direction = "inc";
+
+
+        if(!svg.svgTop.mapPercentDisplay.has(elemToPush.item)){
+          svg.svgTop.mapPercentDisplay.set(elemToPush.item,{percentDisplay:1});
+        }
+
+        elemToPush.height = elemToPush.heightRef*svg.svgTop.mapPercentDisplay.get(elemToPush.item).percentDisplay;
+
+
+        mapElemToSumCurrent(sumMapTopUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+        valuesTopNew.push(elemToPush);
+
+      }else{
+
+
+        if(!svg.svgBottom.mapPercentDisplay.has(elemToPush.item)){
+          svg.svgBottom.mapPercentDisplay.set(elemToPush.item,{percentDisplay:1});
+        }
+
+        elemToPush.height = elemToPush.heightRef*svg.svgBottom.mapPercentDisplay.get(elemToPush.item).percentDisplay;
+
+
+
+        mapElemToSumCurrent(sumMapBottomUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+        valuesBottomNew.push(elemToPush)
+
+      }
+
+      mapElemToSumCurrent(sumMapUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
+
+    }
+
+    sumMapUpdate.forEach(function(value, key){
+
+      if(!svg.colorMap.has(key)){
+        svg.colorMap.set(key, svg.colorGenerator());
+      }
+
+    });
+
+    onAutoUpdate(svg, svg.svgTop,valuesTopNew, gapMinute, sumMapTopUpdate);
+    onAutoUpdate(svg, svg.svgBottom,valuesBottomNew, gapMinute, sumMapBottomUpdate);
+    
+    svg.transition("updateX").duration(svg.updateTransitionDuration).ease(d3.easeLinear).tween("",function(){
+
+        var lastT = 0;
+        var coef;
+        return function(t){
+
+          coef = (lastT - t)*gapMinute;
+
+          svg.svgBottom.values.forEach(function(elem){
+            elem.x = elem.x + coef;
+          });
+
+          svg.svgTop.values.forEach(function(elem){
+            elem.x = elem.x + coef;
+          });
+
+          lastT = t;
+
+          update2HistoStack(svg, svg.svgTop);
+          update2HistoStack(svg, svg.svgBottom);
+        }
+
+      })
+      .on("end",function(){
+
+        onEndAutoUpdate(svg, svg.svgTop, sumMapTopUpdate);
+        onEndAutoUpdate(svg, svg.svgBottom, sumMapBottomUpdate);
+
+
+        if(responsesFIFOList.length > 0){
+          var resp= responsesFIFOList.shift();
+          updateGraph(resp[0],resp[1]);
+        }else{
+          onUpdate = false;
+        }
+
+      });
+
+
+  }
+
+  /*
+
+   if(typeof arrayAutoUpdate === "undefined"){
+   arrayAutoUpdate =[[id, urlJson]]
+   }else{
+   arrayAutoUpdate.push([id, urlJson]);
+   }*/
+
+  console.log(id);
 
 }
 

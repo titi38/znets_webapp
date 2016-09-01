@@ -1,3 +1,15 @@
+/**
+ * Created by elie.
+ */
+
+/**
+ * Creates a double stacked histogram with zoom, resize, transition and popup features which auto-updates its values on
+ *                                                                                               websocket notification.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
@@ -74,7 +86,9 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     json = json.response;
     var jsonData = json.data;
     var jsonContent = json.content;
-
+    
+    processServices(jsonData,jsonContent,svg);
+    console.log(jsonContent);
 
     svg.contentItemValue = searchItemValue(jsonContent);
     svg.contentAmountValue = searchAmountValue(jsonContent);
@@ -179,7 +193,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
         x: elemJson[svg.contentXPositionValue],
         height: +elemJson[svg.contentAmountValue],
         heightRef: +elemJson[svg.contentAmountValue],
-        item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue],
+        item: ((elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue]) + "",
         direction: elemJson[svg.contentDirectionValue].toLowerCase()
       };
 
@@ -551,7 +565,14 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
 } //function end
 
-/***********************************************************************************************************************/
+
+
+/**
+ * Allows the graph to actualize its data on real-time by subscribing to a websocket.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param urlJson {String} Url to request the data to the server.
+ * @param div {Object} D3 encapsulated parent div element.
+ */
 
 function autoUpdateDoubleCurrent(svg,urlJson, div){
 
@@ -609,6 +630,8 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     var jsonData = json.data;
 
+    processServices(jsonData,json.content,svg);
+
     jsonData.forEach(function(minuteAndElems){
 
       var position = trueModulo(minuteAndElems[0] - svg.lastMinute, 60)  + gapMinute + 59;
@@ -646,7 +669,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
       elemToPush = {
         x: elemJson[svg.contentXPositionValue],
         heightRef: +elemJson[svg.contentAmountValue],
-        item: (elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue],
+        item: ((elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue]) + "",
         direction: elemJson[svg.contentDirectionValue].toLowerCase()
       };
 
@@ -790,6 +813,10 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     svg.selectionTop = selecTopEnter.merge(svg.selectionTop);
 
+    selecTopEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
+    selecBottomEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
+
+
     svg.valuesBottom.sort(sortValuesCurrent);
     svg.valuesTop.sort(sortValuesCurrent);
 
@@ -863,10 +890,6 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
         svg.selectionTop = svg.chartTop.selectAll(".data");
 
         svg.valuesTop = svg.selectionTop.data();
-
-        selecTopEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
-        selecBottomEnter.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
-
 
         createTooltipHistoCurrent(svg,selecTopEnter,svg.sumMap);
         createTooltipHistoCurrent(svg,selecBottomEnter, svg.sumMap);

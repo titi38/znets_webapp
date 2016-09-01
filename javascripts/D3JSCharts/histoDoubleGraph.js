@@ -1,3 +1,14 @@
+/**
+ * Created by elie.
+ */
+
+/**
+ * Creates a double stacked histogram with zoom, resize, transition and popup features.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
@@ -532,9 +543,14 @@ function createHisto2DStackDouble(div,svg,mydiv,urlJson){
 
 }
 
-
-/***********************************************************************************************************/
-
+/**
+ * Creates a double stacked histogram with zoom, resize, transition and popup features.
+ * This function differs from createHisto2DStackDouble in the json's format it receives from the server.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ * @param mydiv {String} Div identifier.
+ * @param urlJson {String} Url to request the data to the server.
+ */
 
 function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
@@ -1224,8 +1240,10 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
 }
 
-/***********************************************************************************************************/
-
+/**
+ * Effectively redraws the double stacked histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ */
 
 
 function updateHisto2DStackDouble(svg){
@@ -1269,8 +1287,12 @@ function updateHisto2DStackDouble(svg){
 }
 
 
-
-/************************************************************************************************************/
+/**
+ * Called when a resize occurs on the div parameter.
+ * Adjusts svg's internal variables before calling updateHisto2DStackDouble which effectively redraw the graph.
+ * @param div {Object} D3 encapsulated parent div element.
+ * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
+ */
 
 function redrawHisto2DStackDouble(div,svg){
 
@@ -1361,7 +1383,11 @@ function redrawHisto2DStackDouble(div,svg){
 }
 
 
-/***********************************************************************************************************/
+/**
+ * Add zoom feature to the stacked double histogram.
+ * @param svg {Object} D3 encapsulated parent svg element.
+ * @param updateFunction {Function} The function that will be called to update the view of the graph.
+ */
 
 
 function addZoomDouble(svg,updateFunction){

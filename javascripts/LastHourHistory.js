@@ -24,7 +24,6 @@ function LastHourHistory(theWSEventNotifier) {
   var mapResultLastMinute = new Map();
 
   this.onWSConnect = function(){
-    var _this = this;
     theWSEventNotifier.addCallback("notify", "date_processing", function (param) {onNotification(param)});
 
   };

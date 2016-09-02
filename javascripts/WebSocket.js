@@ -52,7 +52,7 @@ function WSEventNotifier(webSocketName)
             
             if(key in eventSuscribers){
                 for (var i = 0; i < eventSuscribers[key].length; i++) {
-                    console.error(eventSuscribers[key][i]);
+                    console.log(eventSuscribers[key][i]);
                     eventSuscribers[key][i](json.param);
                 }
             }
@@ -87,28 +87,36 @@ function WSEventNotifier(webSocketName)
         if(!eventSuscribers[type+':'+nom])
             eventSuscribers[type+':'+nom] = [];
         eventSuscribers[type+':'+nom].push(func);
-    }
+    };
 
 
 
     // Make the function wait until the connection is made...
     this.waitForSocketConnection = function(callback){
-        var _this = this;
-        setTimeout(
-            function (callback) {
+
+        console.log("wait for connection...");
+
+
+        function testConnection() {
+            setTimeout(function(){
+
                 if (webSocket.readyState === WebSocket.OPEN) {
-                    console.log("Connection is made")
-                    if(callback != null){
+                    console.log("Connection is made");
+                    if (callback != null) {
                         callback();
                     }
                     return;
-
-                } else {
-                    console.log("wait for connection...")
-                    _this.waitForSocketConnection(webSocket, callback);
                 }
 
+                testConnection();
+
+
             }, 5); // wait 5 milisecond for the connection...
+        }
+
+        testConnection();
+
+
     }
 
 }

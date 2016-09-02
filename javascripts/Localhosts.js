@@ -45,7 +45,7 @@ function Localhosts(theWSEventNotifier) {
     this.onWSConnect = function(){
         var _this = this;
         theWSEventNotifier.addCallback("notify", "date_processing", function () {
-            console.error("UPDATING LOCALHOST TaBLE !!!!");
+            console.log("UPDATING LOCALHOST TaBLE !!!!");
             _this.update();
         });
 

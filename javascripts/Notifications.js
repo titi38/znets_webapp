@@ -189,7 +189,7 @@ function addAjaxNotification(mesg, callBack) {
 */
         else
             if(mesg.request != null)
-                console.error(mesg.request);
+                console.log(mesg.request);
     //console.error("addAjaxNotification error (%i)", 104);
 
     }

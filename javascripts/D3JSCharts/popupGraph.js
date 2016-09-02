@@ -263,9 +263,9 @@ function addPopup(selection, div, svg , onCreationFunct, onSupprFunct) {
         console.log(arrayUrl);
 
         if(arrayUrl[1] !== "loc" && arrayUrl[1] !== "ext"){
-          createPopupButton(arrayUrl[0],arrayUrl[1], svg, svg.pieside, d,div.overlay);
+          createPopupButton(arrayUrl[0] + "&amount=" + d.height,arrayUrl[1] + "&amount=" + d.height, svg, svg.pieside, d,div.overlay);
         }else {
-          createPopupSimple(arrayUrl[0], svg, svg.pieside, d,div.overlay, arrayUrl[1]);
+          createPopupSimple(arrayUrl[0] + "&amount=" + d.height, svg, svg.pieside, d,div.overlay, arrayUrl[1]);
         }
 
       }, 500);

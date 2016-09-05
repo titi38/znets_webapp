@@ -39,6 +39,7 @@ function createChoroplethDirection(div, svg, mydiv, urlJson){
 
 function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
+
   svg.style("margin", "auto").classed("diagram",false).style("display","block");
 
   var colorBottomStart = "#ffff00", colorBottomEnd = "#ff0000";
@@ -51,10 +52,21 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   svg.margin.top = 20;
   svg.margin.bottom = 5;
 
+
+
   if(error || typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined"){
     noData(div,svg,mydiv,"error json conformity");
     return;
   }
+
+  var button = div.append("button").text("Switch to histogram").classed("buttonMap", true).remove();
+  div.node().insertBefore(button.node(), svg.node());
+
+  button.on("click",function(){
+    myLastHourHistory.unsubscribe(urlJson, svg.id);
+    drawChartFromInterface(urlJson, mydiv);
+
+  });
 
 
   json = json.response;
@@ -438,7 +450,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 function autoUpdateMapDirection(svg,urlJson){
   var duration = 800;
 
-  var id = myLastHourHistory.addMinuteRequest(urlJson,function(json){
+  svg.id = myLastHourHistory.addMinuteRequest(urlJson,function(json){
 
     console.log(json);
 
@@ -533,7 +545,7 @@ function autoUpdateMapDirection(svg,urlJson){
 
   },-1);
 
-  console.log(id);
+  console.log(svg.id);
 }
 
 

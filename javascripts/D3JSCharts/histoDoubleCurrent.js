@@ -41,6 +41,26 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
     //json ok, graph creation
 
+    if("netTopCountryTraffic" === svg.typeGraph || svg.typeGraph === "hostTopCountryTraffic"){
+      var button = div.append("button").text("Switch to map").classed("buttonMap", true).remove();
+      div.node().insertBefore(button.node(), svg.node());
+
+      button.on("click",function(){
+        cleanDiv(div,svg);
+        myLastHourHistory.unsubscribe(urlJson, svg.id);
+        var newSvg = svg.node().cloneNode(true);
+        div.node().replaceChild(newSvg,svg.node());
+        svg = d3.select(newSvg);
+        
+        svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
+        svg.urlJson = urlJson;
+
+
+        createChoroplethDirection(div,svg,mydiv,urlJson);
+
+      })
+    }
+
 
     //table for legend
     svg.tableWidth = 200;
@@ -587,10 +607,10 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
   //We suppose that urljson doesn't contain a minute parameter
 
-  var id = myLastHourHistory.addMinuteRequest(urlJson,
+  svg.id = myLastHourHistory.addMinuteRequest(urlJson,
     function(json, notifdate){
       
-      if(unsubscribeGraphIfInactive(id, urlJson, div)){
+      if(unsubscribeGraphIfInactive(svg.id, urlJson, div)){
         console.log("unsubscribe");
         return;
       }
@@ -935,6 +955,6 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
     arrayAutoUpdate.push([id, urlJson]);
   }*/
 
-  console.log(id);
+  console.log(svg.id);
 
 }

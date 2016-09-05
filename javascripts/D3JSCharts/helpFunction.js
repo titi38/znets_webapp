@@ -1682,3 +1682,39 @@ function idToProtocol(id){
 
   }
 }
+
+/**
+ * Ready the div before graph creation
+ * @param div {Object} D3 selection of the div.
+ * @param svg {Object} D3 selection of the parent svg.
+ */
+
+function cleanDiv(div, svg){
+
+  var svgNode = svg.node();
+
+
+  if(div.size() === 0){
+    return;
+  }
+  var divNode = div.node();
+  var divChild = divNode.firstChild;
+
+  while(divChild){
+
+    divNode.removeChild(divChild);
+    divChild = divNode.firstChild;
+
+  }
+  divNode.appendChild(svgNode);
+
+  var svgChild = svgNode.firstChild;
+
+  while(svgChild){
+
+    svgNode.removeChild(svgChild);
+    svgChild = svgNode.firstChild;
+
+  }
+
+}

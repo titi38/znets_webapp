@@ -76,32 +76,10 @@ function emptyChartContainer(jqueryElement) {
 function drawChartFromInterface(urlJson, mydiv) {
 
     var div = d3.select(mydiv);
-    var svg = div.select("svg").classed("diagram",true).classed("parentSvg",true);
-    var svgNode = svg.node();
+    var svg = div.select("svg").classed("diagram",true).classed("parentSvg",true)
+      .style("margin", "0 0 0 0").style("display","inline-block");
 
-    if(div.size() === 0){
-        return;
-    }
-    var divNode = div.node();
-    var divChild = divNode.firstChild;
-
-    while(divChild){
-
-        divNode.removeChild(divChild);
-        divChild = divNode.firstChild;
-
-    }
-    divNode.appendChild(svgNode);
-
-    var svgChild = svgNode.firstChild;
-
-    while(svgChild){
-
-        svgNode.removeChild(svgChild);
-        svgChild = svgNode.firstChild;
-
-    }
-
+    cleanDiv(div, svg);
 
 
     svg.on("contextmenu.preventDefault",function(){d3.event.preventDefault();});
@@ -109,6 +87,7 @@ function drawChartFromInterface(urlJson, mydiv) {
     svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
 
     svg.urlJson = urlJson;
+
 
     //TODO suppr
 
@@ -132,30 +111,8 @@ function drawChart(urlJson, mydiv) {
 
     var div = d3.select('#' + mydiv);
     var svg = div.select("svg").classed("diagram",true).classed("parentSvg",true);
-    var svgNode = svg.node();
 
-    if(div.size() === 0){
-        return;
-    }
-    var divNode = div.node();
-    var divChild = divNode.firstChild;
-
-    while(divChild){
-
-        divNode.removeChild(divChild);
-        divChild = divNode.firstChild;
-
-    }
-    divNode.appendChild(svgNode);
-
-    var svgChild = svgNode.firstChild;
-
-    while(svgChild){
-
-        svgNode.removeChild(svgChild);
-        svgChild = svgNode.firstChild;
-
-    }
+    cleanDiv(div, svg);
 
 
 

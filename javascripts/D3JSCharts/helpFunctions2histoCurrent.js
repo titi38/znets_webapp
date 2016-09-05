@@ -457,7 +457,7 @@ function onAutoUpdate(svg, svgChild, valuesNew, gapMinute, sumMapUpdate){
 
   svgChild.total = Math.max(svgChild.total,d3.max(totalUpdate));
 
-  removeValuesOnUpdate(svgChild,svgChild.values,sumMapUpdate,gapMinute);
+  removeValuesOnUpdate(svg,svgChild.values,sumMapUpdate,gapMinute);
 
   sumMapUpdate.forEach(function(value,key){
 

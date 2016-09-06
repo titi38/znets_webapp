@@ -48,10 +48,13 @@ function create2HistoStackCurrent(div,svg,mydiv,urlJson){
 
       button.on("click",function(){
         cleanDiv(div,svg);
+        d3.select(window).on("resize." + mydiv, null);
         myLastHourHistory.unsubscribe(urlJson, svg.id);
         var newSvg = svg.node().cloneNode(true);
         div.node().replaceChild(newSvg,svg.node());
         svg = d3.select(newSvg);
+        
+        lastSvg = svg;
 
         svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
         svg.urlJson = urlJson;

@@ -50,7 +50,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
   svg.margin.right = svg.margin.offsetLegend * 2 + svg.margin.legendWidth + 60;
   svg.margin.left = 5;
   svg.margin.top = 20;
-  svg.margin.bottom = 5;
+  svg.margin.bottom = 15;
 
 
 
@@ -71,7 +71,8 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
   json = json.response;
   var jsonContent = json.content;
-  var jsonData = json.data[0][1];
+  svg.jsonData = json.data;
+  var minuteArray;
 
   var itemValue = searchItemValue(jsonContent);
   var amountValue = searchAmountValue(jsonContent);
@@ -85,44 +86,77 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
     return;
   }
 
+
+
+  var elemAmount;
+  var elemItem;
+  var i;
+  for(i = svg.jsonData.length - 1; i >=0; i--){
+
+    minuteArray = svg.jsonData[i][1];
+
+    minuteArray.forEach(function(elem){
+
+      elemItem = elem[itemValue];
+      elemAmount = +elem[amountValue];
+
+      if(elemItem === "--" || elemItem === ""){
+        return;
+      }
+
+      switch(elem[directionValue]){
+
+        case "OUT":
+          if(svg.amountByCountryCodeBottom.has(elem[itemValue])){
+            svg.amountByCountryCodeBottom.set(elem[itemValue], elemAmount + svg.amountByCountryCodeBottom.get(elem[itemValue]));
+          }else{
+            svg.amountByCountryCodeBottom.set(elem[itemValue], elemAmount);
+          }
+
+          break;
+
+        case "IN":
+          if(svg.amountByCountryCodeTop.has(elem[itemValue])){
+            svg.amountByCountryCodeTop.set(elem[itemValue], elemAmount + svg.amountByCountryCodeTop.get(elem[itemValue]));
+          }else{
+            svg.amountByCountryCodeTop.set(elem[itemValue], elemAmount);
+          }
+          break;
+
+        default:
+          console.log("inconsistent direction value");
+          break;
+
+      }
+
+    });
+
+  }
+
+  console.log(svg.amountByCountryCodeTop);
+  console.log(svg.amountByCountryCodeBottom);
+
+
   var bottomMax = 0;
   var bottomMin = Infinity;
 
   var topMax = 0;
   var topMin = Infinity;
 
-  var elemAmount;
-  var elemItem;
-  jsonData.forEach(function(elem){
+  svg.amountByCountryCodeBottom.forEach(function(value){
 
-    elemItem = elem[itemValue];
-    elemAmount = +elem[amountValue];
-
-    if(elemItem === "--" || elemItem === ""){
-      return;
-    }
-
-    switch(elem[directionValue]){
-
-      case "OUT":
-        svg.amountByCountryCodeBottom.set(elem[itemValue], elemAmount);
-        bottomMax = Math.max(bottomMax, elemAmount);
-        bottomMin = Math.min(bottomMin, elemAmount);
-        break;
-
-      case "IN":
-        svg.amountByCountryCodeTop.set(elem[itemValue], elemAmount);
-        topMax = Math.max(topMax, elemAmount);
-        topMin = Math.min(topMin, elemAmount);
-        break;
-
-      default:
-        console.log("inconsistent direction value");
-        break;
-
-    }
+    bottomMax = Math.max(bottomMax,value);
+    bottomMin = Math.min(bottomMin,value);
 
   });
+
+  svg.amountByCountryCodeTop.forEach(function(value){
+
+    topMax = Math.max(topMax,value);
+    topMin = Math.min(topMin,value);
+
+  });
+
 
   if(svg.amountByCountryCodeBottom.size === 0){
     bottomMin = 0;
@@ -238,15 +272,15 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
 
 
-  svg.scaleLinearBottom = d3.scaleLinear().range([0,1]);
+  svg.scaleLogBottom = d3.scaleLog().range([0,1]);
   var colorInterpolatorBottom = d3.interpolateRgb(colorBottomStart,colorBottomEnd);
 
-  svg.scaleLinearTop = d3.scaleLinear().range([0,1]);
+  svg.scaleLogTop = d3.scaleLog().range([0,1]);
   var colorInterpolatorTop = d3.interpolateRgb(colorTopStart,colorTopEnd);
 
   //Axes
 
-  svg.scaleBottomDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
+  svg.scaleBottomDisplay = d3.scaleLog().range([svg.mapHeight,0]);
 
   svg.axisBottom = svg.append("g")
     .attr("class", "axisGraph");
@@ -259,7 +293,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
     .attr("transform", "rotate(90)");
 
 
-  svg.scaleTopDisplay = d3.scaleLinear().range([svg.mapHeight,0]);
+  svg.scaleTopDisplay = d3.scaleLog().range([svg.mapHeight,0]);
 
   svg.axisTop = svg.append("g").attr("class", "axisGraph");
 
@@ -288,7 +322,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
       return "#ffffff";
     }
 
-    return colorInterpolatorBottom(svg.scaleLinearBottom(value));
+    return colorInterpolatorBottom(svg.scaleLogBottom(value));
 
   };
 
@@ -300,7 +334,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
       return "#ffffff";
     }
 
-    return colorInterpolatorTop(svg.scaleLinearTop(value));
+    return colorInterpolatorTop(svg.scaleLogTop(value));
 
   };
 
@@ -459,25 +493,145 @@ function autoUpdateMapDirection(svg,urlJson){
       return;
     }
 
-    if(json.data[0][0] === svg.lastMinute){
-      console.log("same minute");
-      return;
-    }
-
+    var llm = svg.lastMinute;
+    var gapMinute = trueModulo(json.data[0][0] - svg.lastMinute, 60);
+    console.log(gapMinute);
     svg.lastMinute = json.data[0][0];
     var jsonContent = json.content;
-    var jsonData = json.data[0][1];
+    var jsonDataUpdate = json.data;
+
+
 
     var itemValue = searchItemValue(jsonContent);
     var amountValue = searchAmountValue(jsonContent);
     var directionValue = searchDirectionValue(jsonContent);
 
-    svg.amountByCountryCodeBottom = new Map();
-    svg.amountByCountryCodeTop = new Map();
 
     if(!(itemValue && amountValue && directionValue)){
       return;
     }
+
+
+
+    var elemAmount;
+    var elemItem;
+
+
+    // -
+
+      for(var i = svg.jsonData.length - 1; trueModulo(llm - svg.jsonData[i][0], 60) + gapMinute > 59; i --){
+
+        console.log(trueModulo(llm - svg.jsonData[i][0], 60) + gapMinute);
+
+        svg.jsonData[i][1].forEach(function(elem){
+
+          elemItem = elem[itemValue];
+          elemAmount = +elem[amountValue];
+
+          if(elemItem === "--" || elemItem === ""){
+            return;
+          }
+
+          console.log(elemItem);
+
+          switch(elem[directionValue]){
+
+            case "OUT":
+
+              var subtraction = svg.amountByCountryCodeBottom.get(elemItem) - elemAmount;
+
+              console.log(svg.amountByCountryCodeBottom.get(elemItem));
+
+              if(subtraction <= 0){
+
+                svg.amountByCountryCodeBottom.delete(elemItem);
+
+              }else{
+
+                svg.amountByCountryCodeBottom.set(elemItem, subtraction);
+
+              }
+
+
+
+              break;
+
+            case "IN":
+
+              subtraction = svg.amountByCountryCodeTop.get(elemItem) - elemAmount;
+
+              console.log(svg.amountByCountryCodeTop.get(elemItem));
+
+              if(subtraction <= 0){
+
+                svg.amountByCountryCodeTop.delete(elemItem);
+
+              }else{
+
+                svg.amountByCountryCodeTop.set(elemItem, subtraction);
+
+              }
+
+              break;
+
+          }
+
+        }); // end svg.jsonData[i][1].forEach
+
+        console.log(svg.jsonData.splice(i,1));
+
+      } // end main for loop
+
+    console.log(trueModulo(llm - svg.jsonData[i][0], 60) + gapMinute);
+
+    console.log(svg.jsonData.length);
+
+    // +
+    for(i = jsonDataUpdate.length - 1; i >= 0; i --){
+
+      jsonDataUpdate[i][1].forEach(function(elem){
+
+        elemItem = elem[itemValue];
+        elemAmount = +elem[amountValue];
+
+        if(elemItem === "--" || elemItem === ""){
+          return;
+        }
+
+        switch(elem[directionValue]){
+
+          case "OUT":
+            if(svg.amountByCountryCodeBottom.has(elemItem)){
+              svg.amountByCountryCodeBottom.set(elemItem, elemAmount + svg.amountByCountryCodeBottom.get(elem[itemValue]));
+            }else{
+              svg.amountByCountryCodeBottom.set(elemItem, elemAmount);
+            }
+
+            break;
+
+          case "IN":
+            if(svg.amountByCountryCodeTop.has(elemItem)){
+              svg.amountByCountryCodeTop.set(elemItem, elemAmount + svg.amountByCountryCodeTop.get(elem[itemValue]));
+            }else{
+              svg.amountByCountryCodeTop.set(elemItem, elemAmount);
+            }
+            break;
+
+          default:
+            console.log("inconsistent direction value");
+            break;
+
+        }
+
+      }); // end jsonDataUpdate forEach
+
+      svg.jsonData.unshift(jsonDataUpdate[i]);
+
+    } // end jsonDataUpdate main for loop
+
+
+    console.log(svg.jsonData);
+
 
     var bottomMax = 0;
     var bottomMin = Infinity;
@@ -485,40 +639,21 @@ function autoUpdateMapDirection(svg,urlJson){
     var topMax = 0;
     var topMin = Infinity;
 
-    var elemAmount;
-    var elemItem;
 
+    svg.amountByCountryCodeBottom.forEach(function(value){
 
-    jsonData.forEach(function(elem){
-
-      elemItem = elem[itemValue];
-      elemAmount = +elem[amountValue];
-
-      if(elemItem === "--" || elemItem === ""){
-        return;
-      }
-
-      switch(elem[directionValue]){
-
-        case "OUT":
-          svg.amountByCountryCodeBottom.set(elem[itemValue], elemAmount);
-          bottomMax = Math.max(bottomMax, elemAmount);
-          bottomMin = Math.min(bottomMin, elemAmount);
-          break;
-
-        case "IN":
-          svg.amountByCountryCodeTop.set(elem[itemValue], elemAmount);
-          topMax = Math.max(topMax, elemAmount);
-          topMin = Math.min(topMin, elemAmount);
-          break;
-
-        default:
-          console.warn("inconsistent direction value");
-          break;
-
-      }
+      bottomMax = Math.max(bottomMax,value);
+      bottomMin = Math.min(bottomMin,value);
 
     });
+
+    svg.amountByCountryCodeTop.forEach(function(value){
+
+      topMax = Math.max(topMax,value);
+      topMin = Math.min(topMin,value);
+
+    });
+
 
     if(svg.amountByCountryCodeBottom.size === 0){
       bottomMin = 0;
@@ -543,7 +678,7 @@ function autoUpdateMapDirection(svg,urlJson){
         return svg.scaleColorTop(d.id)})
       .select("title").text(svg.titleTop);
 
-  },-1);
+  },svg.lastMinute);
 
   console.log(svg.id);
 }

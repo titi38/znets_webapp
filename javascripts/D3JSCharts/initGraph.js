@@ -74,6 +74,14 @@ function emptyChartContainer(jqueryElement) {
  */
 
 function drawChartFromInterface(urlJson, mydiv) {
+    if(typeof lastDiv !== "undefined"){
+
+        d3.select(window).on("resize." + lastMyDiv, null);
+        var newSvg = lastSvg.node().cloneNode(true);
+        lastDiv.node().replaceChild(newSvg,lastSvg.node());
+
+        cleanDiv(lastDiv, lastSvg);
+    }
 
     var div = d3.select(mydiv);
     var svg = div.select("svg").classed("diagram",true).classed("parentSvg",true)
@@ -88,6 +96,9 @@ function drawChartFromInterface(urlJson, mydiv) {
 
     svg.urlJson = urlJson;
 
+    lastDiv = div;
+    lastSvg = svg;
+    lastMyDiv = mydiv;
 
     //TODO suppr
 

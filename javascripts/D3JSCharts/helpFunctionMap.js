@@ -17,39 +17,95 @@ function updateDataAxesMap(svg, inMin, inMax, outMin, outMax){
 
   var isBytes = svg.units === "Bytes";
 
-  var convertArray = quantityConvertUnit(outMax,isBytes);
+  if(isBytes){
 
-  svg.scaleTopDisplay.domain([outMin * convertArray[1], outMax * convertArray[1]]).nice();
 
-  svg.axisTop.attr('transform', 'translate('
-    + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
-      svg.margin.top] + ')');
+    var coef = 1000/1024;
 
-  svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay));
-  niceTicks(svg.axisTop);
 
-  svg.labelGradientTop.text(convertArray[0] + svg.units);
+    svg.scaleTopDisplay.domain([outMin * coef, outMax * coef]).nice();
 
-  var domain = svg.scaleTopDisplay.domain();
+    svg.axisTop.attr('transform', 'translate('
+      + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
+        svg.margin.top] + ')');
 
-  svg.scaleLinearTop.domain([domain[0]/convertArray[1],domain[1]/convertArray[1]]);
+    svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay).tickFormat(
+      function(d){
+        return svg.scaleTopDisplay.tickFormat(10,".0s")(d);
+      }));
+    //niceTicks(svg.axisTop);
 
-  convertArray = quantityConvertUnit(inMax,isBytes);
+    svg.labelGradientTop.text(svg.units);
 
-  svg.scaleBottomDisplay.domain([inMin * convertArray[1], inMax * convertArray[1]]).nice();
+    var domain = svg.scaleTopDisplay.domain();
 
-  svg.axisBottom.attr('transform', 'translate('
-    + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
-      svg.margin.top + svg.margin.zero + svg.mapHeight] + ')');
+    svg.scaleLogTop.domain([domain[0]/coef,domain[1]/coef]);
 
-  svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay));
-  niceTicks(svg.axisBottom);
 
-  svg.labelGradientBottom.text(convertArray[0] + svg.units);
+    svg.scaleBottomDisplay.domain([inMin* coef, inMax* coef]).nice();
 
-  domain = svg.scaleBottomDisplay.domain();
+    svg.axisBottom.attr('transform', 'translate('
+      + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
+        svg.margin.top + svg.margin.zero + svg.mapHeight] + ')');
 
-  svg.scaleLinearBottom.domain([domain[0]/convertArray[1],domain[1]/convertArray[1]]);
+    svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay).tickFormat(
+      function(d){
+        return svg.scaleBottomDisplay.tickFormat(10,".0s")(d);
+      }));
+    //niceTicks(svg.axisBottom);
+
+    svg.labelGradientBottom.text(svg.units);
+
+    domain = svg.scaleBottomDisplay.domain();
+
+    svg.scaleLogBottom.domain([domain[0]/coef,domain[1]/coef]);
+
+
+  }else{
+
+
+    svg.scaleTopDisplay.domain([outMin, outMax]).nice();
+
+    svg.axisTop.attr('transform', 'translate('
+      + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
+        svg.margin.top] + ')');
+
+    svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay).tickFormat(function(d){
+
+      return svg.scaleTopDisplay.tickFormat(10,".3")(d);
+
+    }));
+    //niceTicks(svg.axisTop);
+
+    svg.labelGradientTop.text(svg.units);
+
+    domain = svg.scaleTopDisplay.domain();
+
+    svg.scaleLogTop.domain([domain[0],domain[1]]);
+
+    convertArray = quantityConvertUnit(inMax,false);
+
+    svg.scaleBottomDisplay.domain([inMin, inMax]).nice();
+
+    svg.axisBottom.attr('transform', 'translate('
+      + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
+        svg.margin.top + svg.margin.zero + svg.mapHeight] + ')');
+
+    svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay).tickFormat(function(d){
+
+      return svg.scaleBottomDisplay.tickFormat(10,".3")(d);
+
+    }));
+    //niceTicks(svg.axisBottom);
+
+    svg.labelGradientBottom.text(svg.units);
+
+    domain = svg.scaleBottomDisplay.domain();
+
+    svg.scaleLogBottom.domain([domain[0],domain[1]]);
+
+  }
+
 
 }
 
@@ -66,8 +122,7 @@ function resizeAxesMap(svg){
     + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
       svg.margin.top] + ')');
 
-  svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay));
-  niceTicks(svg.axisTop);
+  //niceTicks(svg.axisTop);
 
   svg.labelGradientTop
     .attr("x",svg.margin.top + 0.5 * svg.mapHeight)
@@ -81,12 +136,38 @@ function resizeAxesMap(svg){
     + [svg.margin.left + svg.width + svg.margin.offsetLegend + svg.margin.legendWidth,
       svg.margin.top + svg.margin.zero + svg.mapHeight] + ')');
 
-  svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay));
-  niceTicks(svg.axisBottom);
+  //niceTicks(svg.axisBottom);
 
   svg.labelGradientBottom
     .attr("x",svg.margin.top + 1.5 * svg.mapHeight + svg.margin.zero)
     .attr("y",-svg.margin.left - svg.width - svg.margin.right);
+
+  if(svg.units === "Bytes"){
+
+    svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay).tickFormat(
+      function(d){
+        return svg.scaleBottomDisplay.tickFormat(10,".0s")(d);
+      }));
+
+    svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay).tickFormat(
+      function(d){
+        return svg.scaleTopDisplay.tickFormat(10,".0s")(d);
+      }));
+
+  }else{
+    svg.axisBottom.call(d3.axisRight(svg.scaleBottomDisplay).tickFormat(function(d){
+
+      return svg.scaleBottomDisplay.tickFormat(10,".3")(d);
+
+    }));
+    svg.axisTop.call(d3.axisRight(svg.scaleTopDisplay).tickFormat(function(d){
+
+      return svg.scaleTopDisplay.tickFormat(10,".3")(d);
+
+    }));
+
+
+  }
 }
 
 
@@ -126,7 +207,7 @@ function mapCountryTitleBottom(svg){
 
     var amount = (svg.amountByCountryCodeBottom.has(d.id)?svg.amountByCountryCodeBottom.get(d.id):0);
 
-    var cvA = quantityConvertUnit(amount, true);
+    var cvA = quantityConvertUnit(amount, isBytes);
 
     return d.properties.name + "\n"
       + Math.round(amount*cvA[1]*100)/100 + " " + cvA[0] + svg.units + "\n" + "(" + amount + " " + svg.units + ")";

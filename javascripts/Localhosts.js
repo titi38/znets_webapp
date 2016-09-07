@@ -165,15 +165,13 @@ function Localhosts(theWSEventNotifier) {
                         var os_icon = "";
 
                         if(data.indexOf("Windows") > -1)
-                            os_icon = "<img src='../../images/win_icon.png' height='20px' title='Windows' alt='Windows'/> ";
+                            os_icon = "<img src='../../images/win_icon.png' height='20px' title='Windows' alt='Microsoft'/> ";
                         else if(data.indexOf("Linux") > -1)
                             os_icon = "<img src='../../images/unix_icon.png' height='20px' title='Linux' alt='Linux'/> ";
                         else if(data.indexOf("Android") > -1)
-                            os_icon = "<img src='../../images/android_icon.png' height='20px' title='Android' alt='Android'/> ";
-                        else if( data.indexOf("Mac") > -1 )
-                            os_icon = "<img src='../../images/mac_icon.png' height='20px' title='Mac' alt='Mac'/> ";
-                        else if( data.indexOf("iPhone") > -1 )
-                            os_icon = "<img src='../../images/mac_icon.png' height='20px' title='Iphone' alt='Iphone'/> ";
+                            os_icon = "<img src='../../images/android_icon.png' height='20px' title='Android' alt='Google Android'/> ";
+                        else if(( data.indexOf("Mac") > -1 ) || ( data.indexOf("iPhone") > -1 ))
+                            os_icon = "<img src='../../images/mac_icon.png' height='20px' title='Iphone' alt='Apple'/> ";
 
                         return os_icon + data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );
 

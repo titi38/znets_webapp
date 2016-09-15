@@ -767,6 +767,8 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     });
 
 
+    
+    timerupdate(urlJson,mydiv);
     //autoUpdateDoubleCurrentFormatVariation(svg,urlJson, div);
 
   }); //d3.json end
@@ -782,8 +784,29 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
 function timerupdate(urlJson, mydiv){
 
-  drawChartFromInterface(urlJson,mydiv);
-
+  var df = getParamUrlJson(urlJson,"df");
+  var dh = getParamUrlJson(urlJson, "dh");
+  urlJson = removeParamUrl(urlJson,"df");
+  var array = df.split("%3A");
+  df = array[0] + ":" + array[1] + ":00";
+  array = df.split("+");
+  df = array[0] + " " + array[1];
+  var date = new Date(df);
+  if(Math.abs(date.getTime() - myLastHourHistory.getCurrentMinute().getTime() - dh*3600000) > 15*60000){
+    return;
+  }
+  date = new Date(date.getTime() + 3600000 + dh*3600000);
+  df = date.toISOString();
+  df = df.substring(0,16);
+  array = df.split("T");
+  df = array[0] + "+" + array[1];
+  array = df.split(":");
+  df = array[0] + "%3A" + array[1];
+  urlJson = urlJson + "&df=" + df;
+  console.log("hello")
+  setTimeout(function(){
+    drawChartFromInterface(urlJson,mydiv);
+  },60000);
 }
 
 

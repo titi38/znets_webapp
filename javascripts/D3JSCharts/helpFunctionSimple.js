@@ -102,8 +102,17 @@ function axisXNiceLegend(svg){
     return;
   }
 
-  var distTick = Math.abs(selecticks._groups[0][0].getAttribute("transform").split(/[,)(]+/)[1]
-    - selecticks._groups[0][1].getAttribute("transform").split(/[,)(]+/)[1]);
+  var array = [];
+  selecticks._groups[0].forEach(function(elem){
+    array.push(elem);
+  });
+
+  array.sort(function(a,b){
+    return a.__data__ - b.__data__;
+  });
+
+  var distTick = Math.abs(array[0].getAttribute("transform").split(/[,)(]+/)[1]
+    - array[1].getAttribute("transform").split(/[,)(]+/)[1]);
 
   var old = - Infinity, current;
   var max = distTick/2;
@@ -125,13 +134,11 @@ function axisXNiceLegend(svg){
 
   var dec = Math.ceil(nb/2);
 
-  selecticks.each(function(d,i){
-      if((i + dec)%nb !== 0){
-        this.remove();
-      }
-
-  });
-
+  for (var i=0; i<selecsize;i++) {
+    if ((i + dec) % nb !== 0) {
+      array[i].remove();
+    }
+  }
 
 }
 

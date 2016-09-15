@@ -12,16 +12,25 @@ function niceTicks(axis) {
   var selectick = axis.selectAll(".tick");
   var selecsize = selectick.size();
 
+  var array = [];
+  selectick._groups[0].forEach(function(elem){
+    array.push(elem);
+  });
+
+  array.sort(function(a,b){
+    return a.__data__ - b.__data__;
+  });
+
   if(selecsize >1){
-    var distTick = Math.abs(selectick._groups[0][0].getAttribute("transform").split(/[,)(]+/)[2]
-      - selectick._groups[0][1].getAttribute("transform").split(/[,)(]+/)[2]);
-    var fontsize = parseFloat(getComputedStyle(selectick._groups[0][0]).fontSize);
+    var distTick = Math.abs(array[0].getAttribute("transform").split(/[,)(]+/)[2] -
+    array[1].getAttribute("transform").split(/[,)(]+/)[2]);
+    var fontsize = parseFloat(getComputedStyle(array[0]).fontSize);
     var nb = Math.ceil(fontsize/distTick);
     if (nb>1){
       var dec = Math.floor(nb/2);
       for (var i=0; i<selecsize;i++){
         if((i + dec)%nb !==0){
-          selectick._groups[0][i].remove();
+          array[i].remove();
         }
       }
     }

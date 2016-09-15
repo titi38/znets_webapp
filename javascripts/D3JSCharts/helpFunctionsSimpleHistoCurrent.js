@@ -94,6 +94,7 @@ function hideShowValuesCurrent(svg){
 
 
 function createTransitionSimpleCurrent(svg, duration){
+  svg.interrupt("hideshow");
   svg.transition("hideshow").duration(duration)
     .tween("",function(){
       var arrayUpdate = [];
@@ -114,6 +115,15 @@ function createTransitionSimpleCurrent(svg, duration){
 
         transitionRefreshSimpleCurrent(svg);
       }
+
+    })
+    .on("end", function(){
+
+      svg.mapPercentDisplay.forEach(function(value, key){
+        value.percentDisplay = svg.hiddenValues.indexOf(key) === -1?1:0;
+      });
+
+      transitionRefreshSimpleCurrent(svg);
 
     });
 }

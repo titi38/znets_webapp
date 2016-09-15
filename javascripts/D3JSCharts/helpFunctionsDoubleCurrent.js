@@ -68,7 +68,9 @@ function updateSumArray( sumArray, sumMapUpdate,hiddenValuesArray,mapPercentDisp
 
 
   for (var i = sumArray.length - 1; i >= 0; i--) {
-    if (sumArray[i].sum <= 0) {
+
+    //remove item
+    if (sumArray[i].sum === 0) {
 
       var index = hiddenValuesArray.indexOf(sumArray[i].item);
       if (index !== -1) {
@@ -540,6 +542,7 @@ function unsubscribeGraphIfInactive(id, urljson, div){
 
 
 function createTransitionDirection(svg, direction, duration, mapDisplayString,hiddenValuesStr){
+  svg.interrupt("hideshow" + direction);
   svg.transition("hideshow" + direction).duration(duration)
     .tween("",function(){
       var arrayUpdate = [];
@@ -560,6 +563,17 @@ function createTransitionDirection(svg, direction, duration, mapDisplayString,hi
 
         transitionRefresh(svg, direction);
       }
+
+    })
+    .on("end",function(){
+
+      svg[mapDisplayString].forEach(function(value, key){
+
+        value.percentDisplay = (svg[hiddenValuesStr].indexOf(key) === -1?1:0);
+
+      });
+      
+      transitionRefresh(svg,direction);
 
     });
 }

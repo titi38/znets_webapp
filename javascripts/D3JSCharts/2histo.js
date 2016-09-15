@@ -14,6 +14,9 @@
 
 function create2HistoStack(div,svg,mydiv,urlJson){
 
+  console.log(div);
+  console.log(mydiv);
+
   svg.margin = {left: 60, right: 60, top: 40, zero: 40, bottom: 40};
   d3.json(urlJson, function (error, json) {
 

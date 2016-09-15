@@ -1,27 +1,12 @@
 /**
- * Created by elie.
+ * Created by elie on 07/09/16.
  */
 
-/**
- * Creates a double stacked histogram with zoom, resize, transition and popup features which auto-updates its values on
- *                                                                                               websocket notification.
- * @param div {Object} D3 encapsulated parent div element.
- * @param svg {Object} D3 encapsulated parent svg element, direct child of div parameter.
- * @param mydiv {String} Div identifier.
- * @param urlJson {String} Url to request the data to the server.
- */
+function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
-function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
+  console.log(urlJson);
 
-  var effectiveUrlJson = urlJson;
-  //some non-exhaustive tests on urlJson
-  if(effectiveUrlJson.indexOf('?') === -1){
-    effectiveUrlJson = effectiveUrlJson + "?minute=60";
-  }else if(effectiveUrlJson.indexOf("minute") === -1){
-    effectiveUrlJson = effectiveUrlJson + "&minute=60";
-  }
-
-  d3.json(effectiveUrlJson, function (error, json) {
+  d3.json(urlJson, function (error, json) {
 
     setStartDate(svg);
 
@@ -109,7 +94,8 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     json = json.response;
     var jsonData = json.data;
     var jsonContent = json.content;
-    
+
+    /*
     processServices(jsonData,jsonContent,svg);
     console.log(jsonContent);
 
@@ -156,7 +142,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     console.log(svg.timeMin);
 
     var processedDataArray = [];
-    
+
 
     jsonData.forEach(function(minuteAndElems){
       var position = trueModulo(minuteAndElems[0] - svg.lastMinute - 1, 60);
@@ -172,7 +158,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     svg.contentXPositionValue = jsonContent.length;
 
     jsonData = processedDataArray;
-    
+
 
 
 
@@ -222,7 +208,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
 
       mapElemToSumCurrent(svg.sumMap, elemToPush, elemJson, svg.contentDisplayValue,itemType);
-      
+
       if(elemJson[svg.contentDirectionValue] === "IN"){
         elemToPush.direction = "inc";
 
@@ -238,6 +224,201 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
 
 
     }
+*/
+
+
+
+
+
+
+    //step = 1 hour by default
+    svg.step = 60000;
+
+    var contentDateValue = searchDateValue(jsonContent);
+
+    //if no date value found, the graph can't be done.
+    if(contentDateValue === false){
+      noData(div,svg,mydiv,"error no date found");
+      return;
+    }
+
+
+    if(json.units){
+      svg.units = unitsStringProcessing(json.units);
+    }else{
+      svg.units = "";
+    }
+
+    console.log(json);
+
+
+
+    svg.valuesBottom = [];
+    svg.valuesTop = [];
+
+    var dataLength = jsonData.length;
+    var contentLength = jsonContent.length;
+
+
+
+
+    //More useful jsonContent. 0: item / 1: direction
+    for(i = 0; i < contentLength; i++){
+
+      if(i === contentDateValue){
+        continue;
+      }
+
+      var tempArrayName = jsonContent[i].split("_");
+
+      if(tempArrayName[tempArrayName.length - 1] === ""){
+        tempArrayName.splice(tempArrayName.length - 1, 1);
+      }
+
+      var strName = tempArrayName[0];
+
+      for(var w = 1; w < tempArrayName.length - 1; w++){
+
+        strName = strName + " " + tempArrayName[w];
+
+      }
+
+      jsonContent[i] = [strName, tempArrayName[tempArrayName.length-1]];
+
+      if(svg.units !== "hosts"){
+
+        jsonContent[i][0] = jsonContent[i][0].toUpperCase();
+
+      }
+
+
+    }
+
+    console.log(jsonContent);
+
+
+    svg.colorMap = new Map();
+    svg.sumMap = new Map();
+    var sumMapBottom = new Map();
+    var sumMapTop = new Map();
+
+    var i,j,k, elemJson, elemToPush, elemSumMap,timeElem;
+    svg.timeMin = Infinity;
+    var timeMax = 0;
+
+
+    svg.hourShift = getTimeShift(urlJson)  * 3600000;
+
+
+
+    // Data are processed and sorted according to their direction.
+
+    if(svg.step === 60000){
+
+      if(jsonData[dataLength - 1][0][0] === "current"){
+        jsonData[0].push(jsonData[1][0]);
+        jsonData = jsonData[0];
+        dataLength = jsonData.length;
+      }
+
+      var dateCurrent = getDateCurrent(urlJson);
+
+      var elemAmountMinuteArray, elemAmountMinuteArrayLength;
+
+      for(i = 0; i < dataLength; i++){
+        elemJson = jsonData[i];
+
+        for(j = 0; j < contentLength; j++){
+
+          if(j === contentDateValue){
+            continue;
+          }
+
+          elemAmountMinuteArray = elemJson[j];
+
+          if(elemJson[contentDateValue] !== "current"){
+            timeElem = (new Date(elemJson[contentDateValue])).getTime() - 3600000  + svg.hourShift;
+          }
+          else{
+            timeElem = dateCurrent.getTime();
+          }
+
+          console.log(elemAmountMinuteArray);
+          elemAmountMinuteArrayLength = elemAmountMinuteArray.length;
+
+          for(k = 0; k < elemAmountMinuteArrayLength; k++) {
+
+            if(+elemAmountMinuteArray[k] === 0 || !elemAmountMinuteArray[k]){
+              continue;
+            }
+
+            elemToPush = {
+              //we add the correct minutes according to the position k
+              //of the element in the array
+              x: timeElem + k*svg.step,
+              height: +elemAmountMinuteArray[k],
+              heightRef: +elemAmountMinuteArray[k],
+              item: jsonContent[j][0],
+              direction: jsonContent[j][1]
+            };
+
+            // .display kept, can have an use someday
+            if (!svg.sumMap.has(elemToPush.item)) {
+              svg.sumMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+            } else {
+              elemSumMap = svg.sumMap.get(elemToPush.item);
+              elemSumMap.sum += elemToPush.height;
+            }
+
+            svg.timeMin = Math.min(svg.timeMin, elemToPush.x);
+            timeMax = Math.max(timeMax, elemToPush.x);
+
+            if (elemToPush.direction === "in" || elemToPush.direction === "inc") {
+              elemToPush.direction = "inc";
+
+
+              if (!sumMapTop.has(elemToPush.item)) {
+                sumMapTop.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+              } else {
+                elemSumMap = sumMapTop.get(elemToPush.item);
+                elemSumMap.sum += elemToPush.height;
+              }
+
+              svg.valuesTop.push(elemToPush);
+
+            } else {
+
+
+              if (!sumMapBottom.has(elemToPush.item)) {
+                sumMapBottom.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
+              } else {
+                elemSumMap = sumMapBottom.get(elemToPush.item);
+                elemSumMap.sum += elemToPush.height;
+              }
+
+
+              svg.valuesBottom.push(elemToPush)
+
+            }
+
+          }
+
+
+        }
+
+
+      }
+
+
+
+
+    }
+
+
+    if(svg.timeMin === Infinity){
+      svg.timeMin = 0;
+    }
+
 
 
     //
@@ -278,11 +459,16 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     }
 
 
+    svg.valuesBottom.forEach(function(elem){
+      elem.x = (elem.x - svg.timeMin)/svg.step
+    });
+
+    svg.valuesTop.forEach(function(elem){
+      elem.x = (elem.x - svg.timeMin)/svg.step
+    });
 
 
-    //step = 1 minute (real time)
-    svg.step = 60000;
-    
+
 
     svg.valuesBottom.sort(sortValuesCurrent);
     svg.valuesTop.sort(sortValuesCurrent);
@@ -293,12 +479,12 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     svg.valuesTopSCAlphabetSort = svg.valuesTop.concat();
     svg.valuesTopSCAlphabetSort.sort(sortAlphabetItemOnly);
 
-    
-    var xMax = 60;
+
+    svg.xMax = (timeMax - svg.timeMin)/svg.step + 1;
 
 
     //Evaluation of the abscissa domain
-    svg.x.domain([-0.625, xMax - 0.375]);
+    svg.x.domain([-0.625, svg.xMax - 0.375]);
 
     var totalSumBottom = [];
     var totalSumTop = [];
@@ -307,7 +493,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     var sum = 0;
     i = 0;
 
-    while (x < xMax) {
+    while (x < svg.xMax) {
 
       while (i < svg.valuesBottom.length && svg.valuesBottom[i].x == x) {
         svg.valuesBottom[i].y = sum;
@@ -322,7 +508,7 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     x = 0;
     i = 0;
 
-    while (x < xMax) {
+    while (x < svg.xMax) {
 
       while (i < svg.valuesTop.length && svg.valuesTop[i].x == x) {
         sum += svg.valuesTop[i].height;
@@ -581,13 +767,24 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
     });
 
 
-    autoUpdateDoubleCurrent(svg,urlJson, div);
+    //autoUpdateDoubleCurrentFormatVariation(svg,urlJson, div);
 
   }); //d3.json end
 
 
 } //function end
 
+
+
+
+
+
+
+function timerupdate(urlJson, mydiv){
+
+  drawChartFromInterface(urlJson,mydiv);
+
+}
 
 
 /**
@@ -597,52 +794,40 @@ function createHistoDoubleCurrent(div,svg,mydiv,urlJson){
  * @param div {Object} D3 encapsulated parent div element.
  */
 
-function autoUpdateDoubleCurrent(svg,urlJson, div){
+function autoUpdateDoubleCurrentFormatVariation(svg,urlJson, div){
 
 
   //The transition seems to really harm the performances of the computer when not 0 and tab inactive for too long.
   //Maybe take a look at that someday to see if something can somehow be done...
-  svg.updateTransitionDuration = 2000;
+  svg.updateTransitionDuration = 0;
 
+  var onUpdate = false;
 
-  var responseUpdate = [];
-
-  var isInUpdate = false;
+  var responsesFIFOList = [];
 
   //We suppose that urljson doesn't contain a minute parameter
 
   svg.id = myLastHourHistory.addMinuteRequest(urlJson,
     function(json, notifdate){
-      
+
       if(unsubscribeGraphIfInactive(svg.id, urlJson, div)){
         console.log("unsubscribe");
         return;
       }
 
-      if(responseUpdate.length === 0){
-        responseUpdate = [json, notifdate];
-      }else{
-        console.log("data queued");
-        responseUpdate[0].data = json.data.concat(responseUpdate[0].data);
-        responseUpdate[0].data.splice(60,responseUpdate[0].data.length - 60);
-        responseUpdate[1] = notifdate;
-      }
-
-      console.log(responseUpdate);
+      responsesFIFOList.push([json, notifdate]);
       console.log("update list responses");
 
-
-
-
-      if(isInUpdate){
+      if(onUpdate){
+        console.log("on Update");
         return;
       }
 
-      isInUpdate = true;
+      onUpdate = true;
 
-      var resp = responseUpdate;
-      responseUpdate = [];
+      var resp= responsesFIFOList.shift();
       updateGraph(resp[0],resp[1]);
+
     }
     ,svg.lastMinute);
 
@@ -657,7 +842,8 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     svg.lastMinute = notificationDate.getMinutes();
 
-
+    svg.timeMin += gapMinute * 60000;
+    svg.startDate = new Date(svg.timeMin);
 
 
     var processedDataArray = [];
@@ -668,9 +854,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     jsonData.forEach(function(minuteAndElems){
 
-      var position =  gapMinute + 59 - trueModulo(svg.lastMinute - minuteAndElems[0], 60) ;
-
-      console.log("position " + position);
+      var position = trueModulo(minuteAndElems[0] - svg.lastMinute, 60)  + gapMinute + 59;
 
       minuteAndElems[1].forEach(function(elem){
 
@@ -678,8 +862,6 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
         processedDataArray.push(elem);
       });
     });
-
-    console.log(processedDataArray);
 
     jsonData = processedDataArray;
 
@@ -746,7 +928,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
       mapElemToSumCurrent(sumMapUpdate, elemToPush, elemJson, svg.contentDisplayValue,itemType);
 
     }
-    
+
     sumMapUpdate.forEach(function(value, key){
 
       if(!svg.colorMap.has(key)){
@@ -758,7 +940,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     valuesTopNew.sort(sortValuesCurrent);
     valuesBottomNew.sort(sortValuesCurrent);
-    
+
     var totalSumBottomUpdate = [];
     var totalSumTopUpdate = [];
 
@@ -780,7 +962,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
       sum = 0;
       x++;
     }
-    
+
     x = 60;
     i = 0;
 
@@ -798,7 +980,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
     svg.totalBottom = Math.max(svg.totalBottom,d3.max(totalSumBottomUpdate));
     svg.totalTop = Math.max(svg.totalTop,d3.max(totalSumTopUpdate));
-    
+
 
     console.log(valuesTopNew);
     console.log(valuesBottomNew);
@@ -869,26 +1051,18 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
     svg.transition("updateX").duration(svg.updateTransitionDuration).ease(d3.easeLinear).tween("",function(){
 
         var lastT = 0;
-        var coef, coef2,newXDomain;
+        var coef;
         return function(t){
 
           coef = (lastT - t)*gapMinute;
 
-          /*
           svg.valuesBottom.forEach(function(elem){
             elem.x = elem.x + coef;
           });
 
           svg.valuesTop.forEach(function(elem){
             elem.x = elem.x + coef;
-          });*/
-
-          coef2 = t* gapMinute;
-
-          svg.x.domain([-0.625 + coef2 , 59.625 + coef2 ]);
-
-          newXDomain = svg.newX.domain();
-          svg.newX.domain([newXDomain[0] - coef, newXDomain[1] - coef]);
+          });
 
           lastT = t;
 
@@ -897,21 +1071,6 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
       })
       .on("end",function(){
-
-        svg.timeMin += gapMinute * 60000;
-        svg.startDate = new Date(svg.timeMin);
-
-        svg.valuesBottom.forEach(function(elem){
-          elem.x = elem.x - gapMinute;
-        });
-
-        svg.valuesTop.forEach(function(elem) {
-          elem.x = elem.x - gapMinute;
-        });
-
-        svg.x.domain([-0.625, 59.625]);
-        var newXDomain = svg.newX.domain();
-        svg.newX.domain([newXDomain[0] - gapMinute, newXDomain[1] - gapMinute]);
 
         var maxTotal = 1;
 
@@ -940,7 +1099,7 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
           if(d.x < 0){
             this.remove();
           }else{
-          maxTotal = Math.max(maxTotal,d.y);
+            maxTotal = Math.max(maxTotal,d.y);
           }
 
         });
@@ -976,16 +1135,11 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
         calculationsHideShowDirection(svg);
 
-        //TODO
-
-        if(responseUpdate.length !== 0){
-
-          console.log("update in queue");
-          var resp = responseUpdate;
-          responseUpdate = [];
+        if(responsesFIFOList.length > 0){
+          var resp= responsesFIFOList.shift();
           updateGraph(resp[0],resp[1]);
         }else{
-          isInUpdate = false;
+          onUpdate = false;
         }
 
       });
@@ -995,11 +1149,11 @@ function autoUpdateDoubleCurrent(svg,urlJson, div){
 
   /*
 
-  if(typeof arrayAutoUpdate === "undefined"){
-    arrayAutoUpdate =[[id, urlJson]]
-  }else{
-    arrayAutoUpdate.push([id, urlJson]);
-  }*/
+   if(typeof arrayAutoUpdate === "undefined"){
+   arrayAutoUpdate =[[id, urlJson]]
+   }else{
+   arrayAutoUpdate.push([id, urlJson]);
+   }*/
 
   console.log(svg.id);
 

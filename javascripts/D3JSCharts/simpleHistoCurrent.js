@@ -201,7 +201,7 @@ function createHisto2DStackSimpleCurrent(div,svg,mydiv, urlJson){
     svg.colorMap.set("OTHERS", "#f2f2f2");
 
     i = 0;
-    if (svg.sumArray[0].item == " Remainder " || svg.sumArray[0].item == "OTHERS") {
+    if (i < svg.sumArray.length && (svg.sumArray[0].item == " Remainder " || svg.sumArray[0].item == "OTHERS")) {
       i = 1;
     }
 
@@ -421,35 +421,46 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
 
   //The transition seems to really harm the performances of the computer when not 0 and tab inactive for too long.
   //Maybe take a look at that someday to see if something can somehow be done...
-  svg.updateTransitionDuration = 0;
+  svg.updateTransitionDuration = 2000;
 
-  var onUpdate = false;
+  var responseUpdate = [];
 
-  var responsesFIFOList = [];
+  var isInUpdate = false;
 
   //We suppose that urljson doesn't contain a minute parameter
 
-  var id = myLastHourHistory.addMinuteRequest(urlJson,
+  svg.id = myLastHourHistory.addMinuteRequest(urlJson,
     function(json, notifdate){
 
-      if(unsubscribeGraphIfInactive(id, urlJson, div)){
+      if(unsubscribeGraphIfInactive(svg.id, urlJson, div)){
         console.log("unsubscribe");
         return;
       }
 
-      responsesFIFOList.push([json, notifdate]);
+      if(responseUpdate.length === 0){
+        responseUpdate = [json, notifdate];
+      }else{
+        console.log("data queued");
+        responseUpdate[0].data = json.data.concat(responseUpdate[0].data);
+        responseUpdate[0].data.splice(60,responseUpdate[0].data.length - 60);
+        responseUpdate[1] = notifdate;
+      }
+
+      console.log(responseUpdate);
       console.log("update list responses");
 
-      if(onUpdate){
-        console.log("on Update");
+
+
+
+      if(isInUpdate){
         return;
       }
 
-      onUpdate = true;
+      isInUpdate = true;
 
-      var resp= responsesFIFOList.shift();
+      var resp = responseUpdate;
+      responseUpdate = [];
       updateGraph(resp[0],resp[1]);
-
     }
     ,svg.lastMinute);
 
@@ -464,8 +475,7 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
 
     svg.lastMinute = notificationDate.getMinutes();
 
-    svg.timeMin += gapMinute * 60000;
-    svg.startDate = new Date(svg.timeMin);
+
 
 
     var processedDataArray = [];
@@ -476,7 +486,7 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
 
     jsonData.forEach(function(minuteAndElems){
 
-      var position = trueModulo(minuteAndElems[0] - svg.lastMinute, 60)  + gapMinute + 59;
+      var position =  gapMinute + 59 - trueModulo(svg.lastMinute - minuteAndElems[0], 60) ;
 
       minuteAndElems[1].forEach(function(elem){
 
@@ -606,15 +616,24 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
     svg.transition("updateX").duration(svg.updateTransitionDuration).ease(d3.easeLinear).tween("",function(){
 
         var lastT = 0;
-        var coef;
+        var coef, coef2,newXDomain;
+
         return function(t){
 
           coef = (lastT - t)*gapMinute;
 
-
+          /*
           svg.values.forEach(function(elem){
             elem.x = elem.x + coef;
           });
+          */
+
+          coef2 = t* gapMinute;
+
+          svg.x.domain([-0.625 + coef2 , 59.625 + coef2 ]);
+
+          newXDomain = svg.newX.domain();
+          svg.newX.domain([newXDomain[0] - coef, newXDomain[1] - coef]);
 
           lastT = t;
 
@@ -623,6 +642,17 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
 
       })
       .on("end",function(){
+
+        svg.timeMin += gapMinute * 60000;
+        svg.startDate = new Date(svg.timeMin);
+
+        svg.values.forEach(function(elem){
+          elem.x = elem.x -gapMinute;
+        });
+        
+        svg.x.domain([-0.625, 59.625]);
+        var newXDomain = svg.newX.domain();
+        svg.newX.domain([newXDomain[0] - gapMinute, newXDomain[1] - gapMinute]);
 
         var maxTotal = 1;
 
@@ -694,11 +724,16 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
         updateScalesSimpleCurrent(svg);
         updateHisto2DStackSimple(svg);
 
-        if(responsesFIFOList.length > 0){
-          var resp= responsesFIFOList.shift();
+
+
+        if(responseUpdate.length !== 0){
+
+          console.log("update in queue");
+          var resp = responseUpdate;
+          responseUpdate = [];
           updateGraph(resp[0],resp[1]);
         }else{
-          onUpdate = false;
+          isInUpdate = false;
         }
 
       });
@@ -714,6 +749,6 @@ function autoUpdateSimpleCurrent(svg,urlJson, div){
    arrayAutoUpdate.push([id, urlJson]);
    }*/
 
-  console.log(id);
+  console.log(svg.id);
 
 }

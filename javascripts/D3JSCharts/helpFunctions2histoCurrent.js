@@ -334,7 +334,7 @@ function hideShowValuesCurrent2Histo(svg, svgChild){
  */
 
 function createTransitionSimpleCurrent2Histo(svg, svgChild, duration){
-
+  svgChild.interrupt("hideshow");
   svgChild.transition("hideshow").duration(duration)
     .tween("",function(){
       var arrayUpdate = [];
@@ -355,6 +355,16 @@ function createTransitionSimpleCurrent2Histo(svg, svgChild, duration){
 
         transitionRefreshSimpleCurrent2Histo(svg, svgChild);
       }
+
+    })
+    .on("end",function(){
+
+      svgChild.mapPercentDisplay.forEach(function(value, key){
+
+        value.percentDisplay = (svgChild.hiddenValues.indexOf(key) === -1?1:0);
+
+      });
+      transitionRefreshSimpleCurrent2Histo(svg,svgChild);
 
     });
 }
@@ -380,8 +390,10 @@ function transitionRefreshSimpleCurrent2Histo(svg, svgChild){
     elemValues = valuesSortAlphabet[i];
 
     if (elemValues.item !== currentItem) {
+
       currentItem = elemValues.item;
       currentPercent = mapDisplay.get(currentItem).percentDisplay;
+      
     }
 
     elemValues.height = elemValues.heightRef * currentPercent;

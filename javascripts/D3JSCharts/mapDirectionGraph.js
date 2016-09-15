@@ -42,7 +42,7 @@ function createMapDirection(error,div,svg,mydiv, urlJson, worldmap,json){
 
   svg.style("margin", "auto").classed("diagram",false).style("display","block");
 
-  var colorBottomStart = "#ffff00", colorBottomEnd = "#ff0000";
+  var colorBottomStart = "#ffccff", colorBottomEnd = "#ff0000";
   var colorTopStart = "#66ffcc", colorTopEnd = "#0066ff";
 
   svg.margin.offsetLegend = 5;

@@ -32,6 +32,7 @@ function LastHourHistory(theWSEventNotifier) {
   this.init = function()
   {
     var _this = this;
+
     theWSEventNotifier.waitForSocketConnection(
       _this.onWSConnect()
     );

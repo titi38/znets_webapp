@@ -531,7 +531,7 @@ function colorEval(firstValue){
   var calcexpmin;
   var added;
   var idecal;
-  var val = typeof firstValue !== "undefined" ? trueModulo(firstValue,360) : 0;
+  var val = typeof firstValue !== "undefined" ? trueModulo(firstValue,360) : 64;
   var exp;
   var i = 0;
 
@@ -679,7 +679,7 @@ function sortAlphabet(a,b){
     return -1;
   }
 
-  return a.display.localeCompare(b.display,"en");
+  return (""+a.display).localeCompare(("" + b.display),"en");
 
 }
 
@@ -1717,4 +1717,33 @@ function cleanDiv(div, svg){
 
   }
 
+}
+
+
+
+function removeParamUrl(url, param){
+  var split = url.split("?" + param + "=");
+  var isFirstParam;
+
+  if(split.length === 1){
+    split = url.split("&" + param + "=");
+    isFirstParam = false;
+  }else{
+    split[0] += "?";
+    isFirstParam = true;
+  }
+
+
+  if(split.length === 1){
+    return url;
+  }
+
+  var index = split[1].indexOf("&");
+  if(isFirstParam){
+    split[1] = ((index === -1)? "":split[1].substring(index + 1));
+  }else{
+    split[1] = ((index === -1)? "":split[1].substring(index));
+  }
+
+  return split[0] + split[1];
 }

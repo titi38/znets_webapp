@@ -185,6 +185,10 @@ function whichCreationFunction(urlJson,svg){
             case "netTopServicesNbFlow":
             case "hostTopServicesNbFlow":
                 return createHisto2DStackSimpleCurrent;
+
+            case "netProtocoleTraffic":
+            case "hostProtocoleTraffic":
+                return createHistoDoubleCurrentFormatVariation;
         }
     }
     

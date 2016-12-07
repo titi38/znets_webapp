@@ -351,7 +351,7 @@ function addLocalhostTab(localhostIp, localhostName){
 
 
     element_tab.find("a").on('shown.bs.tab', function (e) {
-        if($(element_div).find(".graph.tab-pane.fade.active").length === 0) $(element_div).find("a[href*='#trafficByProtocoles']").click();
+        if($(element_div).find(".graph.tab-pane.fade.active").length === 0) $(element_div).find("a[href*='#trafficByProtocols']").click();
     });
 
 

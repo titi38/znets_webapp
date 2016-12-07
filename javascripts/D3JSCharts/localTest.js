@@ -11,7 +11,7 @@
 //drawChart("/dynamic/netTopCountryTraffic.json?dd=2016-07-18%2011%3A44&df=2016-07-19%2011%3A44&pset=2&dh=2", "Graph");
 //drawChart("/dynamic/netTopNbExtHosts.json?dd=2016-07-17+00:00&df=2016-07-22+23:59&pset=DAILY&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-21+00:00&df=2016-07-21+23:59&pset=MINUTE&dh=2", "Graph");
-//drawChart("/dynamic/netProtocoleTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
+//drawChart("/dynamic/netProtocolTraffic.json?dd=2016-07-20%2011%3A44&df=2016-07-21%2011%3A44&pset=MINUTE&dh=2", "Graph");
 //drawChart("/dynamic/netNbLocalHosts.json?dd=2016-07-01%2011%3A44&df=2016-07-20%2011%3A44&dh=2&pset=HOURLY", "Graph");
 //drawChart("/dynamic/netTop10NbExtHosts.json?dd=2016-06-20%2011%3A44&df=2016-06-23%2011%3A44&dh=2", "Graph");
 //drawChart("/dynamic/netTop10CountryTraffic.json?dd=2016-07-11%2011%3A44&df=2016-07-13%2011%3A44&dh=2", "Graph");
@@ -36,7 +36,7 @@ function testtest(){
  test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);*/
   
   drawChart("./netTopAppNbFlow.json","Graph");
-  //drawChart("/dynamic/netProtocoleTraffic.json?service=loc&dd=2016-08-07+11%3A06&df=2016-08-08+11%3A06&pset=HOURLY&dh=2","Graph");
+  //drawChart("/dynamic/netProtocolTraffic.json?service=loc&dd=2016-08-07+11%3A06&df=2016-08-08+11%3A06&pset=HOURLY&dh=2","Graph");
 
   //drawChart("./netTopLHostsTraffic.json?pset=HOURLY&dh=2", "Graph");
   //drawChart("./netTopLHostsTraffic.json?net=labo","Graph");

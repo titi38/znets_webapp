@@ -161,10 +161,10 @@ function buildRawdataColumnRefs(jsonResponse) {
                 });
                 break;
             case "proto":
-                colDefs.push({"targets": i, "title": "Protocole", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center",
+                colDefs.push({"targets": i, "title": "Protocol", "visible": getRawdataShownColumnsSessionVariable()[jsonResponse.content[i]], "className": "dt-head-center dt-body-center",
                     "render": function ( data, type, row ) {
-                        if (protocoleTable[row[6]]) {
-                            return " <div title='protocole id: "+row[6]+"'>"+protocoleTable[row[6]]+"</div>";
+                        if (protocolTable[row[6]]) {
+                            return " <div title='protocol id: "+row[6]+"'>"+protocolTable[row[6]]+"</div>";
                         }
                         return row[6];
                     }

@@ -24,5 +24,5 @@ var localhosts_Ip_Name_Array = [];
 var countryTable = [];
 
 
-// Correspondence Array : (Protocole's) Ids - Names
-var protocoleTable = [];
+// Correspondence Array : (Protocol's) Ids - Names
+var protocolTable = [];

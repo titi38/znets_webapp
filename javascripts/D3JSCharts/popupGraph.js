@@ -89,9 +89,9 @@ function getPieJsonQuery(svg, clickData) {
       return utilUrlPie(res,endStr, svg);
 
 
-    case "Protocole":
+    case "Protocol":
 
-      endStr = (res==="host"?"HostsProtocole":"HostsProto") + (unit === "Packet"?"NbPacket":unit) + ".json" + "?"
+      endStr = (res==="host"?"HostsProtocol":"HostsProto") + (unit === "Packet"?"NbPacket":unit) + ".json" + "?"
         + "&dd="+moment(datedd).format("YYYY-MM-DD+HH:mm")
         + "&df="+moment(datedf).format("YYYY-MM-DD+HH:mm")
         + ( ( $("#preset_ChartsForm").val() ) ? "&pset="+$("#preset_ChartsForm").val() : "" )
@@ -183,7 +183,7 @@ function popupHasButton(svg){
 
   switch (type){
 
-    case "netProtocole":
+    case "netProtocol":
     case "netTopAs":
     case "netTopServices":
     case "netTopApp":

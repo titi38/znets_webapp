@@ -186,8 +186,8 @@ function whichCreationFunction(urlJson,svg){
             case "hostTopServicesNbFlow":
                 return createHisto2DStackSimpleCurrent;
 
-            case "netProtocoleTraffic":
-            case "hostProtocoleTraffic":
+            case "netProtocolTraffic":
+            case "hostProtocolTraffic":
                 return createHistoDoubleCurrentFormatVariation;
         }
     }
@@ -210,15 +210,15 @@ function whichCreationFunction(urlJson,svg){
             return createHisto2DStackDouble;
 
 
-        case "netProtocoleTraffic":
-        case "hostProtocoleTraffic":
+        case "netProtocolTraffic":
+        case "hostProtocolTraffic":
 
             return createHisto2DStackDoubleFormatVariation;
 
         case "netNbFlow":
         case "hostNbFlow":
-        case "netProtocolePackets":
-        case "hostProtocolePacket":
+        case "netProtocolPackets":
+        case "hostProtocolPacket":
         case "hostNbDiffHosts":
 
             return create2HistoStackFormatVariation;

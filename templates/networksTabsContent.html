@@ -17,7 +17,7 @@
                     <ul class="nav nav-tabs nav-stacked nav-nest">
                         <li><a class="navtab" data-toggle="collapse" rv-href="network | prepend '#trafficBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> TRAFFIC</a></li>
                         <ul rv-id="network | prepend 'trafficBy'" class="nav nav-tabs nav-stacked collapse">
-                            <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByProtocoles'" rv-data-network="network" data-chart-json="netProtocoleTraffic.json" data-chart-title="Traffic by Protocole" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> by Protocoles</a></li>
+                            <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByProtocols'" rv-data-network="network" data-chart-json="netProtocolTraffic.json" data-chart-title="Traffic by Protocol" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> by Protocols</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByLocalhosts'" rv-data-network="network" data-chart-json="netTopLHostsTraffic.json" data-chart-title="Traffic by Localhost (Top)" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> by Localhosts (Top)</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByServices'" rv-data-network="network" data-chart-json="netTopServicesTraffic.json" data-chart-title="Traffic by Local Service (Top)" data-ajax-params="service=loc"><i class="fa fa-area-chart" aria-hidden="true"></i> by Local Services (Top)</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#trafficByServices'" rv-data-network="network" data-chart-json="netTopServicesTraffic.json" data-chart-title="Traffic by External Service (Top)" data-ajax-params="service=ext"><i class="fa fa-area-chart" aria-hidden="true"></i> by External Services (Top)</a></li>
@@ -72,7 +72,7 @@
                             <!--li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByLocalhosts'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Localhosts</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByCountries'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Countries</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByAutonomousSystems'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Autonomous Systems</a></li-->
-                            <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByProtocoles'" rv-data-network="network" data-chart-json="netProtocolePackets.json" data-chart-title="Packets by Protocole" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Protocoles</a></li>
+                            <li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByProtocols'" rv-data-network="network" data-chart-json="netProtocolPackets.json" data-chart-title="Packets by Protocol" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Protocols</a></li>
                             <!--li><a class="subnavtab" data-toggle="tab" rv-href="network | prepend '#packetsByApplications'" rv-data-network="network" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Applications</a></li-->
                         </ul>
                     </ul>
@@ -92,7 +92,7 @@
 
 
                 <!--"Traffic by"-->
-                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByProtocoles'">
+                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByProtocols'">
                     <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsProtoTraffic.json" ></svg>
                 </div>
                 <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'trafficByLocalhosts'">
@@ -186,7 +186,7 @@
                 <div class="tab-pane fade " rv-id="network | prepend 'packetsByAutonomousSystems'">
                     <svg class = "diagram" ></svg>
                 </div-->
-                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'packetsByProtocoles'">
+                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="network | prepend 'packetsByProtocols'">
                     <svg class = "diagram" rv-data-network="network" data-pie-json="netLocHostsProtoPackets.json" ></svg>
                 </div>
                 <!--div class="tab-pane fade " rv-id="network | prepend 'packetsByApplications'">

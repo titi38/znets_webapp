@@ -12,7 +12,7 @@
                     <ul class="nav nav-tabs nav-stacked nav-nest">
                         <li><a class="navtab" data-toggle="collapse" rv-href="localhostNum | prepend '#trafficBy'"><i class="fa fa-plus-square " aria-hidden="true"></i> TRAFFIC</a></li>
                         <ul rv-id="localhostNum | prepend 'trafficBy'" class="nav nav-tabs nav-stacked collapse">
-                            <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#trafficByProtocoles'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="hostProtocoleTraffic.json" data-chart-title="Traffic by Protocole" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> by Protocoles</a></li>
+                            <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#trafficByProtocols'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="hostProtocolTraffic.json" data-chart-title="Traffic by Protocol" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> by Protocols</a></li>
                             <!--li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#trafficByLocalhosts'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="netTopLHostsTraffic.json" data-chart-title="Traffic by Localhost (Top)" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> by Localhosts (Top)</a></li-->
                             <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#trafficByServices'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="hostTopServicesTraffic.json" data-chart-title="Traffic by Local Service (Top)" data-ajax-params="service=loc"><i class="fa fa-area-chart" aria-hidden="true"></i> by Local Services (Top)</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#trafficByServices'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="hostTopServicesTraffic.json" data-chart-title="Traffic by External Service (Top)" data-ajax-params="service=ext"><i class="fa fa-area-chart" aria-hidden="true"></i> by External Services (Top)</a></li>
@@ -67,7 +67,7 @@
                             <!--li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#packetsByLocalhosts'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Localhosts</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#packetsByCountries'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Countries</a></li>
                             <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#packetsByAutonomousSystems'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Autonomous Systems</a></li-->
-                            <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#packetsByProtocoles'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="hostProtocolePacket.json" data-chart-title="Packets by Protocole" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Protocoles</a></li>
+                            <li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#packetsByProtocols'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="hostProtocolPacket.json" data-chart-title="Packets by Protocol" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Protocols</a></li>
                             <!--li><a class="subnavtab" data-toggle="tab" rv-href="localhostNum | prepend '#packetsByApplications'" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-chart-json="test.json" data-ajax-params=""><i class="fa fa-area-chart" aria-hidden="true"></i> Applications</a></li-->
                         </ul>
                     </ul>
@@ -87,8 +87,8 @@
 
 
                 <!--"Traffic by"-->
-                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="localhostNum | prepend 'trafficByProtocoles'">
-                    <svg class = "diagram" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-pie-json="hostExtHostsProtocoleTraffic.json" ></svg>
+                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="localhostNum | prepend 'trafficByProtocols'">
+                    <svg class = "diagram" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-pie-json="hostExtHostsProtocolTraffic.json" ></svg>
                 </div>
                 <!--div class="graph tab-pane fade toBottomChartsContainer" rv-id="localhostNum | prepend 'trafficByLocalhosts'">
                     <svg class = "diagram " rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-pie-json="netExtHostsTopHostsTraffic.json" ></svg>
@@ -181,8 +181,8 @@
                 <div class="tab-pane fade " rv-id="localhostNum | prepend 'packetsByAutonomousSystems'">
                     <svg class = "diagram" ></svg>
                 </div-->
-                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="localhostNum | prepend 'packetsByProtocoles'">
-                    <svg class = "diagram" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-pie-json="hostExtHostsProtocoleNbPacket.json" ></svg>
+                <div class="graph tab-pane fade toBottomChartsContainer" rv-id="localhostNum | prepend 'packetsByProtocols'">
+                    <svg class = "diagram" rv-data-localhost-num="localhostNum" rv-data-localhost-ip="localhostIp" data-pie-json="hostExtHostsProtocolNbPacket.json" ></svg>
                 </div>
                 <!--div class="tab-pane fade " rv-id="localhostNum | prepend 'packetsByApplications'">
                     <svg class = "diagram" ></svg>

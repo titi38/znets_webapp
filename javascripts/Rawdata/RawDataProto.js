@@ -4,9 +4,9 @@
 
 
 /**
- * RawData Formular - Protocole Field Initialization Function
- * Call Ajax to retrieve known protocoles list
- * Triggers Protocole Setting Function "setProtosId"
+ * RawData Formular - Protocol Field Initialization Function
+ * Call Ajax to retrieve known protocols list
+ * Triggers Protocol Setting Function "setProtosId"
  */
 function initializeProtosId(){
 
@@ -19,9 +19,9 @@ function initializeProtosId(){
 
 
 /**
- * Protocoles Setting Function
- * Initialize Protocoles array "protocoleTable"
- * Initialize RawData Formular - Protocoles ComboBox (special select field)
+ * Protocols Setting Function
+ * Initialize Protocols array "protocolTable"
+ * Initialize RawData Formular - Protocols ComboBox (special select field)
  * @param jsonResponse
  */
 function setProtosId(jsonResponse) {
@@ -38,7 +38,7 @@ function setProtosId(jsonResponse) {
     for (var i = 0; i < data.length; i++) {
         if( data[i][protoIdIndex] != 1 && data[i][protoIdIndex] != 6 && data[i][protoIdIndex] != 17  && data[i][protoNameIndex] != "" )
             $("#proto").append('<option value="' + data[i][protoIdIndex] + '">' + data[i][protoNameIndex] + '</option>')
-            protocoleTable[jsonResponse.data[i][protoIdIndex]] = jsonResponse.data[i][protoNameIndex];
+            protocolTable[jsonResponse.data[i][protoIdIndex]] = jsonResponse.data[i][protoNameIndex];
     }
 
 

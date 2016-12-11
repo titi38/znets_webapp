@@ -11,7 +11,12 @@ function getAlertDetail(alertData) {
 
     var alertId = alertData[0];
 
-    callAJAX("getAlertDetail.json", "id="+alertId, "json", showAlertDetailsModal, alertData)
+    if(alertId >= 0)
+        callAJAX("getAlertDetail.json", "id="+alertId, "json", showAlertDetailsModal, alertData)
+    else {
+        var t = { details : alertData[alertData.length -1]}
+        showAlertDetailsModal(t, alertData);
+    }
 
 }
 

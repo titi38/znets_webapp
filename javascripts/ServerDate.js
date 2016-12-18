@@ -105,10 +105,10 @@ function ServerDate(theWSEventNotifier) {
         $('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
 
-        /*if($("#timesliceCharts").val() != "custom") {
+        if($("#timesliceCharts").val() != "custom") {
             $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
             $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        }*/
+        }
 
     }
 

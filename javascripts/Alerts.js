@@ -143,9 +143,9 @@ function Alerts(theWSEventNotifier) {
         $(row).off("click");
         $(row).on("click", function(){
           // TODO : click on alert (show alert details)
-          console.warn( 'TODO: click on alert (show alert details)' );
-          console.info( 'removing class' );
-          $(this).removeClass("new-alert");
+          //console.warn( 'TODO: click on alert (show alert details)' );
+          //console.info( 'removing class' );
+          //$(this).removeClass("new-alert");
           getAlertDetail(data);
         });
 

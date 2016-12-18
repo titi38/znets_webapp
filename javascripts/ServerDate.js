@@ -92,14 +92,14 @@ function ServerDate(theWSEventNotifier) {
         // change rawData calendar max date
         $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_RawDataForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#fromDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#toDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        /*$('#fromDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        $('#toDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));*/
 
         // change rawData calendar max date
         $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        /*$('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));*/
 
     }
 

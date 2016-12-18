@@ -94,7 +94,7 @@ function ServerDate(theWSEventNotifier) {
         // change rawData calendar max date
         $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_RawDataForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#fromDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        //$('#fromDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         /*$('#fromDate_RawDataForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_RawDataForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));*/
@@ -102,11 +102,11 @@ function ServerDate(theWSEventNotifier) {
         // change Charts Form calendar max date
         $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        //$('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
 
         if($("#timesliceCharts").val() != "custom") {
-            $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+            //$('#fromDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
             $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         }
 

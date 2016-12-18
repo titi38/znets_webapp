@@ -7,23 +7,37 @@
  * Updates Charts Formular/Bar Visible Values on Timeslice value change
  * @param element : Visible Timeslice Value
  */
-function updateChartsTimeslice( element ){
+function updateChartsTimeslice( timesliceValue ){
 
-    var timesliceValue = $(element).val();
+    $("#timestepCharts option").hide();
 
     switch (timesliceValue) {
         case "lastHour" :
+            $("#timestepCharts option[value='MINUTE']").show();
+            $("#timestepCharts").val('MINUTE');
+            enableDateFormCharts(false);
+            break;
         case "lastDay" :
+            $("#timestepCharts option[value='MINUTE']").show();
+            $("#timestepCharts option[value='HOURLY']").show();
+            $("#timestepCharts").val('HOURLY');
+            enableDateFormCharts(false);
+            break;
         case "lastWeek" :
+            $("#timestepCharts option[value='MINUTE']").show();
+            $("#timestepCharts option[value='HOURLY']").show();
+            $("#timestepCharts option[value='DAILY']").show();
+            $("#timestepCharts").val('HOURLY');
+            enableDateFormCharts(false);
+            break;
         case "lastMonth" :
-            $("#toDate_ChartsForm").data("DateTimePicker").date(moment('1900-01-01 00:01'));
-            $("#toDate_ChartsForm").data("DateTimePicker").date(moment(serverDate).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'));
-            $("#fromDate_ChartsForm").data("DateTimePicker").disable();
-            $("#toDate_ChartsForm").data("DateTimePicker").disable();
+            $("#timestepCharts").val('DAILY');
+            $("#timestepCharts option[value='HOURLY']").show();
+            $("#timestepCharts option[value='DAILY']").show();
+            enableDateFormCharts(false);
             break;
         case "custom" :
-            $("#fromDate_ChartsForm").data("DateTimePicker").enable();
-            $("#toDate_ChartsForm").data("DateTimePicker").enable();
+            enableDateFormCharts(true);
             break;
         default :
             console.error("UNEXPECTED ChartsTimeslice select value (ChartsFormular.js), %i ", 101);
@@ -33,6 +47,21 @@ function updateChartsTimeslice( element ){
 
 }
 
+
+
+function enableDateFormCharts(enabled){
+    if(!enabled){
+        $("#toDate_ChartsForm").data("DateTimePicker").date(moment('1900-01-01 00:01'));
+        $("#toDate_ChartsForm").data("DateTimePicker").date(moment(serverDate).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'));
+
+        $("#fromDate_ChartsForm").data("DateTimePicker").disable();
+        $("#toDate_ChartsForm").data("DateTimePicker").disable();
+    }
+    else{
+        $("#fromDate_ChartsForm").data("DateTimePicker").enable();
+        $("#toDate_ChartsForm").data("DateTimePicker").enable();
+    }
+}
 
 
 
@@ -202,5 +231,8 @@ function initializeChartsTimestepForm() {
             $(this).data("DateTimePicker").date(moment(serverDate).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'));
         }
     });
+
+
+    updateChartsTimeslice("lastDay");
 
 }

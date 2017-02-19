@@ -66,6 +66,8 @@ function initialisation(){
     var myServerDate = new ServerDate(myWSEventNotifier);
     myServerDate.init();
 
+    var myClockWidget = new ClockWidget(myServerDate, $('#clock_container'));
+
     /*********************************************************************************************************
      New Logs Object
      ********************************************************************************************************/

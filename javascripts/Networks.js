@@ -111,7 +111,8 @@ function initNetworksChartsNavTabs() {
 
     });
 
-    $('ul.nav-nest a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+    $('ul.nav-nest a[data-toggle="tab"]')/*.off()*/.on('shown.bs.tab', function (e) {
 
         loadChartJsonToDiv(e.target, true);
 

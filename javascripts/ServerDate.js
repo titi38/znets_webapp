@@ -20,6 +20,8 @@ function ServerDate(theWSEventNotifier) {
     var serverDateEntries = new Array();
     var loadingAJAX = true;
 
+    var minuteChange_Subscribers = {};
+
 
     this.setServerDateDisplay = function(serverDateEntry)
     {
@@ -84,33 +86,39 @@ function ServerDate(theWSEventNotifier) {
         // change server date display
         //$("#serverDate").html(": "+moment(dateString).format('YYYY-MM-DD HH:mm')+ " (GMT)");
 
-        console.info("THERRRRRE");
-
         serverDate = dateString;
-
+/*
         $("#serverDate").html(" "+moment(dateString).add(parseInt(moment().format("Z")), "hours").format('HH:mm'));
 
+ */
 
         // change rawData calendar max date
         $('#fromDate_RawDataForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_RawDataForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        //$('#fromDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        $('#fromDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_RawDataForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        /*$('#fromDate_RawDataForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#toDate_RawDataForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));*/
 
-        // change Charts Form calendar max date
+        // change rawData calendar max date
         $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").maxDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        //$('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        $('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
 
-        if($("#timesliceCharts").val() != "custom") {
-            //$('#fromDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-            $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+
+        for (var key in minuteChange_Subscribers) {
+            setTimeout( function() {
+                minuteChange_Subscribers[key].callback(dateString);
+            }, Math.random() * minuteChange_Subscribers[key].dT + 1)
         }
 
     }
+
+
+    this.addCallback = function(name, callback, dT){
+        minuteChange_Subscribers[name] =  { callback: callback, dT: dT };
+
+    }
+
 
 }
 

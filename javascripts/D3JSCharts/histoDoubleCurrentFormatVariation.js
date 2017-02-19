@@ -2,6 +2,8 @@
  * Created by elie on 07/09/16.
  */
 
+/********************************************************************************************************************/
+
 function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
   console.log(urlJson);
@@ -16,7 +18,6 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.margin.bottom = 20;
     svg.margin.zero = 28;
 
-
     console.log(json);
     //test json conformity
     if (typeof json === "undefined" || json.result != "true" || typeof json.response.data === "undefined" || error) {
@@ -26,10 +27,12 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
     //json ok, graph creation
 
-    if("netTopCountryTraffic" === svg.typeGraph || svg.typeGraph === "hostTopCountryTraffic"){
+    if("netTopCountryTraffic" === svg.typeGraph || svg.typeGraph === "hostTopCountryTraffic")
+    {
       var button = div.append("button").text("Switch to map").classed("buttonMap", true).remove();
       div.node().insertBefore(button.node(), svg.node());
 
+      /*********************/
       button.on("click",function(){
         cleanDiv(div,svg);
         myLastHourHistory.unsubscribe(urlJson, svg.id);
@@ -43,12 +46,10 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
         svg.margin = {top: 20, right: 50, bottom: 20, left: 60, zero:28};
         svg.urlJson = urlJson;
 
-
         createChoroplethDirection(div,svg,mydiv,urlJson);
 
       })
     }
-
 
     //table for legend
     svg.tableWidth = 200;
@@ -87,148 +88,9 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.selec = svg.frame.append("rect").attr("class", "rectSelec");
 
 
-
-
-
-
     json = json.response;
     var jsonData = json.data;
     var jsonContent = json.content;
-
-    /*
-    processServices(jsonData,jsonContent,svg);
-    console.log(jsonContent);
-
-    svg.contentItemValue = searchItemValue(jsonContent);
-    svg.contentAmountValue = searchAmountValue(jsonContent);
-    svg.contentDirectionValue = searchDirectionValue(jsonContent);
-
-    //optional display value for legend, no guaranty on uniqueness/existence.
-    svg.contentDisplayValue = searchDisplayValue(jsonContent);
-
-    //if no display value, then the display value is the item value.
-    if (svg.contentDisplayValue === false){
-      svg.contentDisplayValue = svg.contentItemValue;
-    }
-
-    //if no item/date/amount/direction value found, the graph can't be done.
-    if(svg.contentItemValue === false || svg.contentAmountValue === false || svg.contentDirectionValue === false ){
-      noData(div,svg,mydiv, "error no value found");
-      return;
-    }
-
-
-
-
-
-
-    //Here jsonData should lists 60 minutes of data.
-    svg.lastMinute = (jsonData.length === 0?60:jsonData[0][0]);
-
-    if(svg.lastMinute !== 60){
-      var firstMinute = jsonData[jsonData.length - 1][0];
-      var maxInterval = trueModulo(svg.startDate.getMinutes() - 1 - firstMinute , 60);
-      var dataInterval = trueModulo(svg.lastMinute - firstMinute, 60);
-
-      if(dataInterval > maxInterval){
-        svg.startDate = new Date(svg.startDate.getTime() - trueModulo(svg.startDate.getMinutes() - firstMinute,60) * 60000);
-      }
-
-      svg.lastMinute = trueModulo(svg.startDate.getMinutes() - 1, 60);
-    }
-
-
-    svg.timeMin = svg.startDate.getTime();
-    console.log(svg.timeMin);
-
-    var processedDataArray = [];
-
-
-    jsonData.forEach(function(minuteAndElems){
-      var position = trueModulo(minuteAndElems[0] - svg.lastMinute - 1, 60);
-      minuteAndElems[1].forEach(function(elem){
-        elem.push(position);
-        processedDataArray.push(elem);
-      });
-    });
-
-    console.log(processedDataArray);
-    console.log(svg.startDate);
-
-    svg.contentXPositionValue = jsonContent.length;
-
-    jsonData = processedDataArray;
-
-
-
-
-
-
-
-    svg.units = unitsStringProcessing(json.units);
-
-
-
-    console.log(json);
-
-
-
-    svg.valuesBottom = [];
-    svg.valuesTop = [];
-
-    var dataLength = jsonData.length;
-
-    svg.colorMap = new Map();
-    svg.sumMap = new Map();
-    var sumMapBottom = new Map();
-    var sumMapTop = new Map();
-
-    var i, elemJson, elemToPush;
-
-
-    svg.hourShift = getTimeShift(urlJson)  * 3600000;
-
-    var itemType = jsonContent[svg.contentItemValue];
-
-    // Data are processed and sorted according to their direction.
-    for(i = 0; i < dataLength; i++){
-      elemJson = jsonData[i];
-
-      if(+elemJson[svg.contentAmountValue] === 0){
-        continue;
-      }
-
-      elemToPush = {
-        x: elemJson[svg.contentXPositionValue],
-        height: +elemJson[svg.contentAmountValue],
-        heightRef: +elemJson[svg.contentAmountValue],
-        item: ((elemJson[svg.contentItemValue] === "")?" Remainder ":elemJson[svg.contentItemValue]) + "",
-        direction: elemJson[svg.contentDirectionValue].toLowerCase()
-      };
-
-
-      mapElemToSumCurrent(svg.sumMap, elemToPush, elemJson, svg.contentDisplayValue,itemType);
-
-      if(elemJson[svg.contentDirectionValue] === "IN"){
-        elemToPush.direction = "inc";
-
-        mapElemToSumCurrent(sumMapTop, elemToPush, elemJson, svg.contentDisplayValue,itemType);
-        svg.valuesTop.push(elemToPush);
-
-      }else{
-
-        mapElemToSumCurrent(sumMapBottom, elemToPush, elemJson, svg.contentDisplayValue,itemType);
-        svg.valuesBottom.push(elemToPush)
-
-      }
-
-
-    }
-*/
-
-
-
-
 
 
     //step = 1 hour by default
@@ -252,14 +114,11 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     console.log(json);
 
 
-
     svg.valuesBottom = [];
     svg.valuesTop = [];
 
     var dataLength = jsonData.length;
     var contentLength = jsonContent.length;
-
-
 
 
     //More useful jsonContent. 0: item / 1: direction
@@ -285,13 +144,10 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
       jsonContent[i] = [strName, tempArrayName[tempArrayName.length-1]];
 
-      if(svg.units !== "hosts"){
-
+      if(svg.units !== "hosts")
+      {
         jsonContent[i][0] = jsonContent[i][0].toUpperCase();
-
       }
-
-
     }
 
     console.log(jsonContent);
@@ -306,10 +162,7 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.timeMin = Infinity;
     var timeMax = 0;
 
-
     svg.hourShift = getTimeShift(urlJson)  * 3600000;
-
-
 
     // Data are processed and sorted according to their direction.
 
@@ -338,21 +191,24 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
           if(elemJson[contentDateValue] !== "current"){
             timeElem = (new Date(elemJson[contentDateValue])).getTime() - 3600000  + svg.hourShift;
+       //     console.error("hourshift="+svg.hourShift);
           }
           else{
             timeElem = dateCurrent.getTime();
           }
 
-          console.log(elemAmountMinuteArray);
+          //console.log(elemAmountMinuteArray);
           elemAmountMinuteArrayLength = elemAmountMinuteArray.length;
 
-          for(k = 0; k < elemAmountMinuteArrayLength; k++) {
+          for(k = 0; k < elemAmountMinuteArrayLength; k++)
+          {
 
             if(+elemAmountMinuteArray[k] === 0 || !elemAmountMinuteArray[k]){
               continue;
             }
 
-            elemToPush = {
+            elemToPush =
+            {
               //we add the correct minutes according to the position k
               //of the element in the array
               x: timeElem + k*svg.step,
@@ -363,9 +219,12 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
             };
 
             // .display kept, can have an use someday
-            if (!svg.sumMap.has(elemToPush.item)) {
+            if (!svg.sumMap.has(elemToPush.item))
+            {
               svg.sumMap.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
-            } else {
+            }
+            else
+            {
               elemSumMap = svg.sumMap.get(elemToPush.item);
               elemSumMap.sum += elemToPush.height;
             }
@@ -377,66 +236,51 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
               elemToPush.direction = "inc";
 
 
-              if (!sumMapTop.has(elemToPush.item)) {
+              if (!sumMapTop.has(elemToPush.item))
+              {
                 sumMapTop.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
-              } else {
+              }
+              else
+              {
                 elemSumMap = sumMapTop.get(elemToPush.item);
                 elemSumMap.sum += elemToPush.height;
               }
 
               svg.valuesTop.push(elemToPush);
-
-            } else {
-
-
-              if (!sumMapBottom.has(elemToPush.item)) {
+            }
+            else
+            {
+              if (!sumMapBottom.has(elemToPush.item))
+              {
                 sumMapBottom.set(elemToPush.item, {sum: elemToPush.height, display: elemToPush.item});
-              } else {
+              } else
+              {
                 elemSumMap = sumMapBottom.get(elemToPush.item);
                 elemSumMap.sum += elemToPush.height;
               }
 
-
               svg.valuesBottom.push(elemToPush)
-
             }
-
           }
-
-
         }
-
-
       }
-
-
-
-
     }
-
 
     if(svg.timeMin === Infinity){
       svg.timeMin = 0;
     }
 
-
-
     //
-
 
     svg.sumArray = [];
     svg.sumArrayBottom = [];
     svg.sumArrayTop = [];
 
-
-
     svg.colorGenerator = colorEval();
-
 
     svg.sumMap.forEach(mapToArray(svg.sumArray));
     sumMapBottom.forEach(mapToArray(svg.sumArrayBottom));
     sumMapTop.forEach(mapToArray(svg.sumArrayTop));
-
 
 
     //sort alphabetically
@@ -449,11 +293,13 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.colorMap.set("OTHERS", "#f2f2f2");
 
     i = 0;
-    if (i < svg.sumArray.length && (svg.sumArray[0].item == " Remainder " || svg.sumArray[0].item == "OTHERS")) {
+    if (i < svg.sumArray.length && (svg.sumArray[0].item == " Remainder " || svg.sumArray[0].item == "OTHERS"))
+    {
       i = 1;
     }
 
-    while (i < svg.sumArray.length) {
+    while (i < svg.sumArray.length)
+    {
       svg.colorMap.set(svg.sumArray[i].item, svg.colorGenerator());
       i++;
     }
@@ -466,8 +312,6 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.valuesTop.forEach(function(elem){
       elem.x = (elem.x - svg.timeMin)/svg.step
     });
-
-
 
 
     svg.valuesBottom.sort(sortValuesCurrent);
@@ -520,7 +364,6 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
       x++;
     }
 
-
     svg.totalBottom = Math.max(1,d3.max(totalSumBottom));
     svg.totalTop = Math.max(d3.max(totalSumTop));
 
@@ -534,8 +377,8 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.yBottom.domain([0, svg.totalBottom * 1.1]);
     svg.yTop.domain([0, svg.totalTop * 1.1]);
 
-    //Text background
 
+    //Text background
 
     svg.rectBottom = svg.chartBackground.append("rect").attr("x", 0).attr("y", svg.heightTop + svg.margin.zero)
       .attr("width", svg.width)
@@ -562,13 +405,9 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.grid = svg.chartBackground.append("g").classed("grid", true);
 
 
-
     svg.newX = d3.scaleLinear().range(svg.x.range()).domain(svg.x.domain());
     svg.newYTop = d3.scaleLinear().range(svg.yTop.range()).domain(svg.yTop.domain());
     svg.newYBottom = d3.scaleLinear().range(svg.yBottom.range()).domain(svg.yBottom.domain());
-
-
-
 
 
     svg.selectionBottom = svg.chartBottom.selectAll(".data")
@@ -598,14 +437,14 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
     createTooltipHistoCurrent(svg,selection,svg.sumMap);
 
-
     var blink = blinkCreate(svg.colorMap);
-
 
 
     svg.activeItem = null;
 
-    svg.activationElemsFromTable = function(direction){
+    /*********************/
+    svg.activationElemsFromTable = function(direction)
+    {
       if(direction === "In"){
 
         return function(d){
@@ -615,6 +454,7 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
           svg.activeItem = {item: d.item, direction: "inc"};
 
+          /*********************/
           function testitem(data) {
             return d.item === data.item;
           }
@@ -633,9 +473,9 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
         svg.activeItem = {item: d.item, direction: "out"};
 
+        /*********************/
         function testitem(data) {
           return d.item === data.item;
-
         }
 
         svg.trSelecBottom.filter(testitem).classed("outlined", true);
@@ -645,7 +485,9 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
     };
 
-    svg.activationElemsAutoScroll = function(d) {
+      /******************************************/
+
+      svg.activationElemsAutoScroll = function(d) {
 
       if (svg.popup.pieChart !== null) {
         return;
@@ -653,10 +495,9 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
       svg.activeItem = {item: d.item, direction: d.direction};
 
-
+      /*********************/
       function testitem(data) {
         return d.item == data.item;
-
       }
 
       var elem;
@@ -681,6 +522,7 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
     };
 
+    /******************************************/
 
     svg.deactivationElems = function() {
 
@@ -690,34 +532,27 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
       var activeItem = svg.activeItem.item;
 
-      function testitem(data) {
+      /***********************/
+
+      function testitem(data)
+      {
         return data.item == activeItem;
       }
 
-
-      if(svg.activeItem.direction === "inc"){
-
-
+      if(svg.activeItem.direction === "inc")
+      {
         svg.trSelecTop.filter(testitem).classed("outlined", false);
-
         svg.selectionTop.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", svg.colorMap.get(activeItem));
-
-
-      }else{
-
-        svg.trSelecBottom.filter(testitem).classed("outlined", false);
-
-        svg.selectionBottom.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", svg.colorMap.get(activeItem));
-
-
       }
-
-
+      else
+      {
+        svg.trSelecBottom.filter(testitem).classed("outlined", false);
+        svg.selectionBottom.filter(testitem).interrupt().attr("stroke", "#000000").attr("fill", svg.colorMap.get(activeItem));
+      }
       svg.activeItem = null;
-
     };
 
-
+    /******************************************/
 
     svg.axisx = svg.append("g")
       .attr("class", "axisGraph")
@@ -737,19 +572,13 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     axesDoubleCreation(svg);
     optionalAxesDoubleCreation(svg);
 
-
     gridDoubleGraph(svg);
-
-
-
 
     //for the template...
     svg.popup = [];
     svg.popup.pieChart = null;
 
-
     selection.on("mouseover", svg.activationElemsAutoScroll).on("mouseout", svg.deactivationElems);
-
 
     //Now, no more nodata can happen,so we create the table
     svg.divLegend = div.append("div").classed("diagram", true).style("vertical-align", "top").style("width", svg.tableWidth + "px");
@@ -758,7 +587,6 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
     svg.trSelecBottom = createTableLegendDoubleCurrent(svg,"Out",svg.sumArrayBottom,svg.colorMap, svg.activationElemsFromTable,svg.deactivationElems);
 
     //zoom
-
     addZoomDouble(svg, updateHisto2DStackDouble);
     d3.select(window).on("resize." + mydiv, function () {
       console.log("resize");
@@ -766,21 +594,14 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
     });
 
-
-    
     timerupdate(urlJson,mydiv);
     //autoUpdateDoubleCurrentFormatVariation(svg,urlJson, div);
 
   }); //d3.json end
 
-
 } //function end
 
-
-
-
-
-
+/********************************************************************************************************************/
 
 function timerupdate(urlJson, mydiv){
 
@@ -788,14 +609,15 @@ function timerupdate(urlJson, mydiv){
   var dh = getParamUrlJson(urlJson, "dh");
   urlJson = removeParamUrl(urlJson,"df");
   var array = df.split("%3A");
-  df = array[0] + ":" + array[1] + ":00";
+  //df = array[0] + ":" + array[1] + ":00";
+    df = array[0] + ":59:59";
   array = df.split("+");
   df = array[0] + " " + array[1];
   var date = new Date(df);
   if(Math.abs(date.getTime() - myLastHourHistory.getCurrentMinute().getTime() - dh*3600000) > 15*60000){
     return;
   }
-  date = new Date(date.getTime() + 3600000 + dh*3600000);
+  date = new Date(date.getTime() + 3600000 /*+ dh*3600000*/);
   df = date.toISOString();
   df = df.substring(0,16);
   array = df.split("T");
@@ -803,13 +625,14 @@ function timerupdate(urlJson, mydiv){
   array = df.split(":");
   df = array[0] + "%3A" + array[1];
   urlJson = urlJson + "&df=" + df;
-  console.log("hello")
+  //console.log("hello")
+    console.error ("urlJson:" + urlJson);
   setTimeout(function(){
     drawChartFromInterface(urlJson,mydiv);
   },60000);
 }
 
-
+/**********************************************************************************************************************/
 /**
  * Allows the graph to actualize its data on real-time by subscribing to a websocket.
  * @param svg {Object} D3 encapsulated parent svg element.
@@ -818,7 +641,6 @@ function timerupdate(urlJson, mydiv){
  */
 
 function autoUpdateDoubleCurrentFormatVariation(svg,urlJson, div){
-
 
   //The transition seems to really harm the performances of the computer when not 0 and tab inactive for too long.
   //Maybe take a look at that someday to see if something can somehow be done...
@@ -854,9 +676,9 @@ function autoUpdateDoubleCurrentFormatVariation(svg,urlJson, div){
     }
     ,svg.lastMinute);
 
+  /********************************************************************************************************************/
 
   function updateGraph(json, notificationDate){
-
 
     svg.deactivationElems();
 
@@ -1017,7 +839,6 @@ function autoUpdateDoubleCurrentFormatVariation(svg,urlJson, div){
       if(!svg.sumMap.has(key)){
         svg.sumMap.set(key,{sum:value.sum, display:value.display})
       }
-
     });
 
 

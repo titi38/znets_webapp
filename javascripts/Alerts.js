@@ -22,6 +22,9 @@ function Alerts(theWSEventNotifier) {
      */
   var alertEntries = new Array();
   var loadingAJAX = true;
+  var bufferSize = 0;
+  var nextAlertId = 0;
+  var firstSignificativeAlertReached = false;
   //var alertId = -1;
 
   /**
@@ -37,18 +40,12 @@ function Alerts(theWSEventNotifier) {
 
       var t = $('#tableAlerts').DataTable();
 
-    console.info(t);
-
         t.row.add( [
-            -1,
+          alertEntry.severity,
           moment(alertEntry.date).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'),
-          alertEntry.ip,
-          alertEntry.hostname,
-          alertEntry.title,
+          alertEntry.message,
           alertEntry.detail
-        ] )
-        .draw( false )
-        .addClass( 'new-alert' );
+        ] ).draw( false );
 
 
   }
@@ -57,15 +54,15 @@ function Alerts(theWSEventNotifier) {
    * Deals with received Alerts on WebSocket
    *  - If Alerts are still initiating, then stacks received Alert temporary
    *  - If not, triggers temporary stacked Alerts unstack
-   * @param date  {number} Alert's date
-   * @param title {string} Alert's title
-   * @param ip {string} Alert's ip
-   * @param hostname {string} Alert's hostname
+   * @param id  {number} Alert's id
+   * @param severity {string} Alert's severity
+   * @param date {string} Alert's date
+   * @param message {string} Alert's message
    * @param detail {string} Alert's detail
    */
-  this.addAlertEntry = function (date, title, ip, hostname, detail)
+  this.addAlertEntry = function (id, severity, date, message, detail)
   {
-    alertEntries.push({"date": date, "title" : title, "ip" : ip, "hostname" : hostname, "detail" : detail});
+    alertEntries.push({"id": id, "severity" : severity, "date" : date, "message" : message, "detail" : detail});
     if (!loadingAJAX)
       this.unstackFIFO();
   }
@@ -75,8 +72,8 @@ function Alerts(theWSEventNotifier) {
    */
   this.onWSConnect = function(){
     var _this = this;
-    theWSEventNotifier.addCallback("notify", "alert", function (param_json) {
-      _this.addAlertEntry(param_json.date, param_json.title, param_json.ip, param_json.hostname, param_json.detail);
+    theWSEventNotifier.addCallback("notify", "alerts", function (param_json) {
+      _this.addAlertEntry(param_json.id, param_json.severity, param_json.date, param_json.message, param_json.detail);
     });
     // TODO CallAJAX to get Alerts (getAlert.json)
     callAJAX('getAlertList.json', '', 'json', _this.displayAlerts, _this);
@@ -91,8 +88,12 @@ function Alerts(theWSEventNotifier) {
     {
       var i = alertEntries.shift();
 
-      this.insertAlertDisplay(i);
+      if(!firstSignificativeAlertReached && i.id == nextAlertId)
+        firstSignificativeAlertReached = true;
 
+      if(firstSignificativeAlertReached){
+        this.insertAlertDisplay(i);
+      }
     }
   };
 
@@ -104,6 +105,9 @@ function Alerts(theWSEventNotifier) {
    */
   this.displayAlerts = function(jsonContent, _this)
   {
+
+    bufferSize = jsonContent.bufSize;
+    nextAlertId = jsonContent.nextId;
 
 
     $('#divAlerts').append('<table id="tableAlerts" class="display table table-striped table-bordered dataTable no-footer"></table>');
@@ -131,21 +135,12 @@ function Alerts(theWSEventNotifier) {
         { "targets": 4, "className": "dt-head-center dt-body-center", "title": "Message"},
         { "targets": 5, "visible": false, "searchable": false }
       ],
-      order: [[ 1, "desc" ]],
-      "createdRow": function ( row, data, index ) {
-        console.info(data[data.length -1]);
-        if(data[data.length -1] != "")
-          $(row).addClass("new-alert");
-
-      },
       "rowCallback": function( row, data ) {
         $(row).attr("role", "button");
         $(row).off("click");
         $(row).on("click", function(){
           // TODO : click on alert (show alert details)
-          //console.warn( 'TODO: click on alert (show alert details)' );
-          //console.info( 'removing class' );
-          //$(this).removeClass("new-alert");
+          console.warn( 'TODO: click on alert (show alert details)' );
           getAlertDetail(data);
         });
 

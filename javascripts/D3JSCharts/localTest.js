@@ -23,25 +23,3 @@
 
 
 
-
-function testtest(){
-
-  /*proxyPass = "/dynamic/";
-
-  var myWSEventNotifier = new WSEventNotifier('EventNotifier');
-  test = new LastHourHistory(myWSEventNotifier);
-  test.init();
-
- test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},40);
- test.addMinuteRequest("/dynamic/netTopCurrentCountryTraffic.json?net=labo",function(json){console.log(json);},45);*/
-  
-  drawChart("./netTopAppNbFlow.json","Graph");
-  //drawChart("/dynamic/netProtocolTraffic.json?service=loc&dd=2016-08-07+11%3A06&df=2016-08-08+11%3A06&pset=HOURLY&dh=2","Graph");
-
-  //drawChart("./netTopLHostsTraffic.json?pset=HOURLY&dh=2", "Graph");
-  //drawChart("./netTopLHostsTraffic.json?net=labo","Graph");
-
-
-}
-
-testtest();

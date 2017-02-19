@@ -64,19 +64,8 @@ function addNotification(message, alertType, callBack) {
  */
 function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
 
-    console.info(mesgType);
-    console.info(mesgName);
-    console.info(mesgParams);
-
     if (mesgName === "logs")
         addNotification("NEW LOG "+mesgParams.severity+ " : " + mesgParams.message, "alert-log alert-info", callBack);
-
-    if(mesgType === "notify") {
-        if (mesgName === "alert")
-            addNotification("NEW ALERT RAISED", "alert-log alert-info", callBack);
-        else
-            console.error(mesgType + ":" + mesgName + ":" + JSON.stringify(mesgParams))
-    }
 
 /*
     if(mesgType === "notify")

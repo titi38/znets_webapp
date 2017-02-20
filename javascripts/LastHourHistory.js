@@ -14,7 +14,7 @@
  * @param theWSEventNotifier
  * @constructor
  */
-
+z
 function LastHourHistory(theWSEventNotifier) {
 
   var idGenerator = 0;

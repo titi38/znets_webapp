@@ -605,19 +605,37 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 
 function timerupdate(urlJson, mydiv){
 
+  console.error (urlJson);
+
   var df = getParamUrlJson(urlJson,"df");
   var dh = getParamUrlJson(urlJson, "dh");
   urlJson = removeParamUrl(urlJson,"df");
   var array = df.split("%3A");
-  //df = array[0] + ":" + array[1] + ":00";
+
+    var timesliceValue = $("#timesliceCharts").val();
+
+    switch (timesliceValue) {
+        case "lastHour" :
+        case "lastDay" :
+        case "lastWeek" :
+        case "lastMonth" :
+            myServerDate.addCallback("thegraph", drawChartFromInterfaceUpdate, [urlJson, mydiv], 300);
+            break;
+        default :
+            break;
+    }
+/*
+
+    //df = array[0] + ":" + array[1] + ":00";
     df = array[0] + ":59:59";
-  array = df.split("+");
-  df = array[0] + " " + array[1];
-  var date = new Date(df);
+    array = df.split("+");
+    df = array[0] + " " + array[1];
+    var date = new Date(df);
   if(Math.abs(date.getTime() - myLastHourHistory.getCurrentMinute().getTime() - dh*3600000) > 15*60000){
-    return;
-  }
-  date = new Date(date.getTime() + 3600000 /*+ dh*3600000*/);
+   return;
+   }
+
+  date = new Date(date.getTime() + 3600000 ); //+ dh*3600000//);
   df = date.toISOString();
   df = df.substring(0,16);
   array = df.split("T");
@@ -628,8 +646,20 @@ function timerupdate(urlJson, mydiv){
   //console.log("hello")
     console.error ("urlJson:" + urlJson);
   setTimeout(function(){
+      console.errror (urlJson);
     drawChartFromInterface(urlJson,mydiv);
   },60000);
+*/
+//
+}
+
+
+drawChartFromInterfaceUpdate = function (date, params) {
+  var dh = getParamUrlJson(params[0], "dh");
+  df = moment(date).add(parseInt(dh), "hours").format('YYYY-MM-DD+HH:mm');
+  urlJson = params[0] + "&df=" + df;
+  console.error ("urlJson:" + urlJson);
+  drawChartFromInterface( urlJson, params[1] /* mydiv */ );
 }
 
 /**********************************************************************************************************************/

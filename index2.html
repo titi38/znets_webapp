@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+    <script type="text/javascript" language="javascript" src="bower_components/jquery/jquery.min.js"></script>
+
+    <!-- D3JS & CHARTS STYLES -->
+    <!--link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'-->
+    <link href='javascripts/D3JSCharts/fonts.css' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="javascripts/D3JSCharts/graph.css">
+
+    <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+    <script src="bower_components/topojson/topojson.min.js"></script>
+
+    <!-- DATATABLES -->
+    <!------------------------------------------------------------------------------------------------------>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/datatables.net-buttons-bs/css/buttons.bootstrap.min.css">
+    <!------------------------------------------------------------------------------------------------------>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/jszip/dist/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/pdfmake/build/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/pdfmake/build/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+    <!------------------------------------------------------------------------------------------------------>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-plugins/sorting/ip-address.js"></script>
+
+
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css">
+
+    <script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.js"></script>
+
+    <!-- Sidebar's styles -->
+    <link rel="stylesheet" type="text/css" href="styles/sideBar.css">
+
+
+    <!-- MOMENT -->
+    <script src="bower_components/moment/min/moment-with-locales.js"></script>
+
+
+    <!-- DATETIMEPICKER -->
+    <script src="bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css">
+
+
+    <!-- BOOTSTRAP -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+
+    <!-- NOUISLIDER -->
+    <script src="bower_components/nouislider/distribute/nouislider.min.js"></script>
+    <link rel="stylesheet" href="bower_components/nouislider/distribute/nouislider.min.css">
+
+
+
+    <!-- FONT-AWESOME -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+
+    <!-- FONT-AWESOME-ANIMATION -->
+    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css">
+
+
+    <!-- RIVETS -->
+    <script src="bower_components/rivets/dist/rivets.bundled.min.js"></script>
+
+
+
+    <!-- DoT -->
+    <script src="bower_components/dot/doT.min.js"></script>
+
+
+    <!-- MY STYLES -->
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/tabs.css">
+
+    <!--JAVASCRIPT IMPORT -->
+
+    <script type="text/javascript" src="javascripts/GlobalVariables.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataColumnResults.js"></script>
+    <script type="text/javascript" src="javascripts/CallAjax.js"></script>
+    <script type="text/javascript" src="javascripts/WebSocket.js"></script>
+    <script type="text/javascript" src="javascripts/Logs.js"></script>
+    <script type="text/javascript" src="javascripts/Alerts.js"></script>
+    <script type="text/javascript" src="javascripts/Auth.js"></script>
+    <script type="text/javascript" src="javascripts/Initialisation.js"></script>
+    <script type="text/javascript" src="javascripts/Notifications.js"></script>
+    <script type="text/javascript" src="javascripts/LastHourHistory.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataTableResults.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataTabs.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataForm.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataApplications.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataCountries.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataASNums.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataProto.js"></script>
+    <script type="text/javascript" src="javascripts/Rawdata/RawDataLocalhosts.js"></script>
+    <script type="text/javascript" src="javascripts/ChartsFormular.js"></script>
+    <script type="text/javascript" src="javascripts/Networks.js"></script>
+    <script type="text/javascript" src="javascripts/Localhosts.js"></script>
+    <script type="text/javascript" src="javascripts/ServerDate.js"></script>
+    <script type="text/javascript" src="javascripts/ClockWidget.js"></script>
+    <script type="text/javascript" src="javascripts/Common_Tabs/TabsScroll.js"></script>
+    <script type="text/javascript" src="javascripts/Common_Modal_Bootstrap/DetailsModal.js"></script>
+    <script type="text/javascript" src="javascripts/Templates.js"></script>
+    <script type="text/javascript" src="javascripts/Common_DataTables/DataTablesSizeAdjustments.js"></script>
+    <script type="text/javascript" src="javascripts/Common_Tabs/TabsScroll.js"></script>
+    <script type="text/javascript" src="javascripts/Common_Tabs/TabsInitialization.js"></script>
+    <script type="text/javascript" src="javascripts/Rivets/RivetsFormatters.js"></script>
+
+
+    <script type="text/javascript" src="javascripts/D3JSCharts/initGraph.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/curveSimpleGraph.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunction.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunctionSimple.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunctionDouble.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunctionMap.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpfunction2histo.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/mapDirectionGraph.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/histoSimpleGraph.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunctionsSimpleHistoCurrent.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/simpleHistoCurrent.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/2histo.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/histoDoubleGraph.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/histoDoubleCurrent.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunctionsDoubleCurrent.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/mapGraph.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/popupGraph.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/MonitoringCharts.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/2histoCurrent.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunctions2histoCurrent.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/helpFunctionsCurrent.js"></script>
+    <script type="text/javascript" src="javascripts/D3JSCharts/histoDoubleCurrentFormatVariation.js"></script>
+
+
+    <!-- D3 Lines Chart Style -->
+    <link rel="stylesheet" href="styles/monitoringCharts.css">
+
+
+
+    <link rel="stylesheet" href="styles/chartNavigation.css">
+    <link rel="stylesheet" href="styles/RawDataForm.css">
+
+
+
+    <!-- JQuery-UI Combobox function and styles -->
+    <link rel="stylesheet" href="styles/comboBox.css">
+    <script type="text/javascript" src="javascripts/Rawdata/ComboBox.js"></script>
+
+
+</head>
+
+
+<!-- BODY with disabled right-click -->
+<body oncontextmenu="return false;">
+
+
+<div class="row">
+    <div id="notificationsContainer" class="col-xs-8 col-xs-offset-2 col-md-6 col-md-offset-3" data-spy="affix" data-offset-top="1"></div>
+</div>
+
+<div class="modal fade" id="information_Details_Modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--button type="button" class="close" data-dismiss="modal">&times;</button-->
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>hell yeah !!!</p>
+            </div>
+            <!--div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div-->
+        </div>
+
+    </div>
+</div>
+
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand mybrand"><div class="logo brand"></div></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav" id="tabs">
+                <!--li class="active home"><a href="#home"><i class="fa fa-home fa-1_3x" aria-hidden="true"></i></a></li-->
+                <li class="disabled network"><a href=".tab-network" class="networkTab">Network</a></li>
+                <li class="disabled localhosts"><a href=".tab-localhosts" id="localhostTab" class="localhostTab">Localhosts</a></li>
+                <li class="disabled rawdata"><a href="#rawdata">Flows</a></li>
+                <li class="disabled alerts"><a href="#alerts" class="alertTab">Alerts</a></li>
+                <li class="disabled logs"><a href="#logs" class="logTab">Logs</a></li>
+            </ul>
+
+            <div id="clock_container">
+
+            </div>
+
+            <form id="loginform" class="navbar-form navbar-right form-inline hidden" role="form" onsubmit="connect(); return false;">
+                <!--div id="statusMsg" styles="display: inline !important; margin-right:25px;" role="alert"></div-->
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="shown-login-username" type="text" class="form-control" name="username" value="" placeholder="username">
+                </div>
+                <button type="submit" id="btn-disconnect" class="btn btn-default" onclick="disconnect(); return false;">Log out </button>
+                <!--/div-->
+            </form>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+
+<div class="container-fluid">
+    <div id="content">
+
+        <div class="tabbable boxed parentTabs">
+            <!--ul class="nav nav-tabs" id="tabs">
+              <li class="active"><a href="#home">Home</a></li>
+              <li class="disabled"><a href="#alerts">alerts</a></li>
+              <li class="disabled"><a href="#rawdata">rawdata</a></li>
+              <li class="disabled"><a href="#logs">Control Command</a></li>
+            </ul-->
+            <div class="tab-content">
+
+                <div class="tab-pane fade active in" id="home">
+                    <!--iframe class="toBottomContainer" src="home.html"></iframe-->
+
+
+                </div>
+
+                <div class="tab-pane fade" id="alerts">
+                    <br><br>
+                    <div id="divAlerts" class="toBottomTabsContainer">
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <br>
+
+                <div class="container-fluid tab-pane fade tab-network">
+
+                    <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <div class="wrapper">
+                        <ul class="nav nav-tabs list network-tab-list" id="networkTabsContainer">
+                            <!--li class="active"><a data-toggle="tab" href="#divNetworkGlobal"> Global</a></li-->
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="container-fluid tab-pane fade tab-localhosts">
+
+                    <button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    <div class="wrapper localhosts">
+                        <ul class="nav nav-tabs list localhost-tab-list" id="localhostTabsContainer">
+                            <li class="active"><a class="localhostsInventory" href="#localhostsInventory">Inventory</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div id="charts_form_container" class="container-fluid tab-pane fade tab-localhosts tab-network">
+
+                </div>
+
+                <div class="container-fluid tab-pane fade tab-network" id ="network">
+
+                    <div class="tab-content network-tab-content">
+                        <!--div class="tab-pane fade in network active" data-network="Global" data-toggle="tab" id="divNetworkGlobal" >Global Network Content</div-->
+                    </div>
+
+                </div>
+
+
+                <div class="container-fluid tab-pane fade tab-localhosts" id ="localhosts">
+
+                    <div class="tab-content localhost-tab-content">
+                        <!--div class="tab-pane fade in localhost active" data-localhost="Global" data-toggle="tab" id="divLocalhostGlobal" >Global Localhost Content</div-->
+                        <div class="tab-pane fade active in" id="localhostsInventory">
+                            <div id="divLocalhosts" class="toBottomTabsContainer col-xs-12">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+                <div class="tab-pane fade" id="rawdata">
+
+                </div>
+
+                <div class="tab-pane fade" id="logs">
+                    <br><br>
+                    <div id="divLogs" class="toBottomTabsContainer">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div> <!-- container -->
+
+
+
+</body>
+</html>

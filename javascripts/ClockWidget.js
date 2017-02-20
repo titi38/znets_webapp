@@ -28,7 +28,7 @@ function ClockWidget(ServerDate, div_clock_container)
 
 
     // Make the function wait until the connection is made...
-    this.update = function(dateString){
+    this.update = function(dateString, noParam){
         $("#serverDate").html(" "+moment(dateString).add(parseInt(moment().format("Z")), "hours").format('HH:mm'));
     }
 
@@ -36,7 +36,7 @@ function ClockWidget(ServerDate, div_clock_container)
     this.init = function(div_clock_container)
     {
         this.draw(div_clock_container);
-        ServerDate.addCallback("theClock", _this.update, 150);
+        ServerDate.addCallback("theClock", _this.update, null, 150);
     };
 
     this.draw(div_clock_container);

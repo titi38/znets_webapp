@@ -107,15 +107,15 @@ function ServerDate(theWSEventNotifier) {
 
         for (var key in minuteChange_Subscribers) {
             setTimeout( function() {
-                minuteChange_Subscribers[key].callback(dateString);
+                minuteChange_Subscribers[key].callback(dateString, minuteChange_Subscribers[key].callbackParams);
             }, Math.random() * minuteChange_Subscribers[key].dT + 1)
         }
 
     }
 
 
-    this.addCallback = function(name, callback, dT){
-        minuteChange_Subscribers[name] =  { callback: callback, dT: dT };
+    this.addCallback = function(name, callback, callbackParams, dT){
+        minuteChange_Subscribers[name] =  { callback: callback, callbackParams: callbackParams, dT: dT };
 
     }
 

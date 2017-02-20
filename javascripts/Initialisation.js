@@ -63,7 +63,7 @@ function initialisation(){
     /*********************************************************************************************************
      New ServerDate Object
      ********************************************************************************************************/
-    var myServerDate = new ServerDate(myWSEventNotifier);
+    /*var */myServerDate = new ServerDate(myWSEventNotifier);
     myServerDate.init();
 
     var myClockWidget = new ClockWidget(myServerDate, $('#clock_container'));

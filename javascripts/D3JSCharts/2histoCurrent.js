@@ -391,9 +391,6 @@ function autoUpdate2HistoCurrent(svg,urlJson, div){
       console.log(responseUpdate);
       console.log("update list responses");
 
-
-
-
       if(isInUpdate){
         return;
       }

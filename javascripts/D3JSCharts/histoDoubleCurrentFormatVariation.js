@@ -619,40 +619,12 @@ function timerupdate(urlJson, mydiv){
         case "lastDay" :
         case "lastWeek" :
         case "lastMonth" :
-            myServerDate.addCallback("thegraph", drawChartFromInterfaceUpdate, [urlJson, mydiv], 300);
+            myServerDate.addCallback("theGraph", drawChartFromInterfaceUpdate, [urlJson, mydiv], 500);
             break;
         default :
             break;
     }
-/*
-
-    //df = array[0] + ":" + array[1] + ":00";
-    df = array[0] + ":59:59";
-    array = df.split("+");
-    df = array[0] + " " + array[1];
-    var date = new Date(df);
-  if(Math.abs(date.getTime() - myLastHourHistory.getCurrentMinute().getTime() - dh*3600000) > 15*60000){
-   return;
-   }
-
-  date = new Date(date.getTime() + 3600000 ); //+ dh*3600000//);
-  df = date.toISOString();
-  df = df.substring(0,16);
-  array = df.split("T");
-  df = array[0] + "+" + array[1];
-  array = df.split(":");
-  df = array[0] + "%3A" + array[1];
-  urlJson = urlJson + "&df=" + df;
-  //console.log("hello")
-    console.error ("urlJson:" + urlJson);
-  setTimeout(function(){
-      console.errror (urlJson);
-    drawChartFromInterface(urlJson,mydiv);
-  },60000);
-*/
-//
 }
-
 
 drawChartFromInterfaceUpdate = function (date, params) {
   var dh = getParamUrlJson(params[0], "dh");

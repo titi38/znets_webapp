@@ -29,6 +29,7 @@ function ClockWidget(ServerDate, div_clock_container)
 
     // Make the function wait until the connection is made...
     this.update = function(dateString, noParam){
+        console.error("ClockWidget::update");
         $("#serverDate").html(" "+moment(dateString).add(parseInt(moment().format("Z")), "hours").format('HH:mm'));
     }
 

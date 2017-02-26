@@ -104,11 +104,19 @@ function ServerDate(theWSEventNotifier) {
         $('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
 
+   //     $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+
+
 
         for (var key in minuteChange_Subscribers) {
-            setTimeout( function() {
-                minuteChange_Subscribers[key].callback(dateString, minuteChange_Subscribers[key].callbackParams);
-            }, Math.random() * minuteChange_Subscribers[key].dT + 1)
+            console.log("serverDateChanges key="+key)
+
+            console.log(Math.random() * minuteChange_Subscribers[key].dT + 1)
+            setTimeout( function(_key) {
+                minuteChange_Subscribers[_key].callback(dateString, minuteChange_Subscribers[_key].callbackParams);
+            }, Math.random() * minuteChange_Subscribers[key].dT + 1, key);
+
         }
 
     }

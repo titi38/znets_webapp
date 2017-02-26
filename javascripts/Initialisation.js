@@ -69,6 +69,13 @@ function initialisation(){
     var myClockWidget = new ClockWidget(myServerDate, $('#clock_container'));
 
     /*********************************************************************************************************
+     New LastHourHistory Object
+     ********************************************************************************************************/
+    myLastHourHistory = new LastHourHistory(myServerDate);
+//    myLastHourHistory.init();
+
+
+    /*********************************************************************************************************
      New Logs Object
      ********************************************************************************************************/
     var myLogs = new Logs(myWSEventNotifier);
@@ -87,13 +94,6 @@ function initialisation(){
     //var myLocalhosts = new Localhosts();
     myLocalhosts.init();
 
-
-
-    /*********************************************************************************************************
-     New LastHourHistory Object
-     ********************************************************************************************************/
-    myLastHourHistory = new LastHourHistory(myWSEventNotifier);
-    myLastHourHistory.init();
 
     /*********************************************************************************************************
      Activate logs tab

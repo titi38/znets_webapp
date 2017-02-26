@@ -14,8 +14,9 @@
  * @param theWSEventNotifier
  * @constructor
  */
-z
-function LastHourHistory(theWSEventNotifier) {
+
+function LastHourHistory(ServerDate) {
+//function LastHourHistory(theWSEventNotifier) {
 
   var idGenerator = 0;
   var currentTime = new Date(0);
@@ -23,9 +24,9 @@ function LastHourHistory(theWSEventNotifier) {
   var mapRequestsOnNewMinute = new Map();
   var mapResultLastMinute = new Map();
 
+/*
   this.onWSConnect = function(){
     theWSEventNotifier.addCallback("notify", "date_processing", function (param) {onNotification(param)});
-
   };
 
 
@@ -42,37 +43,47 @@ function LastHourHistory(theWSEventNotifier) {
     return currentTime;
   };
 
+    this.init = function()
+    {
 
+    };
 
+ */
 
-  function onNotification(param){
+  function onNotification(dateString, noParam){
 
-    var notificationDate = new Date(param.date);
+    var notificationDate = new Date(dateString);
 
     mapRequestsOnNewMinute.forEach(function(callbacks, urlRequest){
-
       var lastResult = mapResultLastMinute.get(urlRequest);
-
       var minuteParam;
 
+      switch ($("#timesliceCharts").val()) {
+          case "lastHour" :
+          case "lastDay" :
+          case "lastWeek" :
+          case "lastMonth" :
+              if(lastResult) {
+                  minuteParam = lastResult.result.data[0][0];
+                  break;
+              }
+          default :
+              minuteParam = 60;
+              break;
+      }
+/*
       //More than 15mn since the last result=> possible trouble, one hour is requested.
       if(!lastResult || notificationDate.getTime() - lastResult.date.getTime() > 900000){
-
         minuteParam = 60;
-
       }else{
-
         minuteParam = lastResult.result.data[0][0];
-
       }
-
+*/
       console.log(minuteParam);
 
       var urlRequestParam = addStringUrl(urlRequest,"minute=" + minuteParam);
 
-
       d3.json(urlRequestParam,function(error,json){
-
         if(error || testJson(json)){
           console.warn("error request notification " + urlRequestParam);
           return;
@@ -81,17 +92,14 @@ function LastHourHistory(theWSEventNotifier) {
         json = json.response;
         var jsonData = json.data;
         var jsonCurrentMinute = jsonData[0][0];
-
         var newResult;
 
         if((minuteParam !== 60) && (jsonCurrentMinute !== minuteParam) /*must be checked,server has a slightly incoherent
          behavior if current minute is requested*/)
         {
-
           var lastResultData = lastResult.result.data;
           var durationResult = trueModulo(jsonCurrentMinute - minuteParam, 60);
           var lastResultDataLength = lastResultData.length;
-
 
           //an 1 hour window is kept
           for(var i = lastResultDataLength - 1; i >=0 ; i --){
@@ -99,25 +107,18 @@ function LastHourHistory(theWSEventNotifier) {
             if(trueModulo(minuteParam - lastResultData[i][0], 60) + 1 + durationResult <= 60){
               break;
             }
-
           }
 
           i++;
-
           lastResultData.splice(i,lastResultDataLength - i);
-
 
           //new data is stored
           for(i = jsonData.length - 1; i >= 0; i--){
             lastResultData.unshift(jsonData[i]);
           }
-
           newResult = lastResult.result;
-
         }else if(jsonCurrentMinute === minuteParam){
-
           newResult = lastResult.result;
-
         }else{
           //minuteParam === 60
           newResult = json;
@@ -129,9 +130,7 @@ function LastHourHistory(theWSEventNotifier) {
         callbacks.sort(function(a,b){
 
           if(a.lastMinute === -1 && b.lastMinute === -1){
-
             return 0;
-
           }
 
           if(a.lastMinute === -1){
@@ -143,7 +142,6 @@ function LastHourHistory(theWSEventNotifier) {
           }
 
           return trueModulo(jsonCurrentMinute - b.lastMinute,60) - trueModulo(jsonCurrentMinute - a.lastMinute,60);
-
         });
 
 
@@ -180,10 +178,8 @@ function LastHourHistory(theWSEventNotifier) {
 
           callbackObj.lastMinute = (lastMinute === -1)?-1:jsonCurrentMinute;
 
-
-
           try {
-            callbackObj.callback(response, new Date(param.date));
+            callbackObj.callback(response, new Date(dateString));
           }catch(e){
             console.warn("callback error");
             console.warn(e);
@@ -211,6 +207,8 @@ function LastHourHistory(theWSEventNotifier) {
 
   this.addMinuteRequest = function(urlRequest, callback, lastMinute){
 
+    ServerDate.addCallback("theGraph", onNotification, null, 300);
+
     var id = generateId();
 
     if(mapRequestsOnNewMinute.has(urlRequest)){
@@ -234,6 +232,7 @@ function LastHourHistory(theWSEventNotifier) {
    */
 
   this.unsubscribe = function(urlRequest, id){
+
     var r = mapRequestsOnNewMinute.get(urlRequest);
     if(r){
 
@@ -257,7 +256,7 @@ function LastHourHistory(theWSEventNotifier) {
    * @param callback {Function} a function which is called with the result if the data has been received from the server,
    * and with false otherwise if any error occurred.
    */
-
+/*
   this.getLastHour = function(urlRequest, callback){
 
     var resultLastMinute = mapResultLastMinute.get(urlRequest);
@@ -290,7 +289,7 @@ function LastHourHistory(theWSEventNotifier) {
     return b;
 
   }
-
+*/
   function addStringUrl(url, prmt){
 
     return(url.indexOf("?") === -1)?url + "?" + prmt:url+ "&" + prmt;
@@ -300,6 +299,7 @@ function LastHourHistory(theWSEventNotifier) {
   function generateId(){
     return idGenerator ++;
   }
+
 }
 
 

@@ -104,8 +104,7 @@ function ServerDate(theWSEventNotifier) {
         $('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
 
-   //     $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
-        $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+       // $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
 
 
 
@@ -125,6 +124,14 @@ function ServerDate(theWSEventNotifier) {
     this.addCallback = function(name, callback, callbackParams, dT){
         minuteChange_Subscribers[name] =  { callback: callback, callbackParams: callbackParams, dT: dT };
 
+    }
+
+
+    this.resetGraphRefresh = function(){
+        console.error(minuteChange_Subscribers["theGraph"]);
+        if(minuteChange_Subscribers["theGraph"])
+            delete minuteChange_Subscribers["theGraph"];
+        console.error(minuteChange_Subscribers["theGraph"]);
     }
 
 

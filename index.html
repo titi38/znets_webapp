@@ -2,107 +2,86 @@
 <html>
 <head>
 
-    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-
+    <script type="text/javascript" language="javascript" src="bower_components/jquery/jquery.min.js"></script>
 
     <!-- D3JS & CHARTS STYLES -->
     <!--link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'-->
     <link href='javascripts/D3JSCharts/fonts.css' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="javascripts/D3JSCharts/graph.css">
-    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
 
+    <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+    <script src="bower_components/topojson/topojson.min.js"></script>
 
     <!-- DATATABLES -->
     <!------------------------------------------------------------------------------------------------------>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.bootstrap.min.css">
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/datatables.net-buttons-bs/css/buttons.bootstrap.min.css">
     <!------------------------------------------------------------------------------------------------------>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.bootstrap.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/jszip/dist/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/pdfmake/build/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/pdfmake/build/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-buttons/js/buttons.colVis.min.js"></script>
     <!------------------------------------------------------------------------------------------------------>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/ip-address.js"></script>
-    <!--script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"-->
+    <script type="text/javascript" language="javascript" src="bower_components/datatables.net-plugins/sorting/ip-address.js"></script>
 
 
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css">
 
-
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
-    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <!--script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script-->
-
-
+    <script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.js"></script>
 
     <!-- Sidebar's styles -->
     <link rel="stylesheet" type="text/css" href="styles/sideBar.css">
 
 
-
     <!-- MOMENT -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-
+    <script src="bower_components/moment/min/moment-with-locales.js"></script>
 
 
     <!-- DATETIMEPICKER -->
-    <script src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
-	<link rel="stylesheet" href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css">
-
+    <script src="bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css">
 
 
     <!-- BOOTSTRAP -->
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"-->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
 
 
     <!-- NOUISLIDER -->
-	<script src="https://cdn.jsdelivr.net/jquery.nouislider/8.5.0/nouislider.min.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.nouislider/8.5.0/nouislider.min.css">
+    <script src="bower_components/nouislider/distribute/nouislider.min.js"></script>
+    <link rel="stylesheet" href="bower_components/nouislider/distribute/nouislider.min.css">
 
 
 
     <!-- FONT-AWESOME -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 
     <!-- FONT-AWESOME-ANIMATION -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"-->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.0.9/font-awesome-animation.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css">
 
 
     <!-- RIVETS -->
-    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.9.0/rivets.min.js"></script-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.9.0/rivets.bundled.min.js"></script>
+    <script src="bower_components/rivets/dist/rivets.bundled.min.js"></script>
 
 
 
     <!-- DoT -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/dot/1.0.3/doT.min.js"></script>
+    <script src="bower_components/dot/doT.min.js"></script>
 
 
     <!-- MY STYLES -->
@@ -133,6 +112,7 @@
     <script type="text/javascript" src="javascripts/Networks.js"></script>
     <script type="text/javascript" src="javascripts/Localhosts.js"></script>
     <script type="text/javascript" src="javascripts/ServerDate.js"></script>
+    <script type="text/javascript" src="javascripts/ClockWidget.js"></script>
     <script type="text/javascript" src="javascripts/Common_Tabs/TabsScroll.js"></script>
     <script type="text/javascript" src="javascripts/Common_Modal_Bootstrap/DetailsModal.js"></script>
     <script type="text/javascript" src="javascripts/Templates.js"></script>
@@ -237,9 +217,9 @@
                 <li class="disabled logs"><a href="#logs" class="logTab">Logs</a></li>
             </ul>
 
-            <ul class="nav navbar-nav pull-right margin-left-15px" title="Server Time">
-                <li class="active"><a><i class="fa fa-clock-o fa-1_3x" id="serverDate" aria-hidden="true"></i></a></li>
-            </ul>
+            <div id="clock_container">
+
+            </div>
 
             <form id="loginform" class="navbar-form navbar-right form-inline hidden" role="form" onsubmit="connect(); return false;">
                 <!--div id="statusMsg" styles="display: inline !important; margin-right:25px;" role="alert"></div-->

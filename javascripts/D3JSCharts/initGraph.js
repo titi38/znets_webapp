@@ -11,6 +11,9 @@
  */
 function loadChartJsonToDiv(selectedNavChart, forNetworks) {
 
+    // Reset Chart's auto refresh, on serverDate change
+    myServerDate.resetGraphRefresh();
+
     var jsonData = selectedNavChart.dataset.chartJson;
     var ajaxParams = selectedNavChart.dataset.ajaxParams;
     var jqueryTarget = selectedNavChart.hash;
@@ -19,6 +22,7 @@ function loadChartJsonToDiv(selectedNavChart, forNetworks) {
 
     var subNet_or_lhIp = (forNetworks) ? ( (selectedNavChart.dataset.network === "Global") ? "" : selectedNavChart.dataset.network ) : ( selectedNavChart.dataset.localhostIp );
     drawChartFromInterface(setChartJsonFUllURL(jsonData, ajaxParams, subNet_or_lhIp, forNetworks), jqueryTarget);
+
 
 }
 

@@ -209,7 +209,8 @@ function LastHourHistory(ServerDate) {
 
     ServerDate.addCallback("theGraph", onNotification, null, 300);
 
-    var id = generateId();
+    var id = 0; //generateId();
+    mapRequestsOnNewMinute.clear();
 
     if(mapRequestsOnNewMinute.has(urlRequest)){
 

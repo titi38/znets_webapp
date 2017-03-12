@@ -74,13 +74,18 @@
 }
 .divtable{
     vertical-align: top;
-    border-style: ridge;
+ /*   border-style: ridge;*/
+    border-radius: 8px;
+    border: 2px solid #73AD21;
+    padding: 4px;
 
 }
 
 .borderTable{
-    border-style: ridge;
-
+    /*border-style: ridge;*/
+    border-radius: 8px;
+    border: 2px solid #73AD21;
+    padding: 4px; 
 }
 
 .tableLegend{

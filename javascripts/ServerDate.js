@@ -44,7 +44,6 @@ function ServerDate(theWSEventNotifier) {
         });
         // TODO CallAJAX to get ServerDate (getServerDate.json)
         callAJAX('getGMTdate.json', '', 'json', _this.displayServerDate, _this);
-
     };
 
 
@@ -122,6 +121,8 @@ function ServerDate(theWSEventNotifier) {
 
 
     this.addCallback = function(name, callback, callbackParams, dT){
+        if(minuteChange_Subscribers[name])
+            delete minuteChange_Subscribers[name];
         minuteChange_Subscribers[name] =  { callback: callback, callbackParams: callbackParams, dT: dT };
 
     }

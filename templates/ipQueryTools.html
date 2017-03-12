@@ -1,0 +1,67 @@
+
+<div class="container" >
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#iptoolboxModal" id="iptoolbox-button" onclick="updateIptoolboxButton();">Ip Query Tools</button>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="iptoolboxModal" role="dialog">
+        <div class="modal-dialog modal-lg" >
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Ip Query Tools</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="panel panel-iptoolbox"> <!-- global -->
+                        <div class="panel-heading">
+                            <!--div class="form-inline"-->
+                            <form id="iptoolboxForm" class="form-inline" role="form">
+
+                                <div class="form-group">
+                                    <label class="control-label"
+                                           for="iptoolboxElem">Ip, Hostname or <BR>Domain Name:</label>
+                                    <input class="form-control" type="text" id="iptoolboxElem"
+                                           size="17"
+                                           onkeyup="updateIptoolboxButton()"/>
+                                </div>
+
+                                <div class="form-group" style="margin-left: 10px;">
+                                    <label class="control-label"
+                                           for="cmdTool">Tool:</label>
+                                    <select class="form-control" id="cmdTool"
+                                            style=' cursor: pointer;' onchange="updateToolBoxSelection(); updateIptoolboxButton();">
+                                        <option selected=true disabled>Choose a tool</option>"
+                                        <option value="whois">Whois</option>
+                                        <option value="dns">DNS record</option>
+                                        <option value="geoip">GeoIp</option>
+                                        <option value="ping">Ping</option>
+                                        <!--option value="traceroute">Traceroute</option -->
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="margin-left: 10px; display: none;" id="whoisServerSelection">
+                                    <label class="control-label"
+                                           for="whoisServer">Server:</label>
+                                    <select class="form-control" id="whoisServer"
+                                            style=' cursor: pointer;' onchange="updateIptoolboxButton()">
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="margin-left: 10px;">
+                                </div><br/>
+                                <button type="button" id="btn-iptoolboxExec" class="btn btn-success" style="margin-top: 10px;" onclick="iptoolboxExec()" >Execute </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="panel-body" id="iptoolbox-result"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

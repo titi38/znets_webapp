@@ -28,6 +28,8 @@ $( document ).ready(function() {
 
     getHtmlTemplate("#rawdata", "templates/rawData.html", null, null);
 
+    getHtmlTemplate("#ipQueryTools_container", "templates/ipQueryTools.html", null, null);
+
     tryRestoreConnectSession();
 
 });

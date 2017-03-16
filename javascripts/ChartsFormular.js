@@ -37,6 +37,9 @@ function updateChartsTimeslice( timesliceValue ){
             enableDateFormCharts(false);
             break;
         case "custom" :
+            $("#timestepCharts option[value='MINUTE']").show();
+            $("#timestepCharts option[value='HOURLY']").show();
+            $("#timestepCharts option[value='DAILY']").show();
             enableDateFormCharts(true);
             break;
         default :
@@ -44,9 +47,7 @@ function updateChartsTimeslice( timesliceValue ){
             console.error(timesliceValue);
             break;
     }
-
 }
-
 
 
 function enableDateFormCharts(enabled){

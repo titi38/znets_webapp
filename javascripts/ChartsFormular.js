@@ -134,8 +134,6 @@ function applyChartsForm(){
 
 
 
-
-
 /**
  * Resets Formular/Bar Visible Fields Values to Hidden Fields Values
  * Copies Hidden Fields Values to each equivalent Visible Fields Values
@@ -153,9 +151,6 @@ function resetChartsForm(){
     $("#resetBtn_charts_form").prop("disabled", true);
 
 }
-
-
-
 
 
 

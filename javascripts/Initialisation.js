@@ -24,11 +24,15 @@ $( document ).ready(function() {
 
     activateTabOfClass("home");
 
+    getHtmlTemplate("#alerts", "templates/alerts.html", null, null);
+
     getHtmlTemplate("#charts_form_container", "templates/chartsFormular.html", null, null);
 
     getHtmlTemplate("#rawdata", "templates/rawData.html", null, null);
 
     getHtmlTemplate("#ipQueryTools_container", "templates/ipQueryTools.html", null, null);
+
+    getHtmlTemplate("#showConf_container", "templates/showConfiguration.html", null, null);
 
     tryRestoreConnectSession();
 
@@ -70,6 +74,9 @@ function initialisation(){
 
     var myClockWidget = new ClockWidget(myServerDate, $('#clock_container'));
 
+
+    $("#showConf_button").show();
+
     /*********************************************************************************************************
      New LastHourHistory Object
      ********************************************************************************************************/
@@ -86,7 +93,7 @@ function initialisation(){
     /*********************************************************************************************************
      New Alerts Object
      ********************************************************************************************************/
-    var myAlerts = new Alerts(myWSEventNotifier);
+    /*var */myAlerts = new Alerts(myWSEventNotifier);
     myAlerts.init();
 
     /*********************************************************************************************************
@@ -147,7 +154,6 @@ function initialisation(){
     $('a.networkTab').on('shown.bs.tab', function (e) {
 
         reAdjustAll();
-
         if($("#network.tab-pane.fade.tab-network.active").find("div.tab-pane.network.active").length === 0) $("li.tabGlobal.tab").find("a").click();
         
     });

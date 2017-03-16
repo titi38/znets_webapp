@@ -22,14 +22,11 @@ updateToolBoxSelection = function() {
         $("#whoisServerSelection").show();
     }
     else
-    {
-        $("#whoisServerSelection").hide();
-    }
+      $("#whoisServerSelection").hide();
 }
 /*********************************************************************************/
 
 iptoolboxShowResult = function(json) {
-    console.log(json);
     $("#iptoolbox-result").html("");
     $("#iptoolbox-result").append("<B>$ "+json.command+"</B>\n");
     $("#iptoolbox-result").append(json.result) ;
@@ -40,7 +37,6 @@ iptoolboxShowResult = function(json) {
 iptoolboxExec = function() {
 
     var params =  "ip=" + $("#iptoolboxElem").val();
-
     params += "&cmd=" + $("#cmdTool").val();
 
     if ($("#cmdTool").val() === "whois")
@@ -56,7 +52,6 @@ updateIptoolboxButton = function() {
     res = $("#iptoolboxElem").val().length == 0 || $("#cmdTool").val() === null;
     //  || ($("#cmdTool").val() === "whois" && $("#whoisServer").val() == null ) ;
     $("#btn-iptoolboxExec").prop('disabled', res);
-
 }
 
 /*********************************************************************************/

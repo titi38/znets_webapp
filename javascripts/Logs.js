@@ -107,54 +107,51 @@ function Logs(theWSEventNotifier) {
         "sInfo": 'Showing _END_ Entries.',
         "sInfoEmpty": 'No entries to show',
       },
-      fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
+        "order": [[ 1, "desc" ]],
+//      fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
       columnDefs: [
-        {
-          // The `data` parameter refers to the data for the cell (defined by the
-          // `data` option, which defaults to the column being worked with, in
-          // this case `data: 0`.
-          "render": function ( data, type, row ) {
-            switch (data){
-              case "WARNING":
-                return "<div class='logWarningIcon' title='Warning'/>";
-                break;
-              case "ALERT":
-                return "<div class='logAlertIcon' title='Alert'/>";
-                break;
-              case "INFO":
-                return "<div class='logInfoIcon' title='Info'/>";
-                break;
-              case "ERROR":
-                return "<div class='logErrorIcon' title='Error'/>";
-                break;
-              case "FATAL":
-                return "<div class='logFatalIcon' title='Fatal'/>";
-                break;
-              default:
-                alert("ChargerLogs : new severity :"+ data);
-                break;
-            }
+          {  "width": "20rem", "targets": 1, "title": "Date" },
+          {
+              // The `data` parameter refers to the data for the cell (defined by the
+              // `data` option, which defaults to the column being worked with, in
+              // this case `data: 0`.
+
+                "render": function ( data, type, row ) {
+                    var result = "";
+                    switch (row[0]) {
+                        case "WARNING":
+                            result += "<i class='logWarningIcon' title='Warning'></i>";
+                            break;
+                        case "ALERT":
+                            result += "<i class='logAlertIcon' title='Alert'></i>";
+                            break;
+                        case "INFO":
+                            result += "<i class='logInfoIcon' title='Info'></i>";
+                            break;
+                        case "ERROR":
+                            result += "<i class='logErrorIcon' title='Error'></i>";
+                            break;
+                        case "FATAL":
+                            result += "<i class='logFatalIcon' title='Fatal'></i>";
+                            break;
+                        default:
+                            alert("ChargerLogs : new severity :" + row[0]);
+                            break;
+                    }
+
+                    result += "&nbsp; "+data+ " &nbsp;&nbsp;";
+
+                    if(row[3] != "")
+                      result += "<i class='glyphicon glyphicon-search'  title='More info'></i>";
+                      //result += "<i class='glyphicon glyphicon-search' onclick='displayPopUp(\""+row[3]+"\")'  title='More info'></i>";
+
+                    return result;
+            },
+            "targets": 2, "title": "Message"
           },
-          "targets": 0, "title": "Severity"
-        },
-        {
-          "targets": 1, "title": "Date"
-        },
-        {
-          "render": function ( data, type, row ) {
-            if(row[3] == "")
-              return "";
-            else
-              return "<div class='logDetailIcon' onclick='displayPopUp(\""+row[3]+"\")'  title='More info'></div>";
-          },
-          "targets": 2, "title": "Details"
-        },
-        {
-          "render": function ( data, type, row ) {
-              return row[2];
-          },
-          "targets": 3, "title": "Message"
-        },
+
+          { "visible": false,  "targets": [ 0 ] },
+          { "visible": false,  "targets": [ 3 ] }
       ],
       "rowCallback": function( row, data ) {
         $(row).attr("role", "button");
@@ -178,10 +175,7 @@ function Logs(theWSEventNotifier) {
 
   };
 
-
-
-  this.init = function()
-  {
+  this.init = function() {
     var _this = this;
     theWSEventNotifier.waitForSocketConnection(
         _this.onWSConnect()

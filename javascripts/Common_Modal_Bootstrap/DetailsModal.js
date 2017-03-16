@@ -40,10 +40,10 @@ function showAlertDetailsModal(response, alertData) {
         setModal(titleText, "Something went wrong : no 'response' field in server's json ! Please check the console.");
 
     $("#information_Details_Modal").modal('show');
-
+    $("#information_Details_Modal").on('hidden.bs.modal', function () {
+        $("#tableAlerts_wrapper").find("tr").removeClass('alert-selected');
+    });
 }
-
-
 
 
 

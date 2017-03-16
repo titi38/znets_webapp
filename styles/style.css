@@ -152,34 +152,33 @@ body.wait, body.wait *{
 }
 
 
-div.logDetailIcon, div.alertDetailIcon {
+i.logDetailIcon, div.alertDetailIcon {
     content:url('../images/more.png');
-    float: left;
+    width: 10px !important;
+    height: 10px !important;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
 
-div.logWarningIcon{
+i.logWarningIcon{
     content:url('../images/warnIcon.gif');
-    margin: auto;
 }
 
-div.logAlertIcon{
+i.logAlertIcon{
     content:url('../images/alertIcon.gif');
-    margin: auto;
 }
 
-div.logInfoIcon{
+i.logInfoIcon{
     content:url('../images/InfoIcon.gif');
-    margin: auto;
 }
 
-div.logErrorIcon{
+i.logErrorIcon{
     content:url('../images/errorIcon.gif');
-    margin: auto;
 }
 
-div.logFatalIcon{
+i.logFatalIcon{
     content:url('../images/fatalIcon.gif');
-    margin: auto;
 }
 
 div.dataTable_Header{
@@ -608,8 +607,30 @@ table.dataTable.display tbody tr.group.cyclerow{
 .new-alert{
     font-weight : bold;
 }
+.alert-form {
+/*    background-image: -webkit-linear-gradient(top,#fff 0,#f8f8f8 100%);
+    background-image: -o-linear-gradient(top,#fff 0,#f8f8f8 100%);
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#fff),to(#f8f8f8));
+    background-image: linear-gradient(to bottom,#fff 0,#f8f8f8 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff8f8f8', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 5px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 5px rgba(0,0,0,.075);
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+    border-radius: 4px;
+    position: relative;*/
+    min-height: 30px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+   /* border: 1px solid transparent;*/
+}
 
-
+.alert-selected {
+    background-color: #dff0d8;
+}
 /*************************************************
 * IP toolbox
 */

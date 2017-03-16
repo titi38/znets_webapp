@@ -24,6 +24,7 @@
     "dot": "doT#^1.1.0",
     "d3": "^4.6.0",
     "topojson": "^2.2.0",
-    "datatables.net-plugins": "^1.10.13"
+    "datatables.net-plugins": "^1.10.13",
+    "json-formatter": "^0.6.0"
   }
 }

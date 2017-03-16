@@ -20,8 +20,11 @@ function Alerts(theWSEventNotifier) {
    *
    * @type {Array}
      */
+  var datatable = null;
   var alertEntries = new Array();
   var loadingAJAX = true;
+  var currentPresetFilter = 1;
+  var currentIpFilter = "";
   //var alertId = -1;
 
   /**
@@ -35,7 +38,7 @@ function Alerts(theWSEventNotifier) {
     console.log("NEW ALERT ENTRY :");
     console.log(alertEntry);
 
-      var t = $('#tableAlerts').DataTable();
+    var t = $('#tableAlerts').DataTable();
 
     console.info(t);
 
@@ -48,7 +51,7 @@ function Alerts(theWSEventNotifier) {
           alertEntry.detail
         ] )
         .draw( false )
-        .addClass( 'new-alert' );
+  //      .addClass( 'new-alert' );
 
 
   }
@@ -65,9 +68,11 @@ function Alerts(theWSEventNotifier) {
    */
   this.addAlertEntry = function (date, title, ip, hostname, detail)
   {
-    alertEntries.push({"date": date, "title" : title, "ip" : ip, "hostname" : hostname, "detail" : detail});
-    if (!loadingAJAX)
-      this.unstackFIFO();
+    if (currentIpFilter == "" || currentIpFilter == ip) {
+        alertEntries.push({"date": date, "title": title, "ip": ip, "hostname": hostname, "detail": detail});
+        if (!loadingAJAX)
+            this.unstackFIFO();
+    }
   }
 
   /**
@@ -79,23 +84,46 @@ function Alerts(theWSEventNotifier) {
       _this.addAlertEntry(param_json.date, param_json.title, param_json.ip, param_json.hostname, param_json.detail);
     });
     // TODO CallAJAX to get Alerts (getAlert.json)
-    callAJAX('getAlertList.json', '', 'json', _this.displayAlerts, _this);
-
+    this.loadAlerts();
   };
 
-  /**
+  this.updateAlertFilterButtons = function() {
+        res = currentPresetFilter === $("#filterPresetsAlerts").val() &&  currentIpFilter === $("#filterIpAlerts").val();
+        $("#btn-alertFilterApply").prop('disabled', res);
+    }
+
+  this.loadAlerts = function ()
+  {
+      currentPresetFilter = $("#filterPresetsAlerts").val();
+      var params =  "duree=" + currentPresetFilter;
+
+      currentIpFilter = $("#filterIpAlerts").val();
+
+      if (currentIpFilter !== "")
+          params += "&ip="+currentIpFilter;
+
+      callAJAX('getAlertList.json', params, 'json', this.displayAlerts, this);
+      this.updateAlertFilterButtons();
+  }
+
+   this.resetFilter = function ()
+   {
+       $("#filterPresetsAlerts").val(1);
+       $("#filterIpAlerts").val("");
+
+       this.loadAlerts();
+   }
+
+    /**
    * Unstack alerts received on WebSocket while initialing Alerts object
    */
   this.unstackFIFO = function (){
     while (alertEntries.length != 0)
     {
       var i = alertEntries.shift();
-
       this.insertAlertDisplay(i);
-
     }
   };
-
 
   /**
    * Displays (in a DataTable) alerts list received from server after ajac query
@@ -104,15 +132,16 @@ function Alerts(theWSEventNotifier) {
    */
   this.displayAlerts = function(jsonContent, _this)
   {
-
+    if (datatable !== null) {
+        datatable.destroy();
+    }
 
     $('#divAlerts').append('<table id="tableAlerts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
-    table = $('#tableAlerts').DataTable( {
+    datatable = $('#tableAlerts').DataTable( {
 
       data: jsonContent.data,
       scrollY: 1,
-      //lengthMenu: [[ 10, 25, 50, 100, -1 ],[ 10, 25, 50, 100, "All" ]],
       pageLength: -1,
       paging: false,
       responsive: true,
@@ -122,7 +151,7 @@ function Alerts(theWSEventNotifier) {
         "sInfoEmpty": 'No entries to show',
       },
       //fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); this.fnPageChange( 'last' ) },
-      fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
+   //   fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
       columnDefs: [
         { "targets": 0, "visible": false, "searchable": false },
         { "targets": 1, "className": "dt-head-center dt-body-center", "title": "Date"},
@@ -141,27 +170,21 @@ function Alerts(theWSEventNotifier) {
       "rowCallback": function( row, data ) {
         $(row).attr("role", "button");
         $(row).off("click");
-        $(row).on("click", function(){
-          // TODO : click on alert (show alert details)
-          //console.warn( 'TODO: click on alert (show alert details)' );
-          //console.info( 'removing class' );
-          //$(this).removeClass("new-alert");
+        $(row).on("click", function() {
+          $(row).addClass('alert-selected');
           getAlertDetail(data);
         });
 
-        /*if ( $.inArray(data.DT_RowId, selected) !== -1 ) {
+
+      /*  if ( $.inArray(data.DT_RowId, selected) !== -1 ) {
           $(row).addClass('selected');
         }*/
-
       }
-
     } );
 
     _this.unstackFIFO();
     loadingAJAX = false;
-
   };
-
 
   /**
    * Initialisation function
@@ -173,7 +196,6 @@ function Alerts(theWSEventNotifier) {
         _this.onWSConnect()
     );
   };
-
 }
 
 

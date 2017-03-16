@@ -1,0 +1,24 @@
+
+<br>
+
+<div id="divAlerts" class="toBottomTabsContainer">
+    <div class="alert-form">
+
+        <form class="form-inline" id="alert-filter-form">
+            <label class="mr-sm-2" for="filterPresetsAlerts">Filter: </label> &nbsp;&nbsp;
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="filterPresetsAlerts" onchange="myAlerts.updateAlertFilterButtons();">
+                <option value="1" selected="">Last 24h</option>
+                <option value="2">Last Week</option>
+                <option value="3">Last Month</option>
+                <option value="0">All</option>
+            </select>&nbsp;&nbsp;
+            <label class="control-label"
+                   for="filterIpAlerts">  Localhost Ip:</label>
+            <input class="form-control" type="text" id="filterIpAlerts"
+                   size="17" onkeyup="myAlerts.updateAlertFilterButtons();"/>
+            &nbsp;&nbsp;
+            <button type="button" id="btn-alertFilterApply" class="btn btn-primary" onclick="myAlerts.loadAlerts();" disabled>Apply</button>&nbsp;
+            <button type="button" id="btn-alertFilterReset" class="btn btn-primary" onclick="myAlerts.resetFilter();">Reset</button>
+        </form>
+    </div>
+</div>

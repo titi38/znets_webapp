@@ -14,25 +14,19 @@
  */
 function ClockWidget(ServerDate, div_clock_container)
 {
-
     var _this = this;
 
-
     this.draw = function(div_clock_container) {
-
-        div_clock_container.html('<ul class="nav navbar-nav pull-right margin-left-15px" title="Server Time">\
-                                    <li class="active"><a><i class="fa fa-clock-o fa-1_3x" id="serverDate" aria-hidden="true"></i></a></li>\
-                                </ul>')
-
+        div_clock_container.html('<div class="navbar-text pull-right margin-left-15px" title="Server Time">\
+                                  <i class="fa fa-clock-o fa-1_3x" id="serverDate" aria-hidden="true"></i>\
+                                  </div>')
     };
-
 
     // Make the function wait until the connection is made...
     this.update = function(dateString, noParam){
         console.error("ClockWidget::update");
         $("#serverDate").html(" "+moment(dateString).add(parseInt(moment().format("Z")), "hours").format('HH:mm'));
     }
-
 
     this.init = function(div_clock_container)
     {
@@ -42,7 +36,6 @@ function ClockWidget(ServerDate, div_clock_container)
 
     this.draw(div_clock_container);
     this.init(div_clock_container);
-
 
 }
 

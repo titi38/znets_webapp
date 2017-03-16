@@ -43,11 +43,9 @@
     <!-- MOMENT -->
     <script src="bower_components/moment/min/moment-with-locales.js"></script>
 
-
     <!-- DATETIMEPICKER -->
     <script src="bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
     <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css">
-
 
     <!-- BOOTSTRAP -->
     <!-- Latest compiled and minified CSS -->
@@ -59,13 +57,9 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-
-
     <!-- NOUISLIDER -->
     <script src="bower_components/nouislider/distribute/nouislider.min.js"></script>
     <link rel="stylesheet" href="bower_components/nouislider/distribute/nouislider.min.css">
-
-
 
     <!-- FONT-AWESOME -->
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
@@ -74,15 +68,14 @@
     <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css">
 
-
     <!-- RIVETS -->
     <script src="bower_components/rivets/dist/rivets.bundled.min.js"></script>
-
-
 
     <!-- DoT -->
     <script src="bower_components/dot/doT.min.js"></script>
 
+    <!-- JSON-FORMATTER-JS -->
+    <script src="bower_components/json-formatter-js/dist/json-formatter.js"></script>
 
     <!-- MY STYLES -->
     <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -101,6 +94,7 @@
     <script type="text/javascript" src="javascripts/Notifications.js"></script>
     <script type="text/javascript" src="javascripts/LastHourHistory.js"></script>
     <script type="text/javascript" src="javascripts/ipQueryTools.js"></script>
+    <script type="text/javascript" src="javascripts/showConfiguration.js"></script>
     <script type="text/javascript" src="javascripts/Rawdata/RawDataTableResults.js"></script>
     <script type="text/javascript" src="javascripts/Rawdata/RawDataTabs.js"></script>
     <script type="text/javascript" src="javascripts/Rawdata/RawDataForm.js"></script>
@@ -218,8 +212,10 @@
                 <li class="disabled logs"><a href="#logs" class="logTab">Logs</a></li>
             </ul>
 
-            <div id="clock_container">
+            <div id="clock_container"></div>
 
+            <div id="showConf_button" class="navbar-btn pull-right margin-left-15px" style="display: none;">
+              <button class="btn btn-default" data-toggle="modal" data-target="#showConfModal" id="showConf-button" title="show configuration" onClick="loadZnetsConfiguration();"><i class="glyphicon glyphicon-cog"></i></button>
             </div>
 
             <form id="loginform" class="navbar-form navbar-right form-inline hidden" role="form" onsubmit="connect(); return false;">
@@ -254,11 +250,8 @@
 
 
                 </div>
-
                 <div class="tab-pane fade" id="alerts">
-                    <br><br>
-                    <div id="divAlerts" class="toBottomTabsContainer">
-                    </div>
+
                 </div>
 
 
@@ -349,10 +342,9 @@
 
 
 
-<div id="ipQueryTools_container">
-</div>
+<div id="ipQueryTools_container"></div>
 
-
+<div id="showConf_container"></div>
 
 
 </body>

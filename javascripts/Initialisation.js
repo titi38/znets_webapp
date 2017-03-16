@@ -99,7 +99,7 @@ function initialisation(){
     /*********************************************************************************************************
      New Localhosts Object - without websocket
      ********************************************************************************************************/
-    var myLocalhosts = new Localhosts(myWSEventNotifier);
+    /*var */myLocalhosts = new Localhosts(myWSEventNotifier);
     //var myLocalhosts = new Localhosts();
     myLocalhosts.init();
 

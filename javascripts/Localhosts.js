@@ -41,22 +41,43 @@ function initializeLocalhosts() {
 function Localhosts(theWSEventNotifier) {
 
     var table;
+    var datatable = null;
+    var _this = this;
 
     this.onWSConnect = function(){
-        var _this = this;
+
         theWSEventNotifier.addCallback("notify", "date_processing", function () {
             console.log("UPDATING LOCALHOST TaBLE !!!!");
             _this.update();
         });
 
-        _this.displayLocalhosts();
+        _this.loadLocalHosts();
 
     };
 
 
-
-    this.displayLocalhosts = function()
+    this.loadLocalHosts = function ()
     {
+        var currentNetworkFilter = $("#filterNetworkLocalHosts").val();
+        var params =  "";
+        if (currentNetworkFilter !== "")
+            params += "net=" + currentNetworkFilter;
+
+        callAJAX('getListLocalhosts.json', params, 'json', this.displayLocalHosts, this);
+    }
+
+    /**
+     * Displays (in a DataTable) alerts list received from server after ajac query
+     * @param jsonContent {JSON} Request's Response JSON
+     * @param _this {Alerts} Self
+     */
+    this.displayLocalHosts = function(jsonContent, _this)
+    {
+        if (datatable !== null) {
+            datatable.destroy();
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
 
         var lh_ipIndex = 0;
         var lh_nameIndex = 0;
@@ -66,29 +87,29 @@ function Localhosts(theWSEventNotifier) {
 
         $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
-        table = $('#tableLocalhosts').DataTable( {
-
+        datatable = $('#tableLocalhosts').DataTable( {
+            data: jsonContent.data,
             dom: 'Bfrtip',
             buttons: [
                 {
                     extend: 'collection',
-                    text: 'Export',
+                    text: 'Export List',
                     buttons: [
                         'copy',
                         {
                             extend: 'excel',
-                            filename: 'local_hosts_dataTable.xlsx'
+                            filename: 'local_hosts.xlsx'
                         },
                         {
                             extend: 'csv',
-                            filename: 'local_hosts_dataTable.csv'
+                            filename: 'local_hosts.csv'
                         },
                         'print'
                     ]
                 }
             ],
 
-            ajax: {
+          /*  ajax: {
                 url: proxyPass+'getListLocalhosts.json',
                 "dataSrc": function ( json ) {
 
@@ -123,7 +144,7 @@ function Localhosts(theWSEventNotifier) {
 
                     return json.response.data;
                 }
-            },
+            },*/
             columns: tableColumns,
             paging: false,
             pageLength: -1,
@@ -207,30 +228,30 @@ function Localhosts(theWSEventNotifier) {
                     console.warn( 'TODO: click on localhost ROW (show localhost details ???)' );
                     checkLocalhostTab(data[0], data[1]);
                 });
-
             }
-
         } );
-
     };
 
 
-
-    this.init = function()
-    {
+    this.init = function() {
         var _this = this;
         theWSEventNotifier.waitForSocketConnection(
             _this.onWSConnect()
         );
+
     };
 
+    this.updateNetworkList = function( networksNamesArray ) {
 
-
-    this.update = function()
-    {
-        table.ajax.reload();
+        var htmlStr = "<option value=\"\" selected=\"\">All</option>";
+        $.each( networksNamesArray, function( index, value ) {
+            if (value !== "Global") {
+                htmlStr += "<option value='" + value + "'>";
+                htmlStr += value + "</option>";
+            }
+        });
+        $("#filterNetworkLocalHosts").append(htmlStr);
     }
-
 }
 
 

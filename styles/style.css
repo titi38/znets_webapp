@@ -476,7 +476,10 @@ hr.charts_preset_hr{
     float: left;
 }
 
-
+.lhosts-form {
+    float: right;
+    margin-left: 3em;
+}
 
 table.dataTable.display tbody tr:hover, table.dataTable.display tbody tr:hover .sorting_1, table.dataTable.display tbody tr:hover .sorting_2{
     background-color: #dff0d8;

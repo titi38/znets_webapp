@@ -2,7 +2,6 @@
  * Created by smile on 30/06/16.
  */
 
-
 /**
  * Networks Tab Initialisation Function
  */
@@ -32,6 +31,7 @@ function addNetworksTabs(networksNamesArrayObject) {
 
     initNetworksChartsNavTabs();
 
+    myLocalhosts.updateNetworkList(networksNamesArray);
 }
 
 

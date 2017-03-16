@@ -8,9 +8,7 @@ updateToolBoxSelection = function() {
         if ( !$('#whoisServer option').size() )
         {
             $.getJSON( "static/getListWhoisServers.json", function( data ) {
-                //var htmlStr = "<option selected disabled>Choose a server</option>";
                 var htmlStr = "<option selected value=\"\">Default server</option>";
-                var items = [];
                 $.each( data.servers, function( index, value ) {
                     htmlStr += "<option value='" + value + "'>";
                     htmlStr += value+ "</option>";

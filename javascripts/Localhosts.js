@@ -38,13 +38,13 @@ function initializeLocalhosts() {
  * @param theWSEventNotifier
  * @constructor
  */
-function Localhosts(theWSEventNotifier) {
+function Localhosts(ServerDate) {
 
     var table;
     var datatable = null;
     var _this = this;
 
-    this.onWSConnect = function(){
+/*    this.onWSConnect = function(){
 
         theWSEventNotifier.addCallback("notify", "date_processing", function () {
             console.log("UPDATING LOCALHOST TaBLE !!!!");
@@ -54,16 +54,16 @@ function Localhosts(theWSEventNotifier) {
         _this.loadLocalHosts();
 
     };
-
+*/
 
     this.loadLocalHosts = function ()
     {
         var currentNetworkFilter = $("#filterNetworkLocalHosts").val();
         var params =  "";
-        if (currentNetworkFilter !== "")
+        if (currentNetworkFilter !== "" && currentNetworkFilter !== null)
             params += "net=" + currentNetworkFilter;
 
-        callAJAX('getListLocalhosts.json', params, 'json', this.displayLocalHosts, this);
+        callAJAX('getListLocalhosts.json', params, 'json', _this.displayLocalHosts, this);
     }
 
     /**
@@ -76,6 +76,8 @@ function Localhosts(theWSEventNotifier) {
         if (datatable !== null) {
             datatable.destroy();
         }
+        else
+          $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -84,8 +86,6 @@ function Localhosts(theWSEventNotifier) {
 
         // Not Used !!!
         var tableColumns = [];
-
-        $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
         datatable = $('#tableLocalhosts').DataTable( {
             data: jsonContent.data,
@@ -155,13 +155,13 @@ function Localhosts(theWSEventNotifier) {
                 "sInfo": 'Showing _END_ Entries.',
                 "sInfoEmpty": 'No entries to show',
             },
-            fnInitComplete: function() { $( document ).trigger("dataTable_Loaded");},
+            fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); initializeRawDataLocalhostsIp(); },
             columnDefs: [
-                {'targets': 0, "type": 'ip-address', 'title': "Ip", "className": "dt-head-center dt-body-center"},
-                {'targets': 1, 'title': "Name", "className": "dt-head-center dt-body-center"},
-                {'targets': 2, 'title': "Network", "className": "dt-head-center dt-body-center"},
+                {'targets': 0, "type": 'ip-address', 'title': "Ip"},
+                {'targets': 1, 'title': "Name",  "sortable": true, "searchable": true },
+                {'targets': 2, 'title': "Network"},
                 {
-                    "targets": 3, 'title': "Last seen", "className": "dt-head-center dt-body-center",
+                    "targets": 3, 'title': "Last seen",
                     "data": function ( row, type, val, meta ) {
                         if (type === 'display') {
                             return moment.duration({'seconds' : row[3]}).humanize();
@@ -172,7 +172,7 @@ function Localhosts(theWSEventNotifier) {
                         return row[3];
                     }
                 },
-                {'targets': 4, 'title': "Mac Adress", "className": "dt-head-center dt-body-center",
+                {'targets': 4, 'title': "Mac Adress",
                     "render": function ( data, type, row ) {
                         return " <div class='macadressTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveMacAdress(this)' onmouseout='abordMacAdressRetrieval(this)' value="+data+">"+data+"</div>";
                     }
@@ -197,10 +197,10 @@ function Localhosts(theWSEventNotifier) {
                         return os_icon + data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );
 
                     },
-                    "targets": 5, 'title': "OS Name", "className": "dt-head-center dt-body-center"
+                    "targets": 5, 'title': "OS Name"
                 },
                 {'targets': [6, 7], "visible": false, "searchable": false},
-                { "targets": 8, 'title': "Local Services", "className": "dt-head-center dt-body-center",
+                { "targets": 8, 'title': "Local Services",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).attr("title",cellData);
                     },
@@ -209,7 +209,7 @@ function Localhosts(theWSEventNotifier) {
                         return renderedString+ ( (data.toString() != renderedString) ? "..." : "" );
                     }
                 },
-                { "targets": 9, 'title': "External Services", "className": "dt-head-center dt-body-center",
+                { "targets": 9, 'title': "External Services",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).attr("title",cellData);
                     },
@@ -217,8 +217,12 @@ function Localhosts(theWSEventNotifier) {
                         var renderedString = data.toString().substring(0, 30);
                         return renderedString+ ( (data.toString() != renderedString) ? "..." : "" );
                     }
-                }
-
+                },
+                {
+                  "targets": 10, 'data': " ", "sortable": false, "searchable": false, "render": function ( data, type, row ) {
+                     return "<center><button><i class='glyphicon glyphicon-search'></i></button></center>"; }
+                },
+                {"className": "dt-center dt-head-center", "targets": "_all"},
             ],
             "rowCallback": function( row, data ) {
                 $(row).attr("role", "button");
@@ -234,11 +238,12 @@ function Localhosts(theWSEventNotifier) {
 
 
     this.init = function() {
-        var _this = this;
+/*        var _this = this;
         theWSEventNotifier.waitForSocketConnection(
             _this.onWSConnect()
         );
-
+*/
+        ServerDate.addCallback("listLocalhost", _this.loadLocalHosts, null, 999);
     };
 
     this.updateNetworkList = function( networksNamesArray ) {

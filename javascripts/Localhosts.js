@@ -56,6 +56,24 @@ function Localhosts(ServerDate) {
     };
 */
 
+    this.resolveIp = function( ip ) {
+        var localhostRows = datatable.rows().data();
+        var found=false;
+        var i = 0;
+
+        for (; i < localhostRows.length && !found; i++) {
+            found = (ip == localhostRows[i][0]);
+        }
+        if (found)
+        {
+            i--;
+            var hsname=localhostRows[i][1];
+            if (hsname !== "") return hsname;
+            else return "No name";
+        }
+        else return "Unknown"
+    }
+
     this.loadLocalHosts = function ()
     {
         var currentNetworkFilter = $("#filterNetworkLocalHosts").val();
@@ -73,20 +91,19 @@ function Localhosts(ServerDate) {
      */
     this.displayLocalHosts = function(jsonContent, _this)
     {
-        if (datatable !== null) {
+        if (datatable !== null)
             datatable.destroy();
-        }
         else
           $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
         // -------------------------------------------------------------------------------------------------------------
-
+/*
         var lh_ipIndex = 0;
         var lh_nameIndex = 0;
 
         // Not Used !!!
         var tableColumns = [];
-
+*/
         datatable = $('#tableLocalhosts').DataTable( {
             data: jsonContent.data,
             dom: 'Bfrtip',
@@ -145,7 +162,7 @@ function Localhosts(ServerDate) {
                     return json.response.data;
                 }
             },*/
-            columns: tableColumns,
+//            columns: tableColumns,
             paging: false,
             pageLength: -1,
             scrollY: 1,
@@ -158,10 +175,10 @@ function Localhosts(ServerDate) {
             fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); initializeRawDataLocalhostsIp(); },
             columnDefs: [
                 {'targets': 0, "type": 'ip-address', 'title': "Ip"},
-                {'targets': 1, 'title': "Name",  "sortable": true, "searchable": true },
-                {'targets': 2, 'title': "Network"},
+                {'targets': 1, 'title': "Name", "sortable": true, "searchable": true },
+                {'targets': 2, 'title': "Network", "sortable": true},
                 {
-                    "targets": 3, 'title': "Last seen",
+                    "targets": 3, 'title': "Last seen", "sortable": true,
                     "data": function ( row, type, val, meta ) {
                         if (type === 'display') {
                             return moment.duration({'seconds' : row[3]}).humanize();
@@ -172,7 +189,7 @@ function Localhosts(ServerDate) {
                         return row[3];
                     }
                 },
-                {'targets': 4, 'title': "Mac Adress",
+                {'targets': 4, 'title': "Mac Adress", "sortable": true,
                     "render": function ( data, type, row ) {
                         return " <div class='macadressTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveMacAdress(this)' onmouseout='abordMacAdressRetrieval(this)' value="+data+">"+data+"</div>";
                     }
@@ -197,10 +214,10 @@ function Localhosts(ServerDate) {
                         return os_icon + data + ( (row[6] === "t") ? " <img src='../../images/64bit-icon.png' height='20px' title='64-bits' alt='64-bits'/>" : "" ) + ( (row[7] === "t") ? " <img src='../../images/mobile-icon.png' height='20px' title='Mobile' alt='Mobile'/>" : "" );
 
                     },
-                    "targets": 5, 'title': "OS Name"
+                    "targets": 5, 'title': "OS Name", "sortable": true
                 },
                 {'targets': [6, 7], "visible": false, "searchable": false},
-                { "targets": 8, 'title': "Local Services",
+                { "targets": 8, 'title': "Local Services", "sortable": false,
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).attr("title",cellData);
                     },
@@ -209,7 +226,7 @@ function Localhosts(ServerDate) {
                         return renderedString+ ( (data.toString() != renderedString) ? "..." : "" );
                     }
                 },
-                { "targets": 9, 'title': "External Services",
+                { "targets": 9, 'title': "External Services", "sortable": false,
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).attr("title",cellData);
                     },
@@ -219,8 +236,8 @@ function Localhosts(ServerDate) {
                     }
                 },
                 {
-                  "targets": 10, 'data': " ", "sortable": false, "searchable": false, "render": function ( data, type, row ) {
-                     return "<center><button><i class='glyphicon glyphicon-search'></i></button></center>"; }
+                  "targets": 10, 'data': null, "sortable": false, "searchable": false, "render": function ( data, type, row ) {
+                     return "<div style='text-align: center'><button><i class='glyphicon glyphicon-search'></i></button></div>"; }
                 },
                 {"className": "dt-center dt-head-center", "targets": "_all"},
             ],

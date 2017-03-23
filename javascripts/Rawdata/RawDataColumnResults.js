@@ -16,20 +16,17 @@ function initializeRawdataShownColumnsSessionVariable(tableColumns) {
 
         if (tableColumns[i].title !== "country") {
 
-            rawdataShownColumns[tableColumns[i].title] = true;
+            if (tableColumns[i].title !== "lasttime")
+              rawdataShownColumns[tableColumns[i].title] = true;
+            else   rawdataShownColumns[tableColumns[i].title] = false;
 
-            $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '"><div class="columnIcon glyphicon glyphicon-ok"></div>&nbsp;' + tableColumns[i].title + '</a></li>');
-
+                $('#shownColumns').append('<li><a href="#" class="small" data-column="' + i + '" data-column-name="' + tableColumns[i].title + '"><div class="columnIcon glyphicon glyphicon-ok"></div>&nbsp;' + tableColumns[i].title + '</a></li>');
         }
-
     }
 
     // Put the object into storage
     localStorage.setItem('rawdataShownColumns', JSON.stringify(rawdataShownColumns));
-
 }
-
-
 
 
 

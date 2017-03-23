@@ -117,15 +117,6 @@ body.wait, body.wait *{
     height: 4em;
 }
 
-.bannerImg{
-    background-image: url("../images/imageFrame.png");
-    background-position: 0px -66px;
-}
-
-.homeLogoImg, .bannerImg{
-    height:100px;
-}
-
 .libnavajoLogo {
     height: 80px;
 }
@@ -401,13 +392,18 @@ iframe {
 
 }
 
-.banner_holderImage{
-    width: 100%;
-    position: absolute;
-    background: url("../images/logoMIMAC.png")no-repeat;
-    background-position: left;
-    background-size: initial;
+.rawdataResult_ipextern{
+    display:inline;
+    padding-right: 25px;
+    margin:0px auto;
 }
+
+.rawdataResult_amountIsNull{
+    color:orange;
+    font-weight: bold;
+}
+
+table.dataTable th, td code { white-space: nowrap; }
 
 .navbar {
     margin-bottom: 0;

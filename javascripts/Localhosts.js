@@ -172,7 +172,10 @@ function Localhosts(ServerDate) {
                 "sInfo": 'Showing _END_ Entries.',
                 "sInfoEmpty": 'No entries to show',
             },
-            fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); initializeRawDataLocalhostsIp(); },
+            fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); initializeRawDataLocalhostsIp();
+                                         $(".macadressTooltip").each(function( index ) {
+                                                $( this ).tooltip(); });
+            },
             columnDefs: [
                 {'targets': 0, "type": 'ip-address', 'title': "Ip"},
                 {'targets': 1, 'title': "Name", "sortable": true, "searchable": true },
@@ -191,7 +194,7 @@ function Localhosts(ServerDate) {
                 },
                 {'targets': 4, 'title': "Mac Adress", "sortable": true,
                     "render": function ( data, type, row ) {
-                        return " <div class='macadressTooltip' data-toggle='tooltip' data-placement='top' data-original-title='' onmouseover='retrieveMacAdress(this)' onmouseout='abordMacAdressRetrieval(this)' value="+data+">"+data+"</div>";
+                        return " <div class='macadressTooltip' data-toggle='tooltip' data-placement='top' data-original-title='...' onmouseover='openResolveMacAddressPopup(this)' onmouseout='clearPopup(this)' value="+data+">"+data+"</div>";
                     }
                 },
                 {
@@ -434,13 +437,13 @@ function addLocalhostTab(localhostIp, localhostName){
  * - Ajax request result will trigger Cell's Tooltip definition
  * @param el : cell element
  */
-function retrieveMacAdress(el){
 
-    ///callAJAX("getMacList.json", '', "json", setMacAdresssId, null);
+function openResolveMacAddressPopup(el){
+
     var element = $(el);
     var delay = 500; // 0.5 seconds delay after last input
 
-    if($(element).attr('data-original-title') === "") {
+    if($(element).attr('data-original-title') === "...") {
 
         clearTimeout(element.data('timer'));
 
@@ -448,36 +451,16 @@ function retrieveMacAdress(el){
             element.data('timer', setTimeout(function () {
                 element.removeData('timer');
 
-                // Do your stuff after 2 seconds of last user input
-                callAJAX("getMacOrganization.json", 'mac=' + element.html(), "json", setMacToElementTitle, element);
+                callAJAX("getMacOrganization.json", 'mac=' + element.html(), "json", setMacAddressAndOpenPopup, element);
             }, delay));
-        else{
-            $(element).attr('data-original-title', "No Mac Organization");
-            $(element).attr("title", "No Mac Organization");
-        }
-
+        else
+            setMacToElementTitle(null, element);
     }
-
+    else
+        element.tooltip('show');
 }
 
-
-/**
- * RawData Results DataTable - Mac Organization Retrieval Abortion Function
- * THIS FUNCTION IS TRIGGERED ON MacAdress TABLE CELL MOUSEOUT
- * - Abort cell's Mac Organization Retrieval
- * @param el : cell element
- */
-function abordMacAdressRetrieval(el){
-
-    var element = $(el);
-
-    clearTimeout(element.data('timer'));
-
-}
-
-
-
-
+//
 
 /**
  * RawData Results DataTable - Mac Cell's Tooltip Definition Function
@@ -486,21 +469,39 @@ function abordMacAdressRetrieval(el){
  * @param jsonResponse : server's response containing Mac Organization
  * @param element : Cell Element
  */
-function setMacToElementTitle(jsonResponse, element){
+
+function setMacAddressAndOpenPopup(jsonResponse, element){
 
     var title = "Mac Organization not found";
 
-    if(jsonResponse)
-        if(jsonResponse.organization)
-            title = jsonResponse.organization;
+    if (jsonResponse !== null && jsonResponse !== "" && jsonResponse.organization)
+        title = jsonResponse.organization;
 
-    element.parents("table").dataTable().find("div.macadressTooltip[data-toggle='tooltip'][value='"+element.attr("value")+"']").each(function() {
-        $(this).tooltip();
-        $(this).attr('data-original-title', title);
-        $(this).tooltip();
+    $(".macadressTooltip").each(function( index ) {
+        $(this).tooltip('hide');
     });
+    $(element).attr('data-original-title', title);
+    $(element).unbind('onmouseover');
+    $(element).unbind('mouseover');
 
+    $(element).tooltip('show');
     $(element).mouseover();
-
 }
 
+/*function setMacToElementTitle(jsonResponse, element){
+
+ var title = "Mac Organization not found";
+
+ if(jsonResponse)
+ if(jsonResponse.organization)
+ title = jsonResponse.organization;
+
+ element.parents("table").dataTable().find("div.macadressTooltip[data-toggle='tooltip'][value='"+element.attr("value")+"']").each(function() {
+ $(this).tooltip();
+ $(this).attr('data-original-title', title);
+ $(this).tooltip();
+ });
+
+ $(element).mouseover();
+
+ }*/

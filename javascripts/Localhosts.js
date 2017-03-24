@@ -74,6 +74,48 @@ function Localhosts(ServerDate) {
         else return "Unknown"
     }
 
+    this.resolveHostName = function( hname ) {
+        var localhostRows = datatable.rows().data();
+        var found=false;
+        var i = 0;
+
+        for (; i < localhostRows.length && !found; i++) {
+            found = (hname == localhostRows[i][1]);
+        }
+        if (found)
+        {
+            i--;
+            return localhostRows[i][0];
+        }
+        else return "";
+    }
+
+    this.getAllIpAddress = function() {
+        if (datatable == null || !datatable.rows())
+            return [];
+        var localhostRows = datatable.rows().data();
+        var result = [];
+
+        for (i = 0; i < localhostRows.length ; i++) {
+            result [i] = localhostRows[i][0];
+        }
+
+        return result
+    }
+
+    this.getAllLocHostName = function() {
+        if (datatable == null || !datatable.rows())
+            return [];
+        var localhostRows = datatable.rows().data();
+        var result = [];
+
+        for (i = 0; i < localhostRows.length ; i++) {
+            result [i] = localhostRows[i][1];
+        }
+
+        return result
+    }
+
     this.loadLocalHosts = function ()
     {
         var currentNetworkFilter = $("#filterNetworkLocalHosts").val();
@@ -92,7 +134,10 @@ function Localhosts(ServerDate) {
     this.displayLocalHosts = function(jsonContent, _this)
     {
         if (datatable !== null)
+        {
+            detroy_RawDataForm_autocompletion();
             datatable.destroy();
+        }
         else
           $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
@@ -254,6 +299,7 @@ function Localhosts(ServerDate) {
                 });
             }
         } );
+        update_RawDataForm_autocompletion();
     };
 
 

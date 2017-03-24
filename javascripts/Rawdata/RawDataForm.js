@@ -69,18 +69,14 @@ function initializeRawDataForm_OtherFields(){
     $("button.rawDataFormularTab[href='#rawDataFormularTab']").on("click", function () {
         $(".rawdata-tab-list li.active").removeClass("active");
     });
-
 }
-
-
-
 
 
 
 /**
  * RawData Formular - Time Fields Initialization Function
  * Initializes DatePicker (default values, max, behaviour, interactions)
- */
+ *
 function resetRawDataForm(){
 
     $('#rawData_form').find("input").each(function(){
@@ -99,7 +95,7 @@ function resetRawDataForm(){
     });
 
 }
-
+*/
 
 
 
@@ -222,13 +218,10 @@ function checkRawDataResults(jsonResponse, paramRawData){
 }
 
 
-
-
-
 /**
  * RawData Formular - Setting Local host Ip Function
  * Sets Localhost Ip Field Value OF THE NEXT RAWDATA REQUEST, to the value entered/selected by user in the RawData Formular
- */
+ *
 function setIpLocValue(){
 
     console.warn(iplocHidden);
@@ -237,9 +230,10 @@ function setIpLocValue(){
 
     $("#iplocHidden").val( $("#iploc").val() + ( ($("#iplocMask").val()) ? ("/"+$("#iplocMask").val()) : "" ) )
 
+
 }
 
-
+*/
 
 
 
@@ -305,7 +299,7 @@ function setOutTcpFlagsValue(){
 /**
  * RawData Formular - Setting Local host Name Function
  * Sets Local host Name Field Value, to the corresponding Local host Ip value entered/selected by user in the RawData Formular
- */
+ *
 function setLocalhostName(){
 
     if( $("#iplocMask").val() === "" || $("#iplocMask").val() === "32" || $("#iplocMask").val() === "128" )
@@ -316,18 +310,15 @@ function setLocalhostName(){
     {
         $('#nameloc').combobox('setValueTo', "");
     }
-
 }
 
 
 
 
-
-
-/**
+**
  * RawData Formular - Setting Local host Ip Function
  * Sets Local host Ip Field Value, to the corresponding Local host Name value entered/selected by user in the RawData Formular
- */
+ *
 function setLocalhostIp(){
 
     $("#iplocMask").val("");
@@ -335,6 +326,49 @@ function setLocalhostIp(){
     $("#iploc").val( $("#nameloc").val() );
 
 }
+*/
 
+function setIpLocValue() {
+    $("#iplocHidden").val( $("#iploc").val() + ( ($("#iplocMask").val()) ? ("/"+$("#iplocMask").val()) : "" ) );
+}
+
+function rawDataForm_updateLocIpAddr() {
+    ip=myLocalhosts.resolveHostName($("#nameloc").val() );
+    if (ip && ip !== "")
+    {
+        $("#iplocMask").val("");
+        $("#iploc").val(ip);
+        setIpLocValue();
+    }
+    else
+      $("#nameloc").val( "unknown" );
+}
+
+
+function rawDataForm_updateLocHostName() {
+
+    setIpLocValue();
+
+    if( $("#iplocMask").val() === "" || $("#iplocMask").val() === "32" || $("#iplocMask").val() === "128" )
+        $("#nameloc").val( myLocalhosts.resolveIp($("#iploc").val()) );
+    else
+        $("#nameloc").val( "" );
+}
+
+
+function detroy_RawDataForm_autocompletion(){
+    $( ".autocompleteLocIpAddr" ).autocomplete( "destroy" );
+    $(".autocompleteLocHostName").autocomplete( "destroy" );
+}
+
+function update_RawDataForm_autocompletion(){
+    $(".autocompleteLocIpAddr").autocomplete({
+        source: myLocalhosts.getAllIpAddress()
+    },{ minLength: 6 }, {autoFocus: true}, {delay: 0});
+
+    $(".autocompleteLocHostName").autocomplete({
+        source: myLocalhosts.getAllLocHostName()
+    },{ minLength: 6 }, {autoFocus: true}, {delay: 0});
+}
 
 

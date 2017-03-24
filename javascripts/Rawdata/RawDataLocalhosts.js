@@ -15,7 +15,7 @@ function initializeRawDataLocalhostsIp() {
         if(a.name > b.name) return 1;
         return 0;
     });
-
+/*
     for (var i = 0; i < data.length; i++) {
         $("#nameloc").append('<option value="' + data[i].ip + '">' + ( (data[i].name) ? data[i].name : "No name" ) + '(' + data[i].ip + ' )</option>')
     }
@@ -23,6 +23,6 @@ function initializeRawDataLocalhostsIp() {
 
     // Process JQuery-UI combobox drawing
     $( "#nameloc" ).combobox();
-
+*/
 }
 

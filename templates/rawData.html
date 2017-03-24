@@ -119,8 +119,7 @@
                                             <div class="row">
 
                                                 <div class="col-xs-12">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
+                                                    <div class="panel-heading">
 
                                                             <fieldset>
 
@@ -149,15 +148,17 @@
                                                                                         <!--input class="form-control" type="text" id="iploc"
                                                                                                size="17" maxlength="39" value=""
                                                                                                onchange="setIpLocValue(); if(!this.value.split('/')[1])SelectIp.attr('value', this.value );"/-->
-                                                                                        <input class="form-control" type="text" id="iploc"
-                                                                                               size="17" maxlength="39" value=""
-                                                                                               onchange="setIpLocValue(); setLocalhostName();"/>
+
+
+                                                                                        <input class="form-control autocompleteLocIpAddr" type="text" id="iploc"
+                                                                                               size="17" maxlength="39" value="" placeholder="Enter Ip Address"
+                                                                                               onchange="rawDataForm_updateLocHostName();"/>
                                                                                     </div>
                                                                                     <div class="col-xs-3 paddingLeft5">
                                                                                         <p class="slashMask">/</p>
                                                                                         <input class="form-control" type="text" id="iplocMask"
                                                                                                size="3" maxlength="3" value=""
-                                                                                               onchange="setIpLocValue(); setLocalhostName();"/>
+                                                                                               onchange="rawDataForm_updateLocHostName();"/>
                                                                                     </div>
                                                                                 </div>
 
@@ -165,13 +166,13 @@
                                                                                     <label class="control-label col-xs-2"
                                                                                            for="nameloc">Name:</label>
                                                                                     <div class="col-xs-10">
-                                                                                        <!--input class="form-control" type="text" id="nameloc"
-                                                                                               size="17" maxlength="39" value=""
-                                                                                               onchange="setIpLocValue(); setLocalhostIp()"/-->
-                                                                                        <select class="form-control" id="nameloc"
+                                                                                        <input class="form-control autocompleteLocHostName" type="text" id="nameloc"
+                                                                                               size="80" maxlength="255" value="" placeholder="Enter Local Host Name"
+                                                                                               onchange="rawDataForm_updateLocIpAddr();"/>
+                                                                                        <!-- select class="form-control" id="nameloc"
                                                                                                 style=' cursor: pointer;' onchange="setLocalhostIp(); setIpLocValue()">
                                                                                             <option value="" selected=true>All</option>
-                                                                                        </select>
+                                                                                        </select-->
                                                                                     </div>
                                                                                 </div>
 
@@ -283,14 +284,12 @@
 
                                                             </fieldset>
 
-                                                        </div>
                                                     </div>
                                                 </div>
 
 
                                                 <div class="col-xs-12">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
+                                                    <div class="panel-heading">
 
                                                             <fieldset>
 
@@ -477,7 +476,6 @@
 
                                                             </fieldset>
 
-                                                        </div>
                                                     </div>
 
 
@@ -485,12 +483,12 @@
 
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row form-horizontal">
 
 
                                                 <div class="col-xs-12 col-md-4">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
+                                                    <div class="panel-heading">
+                                                        <!--div class="panel-heading" -->
 
                                                             <fieldset>
 
@@ -552,14 +550,14 @@
 
                                                             </fieldset>
 
-                                                        </div>
+                                                        <!--/div-->
                                                     </div>
                                                 </div>
 
 
                                                 <div class="col-xs-12 col-md-4">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
+                                                    <div class="panel-heading">
+
 
                                                             <fieldset>
 
@@ -636,14 +634,13 @@
 
                                                             </fieldset>
 
-                                                        </div>
+
                                                     </div>
                                                 </div>
 
 
                                                 <div class="col-xs-12 col-md-4">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
+                                                    <div class="panel-heading">
 
                                                             <fieldset>
 
@@ -718,7 +715,6 @@
 
                                                             </fieldset>
 
-                                                        </div>
                                                     </div>
                                                 </div>
 

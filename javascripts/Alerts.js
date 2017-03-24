@@ -135,8 +135,8 @@ function Alerts(theWSEventNotifier) {
     if (datatable !== null) {
         datatable.destroy();
     }
-
-    $('#divAlerts').append('<table id="tableAlerts" class="display table table-striped table-bordered dataTable no-footer"></table>');
+    else
+      $('#divAlerts').append('<table id="tableAlerts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
     datatable = $('#tableAlerts').DataTable( {
 

@@ -207,6 +207,15 @@ function LastHourHistory(ServerDate) {
 
   this.addMinuteRequest = function(urlRequest, callback, lastMinute){
 
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+//TD
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+
+return;
+
     ServerDate.addCallback("theGraph", onNotification, null, 300);
 
     var id = 0; //generateId();

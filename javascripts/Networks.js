@@ -106,14 +106,11 @@ function addNetworkTab(networkName){
 function initNetworksChartsNavTabs() {
 
     $('ul.nav-nest a[data-toggle="tab"]').on('click', function (e) {
-
+console.error("Network.js 109")
         $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
 
-    });
-
-
-    $('ul.nav-nest a[data-toggle="tab"]')/*.off()*/.on('shown.bs.tab', function (e) {
-
+    }).on('shown.bs.tab', function (e) {
+console.error("Network.js 116")
         loadChartJsonToDiv(e.target, true);
 
     });

@@ -165,14 +165,15 @@ function Alerts(theWSEventNotifier) {
         console.info(data[data.length -1]);
         if(data[data.length -1] != "")
           $(row).addClass("new-alert");
-
       },
       "rowCallback": function( row, data ) {
         $(row).attr("role", "button");
         $(row).off("click");
         $(row).on("click", function() {
-          $(row).addClass('alert-selected');
-          getAlertDetail(data);
+            $(row).addClass('alert-selected');
+            getAlertDetail(data);
+            setTimeout( function() {
+              $(row).removeClass('new-alert'); }, 750);
         });
 
 

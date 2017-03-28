@@ -604,6 +604,13 @@ function createHistoDoubleCurrentFormatVariation(div,svg,mydiv,urlJson){
 /********************************************************************************************************************/
 
 function timerupdate(urlJson, mydiv){
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!! DESACTIVATE GRAPH AUTO REFRESH !!!!!!!!!!!!!!!!!!
+//TD
+    return;
+
 
   console.error (urlJson);
 

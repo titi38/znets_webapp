@@ -28,6 +28,7 @@
 .lgd{
     width: 0.75em;
     height: 0.75em;
+    padding: 10px;
 }
 
 .lineGraph{
@@ -86,6 +87,7 @@
     border-radius: 8px;
     border: 2px solid #73AD21;
     padding: 4px; 
+    padding-top: 10px;
 }
 
 .tableLegend{
@@ -128,7 +130,7 @@
 .part path{
 
     stroke-width: 1;
-    stroke: #f2dede;
+    stroke: #73ac77;
 
 }
 
@@ -162,8 +164,8 @@
 
 .popup{
     position:absolute;
-    background-color: #f2dede;
-    border: 1px #ccc solid;
+    background-color: #ededed;
+    border: 1px #57985b solid;
     border-radius: 6px;
     box-shadow: #333 2px 2px 4px;
     display: inline-block;

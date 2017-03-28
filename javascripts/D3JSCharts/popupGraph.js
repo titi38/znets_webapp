@@ -844,7 +844,7 @@ function drawPopupGraph(jsonObj, svg, total, pieside,f){
 
 
   //Table
-  svg.popup.pieChart.divTable = svg.popup.append("div").classed("popupTableDiv", true);
+  svg.popup.pieChart.divTable = svg.popup.append("div").classed("popupTableDiv",true).append("div").classed("borderTable",true);
   svg.popup.pieChart.table = svg.popup.pieChart.divTable.append("table").classed("popupTableLegend",true)
     .style("max-height",svg.pieside + "px").style("width",svg.tableWidth + "px");
 

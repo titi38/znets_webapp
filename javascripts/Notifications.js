@@ -73,7 +73,17 @@ function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
 
     if(mesgType === "notify") {
         if (mesgName === "alert")
-            addNotification("NEW ALERT RAISED", "alert-log alert-info", callBack);
+	{
+	  var theAlertNotif = "NEW ALERT: ";
+          if (mesgParams.hostname && mesgParams.hostname.length)
+            theAlertNotif += "host "+ mesgParams.hostname;
+          else
+            theAlertNotif += "ip "+ mesgParams.ip;
+
+          theAlertNotif += " raised a " + mesgParams.title + " alert";
+
+            addNotification(theAlertNotif, "alert-log alert-info", callBack);
+	}
         else
             console.error(mesgType + ":" + mesgName + ":" + JSON.stringify(mesgParams))
     }

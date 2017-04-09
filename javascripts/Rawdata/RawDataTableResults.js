@@ -54,8 +54,11 @@ function drawRawdataDataTable(jsonResponse, rawdataTabID) {
         order: [[ 0, 'desc' ]],
 
         data: jsonResponse.data,
+        /*
         paging: false,
-        pageLength: -1,
+        pageLength: -1, */
+        paging: true,
+        pageLength: 100,
         scrollY: 1,
         scrollX: true,
         pageLength: 50,

@@ -142,8 +142,10 @@ function Alerts(theWSEventNotifier) {
 
       data: jsonContent.data,
       scrollY: 1,
-      pageLength: -1,
-      paging: false,
+      paging: true,
+      pageLength: 100 /* -1 */,
+/*      pageLength: -1,
+      paging: false,*/
       responsive: true,
       scrollCollapse: true,
       language: {

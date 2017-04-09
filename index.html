@@ -209,7 +209,9 @@
                 <!--li class="active home"><a href="#home"><i class="fa fa-home fa-1_3x" aria-hidden="true"></i></a></li-->
                 <li class="disabled network"><a href=".tab-network" class="networkTab">Network</a></li>
                 <li class="disabled localhosts"><a href=".tab-localhosts" id="localhostTab" class="localhostTab">Localhosts</a></li>
-                <li class="disabled rawdata"><a href="#rawdata">Flows</a></li>
+                <li class="disabled rawdata">
+                    <a href="#rawdata" id="flowstab" data-toggle="tooltip" data-placement="bottom" data-title="Filter updated" data-trigger="manual">Flows</a>
+                </li>
                 <li class="disabled alerts"><a href="#alerts" class="alertTab">Alerts</a></li>
                 <li class="disabled logs"><a href="#logs" class="logTab">Logs</a></li>
             </ul>
@@ -232,8 +234,6 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-
-
 
 <div class="container-fluid">
     <div id="content">

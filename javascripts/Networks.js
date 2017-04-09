@@ -69,7 +69,10 @@ function addNetworkTab(networkName){
 
 
     element_tab.find("a").on('shown.bs.tab', function (e) {
-        if($(element_div).find(".graph.tab-pane.fade.active").length === 0) $(element_div).find("a[href*='#trafficByProtocols']").click();
+        if($(element_div).find(".graph.tab-pane.fade.active").length === 0)
+        {
+            $(element_div).find("a[href*='#trafficByProtocols']").click();
+        }
     });
 
 
@@ -103,22 +106,22 @@ function addNetworkTab(networkName){
  * Network's Charts Navigation Interactions Function.
  * Initialize all Network's Charts Interactions and Selection Formular
  */
+
+// Patch pourri pour éviter génération de 2 graph au 1er clic sur Network
+var firstClickTab = true;
+
 function initNetworksChartsNavTabs() {
 
     $('ul.nav-nest a[data-toggle="tab"]').on('click', function (e) {
-console.error("Network.js 109")
         $($(e.target).parents("ul")[$(e.target).parents("ul").length-1]).find("li").removeClass("active");
-
     }).on('shown.bs.tab', function (e) {
-console.error("Network.js 116")
-        loadChartJsonToDiv(e.target, true);
-
+        if (!firstClickTab)
+            loadChartJsonToDiv(e.target, true);
+        else
+            firstClickTab=false;
     });
 
-
-
     initChartsTabsNavAnimation("#network");
-
 
     /*********************************************************************************************************
      Initialize Charts Formular

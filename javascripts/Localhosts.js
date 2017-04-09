@@ -208,8 +208,8 @@ function Localhosts(ServerDate) {
                 }
             },*/
 //            columns: tableColumns,
-            paging: false,
-            pageLength: -1,
+            paging: true,
+            pageLength: 100 /* -1 */,
             scrollY: 1,
             responsive: true,
             scrollCollapse: true,

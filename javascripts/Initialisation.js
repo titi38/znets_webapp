@@ -168,7 +168,7 @@ function initialisation(){
 
 
     /********************************************************************************************************
-     Initialize RawData Form (selects and others)
+     Initialize RawData Form (selects and data-delay='{ "hide": 5000 }' others)
      ********************************************************************************************************/
     initializeRawDataForm_OtherFields();
 
@@ -193,7 +193,10 @@ function initialisation(){
 
 
 
-
+    /*********************************************************************************************************
+     Initialize flows pre-fill pop-up
+     ********************************************************************************************************/
+    $('a#flowstab[data-toggle="tooltip"]').tooltip("hide");
 
 }
 

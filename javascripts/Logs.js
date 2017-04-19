@@ -135,7 +135,7 @@ function Logs(theWSEventNotifier) {
                             result += "<i class='logFatalIcon' title='Fatal'></i>";
                             break;
                         default:
-                            alert("ChargerLogs : new severity :" + row[0]);
+                            console.error ("ChargerLogs - unknown severity :" + row[0]);
                             break;
                     }
 

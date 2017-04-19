@@ -29,8 +29,13 @@ function WSEventNotifier(webSocketName)
             path = '';
 
         var use_ssl = window.location.protocol.indexOf('https')>-1;
+        var wsUrl=(use_ssl?'wss://':'ws://') + location.host;
+        if ( use_ssl && location.host.indexOf(':') === -1 ) 
+          wsUrl +=':443';
+        wsUrl += path + "/" + proxyPass + webSocketName; 
 
-        webSocket = new WebSocket((use_ssl?'wss://':'ws://') + location.host + (use_ssl?':443':'') + path + "/" + proxyPass + webSocketName);
+
+        webSocket = new WebSocket( wsUrl );
 
         webSocket.onopen = function()
         {

@@ -3,7 +3,6 @@
  */
 
 
-
 /**
  * Localhosts Tab Initialisation Function
  */
@@ -41,6 +40,7 @@ function initializeLocalhosts() {
 function Localhosts(ServerDate) {
 
     var table;
+
     var datatable = null;
     var _this = this;
 
@@ -136,7 +136,9 @@ function Localhosts(ServerDate) {
         if (datatable !== null)
         {
             detroy_RawDataForm_autocompletion();
+//            datatable.off('');
             datatable.destroy();
+            $( datatable.rows().nodes() ).off( '*' );
         }
         else
           $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');

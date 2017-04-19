@@ -155,6 +155,29 @@ function resetChartsForm(){
 
 
 
+function updateChartsTimestepForm(toDate) {
+
+    switch ($("#timesliceCharts").val()) {
+        case "lastHour" :
+            $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'hours').format('YYYY-MM-DD HH:mm'));
+            break;
+        case "lastDay" :
+            $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
+            break;
+        case "lastWeek" :
+            $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'weeks').format('YYYY-MM-DD HH:mm'));
+            break;
+        case "lastMonth" :
+            $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'months').format('YYYY-MM-DD HH:mm'));
+            break;
+        case "custom" :
+            // DO NOTHING
+            break;
+        default :
+            console.error("UNEXPECTED ChartsTimestep select value in Initialisation.js : " + $("#timestepCharts").val() + " (103) ");
+            break;
+    }
+}
 
 /**
  * Formular/Bar Visible and Hidden Fields initialization
@@ -177,6 +200,7 @@ function initializeChartsTimestepForm() {
     });
 
 
+
     /*$("#fromDate_ChartsForm").on("dp.show", function (e) {
         if($('#toDate_ChartsForm').data("DateTimePicker").maxDate())
             $('#fromDate_ChartsForm').data("DateTimePicker").maxDate($('#toDate_ChartsForm').data("DateTimePicker").maxDate());
@@ -195,30 +219,8 @@ function initializeChartsTimestepForm() {
 
         if(e.date)
         {
-
-            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(e.date);
-
-            switch ($("#timesliceCharts").val()) {
-                case "lastHour" :
-                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'hours').format('YYYY-MM-DD HH:mm'));
-                    break;
-                case "lastDay" :
-                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
-                    break;
-                case "lastWeek" :
-                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'weeks').format('YYYY-MM-DD HH:mm'));
-                    break;
-                case "lastMonth" :
-                    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(e.date).subtract(1, 'months').format('YYYY-MM-DD HH:mm'));
-                    break;
-                case "custom" :
-                    // DO NOTHING
-                    break;
-                default :
-                    console.error("UNEXPECTED ChartsTimestep select value in Initialisation.js : "+$("#timestepCharts").val()+" (103) ");
-                    break;
-            }
-
+            $('#fromDate_ChartsForm').data("DateTimePicker").maxDate(e.date)
+            updateChartsTimestepForm(e.date);
         }
         else
         {

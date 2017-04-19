@@ -7,7 +7,6 @@
  WSEventNotifier Constructor
  ********************************************************************************************************/
 
-
 /**
  * WebSocket Event Notifier Object (Constructor)
  * @param webSocketName
@@ -67,24 +66,22 @@ function WSEventNotifier(webSocketName)
 
         webSocket.onclose = function()
         {
-            console.log("Socket closed");
+            console.log("WebSocket closed");
+
+            alertBS("Disconnection", "You have been disconnected. Click to reload the application...", "Reload", function() { location.reload(); } );
         };
 
         webSocket.onerror = function()
         {
-            console.warn("Socket error in Websocket.js");
-            alert("Web Socket Error. Page reload !");
-            
-            /**
-             * Reload current page
-             */
-            //(TODO: uncomment this) location.reload();
+            console.warn("WebSocket error");
+
+            alertBS("Disconnection", "You have been disconnected. Click to reload the application...", "Reload", function() { location.reload(); } );
         };
 
     }
     else
     {
-        alert("WebSockets are not supported by your browser!");
+        alertBS("Critical Issue", "WebSocket are not supported by your browser... The application can't be launched !", "Reload", function() { location.reload(); } );
     }
 
     this.addCallback = function(type, nom, func)

@@ -103,8 +103,18 @@ function ServerDate(theWSEventNotifier) {
         $('#fromDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
         $('#toDate_ChartsForm').data("DateTimePicker").defaultDate(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
 
-       // $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+        if ( $("#timesliceCharts").val().indexOf('last') == 0 )
+        {
+            $('#toDate_ChartsForm').data("DateTimePicker").date(moment(dateString).add(parseInt(moment().format("Z")), "hours"));
+            updateChartsTimestepForm($('#toDate_ChartsForm').data().date);
 
+            if ( moment(dateString).minute() == 0 || $("#timestepCharts").val() == "MINUTE") {
+                $("#applyBtn_charts_form").prop("disabled", false);
+                $("#resetBtn_charts_form").prop("disabled", false);
+            }
+        }
+
+        //charts_form
 
 
         for (var key in minuteChange_Subscribers) {

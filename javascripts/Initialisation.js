@@ -34,6 +34,8 @@ $( document ).ready(function() {
 
     getHtmlTemplate("#showConf_container", "templates/showConfiguration.html", null, null);
 
+    getHtmlTemplate("#alertBS_container", "templates/alertBS.html", null, null);
+
     tryRestoreConnectSession();
 
 });

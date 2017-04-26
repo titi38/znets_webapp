@@ -76,7 +76,37 @@ function onChangeChartsForm() {
     $("#resetBtn_charts_form").prop("disabled", false);
 }
 
+function incDayChartsForm() {
+    toDate = $("#toDate_ChartsForm").data("DateTimePicker").date();
+    fromDate = $("#fromDate_ChartsForm").data("DateTimePicker").date();
+    $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).add(1, 'days').format('YYYY-MM-DD HH:mm'));
+    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).add(1, 'days').format('YYYY-MM-DD HH:mm'));
+    $("#timesliceCharts").val("custom");
+}
 
+function decDayChartsForm() {
+    toDate = $("#toDate_ChartsForm").data("DateTimePicker").date();
+    fromDate = $("#fromDate_ChartsForm").data("DateTimePicker").date();
+    $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
+    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
+    $("#timesliceCharts").val("custom");
+}
+
+function incWeekChartsForm() {
+    toDate = $("#toDate_ChartsForm").data("DateTimePicker").date();
+    fromDate = $("#fromDate_ChartsForm").data("DateTimePicker").date();
+    $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).add(1, 'weeks').format('YYYY-MM-DD HH:mm'));
+    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).add(1, 'weeks').format('YYYY-MM-DD HH:mm'));
+    $("#timesliceCharts").val("custom");
+}
+
+function decWeekChartsForm() {
+    toDate = $("#toDate_ChartsForm").data("DateTimePicker").date();
+    fromDate = $("#fromDate_ChartsForm").data("DateTimePicker").date();
+    $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'weeks').format('YYYY-MM-DD HH:mm'));
+    $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).subtract(1, 'weeks').format('YYYY-MM-DD HH:mm'));
+    $("#timesliceCharts").val("custom");
+}
 function redrawActiveCharts() {
     $("li.active > a.subnavtab").click();
 }

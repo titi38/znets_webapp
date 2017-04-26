@@ -20,7 +20,16 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+
+                <div class="col-md-1">
+                    <div class="form-group form-group-margin-2px pull-right">
+                      <button type="button" class="btn btn-default" onclick="decWeekChartsForm();" ><i class="fa fa-angle-double-left" aria-hidden="true"></i> Week</button>
+                      <button type="button" class="btn btn-default" onclick="decDayChartsForm();"><i class="fa fa-angle-left" aria-hidden="true"></i> Day</button>
+                    </div>
+                </div>
+
+
+                <div class="col-md-2">
                     <div class="form-group form-group-margin-2px">
                         <label class="control-label col-xs-2" for="dateDebCharts">From:</label>
                         <div class="col-xs-10">
@@ -35,26 +44,37 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group form-group-margin-2px">
                         <label class="control-label col-xs-2" for="dateFinCharts">To:</label>
                         <div class="col-xs-10">
                             <div class='input-group date toDate_ChartsForm' id='toDate_ChartsForm'>
                                 <input type='text' class="form-control" onchange="onChangeChartsForm();" required disabled/>
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </span>
                             </div>
                             <input type="hidden" name="df" id="dateFinCharts" value=""/>
                         </div>
                     </div>
                 </div>
 
+
+
+                <div class="col-md-1">
+                    <div class="form-group form-group-margin-2px pull-left">
+                        <button type="button" class="btn btn-default" onclick="incDayChartsForm();"><i class="fa fa-angle-right" aria-hidden="true"></i> Day</button>
+                        <button type="button" class="btn btn-default" onclick="incWeekChartsForm();" ><i class="fa fa-angle-double-right" aria-hidden="true"></i> Week</button>
+                    </div>
+                </div>
+
+
+
                 <div class="col-md-2">
                     <div class="form-group form-group-margin-2px">
                         <label class="control-label col-xs-2 col-md-6" for="timestepCharts">Timestep:</label>
                         <div class="col-xs-10 col-md-6">
-                            <select class="form-control timestepCharts" id="timestepCharts" onchange="onChangeChartsForm()">
+                            <select class="form-control timestepCharts" id="timestepCharts" onchange="onChangeChartsForm();">
                                 <option value="MINUTE">Minutes</option>
                                 <option value="HOURLY" selected>Hours</option>
                                 <option value="DAILY" >Days</option>

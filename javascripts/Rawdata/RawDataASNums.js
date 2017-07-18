@@ -25,8 +25,7 @@ function initializeASNumsId(){
             _this.data('timer', setTimeout(function(){
                 _this.removeData('timer');
 
-                // Do your stuff after 2 seconds of last user input
-                callAJAX("getAsName.json", 'as='+_this.val(), "json", setASNumsName, null);
+                resolveASName( _this.val() );
             }, delay));
         else
             $('#ASName').html("No AS selected.")
@@ -36,6 +35,9 @@ function initializeASNumsId(){
 
 
 
+function resolveASName(Id) {
+  callAJAX("getAsName.json", 'as='+Id, "json", setASNumsName, null);
+}
 
 
 

@@ -153,11 +153,27 @@ function initialisation(){
     activateTabOfClass("network");
 
 
-    $('a.networkTab').on('shown.bs.tab', function (e) {
+    $('a.networkTab').on('click', function (e) {
 
-        reAdjustAll();
-        if($("#network.tab-pane.fade.tab-network.active").find("div.tab-pane.network.active").length === 0) $("li.tabGlobal.tab").find("a").click();
-        
+            reAdjustAll();
+            if($("#network.tab-pane.fade.tab-network").find("div.tab-pane.network.active").length == 0)
+                $("li.tabGlobal.tab").find("a").click();
+            else
+                $("div.tab-pane.tab-network ul.network-tab-list").find("li.active").click();
+
+    });
+
+
+
+
+    $('a#localhostTab').on('click', function (e) {
+
+            reAdjustAll();
+            if ($("#localhosts.tab-pane.fade.tab-localhosts").find("div.tab-pane.localhost.active").length == 0)
+                $("li a#localhostsInventory").click();
+            else
+                $("div.tab-pane.tab-localhosts ul.localhost-tab-list").find("li.active").click();
+
     });
 
 

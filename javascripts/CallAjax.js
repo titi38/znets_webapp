@@ -105,9 +105,9 @@ function callAJAX(url, params, outputType, callback, callbackParams)
                 addNotification("parseError : error while parsing received Json. Check it in the console (network tab)! (401)", "alert-danger", null);
                 break;
             default :
-                console.error("Something went wrong :");
-                console.error(jqXHR);
-                console.error(textStatus);
+                console.error("Connection lost. Server is down ! (555)");
+          //      console.error(jqXHR);
+          //      console.error(textStatus);
                 //addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", reloadPage);
                 addNotification("Connection lost. Server is down ! (555) Page will reload shortly ...", "alert-danger", null);
                 break;

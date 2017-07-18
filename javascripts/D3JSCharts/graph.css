@@ -85,7 +85,7 @@
 .borderTable{
     /*border-style: ridge;*/
     border-radius: 8px;
-    border: 2px solid #73AD21;
+    border: 1px solid #73AD21;
     padding: 4px; 
     padding-top: 10px;
 }

@@ -351,6 +351,7 @@ function checkLocalhostTab(localhostIp, localhostName){
         addLocalhostTab(localhostIp, localhostName);
     }
 
+    DefaultParamsSelection.setLocalHostIP(localhostIp);
 }
 
 

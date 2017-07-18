@@ -45,7 +45,6 @@ function Logs(theWSEventNotifier) {
       logEntry.detail
     ] ).draw( false );
 
-
   }
 
 
@@ -76,9 +75,8 @@ function Logs(theWSEventNotifier) {
       if(!firstSignificativeLogReached && i.id == nextLogId)
         firstSignificativeLogReached = true;
 
-      if(firstSignificativeLogReached){
+//      if(firstSignificativeLogReached)
         this.insertLogDisplay(i);
-      }
     }
   };
 

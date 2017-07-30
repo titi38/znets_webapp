@@ -318,7 +318,15 @@ function Localhosts(ServerDate) {
 
         var htmlStr = "<option value=\"\" selected=\"\">All</option>";
         $.each( networksNamesArray, function( index, value ) {
-            if (value !== "Global") {
+            if(value !== null && typeof value === 'object')
+            {
+                for(var j=0 ; j<value.o.length; j++) {
+                    htmlStr += "<option value='" + value.o[j] + "'>";
+                    htmlStr += value.o[j]  + "</option>";
+                }
+            }
+            else
+              if (value !== "Global") {
                 htmlStr += "<option value='" + value + "'>";
                 htmlStr += value + "</option>";
             }

@@ -55,6 +55,7 @@ function initialisation(){
      Load all templates inside the JST global variable
      ********************************************************************************************************/
     JST["networksTabsContent"] = doT.template(getTemplate("templates/networksTabsContent.html"));
+//    JST["groupNetworksTabsContent"] = doT.template(getTemplate("templates/groupNetworksTabsContent.html"));
     JST["localhostsTabsContent"] = doT.template(getTemplate("templates/localhostsTabsContent.html"));
     //JST["rawDataDropdownMenu"] = doT.template(getTemplate("templates/rawDataDropdownMenu.html"));
     /*JST["planView"] = doT.template(getTemplate("Templates/Views/planView.html"));

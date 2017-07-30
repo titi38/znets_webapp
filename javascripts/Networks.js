@@ -21,11 +21,22 @@ function addNetworksTabs(networksNamesArrayObject) {
 
     var networksNamesArray = networksNamesArrayObject.data;
 
+    addNewTabsContainer();
+
     if( !networksNamesArray.includes("Global") )
         networksNamesArray.unshift("Global");
 
     for(var i=0 ; i<networksNamesArray.length; i++){
-        addNetworkTab(networksNamesArray[i]);
+        if(networksNamesArray[i] !== null && typeof networksNamesArray[i] === 'object')
+        {
+          addNewTabsContainer(networksNamesArray[i].n);
+          for(var j=0 ; j<networksNamesArray[i].o.length; j++){
+              addNetworkTab(networksNamesArray[i].o[j], getIdTabsContainer(networksNamesArray[i].n));
+          }
+          addNetworkGroupTab(networksNamesArray[i].n)
+        }
+        else
+          addNetworkTab(networksNamesArray[i]);
     }
 
 
@@ -35,14 +46,44 @@ function addNetworksTabs(networksNamesArrayObject) {
 }
 
 
+function getIdTabsContainer(groupNetworksName) {
 
+    if (groupNetworksName == "")
+        return "networkTabsContainer";
+    else
+        return "groupTabs" + groupNetworksName;
+
+}
+
+function addNewTabsContainer(groupNetworksName){
+
+    if (groupNetworksName == null)
+        groupNetworksName="";
+
+    var tabContainer_div =  $('<div id="div'+getIdTabsContainer(groupNetworksName)+'">' +
+        '<button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>' +
+        '<button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>' +
+        '<div class="wrapper">' +
+        '<ul class="nav nav-tabs list network-tab-list" id="'+getIdTabsContainer(groupNetworksName)+'">' +
+        '</ul>' +
+        '</div>' +
+        '</div>');
+
+    $("#MultiNetworksTabs").append (tabContainer_div);
+    if (groupNetworksName !== "")
+      $("#div"+getIdTabsContainer(groupNetworksName)).hide();
+
+}
 
 /**
  * Specific Network (sub)Tab Creation Function.
  * Triggers the creation of one network tab defined in the software configuration (server side)
  * @param networkName
  */
-function addNetworkTab(networkName){
+function addNetworkTab(networkName, idContainer){
+
+    if (idContainer == null)
+        idContainer=getIdTabsContainer("");
 
     var element_tab = $('<li class="tab'+networkName+' tab"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+'</a></li>');
     var element_div = $('<div class="tab-pane fade network" data-network="'+networkName+'" id="divNetwork'+networkName+'">'+networkName+'  Network Content</div>');
@@ -51,9 +92,8 @@ function addNetworkTab(networkName){
 
     element_div.html(JST["networksTabsContent"]);
 
-    $(".list.network-tab-list").append(element_tab);
+    $("#"+idContainer+".list.network-tab-list").append(element_tab);
     $(".tab-content.network-tab-content").append(element_div);
-
 
     $( document ).ready(function() {
         rivets.bind(
@@ -101,8 +141,18 @@ function addNetworkTab(networkName){
 }
 
 
+function addNetworkGroupTab(networkName) {
 
-/**
+    var element_tab = $('<li class="tab' + networkName + ' tab"><a data-toggle="tab" href="#' + getIdTabsContainer(networkName) + '"><i class="fa fa-users" aria-hidden="true"></i> ' + networkName + '</a></li>');
+
+    element_tab.click(adjustOnTabClick);
+    $("#"+ getIdTabsContainer("") +".list.network-tab-list").append(element_tab);
+
+
+}
+
+
+    /**
  * Network's Charts Navigation Interactions Function.
  * Initialize all Network's Charts Interactions and Selection Formular
  */

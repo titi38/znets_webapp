@@ -57,22 +57,23 @@ function getIdTabsContainer(groupNetworksName) {
 
 function addNewTabsContainer(groupNetworksName){
 
-    if (groupNetworksName == null)
-        groupNetworksName="";
+    var classProp='';
+    if (groupNetworksName == null) {
+        groupNetworksName = "";
+        classProp = " active";
+    }
 
-    var tabContainer_div =  $('<div id="div'+getIdTabsContainer(groupNetworksName)+'">' +
+    var tabContainer_div =  $('<div  class="tab-content">' +
+        '<div id="div'+getIdTabsContainer(groupNetworksName)+'" class="tab-pane'+classProp+'" >' +
         '<button class="btn scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></button>' +
         '<button class="btn scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></button>' +
-        '<div class="wrapper">' +
+        '<div class="wrapper" style="height: 45px;">' +
         '<ul class="nav nav-tabs list network-tab-list" id="'+getIdTabsContainer(groupNetworksName)+'">' +
         '</ul>' +
         '</div>' +
-        '</div>');
+        '</div></div>');
 
     $("#MultiNetworksTabs").append (tabContainer_div);
-    if (groupNetworksName !== "")
-      $("#div"+getIdTabsContainer(groupNetworksName)).hide();
-
 }
 
 /**
@@ -104,6 +105,9 @@ function addNetworkTab(networkName, idContainer){
 
     element_tab.find("a").click(function (e) {
         e.preventDefault();
+        // remove subgroup tabs if they exist
+        if (idContainer == getIdTabsContainer(""))
+          $("#MultiNetworksTabs").find(".active").slice(1).removeClass("active");
         $(this).tab('show');
     });
 
@@ -143,11 +147,21 @@ function addNetworkTab(networkName, idContainer){
 
 function addNetworkGroupTab(networkName) {
 
-    var element_tab = $('<li class="tab' + networkName + ' tab"><a data-toggle="tab" href="#' + getIdTabsContainer(networkName) + '"><i class="fa fa-users" aria-hidden="true"></i> ' + networkName + '</a></li>');
+    var element_tab = $('<li class="tab' + networkName + ' tab"><a data-toggle="tab" href="#div' + getIdTabsContainer(networkName) + '"><i class="fa fa-users" aria-hidden="true"></i> ' + networkName + '</a></li>');
 
     element_tab.click(adjustOnTabClick);
     $("#"+ getIdTabsContainer("") +".list.network-tab-list").append(element_tab);
 
+
+    element_tab.find("a").click(function (e) {
+        e.preventDefault();
+        // remove subgroup tabs
+        $("#MultiNetworksTabs").find(".active").slice(1).removeClass("active");
+
+        // active the first tab of the container
+        if ($('#'+ getIdTabsContainer(networkName) + ' Li.tab.active').length == 0)
+          $('#'+ getIdTabsContainer(networkName) + ' Li.tab a')[0].click();
+    });
 
 }
 

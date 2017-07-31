@@ -25,6 +25,16 @@ body.wait, body.wait *{
 */
 .navbar-brand.mybrand{
     padding: 9px;
+    padding-left: 20px;
+}
+
+nav.zNavbar{
+    margin-bottom: .8em;
+}
+
+.container-fluid{
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .brand.logo {

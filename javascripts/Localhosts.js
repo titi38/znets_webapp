@@ -2,7 +2,7 @@
  * Created by smile on 22/08/16.
  */
 
-
+var LHdatatables ;
 /**
  * Localhosts Tab Initialisation Function
  */
@@ -123,7 +123,18 @@ function Localhosts(ServerDate) {
         if (currentNetworkFilter !== "" && currentNetworkFilter !== null)
             params += "net=" + currentNetworkFilter;
 
-        callAJAX('getListLocalhosts.json', params, 'json', _this.displayLocalHosts, this);
+        callAJAX('getListLocalhosts.json', params, 'json', _this.displayLocalHosts, _this);
+    }
+
+    this.updateListLocalHosts = function (jsonContent)
+    {
+        //LHdatatables.rows().data()[0][3]=20000;
+        //LHdatatables.rows().invalidate();
+        //LHdatatables.rows().draw( 'page' );
+
+        detroy_RawDataForm_autocompletion();
+        datatable.destroy();
+        $( datatable.rows().nodes() ).off( '*' );
     }
 
     /**
@@ -134,23 +145,13 @@ function Localhosts(ServerDate) {
     this.displayLocalHosts = function(jsonContent, _this)
     {
         if (datatable !== null)
-        {
-            detroy_RawDataForm_autocompletion();
-//            datatable.off('');
-            datatable.destroy();
-            $( datatable.rows().nodes() ).off( '*' );
-        }
+        // The datatable is already created => update it !
+            _this.updateListLocalHosts(jsonContent);
         else
           $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 
         // -------------------------------------------------------------------------------------------------------------
-/*
-        var lh_ipIndex = 0;
-        var lh_nameIndex = 0;
 
-        // Not Used !!!
-        var tableColumns = [];
-*/
         datatable = $('#tableLocalhosts').DataTable( {
             data: jsonContent.data,
             dom: 'Bfrtip',
@@ -173,43 +174,6 @@ function Localhosts(ServerDate) {
                 }
             ],
 
-          /*  ajax: {
-                url: proxyPass+'getListLocalhosts.json',
-                "dataSrc": function ( json ) {
-
-                    for (var i = 0; i < json.response.content.length; i++) {
-                        switch (json.response.content[i]) {
-                            case "ip":
-                                tableColumns.push({'targets': i, "type": 'ip-address', 'title': "Ip", "className": "dt-head-center dt-body-center"});
-                                lh_ipIndex = i;
-                                break;
-                            case "name":
-                                tableColumns.push({'targets': i, 'title': "Name", "className": "dt-head-center dt-body-center"});
-                                lh_nameIndex = i;
-                                break;
-                            default :
-                                // DO NOTHING
-                                break;
-                        }
-                    }
-
-                    // Set Localhost global variable
-                    for (var i = 0; i < json.response.data.length; i++){
-
-                        var lh_ip = json.response.data[i][lh_ipIndex];
-                        var lh_name = json.response.data[i][lh_nameIndex];
-                        localhosts_Ip_Name_Array.push({ ip : lh_ip, name : lh_name});
-
-                    }
-
-                    //initialize localhost list in rawdata form now that "localhosts_Ip_Name_Array" global variable is setted
-                    initializeRawDataLocalhostsIp();
-
-
-                    return json.response.data;
-                }
-            },*/
-//            columns: tableColumns,
             paging: true,
             pageLength: 100 /* -1 */,
             scrollY: 1,
@@ -302,15 +266,25 @@ function Localhosts(ServerDate) {
             }
         } );
         update_RawDataForm_autocompletion();
+        LHdatatables=datatable;
     };
 
 
-    this.init = function() {
-/*        var _this = this;
-        theWSEventNotifier.waitForSocketConnection(
-            _this.onWSConnect()
-        );
+
+    this.insertNewLocalHost = function(entry)
+    {
+/*        datatable.row.add( [
+            logEntry.severity,
+            moment(logEntry.date).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'), // log Entry Date is at server time => conversion to client time
+            logEntry.message,
+            logEntry.detail
+        ] ).draw( false );
 */
+    }
+
+
+
+    this.init = function() {
         ServerDate.addCallback("listLocalhost", _this.loadLocalHosts, null, 999);
     };
 
@@ -337,8 +311,6 @@ function Localhosts(ServerDate) {
 
 
 
-
-
 /**
  * Checks if a specific Localhost's (sub)Tab already exists
  * If it exist, then Open this Localhost's Tab
@@ -361,8 +333,6 @@ function checkLocalhostTab(localhostIp, localhostName){
 
     DefaultParamsSelection.setLocalHostIP(localhostIp);
 }
-
-
 
 
 
@@ -430,7 +400,6 @@ function addLocalhostTab(localhostIp, localhostName){
     });
 
 
-
     element_div.find('ul.nav-nest a[data-toggle="tab"]').each( function () {
 
         $(this).on('click', function (e) {
@@ -447,10 +416,6 @@ function addLocalhostTab(localhostIp, localhostName){
 
     // Set charts preset view
     element_div.find(".chartTimePreset").html("Timeslice: "+$("#timeslice_ChartsForm").val().replace(/last/g, 'Last ').replace(/custom/g, 'Custom') + " | Timestep: " + $("#preset_ChartsForm").val().replace(/HOURLY/g, 'Hourly ').replace(/MINUTE/g, 'Minute').replace(/DAILY/g, 'Daily') + ( ($("#timeslice_ChartsForm").val().indexOf("last") > -1) ? ("") : (" | From: " + $("#dateDebCharts").val() + " | To: " + $("#dateFinCharts").val()) ) );
-
-
-
-
 
 
     element_tab.find("a").on('shown.bs.tab', function (e) {
@@ -517,7 +482,7 @@ function openResolveMacAddressPopup(el){
         element.tooltip('show');
 }
 
-//
+
 
 /**
  * RawData Results DataTable - Mac Cell's Tooltip Definition Function
@@ -545,20 +510,3 @@ function setMacAddressAndOpenPopup(jsonResponse, element){
     $(element).mouseover();
 }
 
-/*function setMacToElementTitle(jsonResponse, element){
-
- var title = "Mac Organization not found";
-
- if(jsonResponse)
- if(jsonResponse.organization)
- title = jsonResponse.organization;
-
- element.parents("table").dataTable().find("div.macadressTooltip[data-toggle='tooltip'][value='"+element.attr("value")+"']").each(function() {
- $(this).tooltip();
- $(this).attr('data-original-title', title);
- $(this).tooltip();
- });
-
- $(element).mouseover();
-
- }*/

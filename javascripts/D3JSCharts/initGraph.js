@@ -110,8 +110,10 @@ function drawChartFromInterface(urlJson, mydiv) {
 
     //createChoroplethDirection(div,svg,mydiv,"dynamic/netTopCountryTraffic.json?pset=MINUTE");
     //createHistoDoubleCurrent(div,svg,mydiv,"dynamic/netTopAppTraffic.json?service=loc&pset=MINUTE");
+console.log("drawChartFromInterface - avant");
+console.error(div);
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
-
+console.log("drawChartFromInterface - apres");
 }
 
 

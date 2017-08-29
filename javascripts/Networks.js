@@ -51,7 +51,7 @@ function getIdTabsContainer(groupNetworksName) {
     if (groupNetworksName == "")
         return "networkTabsContainer";
     else
-        return "groupTabs" + groupNetworksName;
+        return "groupTabs" + groupNetworksName.replace(/\s+/g, '');
 
 }
 
@@ -86,8 +86,9 @@ function addNetworkTab(networkName, idContainer){
     if (idContainer == null)
         idContainer=getIdTabsContainer("");
 
-    var element_tab = $('<li class="tab'+networkName+' tab"><a data-toggle="tab" href="#divNetwork'+networkName+'">'+networkName+'</a></li>');
-    var element_div = $('<div class="tab-pane fade network" data-network="'+networkName+'" id="divNetwork'+networkName+'">'+networkName+'  Network Content</div>');
+    var networkNameWoSpace = networkName.replace(/\s+/g, '');
+    var element_tab = $('<li class="tab'+networkNameWoSpace+' tab"><a data-toggle="tab" href="#divNetwork'+networkNameWoSpace+'">'+networkName+'</a></li>');
+    var element_div = $('<div class="tab-pane fade network" data-network="'+networkName+'" id="divNetwork'+networkNameWoSpace+'">'+networkName+'  Network Content</div>');
 
     element_tab.click(adjustOnTabClick);
 
@@ -147,7 +148,8 @@ function addNetworkTab(networkName, idContainer){
 
 function addNetworkGroupTab(networkName) {
 
-    var element_tab = $('<li class="tab' + networkName + ' tab"><a data-toggle="tab" href="#div' + getIdTabsContainer(networkName) + '"><i class="fa fa-users" aria-hidden="true"></i> ' + networkName + '</a></li>');
+    var networkNameWoSpace = networkName.replace(/\s+/g, '');
+    var element_tab = $('<li class="tab' + networkNameWoSpace + ' tab"><a data-toggle="tab" href="#div' + getIdTabsContainer(networkName) + '"><i class="fa fa-users" aria-hidden="true"></i> ' + networkName + '</a></li>');
 
     element_tab.click(adjustOnTabClick);
     $("#"+ getIdTabsContainer("") +".list.network-tab-list").append(element_tab);

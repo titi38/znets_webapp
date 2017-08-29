@@ -32,10 +32,6 @@ function Logs(theWSEventNotifier) {
   
   this.insertLogDisplay = function(logEntry)
   {
-    // TODO write D3JS update table function
-    console.log("NEW LOG ENTRY :");
-    console.log(logEntry);
-
     var t = $('#tableLogs').DataTable();
 
     t.row.add( [
@@ -44,7 +40,6 @@ function Logs(theWSEventNotifier) {
       logEntry.message,
       logEntry.detail
     ] ).draw( false );
-
   }
 
 

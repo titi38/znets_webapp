@@ -88,7 +88,7 @@ function addNetworkTab(networkName, idContainer){
 
     var networkNameWoSpace = networkName.replace(/\s+/g, '');
     var element_tab = $('<li class="tab'+networkNameWoSpace+' tab"><a data-toggle="tab" href="#divNetwork'+networkNameWoSpace+'">'+networkName+'</a></li>');
-    var element_div = $('<div class="tab-pane fade network" data-network="'+networkName+'" id="divNetwork'+networkNameWoSpace+'">'+networkName+'  Network Content</div>');
+    var element_div = $('<div class="tab-pane fade network" data-network="'+networkNameWoSpace+'" id="divNetwork'+networkNameWoSpace+'">'+networkName+'  Network Content</div>');
 
     element_tab.click(adjustOnTabClick);
 
@@ -100,7 +100,7 @@ function addNetworkTab(networkName, idContainer){
     $( document ).ready(function() {
         rivets.bind(
             $(element_div),
-            {network: networkName}
+            {network: networkNameWoSpace}
         );
     });
 

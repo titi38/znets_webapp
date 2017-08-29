@@ -1,6 +1,6 @@
 .chartNavDropdownContainer{
-    /*position: absolute;*/
-    z-index: 1000;
+    /*position: absolute;
+    z-index: 1000;*/
     width: 100%;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;

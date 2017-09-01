@@ -128,13 +128,32 @@ function Localhosts(ServerDate) {
 
     this.updateListLocalHosts = function (jsonContent)
     {
-        //LHdatatables.rows().data()[0][3]=20000;
-        //LHdatatables.rows().invalidate();
-        //LHdatatables.rows().draw( 'page' );
+        var mapIp = new Object();
+        for (i = 0; i < datatable.rows().data().length ; i++)
+            mapIp[datatable.rows().data()[i][0]]=datatable.rows().data()[i];
 
-        detroy_RawDataForm_autocompletion();
-        datatable.destroy();
-        $( datatable.rows().nodes() ).off( '*' );
+        for  (i = 0; i < jsonContent.data.length ; i++) {
+            var ipData=jsonContent.data[i];
+            if ( !(ipData[0] in mapIp) ) {
+                console.error("NEW HOST: " + ipData[0]);
+                datatable.row.add( ipData ).draw( false );
+                destroy_RawDataForm_autocompletion();
+            }
+            else
+            {
+               // mapIp[ipData[0]] = ipData.slice();
+
+               for (j = 1; j < 7; j++)
+                    mapIp[ipData[0]][j] = ipData[j];
+            }
+        }
+
+        LHdatatables.rows().invalidate();
+        LHdatatables.rows().draw( 'page' );
+
+        //detroy_RawDataForm_autocompletion();
+       // datatable.destroy();
+       // $( datatable.rows().nodes() ).off( '*' );
     }
 
     /**
@@ -144,9 +163,11 @@ function Localhosts(ServerDate) {
      */
     this.displayLocalHosts = function(jsonContent, _this)
     {
-        if (datatable !== null)
-        // The datatable is already created => update it !
+        if (datatable !== null) {
+            // The datatable is already created => update it !
             _this.updateListLocalHosts(jsonContent);
+            return;
+        }
         else
           $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');
 

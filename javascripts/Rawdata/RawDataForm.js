@@ -356,7 +356,7 @@ function rawDataForm_updateLocHostName() {
 }
 
 
-function detroy_RawDataForm_autocompletion(){
+function destroy_RawDataForm_autocompletion(){
     $( ".autocompleteLocIpAddr" ).autocomplete( "destroy" );
     $(".autocompleteLocHostName").autocomplete( "destroy" );
 }

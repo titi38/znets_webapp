@@ -44,19 +44,17 @@ function WSEventNotifier(webSocketName)
 
         webSocket.onmessage = function (evt)
         {
-            //var received_msg = evt.data;
-            console.log("WEBSOCKET MESSAGE: ");
-            console.log(evt);
+            /*console.log("WEBSOCKET MESSAGE: ");
+            console.log(evt);*/
 
             var json = JSON.parse(evt.data);
-            //alert("Json type : " + json.type + "   |||   Json name : " + json.name+ "   |||   Json param p1: " + json.param.p1);
             var key = json.type + ":" + json.name;
 
             addWebsocketNotification(json.type, json.name, json.param, null);
             
             if(key in eventSuscribers){
                 for (var i = 0; i < eventSuscribers[key].length; i++) {
-                    console.log(eventSuscribers[key][i]);
+                    //console.log(eventSuscribers[key][i]);
                     eventSuscribers[key][i](json.param);
                 }
             }

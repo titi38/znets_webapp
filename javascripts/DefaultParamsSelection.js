@@ -106,7 +106,7 @@ DefaultParamsSelection.clearForm = function () {
 }
 
 DefaultParamsSelection.updateFromChartTitle = function (itemName, dir, isLocal) {
-    console.error("item: " + itemName +", dir: " + dir + ", isLocal: " + isLocal);
+//    console.error("item: " + itemName +", dir: " + dir + ", isLocal: " + isLocal);
 
     var isInc=false, isOut=false;
 

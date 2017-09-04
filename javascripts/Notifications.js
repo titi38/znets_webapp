@@ -64,17 +64,17 @@ function addNotification(message, alertType, callBack) {
  */
 function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
 
-    console.info(mesgType);
+/*    console.info(mesgType);
     console.info(mesgName);
-    console.info(mesgParams);
+    console.info(mesgParams);*/
 
     if (mesgName === "logs")
         addNotification("NEW LOG "+mesgParams.severity+ " : " + mesgParams.message, "alert-log alert-info", callBack);
 
     if(mesgType === "notify") {
-        if (mesgName === "alert")
-	{
-	  var theAlertNotif = "NEW ALERT: ";
+      if (mesgName === "alert")
+	  {
+	      var theAlertNotif = "NEW ALERT: ";
           if (mesgParams.hostname && mesgParams.hostname.length)
             theAlertNotif += "host "+ mesgParams.hostname;
           else
@@ -83,9 +83,9 @@ function addWebsocketNotification(mesgType, mesgName, mesgParams, callBack) {
           theAlertNotif += " raised a " + mesgParams.title + " alert";
 
             addNotification(theAlertNotif, "alert-log alert-info", callBack);
-	}
-        else
-            console.error(mesgType + ":" + mesgName + ":" + JSON.stringify(mesgParams))
+	  }
+      //else
+      //      console.error(mesgType + ":" + mesgName + ":" + JSON.stringify(mesgParams))
     }
 
 /*
@@ -208,11 +208,9 @@ function addAjaxNotification(mesg, callBack) {
             else
                 console.error(JSON.stringify(mesg));
 */
-        else
+       /* else
             if(mesg.request != null)
-                console.log(mesg.request);
-    //console.error("addAjaxNotification error (%i)", 104);
-
+                console.log(mesg.request);*/
     }
     else{
 

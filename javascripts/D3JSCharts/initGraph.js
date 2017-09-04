@@ -110,10 +110,8 @@ function drawChartFromInterface(urlJson, mydiv) {
 
     //createChoroplethDirection(div,svg,mydiv,"dynamic/netTopCountryTraffic.json?pset=MINUTE");
     //createHistoDoubleCurrent(div,svg,mydiv,"dynamic/netTopAppTraffic.json?service=loc&pset=MINUTE");
-console.log("drawChartFromInterface - avant");
-console.error(div);
+
     whichCreationFunction(urlJson,svg)(div,svg,mydiv,urlJson);
-console.log("drawChartFromInterface - apres");
 }
 
 
@@ -281,7 +279,7 @@ function whichCreationFunction(urlJson,svg){
  */
 
 function noData(div,svg,mydiv, msg){
-    console.log("incorrect url/data");
+    //console.log("incorrect url/data");
 
     if(!msg){
         msg = "No Data";

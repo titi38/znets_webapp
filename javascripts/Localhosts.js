@@ -306,7 +306,7 @@ function Localhosts(ServerDate) {
 
 
     this.init = function() {
-        ServerDate.addCallback("listLocalhost", _this.loadLocalHosts, null, 999);
+        ServerDate.addCallback("listLocalhost", _this.loadLocalHosts, null, 4999);
     };
 
     this.updateNetworkList = function( networksNamesArray ) {

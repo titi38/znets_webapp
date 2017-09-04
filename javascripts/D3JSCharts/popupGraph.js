@@ -29,8 +29,8 @@ function getPieJsonQuery(svg, clickData) {
     var datedd = new Date((clickData.x - 1) * svg.step + svg.timeMin - svg.hourShift);
     var datedf = new Date(clickData.x * svg.step + svg.timeMin - svg.hourShift);
 
-    console.log(svg.attr("data-pie-json"));
-    console.log(svg.typeGraph);
+    /*console.log(svg.attr("data-pie-json"));
+    console.log(svg.typeGraph);*/
 
     var endStr, type, unit, res;
 
@@ -68,7 +68,7 @@ function getPieJsonQuery(svg, clickData) {
     });
 
 
-    console.log(res + " " + type + " " + unit);
+    //console.log(res + " " + type + " " + unit);
 
     var strResponse;
 
@@ -222,7 +222,7 @@ function addPopup(selection, div, svg, onCreationFunct, onSupprFunct) {
 
     svg.getData = function (data) {
         //TODO smile
-        console.log("data : " + data) //data
+        /*console.log("data : " + data) //data
         console.log("svg.units : " + svg.units) // unit main graph
         console.log("svg.step : " + svg.step); //step in milliseconds
         console.log("svg.urlJson : " + svg.urlJson)
@@ -230,7 +230,7 @@ function addPopup(selection, div, svg, onCreationFunct, onSupprFunct) {
             console.log("svg.popup.pieChart.json.request : " + svg.popup.pieChart.json.request)//name of the pie function
         } else {
             console.log("getDateFromAbscissa(svg,data.x) : " + getDateFromAbscissa(svg, data.x)); //date start main graph
-        }
+        }*/
 
     }
 
@@ -259,7 +259,7 @@ function addPopup(selection, div, svg, onCreationFunct, onSupprFunct) {
                 svg.popup.pieChart = svg.popup.append("svg").attr("width", svg.pieside).attr("height", svg.pieside).classed("pieSvg", true);
 
                 var arrayUrl = getPieJsonQuery(svg, d);
-                console.log("arrayUrl : " + arrayUrl);
+                //console.log("arrayUrl : " + arrayUrl);
 
                 if (arrayUrl[1] !== "loc" && arrayUrl[1] !== "ext") {
                     createPopupButton(arrayUrl[0] + "&amount=" + d.height, arrayUrl[1] + "&amount=" + d.height, svg, svg.pieside, d, div.overlay);
@@ -761,7 +761,7 @@ function drawPopupGraph(jsonObj, svg, total, pieside, f) {
     });
 
 
-    console.log("values: " + values);
+    //console.log("values: " + values);
 
     //data are prepared
 
@@ -990,9 +990,9 @@ function popupTitleH(d, svg) {
 
     var dateBegin = getDateFromAbscissa(svg, d.x - 1);
     var dateEnd = getDateFromAbscissa(svg, d.x);
-    console.error("popuTilteH : d=" );
+    /*console.error("popuTilteH : d=" );
     console.log(d);
-    console.log(svg);
+    console.log(svg);*/
 
     DefaultParamsSelection.updateDateFrom(dateBegin);
     DefaultParamsSelection.updateDateTo(dateEnd);

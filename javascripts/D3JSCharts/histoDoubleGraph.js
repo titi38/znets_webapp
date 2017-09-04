@@ -562,7 +562,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
     svg.margin.bottom = 20;
     svg.margin.zero = 28;
 
-    console.log(json);
+    //console.log(json);
 
     //test json conformity
     if (testJson(json) || error) {
@@ -640,7 +640,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
       svg.units = "";
     }
 
-    console.log(json);
+    //console.log(json);
 
 
 
@@ -685,7 +685,7 @@ function createHisto2DStackDoubleFormatVariation(div, svg, mydiv, urlJson){
 
     }
 
-    console.log(jsonContent);
+    //console.log(jsonContent);
 
 
 

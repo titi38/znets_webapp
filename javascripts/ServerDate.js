@@ -118,9 +118,9 @@ function ServerDate(theWSEventNotifier) {
 
 
         for (var key in minuteChange_Subscribers) {
-            console.log("serverDateChanges key="+key)
+            //console.log("serverDateChanges key="+key)
 
-            console.log(Math.random() * minuteChange_Subscribers[key].dT + 1)
+            //console.log(Math.random() * minuteChange_Subscribers[key].dT + 1)
             setTimeout( function(_key) {
                 minuteChange_Subscribers[_key].callback(dateString, minuteChange_Subscribers[_key].callbackParams);
             }, Math.random() * minuteChange_Subscribers[key].dT + 1, key);
@@ -139,10 +139,10 @@ function ServerDate(theWSEventNotifier) {
 
 
     this.resetGraphRefresh = function(){
-        console.error(minuteChange_Subscribers["theGraph"]);
+        //console.error(minuteChange_Subscribers["theGraph"]);
         if(minuteChange_Subscribers["theGraph"])
             delete minuteChange_Subscribers["theGraph"];
-        console.error(minuteChange_Subscribers["theGraph"]);
+        //console.error(minuteChange_Subscribers["theGraph"]);
     }
 
 

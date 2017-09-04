@@ -309,7 +309,7 @@ function createTableLegendDouble(svg, direction, sumArrayDirection, colorMap,act
 
   var maxHeight = svg.height/2;
 
-  console.log(svg.divLegend);
+  //console.log(svg.divLegend);
 
   var divtableStr = "divtable" + position;
   svg.divLegend[divtableStr] = svg.divLegend.append("div").classed("borderTable diagram",true)

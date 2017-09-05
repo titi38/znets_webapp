@@ -217,6 +217,8 @@ function initialisation(){
      ********************************************************************************************************/
     $('a#flowstab[data-toggle="tooltip"]').tooltip("hide");
 
+
+    $('#ipQueryToolsDiv').removeClass('hidden');
 }
 
 

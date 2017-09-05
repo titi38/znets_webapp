@@ -2,7 +2,6 @@
  * Created by smile on 22/08/16.
  */
 
-var LHdatatables ;
 /**
  * Localhosts Tab Initialisation Function
  */
@@ -41,20 +40,9 @@ function Localhosts(ServerDate) {
 
     var table;
 
+    var autoUpdateEnabledByDefault = false;
     var datatable = null;
     var _this = this;
-
-/*    this.onWSConnect = function(){
-
-        theWSEventNotifier.addCallback("notify", "date_processing", function () {
-            console.log("UPDATING LOCALHOST TaBLE !!!!");
-            _this.update();
-        });
-
-        _this.loadLocalHosts();
-
-    };
-*/
 
     this.resolveIp = function( ip ) {
         var localhostRows = datatable.rows().data();
@@ -135,7 +123,7 @@ function Localhosts(ServerDate) {
         for  (i = 0; i < jsonContent.data.length ; i++) {
             var ipData=jsonContent.data[i];
             if ( !(ipData[0] in mapIp) ) {
-                console.error("NEW HOST: " + ipData[0]);
+                //console.error("NEW HOST: " + ipData[0]);
                 datatable.row.add( ipData ).draw( false );
                 destroy_RawDataForm_autocompletion();
             }
@@ -148,12 +136,8 @@ function Localhosts(ServerDate) {
             }
         }
 
-        LHdatatables.rows().invalidate();
-        LHdatatables.rows().draw( 'page' );
-
-        //detroy_RawDataForm_autocompletion();
-       // datatable.destroy();
-       // $( datatable.rows().nodes() ).off( '*' );
+        datatable.rows().invalidate();
+        datatable.rows().draw( 'page' );
     }
 
     /**
@@ -201,7 +185,7 @@ function Localhosts(ServerDate) {
             responsive: true,
             scrollCollapse: true,
             language: {
-                "sInfo": 'Showing _END_ Entries.',
+     //           "sInfo": 'Showing _END_ Entries.',
                 "sInfoEmpty": 'No entries to show',
             },
             fnInitComplete: function() { $( document ).trigger("dataTable_Loaded"); initializeRawDataLocalhostsIp();
@@ -287,27 +271,33 @@ function Localhosts(ServerDate) {
             }
         } );
         update_RawDataForm_autocompletion();
-        LHdatatables=datatable;
     };
-
-
-
-    this.insertNewLocalHost = function(entry)
-    {
-/*        datatable.row.add( [
-            logEntry.severity,
-            moment(logEntry.date).add(parseInt(moment().format("Z")), "hours").format('YYYY-MM-DD HH:mm'), // log Entry Date is at server time => conversion to client time
-            logEntry.message,
-            logEntry.detail
-        ] ).draw( false );
-*/
-    }
-
 
 
     this.init = function() {
-        ServerDate.addCallback("listLocalhost", _this.loadLocalHosts, null, 4999);
+        $('#autoUpdateLocalHosts').click(function() {
+            var checked = $(this).prop('checked');
+
+            $('#updateLH-button').prop('disabled', checked == true);
+            myLocalhosts.autoUpdate(checked == true);
+        });
+
+        if (autoUpdateEnabledByDefault)
+            this.autoUpdate(true);
+        else
+          this.loadLocalHosts();
+
+        $('#autoUpdateLocalHosts').prop('checked', autoUpdateEnabledByDefault);
+        $('#updateLH-button').prop('disabled', autoUpdateEnabledByDefault);
+
     };
+
+    this.autoUpdate = function( enabled ) {
+        if (enabled)
+            ServerDate.addCallback("listLocalhost", _this.loadLocalHosts, null, 4999);
+        else
+            ServerDate.removeCallback("listLocalhost");
+    }
 
     this.updateNetworkList = function( networksNamesArray ) {
 

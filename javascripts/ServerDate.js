@@ -137,6 +137,11 @@ function ServerDate(theWSEventNotifier) {
 
     }
 
+    this.removeCallback = function(name){
+        if(minuteChange_Subscribers[name])
+            delete minuteChange_Subscribers[name];
+    }
+
 
     this.resetGraphRefresh = function(){
         //console.error(minuteChange_Subscribers["theGraph"]);

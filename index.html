@@ -298,12 +298,21 @@
                             <div id="divLocalhosts" class="toBottomTabsContainer col-xs-12">
 
                                 <div class="lhosts-form">
+                                    <div class=" form-group form-group-margin-2px pull-right">
+                                        <div>
                                     <form class="form-inline" id="lhosts-filter-form">
                                         <label class="mr-sm-2" for="filterNetworkLocalHosts">Network: </label> &nbsp;&nbsp;
                                         <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="filterNetworkLocalHosts" onchange="myLocalhosts.loadLocalHosts();">
-
-                                        </select>&nbsp;&nbsp;
+                                        </select>
                                     </form>
+                                    </div>
+                                    <div class="form-inline pull-right">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" value="" id="autoUpdateLocalHosts">AutoUpdate</label>
+                                        </div>&nbsp;&nbsp;
+                                        <button class="btn btn-default" data-toggle="modal" id="updateLH-button" title="update list" onclick="myLocalhosts.loadLocalHosts();"><i class="glyphicon glyphicon-refresh"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>

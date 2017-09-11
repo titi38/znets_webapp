@@ -104,18 +104,31 @@ function Localhosts(ServerDate) {
         return result
     }
 
+
     this.loadLocalHosts = function ()
     {
         var currentNetworkFilter = $("#filterNetworkLocalHosts").val();
         var params =  "";
-        if (currentNetworkFilter !== "" && currentNetworkFilter !== null)
+        if (currentNetworkFilter !== "" && currentNetworkFilter !== null) {
             params += "net=" + currentNetworkFilter;
+        }
 
-        callAJAX('getListLocalhosts.json', params, 'json', _this.displayLocalHosts, _this);
+        callAJAX('getListLocalhosts.json', params, 'json', _this.displayLocalHosts, [ _this, false ]);
+    }
+
+    this.updateLocalHostsChangeFilter = function () {
+        var currentNetworkFilter = $("#filterNetworkLocalHosts").val();
+        var params =  "";
+        if (currentNetworkFilter !== "" && currentNetworkFilter !== null) {
+            params += "net=" + currentNetworkFilter;
+        }
+
+        callAJAX('getListLocalhosts.json', params, 'json', _this.displayLocalHosts, [ _this, true ]);
     }
 
     this.updateListLocalHosts = function (jsonContent)
     {
+        var isNewHosts = false;
         var mapIp = new Object();
         for (i = 0; i < datatable.rows().data().length ; i++)
             mapIp[datatable.rows().data()[i][0]]=datatable.rows().data()[i];
@@ -125,7 +138,7 @@ function Localhosts(ServerDate) {
             if ( !(ipData[0] in mapIp) ) {
                 //console.error("NEW HOST: " + ipData[0]);
                 datatable.row.add( ipData ).draw( false );
-                destroy_RawDataForm_autocompletion();
+                isNewHosts=true;
             }
             else
             {
@@ -135,22 +148,37 @@ function Localhosts(ServerDate) {
                     mapIp[ipData[0]][j] = ipData[j];
             }
         }
+        if (isNewHosts)
+            destroy_RawDataForm_autocompletion();
 
         datatable.rows().invalidate();
         datatable.rows().draw( 'page' );
     }
+
 
     /**
      * Displays (in a DataTable) alerts list received from server after ajac query
      * @param jsonContent {JSON} Request's Response JSON
      * @param _this {Alerts} Self
      */
-    this.displayLocalHosts = function(jsonContent, _this)
+    this.displayLocalHosts = function(jsonContent, params)
     {
-        if (datatable !== null) {
-            // The datatable is already created => update it !
-            _this.updateListLocalHosts(jsonContent);
-            return;
+        var _this = params [0];
+        var needToDestroyDT = params [1];
+
+        if (datatable !== null)
+        {
+            if (!needToDestroyDT) {
+                destroy_RawDataForm_autocompletion();
+    //            datatable.off('');
+                datatable.destroy();
+                $( datatable.rows().nodes() ).off( '*' );
+            }
+            else {
+                // The datatable is already created => update it !
+                _this.updateListLocalHosts(jsonContent);
+                return;
+            }
         }
         else
           $('#divLocalhosts').append('<table id="tableLocalhosts" class="display table table-striped table-bordered dataTable no-footer"></table>');

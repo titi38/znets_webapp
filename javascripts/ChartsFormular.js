@@ -82,6 +82,7 @@ function incDayChartsForm() {
     $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).add(1, 'days').format('YYYY-MM-DD HH:mm'));
     $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).add(1, 'days').format('YYYY-MM-DD HH:mm'));
     $("#timesliceCharts").val("custom");
+    updateChartsTimeslice("custom");
 }
 
 function decDayChartsForm() {
@@ -90,6 +91,7 @@ function decDayChartsForm() {
     $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
     $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).subtract(1, 'days').format('YYYY-MM-DD HH:mm'));
     $("#timesliceCharts").val("custom");
+    updateChartsTimeslice("custom");    
 }
 
 function incWeekChartsForm() {
@@ -98,6 +100,7 @@ function incWeekChartsForm() {
     $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).add(1, 'weeks').format('YYYY-MM-DD HH:mm'));
     $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).add(1, 'weeks').format('YYYY-MM-DD HH:mm'));
     $("#timesliceCharts").val("custom");
+    updateChartsTimeslice("custom");
 }
 
 function decWeekChartsForm() {
@@ -106,6 +109,7 @@ function decWeekChartsForm() {
     $('#toDate_ChartsForm').data("DateTimePicker").date(moment(toDate).subtract(1, 'weeks').format('YYYY-MM-DD HH:mm'));
     $('#fromDate_ChartsForm').data("DateTimePicker").date(moment(fromDate).subtract(1, 'weeks').format('YYYY-MM-DD HH:mm'));
     $("#timesliceCharts").val("custom");
+    updateChartsTimeslice("custom");
 }
 function redrawActiveCharts() {
     $("li.active > a.subnavtab").click();

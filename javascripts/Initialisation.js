@@ -51,6 +51,27 @@ $( document ).ready(function() {
  */
 function initialisation(){
 
+    if(! BrowserDetection.match([
+            {
+                name: "Chrome",
+                version: 58
+            },{
+                name: "Opera",
+                version: 47
+            },{
+                name: "Firefox",
+                version: 53
+            },{
+                name: "Internet Explorer",
+                version: 12
+            },{
+                name: "Safari",
+                version: 12
+            } ]) )
+
+        alertBS("Unsupported browser", "Your browser is unsupported or out-of-date. ZNETS may not work properly", "Continue anyway", null );
+
+
     /*********************************************************************************************************
      Load all templates inside the JST global variable
      ********************************************************************************************************/
